@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- package_name -->
+    <string name="package_name" translatable="false">com.superbomb.series.SnowBrosBrickOut</string>
+</resources>

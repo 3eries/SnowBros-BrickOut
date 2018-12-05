@@ -1,0 +1,16 @@
+{
+    "android": {
+        "store": "https://play.google.com/store/apps/details?id=com.superbomb.series.rps"
+    },
+    "ios": {
+        "store": "https://itunes.apple.com/app/id1410764042"
+    },
+    "max_score": 9999,
+    "levels": [{
+        "level": 1,
+        "score": 0
+    }, {
+        "level": 2,
+        "score": 20
+    }]
+}
