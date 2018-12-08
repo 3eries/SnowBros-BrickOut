@@ -39,22 +39,37 @@ b2World* PhysicsManager::initWorld() {
     return world;
 }
 
+/**
+ * 모든 바디 제거
+ */
 void PhysicsManager::removeBodies() {
     loopObjects([](SBPhysicsObject *obj) { obj->removeBody(); });
 }
 
+/**
+ * 스케줄러 시작
+ */
 void PhysicsManager::startScheduler() {
     SBScheduleHelper::schedule(CC_CALLBACK_1(PhysicsManager::update, this), this, PHYSICS_FPS, SCHEDULER_UPDATE);
 }
 
+/**
+ * 스케줄러 정지
+ */
 void PhysicsManager::stopScheduler() {
     SBScheduleHelper::unschedule(this, SCHEDULER_UPDATE);
 }
 
+/**
+ * 스케줄러 일시정지
+ */
 void PhysicsManager::pauseScheduler() {
     SBScheduleHelper::pause(this);
 }
 
+/**
+ * 스케줄러 재게
+ */
 void PhysicsManager::resumeScheduler() {
     SBScheduleHelper::resume(this);
 }

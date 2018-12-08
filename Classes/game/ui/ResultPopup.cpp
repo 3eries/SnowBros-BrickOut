@@ -111,13 +111,9 @@ void ResultPopup::initContentView() {
     
     // images
     {
-        // RSP_popup_title_rip.png Vec2MC(-4, 310) , Size(296, 108)
-        // RSP_popup_text_score.png Vec2MC(0, 158) , Size(272, 60)
-        // RSP_popup_text_top3.png Vec2MC(0, -72) , Size(216, 60)
         SBUIInfo infos[] = {
             SBUIInfo(ANCHOR_M,   Vec2MC(-4, 310),  "RSP_popup_title_rip.png"),      // rip
             SBUIInfo(ANCHOR_M,   Vec2MC(0, 158),   "RSP_popup_text_score.png"),     // score title
-            SBUIInfo(ANCHOR_M,   Vec2MC(0, -72),   "RSP_popup_text_top3.png"),      // top3 title
         };
         
         for( int i = 0; i < sizeof(infos)/sizeof(SBUIInfo); ++i ) {

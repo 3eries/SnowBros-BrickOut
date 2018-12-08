@@ -172,7 +172,7 @@ void GameView::onBoostEnd() {
  */
 void GameView::onScoreChanged(int score) {
     
-    // scoreLabel->setString(TO_STRING(score));
+    scoreLabel->setString(TO_STRING(score));
 }
 
 /**
@@ -197,6 +197,12 @@ void GameView::onTileAddFinished() {
  */
 void GameView::onTileDownFinished() {
     
+    // 게임 오버 체크
+    if( isExistTile(0) ) {
+        GameManager::onGameOver();
+        return;
+    }
+    
     updateBallCountUI();
 
     // 다음 턴
@@ -209,6 +215,12 @@ void GameView::onTileDownFinished() {
 void GameView::onShootingReady() {
     
     aimController->setEnabled(true, getBricks());
+    
+    // 볼 위치 설정
+    for( auto ball : balls ) {
+        ball->setPosition(aimController->getStartPosition());
+        ball->syncNodeToBody();
+    }
 }
 
 /**
@@ -222,12 +234,6 @@ void GameView::onShootFinished() {
  * 모든 볼 추락 완료
  */
 void GameView::onFallFinished() {
-    
-    // 게임 오버 체크
-    if( isExistTile(0) ) {
-        GameManager::onGameOver();
-        return;
-    }
     
     // 타일 추가
     addBrick(random(1, 2)); // 벽돌
@@ -263,14 +269,22 @@ void GameView::onContactBrick(Ball *ball, Brick *brick) {
  * 볼 & 바닥 충돌
  */
 void GameView::onContactFloor(Ball *ball) {
-
-    ball->sleepWithAction();
+    
     ++fallenBallCount;
 
+    // 볼 바디 비활성화
+    // ball->sleepWithAction();
+    ball->sleep(false);
+    
     // 첫번째 볼 추락
     if( fallenBallCount == 1 ) {
         aimController->setStartPosition(Vec2(ball->getPosition().x, SHOOTING_POSITION_Y));
     }
+    
+    // 첫번째 볼 위치로 이동
+    auto pos = aimController->getStartPosition();
+    ball->setPosition(Vec2(ball->getPositionX(), pos.y));
+    ball->runAction(MoveTo::create(0.2f, pos));
     
     // 모든 볼 추락
     if( fallenBallCount == balls.size() ) {
@@ -283,24 +297,30 @@ void GameView::onContactFloor(Ball *ball) {
  */
 void GameView::shoot(const Vec2 &endPosition) {
     
-    CCLOG("onShoot: %f,%f", endPosition.x, endPosition.y);
-    aimController->setEnabled(true, getBricks());
-    
-    return;
-    
     shootIndex = 0;
     fallenBallCount = 0;
 
-    auto velocity = b2Vec2(random(-30, 30), 30);
-
+    // 속도 설정
+    // b2Vec2 velocity(random(-30, 30), 30);
+    Vec2 diff = endPosition - aimController->getStartPosition();
+    b2Vec2 velocity = PTM(diff);
+    velocity.Normalize();
+    velocity.x *= BALL_MAX_VELOCITY;
+    velocity.y *= BALL_MAX_VELOCITY;
+    
+    // CCLOG("onShoot diff: %f,%f (%f,%f)", diff.x, diff.y, velocity.x, velocity.y);
+    
+    // 볼 바디 활성화
+    for( auto ball : balls ) {
+        ball->awake();
+    }
+    
+    // 하나씩 발사
     schedule([=](float dt) {
 
         CCLOG("shoot! ball index: %d", shootIndex);
 
         auto ball = balls[shootIndex];
-        // TODO: 볼 좌표 설정?
-        ball->syncNodeToBody();
-        ball->awake();
         ball->shoot(velocity);
 
         ++shootIndex;
@@ -583,8 +603,8 @@ void GameView::initMap() {
     GameManager::getPhysicsManager()->setMap(map);
     
     // 스코어 라벨 초기화
-    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 40, Size::ZERO,
-                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
+    scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 40, Size::ZERO,
+                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
     scoreLabel->setTag(Tag::LABEL_SCORE);
     scoreLabel->setAnchorPoint(ANCHOR_MT);
     scoreLabel->setPosition(Vec2TC(0, -20));
@@ -601,7 +621,7 @@ void GameView::initBall() {
     {
         auto ball = Sprite::create("images/common/circle_white.png");
         ball->setAnchorPoint(ANCHOR_M);
-        ball->setPosition(Vec2(SB_WIN_SIZE.width*0.5f, SHOOTING_POSITION_Y));
+        ball->setPosition(FIRST_SHOOTING_POSITION);
         ball->setColor(Color3B::RED);
         addChild(ball);
 

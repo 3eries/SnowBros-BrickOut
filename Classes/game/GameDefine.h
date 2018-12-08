@@ -48,14 +48,15 @@ static const cocos2d::Size                    MAP_CONTENT_SIZE                 =
 static const float                            MAP_DIAGONAL                     = MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE));  // 대각선
 
 // Ball
-static const int                              FIRST_BALL_COUNT                 = 30;
-static const int                              MAX_BALL_COUNT                   = 1000;
-static const float                            SHOOT_INTERVAL                   = 0.08f;
+static const int                              FIRST_BALL_COUNT                 = 30;        // 최초 볼 갯수
+static const int                              MAX_BALL_COUNT                   = 1000;      // 최대 볼 갯수
+static const float                            SHOOT_INTERVAL                   = 0.08f;     // 발사 시간 간격
 
 static const float                            BALL_RADIUS                      = 18;
 static const cocos2d::Size                    BALL_SIZE                        = cocos2d::Size(BALL_RADIUS*2, BALL_RADIUS*2);
+static const float                            BALL_MAX_VELOCITY                = 30;
 
-#define                                       SHOOTING_POSITION_Y                (MAP_ORIGIN.y+40)
+#define                                       SHOOTING_POSITION_Y                (MAP_ORIGIN.y+BALL_RADIUS+2)
 #define                                       FIRST_SHOOTING_POSITION            Vec2BC(0, SHOOTING_POSITION_Y)
 
 // Wall
