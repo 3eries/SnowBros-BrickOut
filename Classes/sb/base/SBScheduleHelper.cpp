@@ -47,3 +47,14 @@ void SBScheduleHelper::unschedule(void *target, const string &key) {
     getScheduler()->unschedule(key, target);
 }
 
+void SBScheduleHelper::pause(void *target) {
+    
+    getScheduler()->pauseTarget(target);
+}
+
+void SBScheduleHelper::resume(void *target) {
+    
+    getScheduler()->resumeTarget(target);
+}
+
+

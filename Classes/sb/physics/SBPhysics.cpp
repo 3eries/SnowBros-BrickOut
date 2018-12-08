@@ -13,7 +13,7 @@ USING_NS_CC;
 void SBPhysics::syncNodeToBody(Node *node, b2Body *body) {
     
     float radians = CC_DEGREES_TO_RADIANS(node->getRotation());
-    body->SetTransform(b2Vec2(PTM(node->getPosition().x), PTM(node->getPosition().y)), radians);
+    body->SetTransform(PTM(node->getPosition()), radians);
 }
 
 void SBPhysics::syncBodyToNode(b2Body *body, cocos2d::Node *node) {

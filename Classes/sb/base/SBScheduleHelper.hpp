@@ -30,6 +30,9 @@ public:
     
     static void unschedule(void *target);
     static void unschedule(void *target, const std::string &key);
+    
+    static void pause(void *target);
+    static void resume(void *target);
 };
 
 #endif /* SBScheduleHelper_hpp */
