@@ -12,9 +12,16 @@
 #include "cocos2d.h"
 #include "ui/CocosGUI.h"
 #include "superbomb.h"
+#include "Box2D/Box2D.h"
 
 #include "Define.h"
 #include "GameManager.hpp"
+
+#include "object/tile/Tile.hpp"
+
+class Ball;
+class Brick;
+class AimController;
 
 class GameView : public cocos2d::Node {
 public:
@@ -23,13 +30,12 @@ public:
     
 private:
     enum Tag {
-        BG                 = 1,
-        CLOUD,
+        MAP = 10,
+        LABEL_SCORE = 100,
+        DEBUG_DRAW_VIEW = 1000,
     };
     
     enum class ZOrder {
-        BG = -2,
-        CLOUD = -1,
     };
     
 private:
@@ -41,8 +47,13 @@ private:
     void onExit() override;
     void cleanup() override;
     
+    void initPhysics();
     void initBg();
-    void initHero();
+    void initMap();
+    void initBall();
+    void initTile();
+    void initAimController();
+    
     void initGameListener();
     void initIAPListener();
     
@@ -64,6 +75,56 @@ public:
     
     void onScoreChanged(int score);
     void onLevelChanged(const LevelInfo &level);
+    
+private:
+    void onTileAddFinished();               // 1. 타일 추가 완료
+    void onTileDownFinished() ;             // 2. 타일 이동 완료
+    void onShootingReady();                 // 3. 발사 준비 
+    void onShootFinished();                 // 4. 발사 완료
+    void onFallFinished();                  // 5. 모든 볼 추락 완료
+    
+    void onBrickBreak(Brick *brick);
+    
+    void onContactBrick(Ball *ball, Brick *brick);
+    void onContactFloor(Ball *ball);
+    
+private:
+    void shoot(const cocos2d::Vec2 &endPosition);
+    void downTile();
+    
+    void addBall(int count = 1);
+    void addBrick(int count = 1);
+    void addItem(int count);
+    
+    void addTile(Game::Tile *tile);
+    void removeTile(Game::Tile *tile);
+    
+    void syncBalls();
+    void updateBallCountUI();
+    
+private:
+    std::vector<Game::Tile*> getTiles(int y);
+    std::vector<Game::Tile*> getBricks(int y);
+    std::vector<Game::Tile*> getBricks();
+    
+    Game::Tile*              getTile(const Game::Tile::Position &pos);
+    Game::Tile::Positions    getEmptyPositions(int y);
+    bool                     isExistTile(int y);
+    
+private:
+    GameManager *gameMgr;
+    b2World *world;
+    
+    std::vector<Ball*> balls;
+    cocos2d::Label*    ballCountLabel;
+    int                shootIndex;       // 발사된 볼 인덱스
+    int                fallenBallCount;  // 떨어진 볼 갯수
+    
+    std::vector<Game::Tile*> tiles;      // 타일 리스트
+    
+    AimController *aimController;
+    
+    cocos2d::Label *scoreLabel;
 };
 
 #endif /* GameView_hpp */

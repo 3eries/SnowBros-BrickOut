@@ -56,9 +56,13 @@ void MainScene::onEnter() {
     BaseScene::onEnter();
     
     // bgm
+    SBAudioEngine::stopBGM();
+    
+    /*
     scheduleOnce([=](float) {
         SBAudioEngine::playBGM(SOUND_BGM_MAIN);
     }, SceneManager::REPLACE_DURATION_MAIN, "MAIN_SCENE_BGM_DELAY");
+     */
     
     // 개인 정보 처리 방침 안내 팝업
     if( !ConsentManager::isPrivacyPolicyChecked() ) {
@@ -241,14 +245,14 @@ void MainScene::initBg() {
     title->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
     
     // tap to start
-    auto label = Label::createWithTTF("TAP TO START", FONT_RETRO, 40);
+    auto label = Label::createWithTTF("TAP TO START", FONT_RETRO, 35);
     label->setAnchorPoint(ANCHOR_M);
     label->setPosition(Vec2MC(0, -300));
     label->setTextColor(Color4B::WHITE);
     addChild(label);
     
     {
-        auto blink = Blink::create(1.0f, 2);
+        auto blink = Blink::create(1.0f, 1);
         label->runAction(RepeatForever::create(blink));
     }
     

@@ -14,13 +14,24 @@
 #include "UIHelper.hpp"
 #include "TestHelper.hpp"
 
+#include "object/GameMap.hpp"
+#include "object/Ball.hpp"
+#include "object/AimController.hpp"
+#include "object/tile/Brick.hpp"
+
 USING_NS_CC;
 USING_NS_SB;
 using namespace cocos2d::ui;
 using namespace spine;
 using namespace std;
 
-GameView::GameView() {
+static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
+
+#define DEBUG_DRAW_PHYSICS      1
+#define DEBUG_DRAW_TILE         1
+
+GameView::GameView() :
+gameMgr(GameManager::getInstance()) {
 }
 
 GameView::~GameView() {
@@ -38,13 +49,13 @@ bool GameView::init() {
     setPosition(Vec2::ZERO);
     setContentSize(SB_WIN_SIZE);
     
+    initPhysics();
     initBg();
-    
-    if( SceneManager::isGameScene() ) {
-        initHero();
-        initGameListener();
-    }
-    
+    initMap();
+    initBall();
+    initTile();
+    initAimController();
+    initGameListener();
     initIAPListener();
     
     return true;
@@ -58,9 +69,6 @@ void GameView::onEnter() {
 void GameView::onEnterTransitionDidFinish() {
     
     Node::onEnterTransitionDidFinish();
-    
-    auto cloud = getChildByTag<SkeletonAnimation*>(Tag::CLOUD);
-    cloud->runAction(FadeIn::create(1.5f));
 }
 
 void GameView::onExit() {
@@ -85,6 +93,8 @@ void GameView::onGameEnter() {
  * 게임 퇴장
  */
 void GameView::onGameExit() {
+    
+    removeChildByTag(Tag::DEBUG_DRAW_VIEW);
 }
 
 /**
@@ -98,6 +108,11 @@ void GameView::onGameReset() {
  * 게임 시작
  */
 void GameView::onGameStart() {
+    
+    addBall(FIRST_BALL_COUNT);
+    addBrick(4);
+    
+    onTileAddFinished();
 }
 
 /**
@@ -156,6 +171,8 @@ void GameView::onBoostEnd() {
  * 스코어 변경
  */
 void GameView::onScoreChanged(int score) {
+    
+    // scoreLabel->setString(TO_STRING(score));
 }
 
 /**
@@ -165,47 +182,477 @@ void GameView::onLevelChanged(const LevelInfo &level) {
 }
 
 /**
- * 배경 초기화
+ * 타일 추가 완료
  */
-void GameView::initBg() {
+void GameView::onTileAddFinished() {
     
-    auto bg = Sprite::create(DIR_IMG_GAME + "RSP_bg.png");
-    bg->setTag(Tag::BG);
-    bg->setAnchorPoint(ANCHOR_M);
-    bg->setPosition(Vec2MC(0,0));
-    addChild(bg, (int)ZOrder::BG);
-    
-    auto cloud = SkeletonAnimation::createWithJsonFile(ANIM_CLOUD);
-    cloud->setTag(Tag::CLOUD);
-    cloud->setAnchorPoint(Vec2::ZERO);
-    cloud->setPosition(Vec2(SB_WIN_SIZE*0.5f));
-    cloud->setAnimation(0, ANIM_NAME_RUN, true);
-    cloud->update(0);
-    cloud->setOpacity(0);
-    addChild(cloud, (int)ZOrder::CLOUD);
-    
-    auto bottomBg = Sprite::create(DIR_IMG_GAME + "RSP_bg_bottom.png");
-    bottomBg->setAnchorPoint(ANCHOR_MB);
-    bottomBg->setPosition(Vec2BC(0,0));
-    addChild(bottomBg, (int)ZOrder::CLOUD);
+    // 타일 등장 연출 완료 후 이동
+    SBDirector::postDelayed(this, [=]() {
+        this->downTile();
+    }, Game::Tile::ENTER_DURATION + 0.2f);
 }
 
 /**
- * 히어로 초기화
+ * 타일 이동 완료
  */
-void GameView::initHero() {
+void GameView::onTileDownFinished() {
     
-    vector<string> files({
-        DIR_IMG_GAME + "hero_idle_01.png",
-        DIR_IMG_GAME + "hero_idle_02.png"
+    updateBallCountUI();
+
+    // 다음 턴
+    onShootingReady();
+}
+
+/**
+ * 발사 준비
+ */
+void GameView::onShootingReady() {
+    
+    aimController->setEnabled(true, getBricks());
+}
+
+/**
+ * 발사 완료
+ */
+void GameView::onShootFinished() {
+    
+}
+
+/**
+ * 모든 볼 추락 완료
+ */
+void GameView::onFallFinished() {
+    
+    // 게임 오버 체크
+    if( isExistTile(0) ) {
+        GameManager::onGameOver();
+        return;
+    }
+    
+    // 타일 추가
+    addBrick(random(1, 2)); // 벽돌
+    addItem(1);
+    
+    onTileAddFinished();
+}
+
+/**
+ * 벽돌이 깨졌습니다
+ */
+void GameView::onBrickBreak(Brick *brick) {
+    
+    // 스코어 업데이트
+    GameManager::addScore(brick->getOriginalHp());
+    
+    // remove callbacks
+    brick->setOnBreakListener(nullptr);
+    
+    // remove from tile list
+    removeTile(brick);
+}
+
+/**
+ * 볼 & 벽돌 충돌
+ */
+void GameView::onContactBrick(Ball *ball, Brick *brick) {
+    
+    brick->sufferDamage(ball->getDamage());
+}
+
+/**
+ * 볼 & 바닥 충돌
+ */
+void GameView::onContactFloor(Ball *ball) {
+
+    ball->sleepWithAction();
+    ++fallenBallCount;
+
+    // 첫번째 볼 추락
+    if( fallenBallCount == 1 ) {
+        aimController->setStartPosition(Vec2(ball->getPosition().x, SHOOTING_POSITION_Y));
+    }
+    
+    // 모든 볼 추락
+    if( fallenBallCount == balls.size() ) {
+        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), 1.0f);
+    }
+}
+
+/**
+ * 발사!
+ */
+void GameView::shoot(const Vec2 &endPosition) {
+    
+    CCLOG("onShoot: %f,%f", endPosition.x, endPosition.y);
+    aimController->setEnabled(true, getBricks());
+    
+    return;
+    
+    shootIndex = 0;
+    fallenBallCount = 0;
+
+    auto velocity = b2Vec2(random(-30, 30), 30);
+
+    schedule([=](float dt) {
+
+        CCLOG("shoot! ball index: %d", shootIndex);
+
+        auto ball = balls[shootIndex];
+        // TODO: 볼 좌표 설정?
+        ball->syncNodeToBody();
+        ball->awake();
+        ball->shoot(velocity);
+
+        ++shootIndex;
+
+        ballCountLabel->setString(TO_STRING(balls.size() - shootIndex));
+
+        if( shootIndex == balls.size() ) {
+            this->unschedule(SCHEDULER_SHOOT);
+            this->onShootFinished();
+        }
+
+    }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
+}
+
+/**
+ * 모든 타일을 한칸 아래로 이동 시킵니다
+ */
+void GameView::downTile() {
+    
+    for( auto tile : tiles ) {
+        tile->down();
+    }
+
+    SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onTileDownFinished, this), Game::Tile::MOVE_DURATION);
+}
+
+/**
+ * 볼 추가
+ */
+void GameView::addBall(int count) {
+    
+    for( int i = 0; i < count && balls.size() <= MAX_BALL_COUNT; ++i ) {
+        auto ball = Ball::create();
+        ball->sleep();
+        addChild(ball);
+    
+        balls.push_back(ball);
+    }
+
+    ballCountLabel->setString(TO_STRING(balls.size()));
+}
+
+/**
+ * 벽돌 추가
+ */
+void GameView::addBrick(int count) {
+    
+    auto positions = getEmptyPositions(TILE_COLUMNS-1);
+    CCASSERT(positions.size() >= count, "GameView::addBrick error.");
+    
+    random_shuffle(positions.begin(), positions.end());
+    
+    for( int i = 0; i < count; ++i ) {
+        auto brick = Brick::create(FIRST_BALL_COUNT);
+        brick->setTilePosition(positions[i], false);
+        addTile(brick);
+        
+        brick->setOnBreakListener([=](Node*) {
+            this->onBrickBreak(brick);
+        });
+    }
+}
+
+/**
+ * 아이템 추가
+ */
+void GameView::addItem(int count) {
+    
+    auto positions = getEmptyPositions(TILE_COLUMNS-1);
+    
+    if( positions.size() == 0 ) {
+        return;
+    }
+    
+    CCASSERT(positions.size() >= count, "GameView::addItem error.");
+    
+    random_shuffle(positions.begin(), positions.end());
+    
+    for( int i = 0; i < count; ++i ) {
+        
+    }
+}
+
+/**
+ * 타일 추가
+ */
+void GameView::addTile(Game::Tile *tile) {
+    
+    CCASSERT(!getTile(tile->getTilePosition()), "GameView::addTile error: already exists.");
+    
+    tile->enterWithAction();
+    
+    addChild(tile);
+    tiles.push_back(tile);
+}
+
+/**
+ * 타일 제거
+ */
+void GameView::removeTile(Game::Tile *tile) {
+    
+    auto it = std::find(tiles.begin(), tiles.end(), tile);
+    if( it == tiles.end() ) {
+        CCASSERT(false, "GameView::removeTile error.");
+    }
+    
+    // remove from list
+    tiles.erase(it);
+}
+
+/**
+ * 볼을 동기화합니다
+ */
+void GameView::syncBalls() {
+    
+    for( auto ball : balls ) {
+        auto body = ball->getBody();
+
+        if( body->IsActive() && body->IsAwake() ) {
+            ball->syncBodyToNode();
+
+            // Velocity 보정
+            auto v = body->GetLinearVelocity();
+
+            if( abs(v.x) > 0 && abs(v.y) > 0 ) {
+                v.Normalize();
+                CCLOG("velocity1: %f,%f (%f,%f)", body->GetLinearVelocity().x, body->GetLinearVelocity().y, v.x, v.y);
+                //
+                //                    float max = MAX(abs(v.x), abs(v.y));
+                //                    float offset = 30 / max;
+                //                    body->SetLinearVelocity(b2Vec2(v.x * offset, v.y * offset));
+                //
+                //                    CCLOG("velocity2: %f,%f", body->GetLinearVelocity().x, body->GetLinearVelocity().y);
+            }
+        }
+    }
+}
+
+/**
+ * 볼 갯수 UI 업데이트
+ */
+void GameView::updateBallCountUI() {
+    
+    ballCountLabel->setString(TO_STRING(balls.size()));
+}
+
+/**
+ * y줄의 타일을 반환합니다
+ */
+vector<Game::Tile*> GameView::getTiles(int y) {
+    
+    return SBCollection::find(tiles, [y](Game::Tile *tile) -> bool {
+        return tile->getTilePosition().y == y;
+    });
+}
+
+vector<Game::Tile*> GameView::getBricks(int y) {
+    
+    return SBCollection::find(tiles, [y](Game::Tile *tile) -> bool {
+        return tile->getTilePosition().y == y && dynamic_cast<Brick*>(tile);
+    });
+}
+
+vector<Game::Tile*> GameView::getBricks() {
+    
+    return SBCollection::find(tiles, [](Game::Tile *tile) -> bool {
+        return dynamic_cast<Brick*>(tile);
+    });
+}
+
+/**
+ * 좌표에 해당하는 타일을 반환합니다
+ */
+Game::Tile* GameView::getTile(const Game::Tile::Position &pos) {
+    
+    for( auto tile : tiles ) {
+        if( tile->getTilePosition().x == pos.x && tile->getTilePosition().y == pos.y ) {
+            return tile;
+        }
+    }
+    
+    return nullptr;
+}
+
+/**
+ * y줄의 비어있는 좌표를 반환합니다
+ */
+Game::Tile::Positions GameView::getEmptyPositions(int y) {
+    
+    Game::Tile::Positions positions;
+    
+    for( int x = 0; x < TILE_ROWS; ++x ) {
+        Game::Tile::Position pos(x,y);
+        
+        if( !getTile(pos) ) {
+            positions.push_back(pos);
+        }
+    }
+    
+    return positions;
+}
+
+/**
+ * y줄의 타일 유무를 반환합니다
+ */
+bool GameView::isExistTile(int y) {
+    
+    for( int x = 0; x < TILE_ROWS; ++x ) {
+        Game::Tile::Position pos(x,y);
+        
+        if( getTile(pos) ) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+/**
+ * 물리 초기화
+ */
+void GameView::initPhysics() {
+
+    auto physicsMgr = GameManager::getPhysicsManager();
+    this->world = physicsMgr->initWorld();
+    
+    physicsMgr->setOnUpdateListener([=]() {
+        this->syncBalls();
     });
     
-    auto hero = SBAnimationSprite::create(files, 0.5f);
-    hero->setAnchorPoint(ANCHOR_M);
-    hero->setPosition(Vec2BC(-194, 345));
-    addChild(hero);
+    physicsMgr->setOnContactBrickListener(CC_CALLBACK_2(GameView::onContactBrick, this));
+    physicsMgr->setOnContactFloorListener(CC_CALLBACK_1(GameView::onContactFloor, this));
     
-    hero->runAnimation();
+#if DEBUG_DRAW_PHYSICS
+    auto view = DebugDrawView::create(world);
+    view->setTag(Tag::DEBUG_DRAW_VIEW);
+    view->setVisible(false);
+    addChild(view, SBZOrder::BOTTOM);
+    
+    physicsMgr->setDebugDrawView(view);
+
+    uint32 flags = 0;
+    flags += b2Draw::e_shapeBit;
+//        flags += b2Draw::e_jointBit;
+//        flags += b2Draw::e_aabbBit;
+//        flags += b2Draw::e_pairBit;
+//        flags += b2Draw::e_centerOfMassBit;
+    view->getDebugDraw()->SetFlags(flags);
+    
+    auto btn = SBButton::create("DebugDraw", FONT_COMMODORE, 30);
+    btn->setZoomScale(0.1f);
+    btn->setAnchorPoint(ANCHOR_TL);
+    btn->setPosition(Vec2TL(10, -20));
+    btn->setContentSize(Size(250, 50));
+    addChild(btn, view->getLocalZOrder());
+    
+    btn->setOnClickListener([=](Node*) {
+        view->setVisible(!view->isVisible());
+    });
+    
+    // btn->addChild(SBNodeUtils::createBackgroundNode(btn, Color4B::RED));
+#endif
+}
+
+/**
+ * 배경 초기화
+ */
+void GameView::initBg() {
+}
+
+/**
+ * 맵 초기화
+ */
+void GameView::initMap() {
+    
+    auto map = GameMap::create();
+    map->setTag(Tag::MAP);
+    addChild(map);
+    
+    GameManager::getPhysicsManager()->setMap(map);
+    
+    // 스코어 라벨 초기화
+    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 40, Size::ZERO,
+                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
+    scoreLabel->setTag(Tag::LABEL_SCORE);
+    scoreLabel->setAnchorPoint(ANCHOR_MT);
+    scoreLabel->setPosition(Vec2TC(0, -20));
+    scoreLabel->setTextColor(Color4B::WHITE);
+    addChild(scoreLabel);
+}
+
+/**
+ * 볼 초기화
+ */
+void GameView::initBall() {
+    
+    // 영역 확인용
+    {
+        auto ball = Sprite::create("images/common/circle_white.png");
+        ball->setAnchorPoint(ANCHOR_M);
+        ball->setPosition(Vec2(SB_WIN_SIZE.width*0.5f, SHOOTING_POSITION_Y));
+        ball->setColor(Color3B::RED);
+        addChild(ball);
+
+        SBNodeUtils::scale(ball, BALL_SIZE);
+    }
+
+    // 볼 갯수 표시 라벨
+    ballCountLabel = Label::createWithTTF("0", FONT_COMMODORE, 30, Size::ZERO,
+                                          TextHAlignment::CENTER, TextVAlignment::CENTER);
+    ballCountLabel->setAnchorPoint(ANCHOR_MB);
+    ballCountLabel->setPosition(Vec2BC(0, 45));
+    ballCountLabel->setTextColor(Color4B::WHITE);
+    addChild(ballCountLabel);
+}
+
+/**
+ * 타일 초기화
+ */
+void GameView::initTile() {
+    
+#if DEBUG_DRAW_TILE
+    auto parent = getChildByTag(Tag::DEBUG_DRAW_VIEW);
+
+    for( int x = 0; x < TILE_ROWS; ++x ) {
+        for( int y = 0; y < TILE_COLUMNS; ++y ) {
+            auto tile = LayerColor::create(Color4B(255,255,0,255*0.3f));
+            tile->setIgnoreAnchorPointForPosition(false);
+            tile->setCascadeOpacityEnabled(true);
+            tile->setAnchorPoint(ANCHOR_M);
+            tile->setPosition(Game::Tile::convertToTilePosition(x, y));
+            tile->setContentSize(MEASURE_TILE_SIZE(1, 1));
+            parent->addChild(tile, -1);
+
+            auto label = Label::createWithTTF(STR_FORMAT("%d,%d", x, y), FONT_COMMODORE, 20);
+            label->setAnchorPoint(ANCHOR_M);
+            label->setPosition(Vec2MC(tile->getContentSize(), 0, 0));
+            label->setTextColor(Color4B::WHITE);
+            tile->addChild(label);
+        }
+    }
+#endif
+}
+
+/**
+ * 조준 컨트롤러 초기화
+ */
+void GameView::initAimController() {
+    
+    aimController = AimController::create();
+    aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
+    addChild(aimController, SBZOrder::BOTTOM);
 }
 
 /**

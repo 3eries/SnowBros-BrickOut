@@ -69,16 +69,20 @@ void GameScene::onEnter() {
     
     BaseScene::onEnter();
     
-    GameManager::getInstance()->setView(gameView);
     GameManager::onGameEnter();
-    
-    // 실제 프로젝트에서 원하는 시점에 호출
     GameManager::onGameStart();
 }
 
 void GameScene::onEnterTransitionDidFinish() {
     
     BaseScene::onEnterTransitionDidFinish();
+    
+    // bgm
+    SBAudioEngine::playBGM(DIR_SOUND + "bgm_stage_01.mp3");
+    
+//    scheduleOnce([=](float) {
+//        SBAudioEngine::playBGM(SOUND_BGM_MAIN);
+//    }, SceneManager::REPLACE_DURATION_MAIN, "MAIN_SCENE_BGM_DELAY");
 }
 
 void GameScene::onExit() {
@@ -548,6 +552,8 @@ void GameScene::initGameView() {
     
     gameView = GameView::create();
     addChild(gameView);
+    
+    GameManager::getInstance()->setView(gameView);
 }
 
 /**

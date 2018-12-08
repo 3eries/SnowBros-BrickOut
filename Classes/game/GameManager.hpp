@@ -18,6 +18,7 @@
 #include "GameDefine.h"
 
 #include "event/GameEventDispatcher.hpp"
+#include "GamePhysics.hpp"
 
 class GameScene;
 class GameView;
@@ -59,12 +60,14 @@ public:
     
     // Getter
     static GameEventDispatcher* getEventDispatcher();
+    static PhysicsManager*      getPhysicsManager();
     static int                  getPlayCount();
     static int                  getScore();
     static bool                 isContinuable();
     
 private:
     GameEventDispatcher *eventDispatcher;
+    PhysicsManager *physicsManager;
     
     CC_SYNTHESIZE_READONLY(GameConfiguration*, config, Config);
     CC_SYNTHESIZE_READONLY(GameState, state, State);              // 게임 상태

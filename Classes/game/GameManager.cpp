@@ -33,6 +33,7 @@ void GameManager::destroyInstance() {
 
 GameManager::GameManager() :
 eventDispatcher(new GameEventDispatcher()),
+physicsManager(new PhysicsManager()),
 config(GameConfiguration::getInstance()) {
     
     reset();
@@ -41,6 +42,7 @@ config(GameConfiguration::getInstance()) {
 GameManager::~GameManager() {
     
     CC_SAFE_DELETE(eventDispatcher);
+    CC_SAFE_DELETE(physicsManager);
 }
 
 void GameManager::reset() {
@@ -157,6 +159,10 @@ GameEventDispatcher* GameManager::getEventDispatcher() {
     return getInstance()->eventDispatcher;
 }
 
+PhysicsManager* GameManager::getPhysicsManager() {
+    return getInstance()->physicsManager;
+}
+
 int GameManager::getPlayCount() {
     return UserDefault::getInstance()->getIntegerForKey(UserDefaultKey::PLAY_COUNT, 0);
 }
@@ -198,6 +204,9 @@ void GameManager::onGameExit() {
     
     onGamePause();
     
+    getPhysicsManager()->stopScheduler();
+    getPhysicsManager()->removeBodies();
+    
     getInstance()->reset();
     getInstance()->setState(GameState::EXITED);
     getEventDispatcher()->dispatchOnGameExit();
@@ -209,6 +218,8 @@ void GameManager::onGameExit() {
 void GameManager::onGameReset() {
     
     CCLOG("GameManager::onGameReset");
+    
+    getPhysicsManager()->startScheduler();
     
     getEventDispatcher()->dispatchOnGameReset();
 }
@@ -262,6 +273,8 @@ void GameManager::onGamePause() {
         return;
     }
     
+    getPhysicsManager()->pauseScheduler();
+    
     getInstance()->addState(GameState::PAUSED);
     getEventDispatcher()->dispatchOnGamePause();
 }
@@ -277,6 +290,8 @@ void GameManager::onGameResume() {
         return;
     }
     
+    getPhysicsManager()->resumeScheduler();
+    
     getInstance()->removeState(GameState::PAUSED);
     getEventDispatcher()->dispatchOnGameResume();
 }
@@ -289,6 +304,8 @@ void GameManager::onGameOver() {
     CCLOG("GameManager::onGameOver");
     
     CCASSERT(getInstance()->hasState(GameState::STARTED), "GameManager::onGameOver invalid called.");
+    
+    getPhysicsManager()->stopScheduler();
     
     getInstance()->addState(GameState::GAME_OVER);
     getEventDispatcher()->dispatchOnGameOver();
@@ -362,17 +379,15 @@ void GameManager::onGameResult() {
     
     getInstance()->removeState(GameState::GAME_OVER);
     getInstance()->addState(GameState::RESULT);
+    getEventDispatcher()->dispatchOnGameResult();
     
+    // 스코어 등록
     const int score = getInstance()->getScore();
     
     if( score > 0 ) {
         // logEventGameResult(score);
-        
-        // 스코어 등록
         RankingManager::setBestScore(score);
     }
-    
-    getEventDispatcher()->dispatchOnGameResult();
 }
 
 /**
