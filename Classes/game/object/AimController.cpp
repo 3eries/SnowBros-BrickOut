@@ -19,8 +19,8 @@ USING_NS_CC;
 using namespace cocos2d::ui;
 using namespace std;
 
-static const float LINE_PADDING = 10;
-
+static const float LINE_PADDING         = 10;   // 조준선 간격
+static const float MAX_ANGLE            = 80;   // 최대 각도
 static const Color4B DEBUG_AIM_LINE_COLOR               = Color4B(0,0,255,255*0.2f);
 
 AimController::AimController() :
@@ -192,9 +192,7 @@ bool AimController::onTouchBegan(Touch *touch, Event*) {
     
     isTouchCancelled = false;
     
-    // 슈팅 볼 활성화
-    shootingObj.ball->setVisible(true);
-    shootingObj.ball->setPosition(startPosition);
+    // 슈팅 볼 바디 활성화
     shootingObj.ball->syncNodeToBody();
     shootingObj.ball->awake(false);
     
@@ -224,15 +222,19 @@ void AimController::onTouchMoved(Touch *touch, Event *event) {
     
     const float angle = SBMath::getDegree(start, end);
     const float dist = start.getDistance(end);
-    
+
     // 슈팅 오브젝트
     {
         shootingObj.endMark->setVisible(true);
         shootingObj.line.setVisible(true);
         
         // Raycasting
+        float shootingAngle = angle;
+        shootingAngle = MIN(MAX_ANGLE, shootingAngle);
+        shootingAngle = MAX(-MAX_ANGLE, shootingAngle);
+        
         Vec2 virtualEndPosition = startPosition;
-        virtualEndPosition += (Vec2::forAngle(-CC_DEGREES_TO_RADIANS(angle-90)) * MAP_DIAGONAL/*dist*/);
+        virtualEndPosition += (Vec2::forAngle(-CC_DEGREES_TO_RADIANS(shootingAngle-90)) * MAP_DIAGONAL/*dist*/);
         
         rayCast(startPosition, virtualEndPosition);
     }
@@ -298,6 +300,7 @@ void AimController::setEnabled(bool isEnabled, vector<Game::Tile*> bricks) {
     removeBodies();
     
     if( isEnabled ) {
+        // 충돌 체크용 벽돌 바디 생성
         for( auto brick : bricks ) {
             Size size(brick->getContentSize());
             size.width += BALL_SIZE.width;
@@ -324,6 +327,10 @@ void AimController::setEnabled(bool isEnabled, vector<Game::Tile*> bricks) {
             fixtureDef.filter = filter;
             body->CreateFixture(&fixtureDef);
         }
+        
+        // 슈팅 볼 활성화
+        shootingObj.ball->setVisible(true);
+        shootingObj.ball->setPosition(startPosition);
     }
 }
 
@@ -379,7 +386,7 @@ void AimController::initAimObject() {
 }
 
 /**
- * 충돌 확인용 벽 초기화
+ * 충돌 체크용 벽 초기화
  */
 void AimController::initCollisionWall() {
     
@@ -429,7 +436,7 @@ void AimController::initCollisionWall() {
 }
 
 /**
- * 충돌 확인용 벽돌 초기화
+ * 충돌 체크용 벽돌 초기화
  */
 void AimController::initCollisionBrick() {
     
