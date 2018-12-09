@@ -135,7 +135,9 @@ void GameManager::setScore(int score) {
     auto mgr = getInstance();
     
     // 스코어 설정
-    mgr->score = MIN(mgr->getConfig()->getMaxScore(), score);
+    score = MIN(mgr->getConfig()->getMaxScore(), score);
+    mgr->score = score;
+    
     onScoreChanged();
     
     // 레벨 설정
