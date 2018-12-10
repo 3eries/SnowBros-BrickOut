@@ -14,7 +14,6 @@
 #include "superbomb.h"
 
 #include "Tile.hpp"
-#include "Ball.hpp"
 
 class AimController : public cocos2d::Node {
 public:
@@ -29,6 +28,9 @@ private:
     void initAimObject();
     void initCollisionWall();
     void initCollisionBrick();
+    
+    struct AimLine;
+    AimLine createAimLine();
     
 private:
     void shoot();
@@ -75,18 +77,15 @@ private:
         }
     };
     
-    AimLine createAimLine();
-    
     /**
      * 슈팅 오브젝트
      */
     struct ShootingObject {
-        Ball            *ball;      // 볼
+        b2Body          *ballBody;  // 볼
         cocos2d::Node   *endMark;   // 최종 위치 마크
         AimLine          line;      // 조준선
         
         void setVisible(bool isVisible) {
-            if( ball )            ball->setVisible(isVisible);
             if( endMark )         endMark->setVisible(isVisible);
             line.setVisible(isVisible);
         };

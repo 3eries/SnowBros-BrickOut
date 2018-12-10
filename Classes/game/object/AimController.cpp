@@ -13,6 +13,7 @@
 #include "../GameDefine.h"
 #include "../GameManager.hpp"
 
+#include "Ball.hpp"
 #include "Brick.hpp"
 
 USING_NS_CC;
@@ -192,10 +193,6 @@ bool AimController::onTouchBegan(Touch *touch, Event*) {
     
     isTouchCancelled = false;
     
-    // 슈팅 볼 바디 활성화
-    shootingObj.ball->syncNodeToBody();
-    shootingObj.ball->awake(false);
-    
     return true;
 }
 
@@ -256,8 +253,6 @@ void AimController::onTouchEnded(Touch *touch, Event*) {
     }
     
     shootingObj.setVisible(false);
-    shootingObj.ball->sleep(false);
-    
     touchAimLine.setVisible(false);
     
     if( !isTouchCancelled ) {
@@ -281,8 +276,9 @@ void AimController::setEnabled(bool isEnabled, vector<Game::Tile*> bricks) {
     
     setVisible(isEnabled);
     
-    // update wall
+    // update body
     wallBody->SetActive(isEnabled);
+    shootingObj.ballBody->SetActive(isEnabled);
     
     // update bricks
     auto removeBodies = [=]() {
@@ -328,9 +324,8 @@ void AimController::setEnabled(bool isEnabled, vector<Game::Tile*> bricks) {
             body->CreateFixture(&fixtureDef);
         }
         
-        // 슈팅 볼 활성화
-        shootingObj.ball->setVisible(true);
-        shootingObj.ball->setPosition(startPosition);
+        // 슈팅 볼 좌표 설정
+        shootingObj.ballBody->SetTransform(PTM(startPosition), shootingObj.ballBody->GetAngle());
     }
 }
 
@@ -365,8 +360,7 @@ void AimController::initAimObject() {
     // 슈팅 오브젝트
     {
         // Ball
-        shootingObj.ball = Ball::create();
-        addChild(shootingObj.ball);
+        shootingObj.ballBody = Ball::createBody();
         
         // End Mark
         shootingObj.endMark = Sprite::create("images/common/circle_white.png");
