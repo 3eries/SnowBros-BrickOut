@@ -31,7 +31,8 @@ public:
 private:
     enum Tag {
         MAP = 10,
-        LABEL_SCORE = 100,
+        SCORE = 100,
+        
         DEBUG_DRAW_VIEW = 1000,
     };
     
@@ -125,7 +126,6 @@ private:
     
     AimController *aimController;
     
-    cocos2d::Label *scoreLabel;
 };
 
 #endif /* GameView_hpp */

@@ -172,7 +172,11 @@ void GameView::onBoostEnd() {
  */
 void GameView::onScoreChanged(int score) {
     
-    scoreLabel->setString(TO_STRING(score));
+    auto scoreLabel = getChildByTag<Label*>(Tag::SCORE);
+    
+    if( scoreLabel ) {
+        scoreLabel->setString(TO_STRING(score));
+    }
 }
 
 /**
@@ -609,9 +613,9 @@ void GameView::initMap() {
     GameManager::getPhysicsManager()->setMap(map);
     
     // 스코어 라벨 초기화
-    scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 40, Size::ZERO,
-                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
-    scoreLabel->setTag(Tag::LABEL_SCORE);
+    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 40, Size::ZERO,
+                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
+    scoreLabel->setTag(Tag::SCORE);
     scoreLabel->setAnchorPoint(ANCHOR_MT);
     scoreLabel->setPosition(Vec2TC(0, -20));
     scoreLabel->setTextColor(Color4B::WHITE);
