@@ -362,7 +362,8 @@ void GameView::addBall(int count) {
     
     for( int i = 0; i < count && balls.size() <= MAX_BALL_COUNT; ++i ) {
         auto ball = Ball::create();
-        ball->sleep();
+        ball->setPosition(aimController->getStartPosition());
+        ball->sleep(false);
         addChild(ball);
     
         balls.push_back(ball);
