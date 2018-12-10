@@ -127,6 +127,11 @@ private:
     
     AimController *aimController;
     
+    // Debug
+    int             tunnelingCount;
+    cocos2d::Label *tunnelingCountLabel;
+    
+    cocos2d::Label *bodyCountLabel;
 };
 
 #endif /* GameView_hpp */

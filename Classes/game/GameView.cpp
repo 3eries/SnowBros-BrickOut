@@ -31,7 +31,8 @@ static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
 #define DEBUG_DRAW_TILE         1
 
 GameView::GameView() :
-gameMgr(GameManager::getInstance()) {
+gameMgr(GameManager::getInstance()),
+tunnelingCount(0) {
 }
 
 GameView::~GameView() {
@@ -262,7 +263,39 @@ void GameView::onBrickBreak(Brick *brick) {
  * 물리 세계 업데이트
  */
 void GameView::onPhysicsUpdate() {
+ 
+    // 터널링 체크
+    auto bricks = getBricks();
     
+    for( auto brick : bricks ) {
+        auto brickBox = SBNodeUtils::getBoundingBoxInWorld(brick);
+    
+        vector<Ball*> needRemoveBalls;
+        
+        for( auto ball : balls ) {
+            auto body = ball->getBody();
+            
+            if( !body || !body->IsActive() || !body->IsAwake() ) {
+                continue;
+            }
+            
+            Vec2 center = MTP(body->GetPosition());
+            
+            if( brickBox.intersectsCircle(center, BALL_RADIUS) ) {
+                ++tunnelingCount;
+                needRemoveBalls.push_back(ball);
+            }
+        }
+        
+        for( auto ball : needRemoveBalls ) {
+            removeBall(ball);
+        }
+    }
+    
+    tunnelingCountLabel->setString(STR_FORMAT("Tunneling: %d", tunnelingCount));
+    
+    // 바디 수 체크
+    bodyCountLabel->setString(STR_FORMAT("Body Count: %d", world->GetBodyCount()));
 }
 
 /**
@@ -583,6 +616,7 @@ void GameView::initPhysics() {
     physicsMgr->setOnContactFloorListener(CC_CALLBACK_1(GameView::onContactFloor, this));
     
 #if DEBUG_DRAW_PHYSICS
+    // DebugDrawView
     auto view = DebugDrawView::create(world);
     view->setTag(Tag::DEBUG_DRAW_VIEW);
     view->setVisible(false);
@@ -610,6 +644,20 @@ void GameView::initPhysics() {
     });
     
     // btn->addChild(SBNodeUtils::createBackgroundNode(btn, Color4B::RED));
+    
+    // Debug Tunneling Label
+    tunnelingCountLabel = Label::createWithTTF("", FONT_COMMODORE, 30,
+                                               Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+    tunnelingCountLabel->setAnchorPoint(ANCHOR_TL);
+    tunnelingCountLabel->setPosition(Vec2TL(30, -70));
+    view->addChild(tunnelingCountLabel);
+
+    bodyCountLabel = Label::createWithTTF("", FONT_COMMODORE, 30,
+                                          Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
+    bodyCountLabel->setAnchorPoint(ANCHOR_TL);
+    bodyCountLabel->setPosition(Vec2TL(30, -120));
+    view->addChild(bodyCountLabel);
+    
 #endif
 }
 
