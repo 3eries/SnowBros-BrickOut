@@ -32,7 +32,9 @@ public:
     virtual void setHp(int hp, bool updateUI = true);
     virtual void updateHpUI();
     
-    bool isBroken();
+    bool    isBroken();
+    
+    float   getHpGageRatio();
     
 protected:
     CC_SYNTHESIZE(SBCallbackNode, onBreakListener, OnBreakListener)
@@ -42,7 +44,14 @@ protected:
     CC_SYNTHESIZE_READONLY(int, originalHp, OriginalHp);
     CC_SYNTHESIZE_READONLY(int, hp, Hp);
     
-    cocos2d::Label *hpLabel;
+    struct HpNode {
+        cocos2d::Node *bg;
+        cocos2d::Sprite *gage;
+        cocos2d::Sprite *gageEffect;
+        cocos2d::Label *label;
+    };
+    
+    HpNode hpNode;
 };
 
 #endif /* Brick_hpp */

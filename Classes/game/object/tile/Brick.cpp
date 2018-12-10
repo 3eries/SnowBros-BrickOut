@@ -53,12 +53,37 @@ bool Brick::init() {
     
     // n->setVisible(false);
     
-    // HP 라벨 초기화
-    hpLabel = Label::createWithTTF("", FONT_COMMODORE, 30);
-    hpLabel->setAnchorPoint(ANCHOR_M);
-    hpLabel->setPosition(Vec2MC(getContentSize(), 0, 0));
-    hpLabel->setTextColor(Color4B::WHITE);
-    addChild(hpLabel);
+    // HP UI 초기화
+    hpNode.bg = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_bg.png");
+    hpNode.bg->setAnchorPoint(ANCHOR_MT);
+    hpNode.bg->setPosition(Vec2TC(getContentSize(), 0, -10));
+    hpNode.bg->setScale((getContentSize().width*0.95f) / hpNode.bg->getContentSize().width);
+    addChild(hpNode.bg);
+    
+    auto hpBgSize = hpNode.bg->getContentSize();
+    
+    // HP gage
+    hpNode.gage = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_green.png");
+    hpNode.gage->setAnchorPoint(ANCHOR_ML);
+    hpNode.gage->setPosition(Vec2ML(hpBgSize, (hpBgSize.width-hpNode.gage->getContentSize().width)*0.5f, 0));
+    hpNode.gage->setScaleX(1);
+    hpNode.bg->addChild(hpNode.gage);
+    
+    // HP gage effect
+    hpNode.gageEffect = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_white.png");
+    hpNode.gageEffect->setVisible(false);
+    hpNode.gageEffect->setAnchorPoint(hpNode.gage->getAnchorPoint());
+    hpNode.gageEffect->setPosition(hpNode.gage->getPosition());
+    hpNode.bg->addChild(hpNode.gageEffect);
+    
+    // HP Label
+    hpNode.label = Label::createWithTTF("", FONT_COMMODORE, 35,
+                                        Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+    hpNode.label->setAnchorPoint(ANCHOR_M);
+    hpNode.label->setPosition(Vec2MC(hpBgSize, 0, 10));
+    hpNode.label->setTextColor(Color4B::WHITE);
+    hpNode.label->enableOutline(Color4B::BLACK, 4);
+    hpNode.bg->addChild(hpNode.label);
     
     updateHpUI();
     
@@ -103,6 +128,7 @@ void Brick::onBreak() {
         onBreakListener(this);
     }
     
+    hpNode.bg->setVisible(false);
     removeWithAction();
 }
 
@@ -112,6 +138,16 @@ void Brick::onBreak() {
 void Brick::sufferDamage(int damage) {
     
     setHp(hp - damage);
+    
+    // 게이지 연출
+    if( hpNode.gageEffect->getNumberOfRunningActions() == 0 ) {
+        hpNode.gageEffect->setVisible(true);
+        hpNode.gageEffect->setScaleX(getHpGageRatio());
+        
+        auto delay = DelayTime::create(0.04f);
+        auto hide = Hide::create();
+        hpNode.gageEffect->runAction(Sequence::create(delay, hide, nullptr));
+    }
 }
 
 /**
@@ -132,10 +168,16 @@ void Brick::setHp(int hp, bool updateUI) {
 
 void Brick::updateHpUI() {
     
-    hpLabel->setString(TO_STRING(hp));
+    hpNode.gage->setScaleX(getHpGageRatio());
+    hpNode.label->setString(TO_STRING(hp));
 }
 
 bool Brick::isBroken() {
     
     return hp == 0;
+}
+
+float Brick::getHpGageRatio() {
+    
+    return (float)hp / originalHp;
 }
