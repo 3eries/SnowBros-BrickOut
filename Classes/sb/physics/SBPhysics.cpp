@@ -44,16 +44,20 @@ void SBPhysicsObject::removeBody() {
     }
 }
 
-void SBPhysicsObject::beforeStep() {
-    
+bool SBPhysicsObject::beforeStep() {
+    return true;
 }
 
-void SBPhysicsObject::afterStep() {
+bool SBPhysicsObject::afterStep() {
     
     if( needRemove ) {
         removeBody();
         node->removeFromParent();
+        
+        return false;
     }
+    
+    return true;
 }
 
 void SBPhysicsObject::setActive(bool isActive, bool updateVisible) {

@@ -73,14 +73,18 @@ b2Body* Ball::createBody(SBPhysicsObject *userData) {
     return body;
 }
 
-void Ball::beforeStep() {
-    
+bool Ball::beforeStep() {
+    return true;
 }
 
-void Ball::afterStep() {
+bool Ball::afterStep() {
+    
+    if( !SBPhysicsObject::afterStep() ) {
+        return false;
+    }
     
     if( !body->IsActive() || !body->IsAwake() ) {
-        return;
+        return true;
     }
     
     // 바디 값 동기화
@@ -101,6 +105,8 @@ void Ball::afterStep() {
 //
 //        CCLOG("velocity2: %f,%f", body->GetLinearVelocity().x, body->GetLinearVelocity().y);
     }
+    
+    return true;
 }
 
 /**

@@ -41,8 +41,8 @@ public:
 public:
     virtual void removeBody();
     
-    virtual void beforeStep();
-    virtual void afterStep();
+    virtual bool beforeStep();
+    virtual bool afterStep();
     
     virtual void beginContact(b2Fixture *other, b2Contact *contact) {};
     virtual void endContact(b2Fixture *other, b2Contact *contact) {};

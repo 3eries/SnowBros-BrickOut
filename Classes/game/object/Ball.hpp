@@ -26,8 +26,8 @@ private:
 public:
     static b2Body* createBody(SBPhysicsObject *userData = nullptr);
     
-    void beforeStep() override;
-    void afterStep() override;
+    bool beforeStep() override;
+    bool afterStep() override;
     
     void shoot(b2Vec2 velocity);
     void sleepWithAction();
