@@ -258,6 +258,13 @@ void GameView::onBrickBreak(Brick *brick) {
 }
 
 /**
+ * 물리 세계 업데이트
+ */
+void GameView::onPhysicsUpdate() {
+    
+}
+
+/**
  * 볼 & 벽돌 충돌
  */
 void GameView::onContactBrick(Ball *ball, Brick *brick) {
@@ -547,10 +554,7 @@ void GameView::initPhysics() {
     auto physicsMgr = GameManager::getPhysicsManager();
     this->world = physicsMgr->initWorld();
     
-    physicsMgr->setOnUpdateListener([=]() {
-        this->syncBalls();
-    });
-    
+    physicsMgr->setOnUpdateListener(CC_CALLBACK_0(GameView::onPhysicsUpdate, this));
     physicsMgr->setOnContactBrickListener(CC_CALLBACK_2(GameView::onContactBrick, this));
     physicsMgr->setOnContactFloorListener(CC_CALLBACK_1(GameView::onContactFloor, this));
     

@@ -85,6 +85,7 @@ private:
     
     void onBrickBreak(Brick *brick);
     
+    void onPhysicsUpdate();
     void onContactBrick(Ball *ball, Brick *brick);
     void onContactFloor(Ball *ball);
     
@@ -93,13 +94,13 @@ private:
     void downTile();
     
     void addBall(int count = 1);
+    
     void addBrick(int count = 1);
     void addItem(int count);
     
     void addTile(Game::Tile *tile);
     void removeTile(Game::Tile *tile);
     
-    void syncBalls();
     void updateBallCountUI();
     
 private:

@@ -67,6 +67,36 @@ bool Ball::init() {
     return true;
 }
 
+void Ball::beforeStep() {
+    
+}
+
+void Ball::afterStep() {
+    
+    if( !body->IsActive() || !body->IsAwake() ) {
+        return;
+    }
+    
+    // 바디 값 동기화
+    syncBodyToNode();
+    
+    // Velocity 보정
+    auto v = body->GetLinearVelocity();
+    
+    if( abs(v.x) > 0 && abs(v.y) > 0 ) {
+        v.Normalize();
+//        CCLOG("velocity1: %f,%f (%f,%f)",
+//              body->GetLinearVelocity().x, body->GetLinearVelocity().y,
+//              v.x, v.y);
+
+//        float max = MAX(abs(v.x), abs(v.y));
+//        float offset = 30 / max;
+//        body->SetLinearVelocity(b2Vec2(v.x * offset, v.y * offset));
+//
+//        CCLOG("velocity2: %f,%f", body->GetLinearVelocity().x, body->GetLinearVelocity().y);
+    }
+}
+
 /**
  * 발사
  */

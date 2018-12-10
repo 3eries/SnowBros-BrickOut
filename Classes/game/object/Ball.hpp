@@ -24,6 +24,9 @@ private:
     bool init() override;
     
 public:
+    void beforeStep() override;
+    void afterStep() override;
+    
     void shoot(b2Vec2 velocity);
     void sleepWithAction();
     
