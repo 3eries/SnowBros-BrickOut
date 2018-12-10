@@ -41,16 +41,22 @@ bool Ball::init() {
     addChild(image);
     
     // 물리 객체 초기화
+    setBody(createBody((SBPhysicsObject*)this));
+    
+    return true;
+}
+
+b2Body* Ball::createBody(SBPhysicsObject *userData) {
+    
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.fixedRotation = true;
-    bodyDef.userData = (SBPhysicsObject*)this;
+    bodyDef.userData = userData;
     
     b2CircleShape circle;
-    circle.m_radius = PTM(BALL_SIZE.height * 0.5f);
+    circle.m_radius = PTM(BALL_RADIUS);
     
     auto body = GameManager::getPhysicsManager()->getWorld()->CreateBody(&bodyDef);
-    setBody(body);
     
     b2Filter filter;
     filter.categoryBits = PhysicsCategory::BALL;
@@ -64,7 +70,7 @@ bool Ball::init() {
     fixtureDef.filter = filter;
     body->CreateFixture(&fixtureDef);
     
-    return true;
+    return body;
 }
 
 void Ball::beforeStep() {

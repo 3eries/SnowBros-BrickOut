@@ -24,6 +24,8 @@ private:
     bool init() override;
     
 public:
+    static b2Body* createBody(SBPhysicsObject *userData = nullptr);
+    
     void beforeStep() override;
     void afterStep() override;
     
