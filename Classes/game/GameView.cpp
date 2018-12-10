@@ -351,7 +351,8 @@ void GameView::downTile() {
         tile->down();
     }
 
-    SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onTileDownFinished, this), Game::Tile::MOVE_DURATION);
+    SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onTileDownFinished, this),
+                            Game::Tile::MOVE_DURATION + 0.2f);
 }
 
 /**
