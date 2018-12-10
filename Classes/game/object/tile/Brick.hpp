@@ -26,6 +26,9 @@ protected:
     virtual void initPhysics() override;
     
 public:
+    virtual void enterWithAction() override;
+    virtual void removeWithAction() override;
+    
     virtual void onBreak();
     
     virtual void sufferDamage(int damage);

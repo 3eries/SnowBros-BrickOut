@@ -73,9 +73,6 @@ void Tile::initPhysics() {
  * 등장
  */
 void Tile::enterWithAction() {
-    
-    setScale(0);
-    runAction(ScaleTo::create(ENTER_DURATION, 1));
 }
 
 /**
@@ -83,17 +80,7 @@ void Tile::enterWithAction() {
  */
 void Tile::removeWithAction() {
     
-    // PhysicsManager::getWorld()->DestroyBody(getBody());
-    // setActive(false, false);
     sleep(false);
-    
-    auto scale = ScaleTo::create(0.2f, 0);
-    auto callFunc = CallFunc::create([=]() {
-        // this->removeFromParent();
-        this->setVisible(false);
-        this->setNeedRemove(true);
-    });
-    runAction(Sequence::create(scale, callFunc, nullptr));
 }
 
 /**

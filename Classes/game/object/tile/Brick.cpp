@@ -120,16 +120,44 @@ void Brick::initPhysics() {
 }
 
 /**
+ * 등장
+ */
+void Brick::enterWithAction() {
+    
+    Game::Tile::enterWithAction();
+    
+    setScale(0);
+    runAction(ScaleTo::create(ENTER_DURATION, 1));
+}
+
+/**
+ * 제거
+ */
+void Brick::removeWithAction() {
+    
+    Game::Tile::removeWithAction();
+ 
+    setOnBreakListener(nullptr);
+    
+    auto scale = ScaleTo::create(0.2f, 0);
+    auto callFunc = CallFunc::create([=]() {
+        // this->removeFromParent();
+        this->setVisible(false);
+        this->setNeedRemove(true);
+    });
+    runAction(Sequence::create(scale, callFunc, nullptr));
+}
+
+/**
  * 벽돌이 깨졌습니다
  */
 void Brick::onBreak() {
     
+    hpNode.bg->setVisible(false);
+    
     if( onBreakListener ) {
         onBreakListener(this);
     }
-    
-    hpNode.bg->setVisible(false);
-    removeWithAction();
 }
 
 /**

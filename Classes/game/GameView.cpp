@@ -254,10 +254,7 @@ void GameView::onBrickBreak(Brick *brick) {
     // 스코어 업데이트
     GameManager::addScore(brick->getOriginalHp());
     
-    // remove callbacks
-    brick->setOnBreakListener(nullptr);
-    
-    // remove from tile list
+    // remove brick
     removeTile(brick);
 }
 
@@ -442,6 +439,9 @@ void GameView::removeTile(Game::Tile *tile) {
     
     // remove from list
     tiles.erase(it);
+    
+    // remove tile
+    tile->removeWithAction();
 }
 
 /**
