@@ -95,6 +95,7 @@ private:
     void downTile();
     
     void addBall(int count = 1);
+    void removeBall(Ball *ball);
     
     void addBrick(int count = 1);
     void addItem(int count);

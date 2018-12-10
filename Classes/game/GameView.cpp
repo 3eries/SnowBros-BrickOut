@@ -374,6 +374,24 @@ void GameView::addBall(int count) {
 }
 
 /**
+ * 볼 제거
+ */
+void GameView::removeBall(Ball *ball) {
+    
+    auto it = std::find(balls.begin(), balls.end(), ball);
+    if( it == balls.end() ) {
+        CCASSERT(false, "GameView::removeBall error.");
+    }
+    
+    // remove from list
+    balls.erase(it);
+    
+    // remove ball
+    ball->sleep();
+    ball->setNeedRemove(true);
+}
+
+/**
  * 벽돌 추가
  */
 void GameView::addBrick(int count) {
