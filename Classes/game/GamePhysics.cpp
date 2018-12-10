@@ -43,7 +43,9 @@ b2World* PhysicsManager::initWorld() {
  * 모든 바디 제거
  */
 void PhysicsManager::removeBodies() {
+    
     loopObjects([](SBPhysicsObject *obj) { obj->removeBody(); });
+    loopBodies([=](b2Body *body)         { world->DestroyBody(body); });
 }
 
 /**
@@ -89,7 +91,7 @@ void PhysicsManager::update(float dt) {
 /**
  * 물리 오브젝트 루프
  */
-void PhysicsManager::loopObjects(function<void(SBPhysicsObject*)> callback) {
+void PhysicsManager::loopBodies(function<void(b2Body*)> callback) {
     
     if( !world ) {
         return;
@@ -97,22 +99,30 @@ void PhysicsManager::loopObjects(function<void(SBPhysicsObject*)> callback) {
     
     // GetBodyList()를 이용한 루프 진행 중 바디가 제거되어,
     // dangling pointer가 발생할 수 있으므로 별도의 리스트 생성
-    vector<SBPhysicsObject*> objs;
+    vector<b2Body*> bodies;
     
     for( auto b = world->GetBodyList(); b; b = b->GetNext() ) {
+        bodies.push_back(b);
+    }
+    
+    for( auto b : bodies ) {
+        callback(b);
+    }
+}
+
+void PhysicsManager::loopObjects(function<void(SBPhysicsObject*)> callback) {
+    
+    loopBodies([=](b2Body *b) {
+        
         auto userData = b->GetUserData();
         
         if( userData ) {
             auto obj = (SBPhysicsObject*)userData;
-            objs.push_back(obj);
+            callback(obj);
         }
-    }
-    
-    for( auto obj : objs ) {
-        callback(obj);
-    }
+    });
 }
-
+ 
 /**
  * 충돌 여부 설정
  */
@@ -130,7 +140,7 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
  */
 void PhysicsManager::BeginContact(b2Contact *contact) {
     
-    CCLOG("BeginContact");
+    // CCLOG("BeginContact");
     
     auto fixtureA = contact->GetFixtureA();
     auto fixtureB = contact->GetFixtureB();

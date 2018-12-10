@@ -47,6 +47,7 @@ public:
     
     void update(float dt);
     
+    void loopBodies(std::function<void(b2Body*)> callback);
     void loopObjects(std::function<void(SBPhysicsObject*)> callback);
     
 public:
