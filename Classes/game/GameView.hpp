@@ -36,7 +36,9 @@ private:
         DEBUG_DRAW_VIEW = 1000,
     };
     
-    enum class ZOrder {
+    enum ZOrder {
+        TILE = 0,
+        BALL,
     };
     
 private:
@@ -54,7 +56,7 @@ private:
     void initBall();
     void initTile();
     void initAimController();
-    
+    void initTouchListener();
     void initGameListener();
     void initIAPListener();
     
@@ -92,6 +94,8 @@ private:
     
 private:
     void shoot(const cocos2d::Vec2 &endPosition);
+    void withdrawBalls();
+    
     void downTile();
     
     void addBall(int count = 1);
@@ -104,6 +108,12 @@ private:
     void removeTile(Game::Tile *tile);
     
     void updateBallCountUI();
+    
+private:
+    bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event*);
+    void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event*);
+    void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event*);
+    void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event*);
     
 private:
     std::vector<Game::Tile*> getTiles(int y);
@@ -126,6 +136,9 @@ private:
     std::vector<Game::Tile*> tiles;      // 타일 리스트
     
     AimController *aimController;
+    
+    bool isWithdrawEnabled;              // 볼 회수 기능 활성화 여부
+    bool isWithdraw;                     // 볼 회수 여부
     
     // Debug
     int             tunnelingCount;

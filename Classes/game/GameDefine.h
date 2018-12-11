@@ -41,7 +41,7 @@ static const float                            MAP_CONTENT_WIDTH                =
 static const float                            MAP_CONTENT_HEIGHT               = 1100;
 static const cocos2d::Size                    MAP_CONTENT_SIZE                 = cocos2d::Size(MAP_CONTENT_WIDTH, MAP_CONTENT_HEIGHT);
 
-#define                                       MAP_POSITION                       Vec2MC(0, 0)
+#define                                       MAP_POSITION                       Vec2MC(0, -30)
 #define                                       MAP_ORIGIN                         cocos2d::Vec2(MAP_POSITION.x - MAP_CONTENT_WIDTH*0.5f, MAP_POSITION.y - MAP_CONTENT_HEIGHT*0.5f)
 #define                                       MAP_BOUNDING_BOX                   cocos2d::Rect(MAP_ORIGIN, MAP_CONTENT_SIZE)
 
@@ -52,7 +52,9 @@ static const int                              FIRST_BALL_COUNT                 =
 static const int                              MAX_BALL_COUNT                   = 1000;      // 최대 볼 갯수
 static const float                            SHOOT_INTERVAL                   = 0.08f;     // 발사 시간 간격
 
-static const float                            BALL_RADIUS                      = 18;
+#define                                       BALL_IMAGE                         std::string(DIR_IMG_GAME + "game_ball.png")
+
+static const float                            BALL_RADIUS                      = 20;
 static const cocos2d::Size                    BALL_SIZE                        = cocos2d::Size(BALL_RADIUS*2, BALL_RADIUS*2);
 static const float                            BALL_MAX_VELOCITY                = 30;
 

@@ -15,7 +15,8 @@ USING_NS_CC;
 using namespace std;
 
 Ball::Ball() : SBPhysicsObject(this),
-damage(1) {
+damage(1),
+fall(false) {
 }
 
 Ball::~Ball() {
@@ -34,7 +35,7 @@ bool Ball::init() {
     setCascadeOpacityEnabled(true);
     
     // 이미지 초기화
-    image = Sprite::create("images/common/circle_white.png");
+    image = Sprite::create(BALL_IMAGE);
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(BALL_SIZE, 0, 0));
     SBNodeUtils::scale(image, BALL_SIZE);
@@ -114,6 +115,7 @@ bool Ball::afterStep() {
  */
 void Ball::shoot(b2Vec2 velocity) {
     
+    setFall(false);
     setOpacity(255);
     
     getBody()->SetLinearVelocity(velocity);

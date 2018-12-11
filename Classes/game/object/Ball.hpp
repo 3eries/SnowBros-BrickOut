@@ -36,6 +36,8 @@ private:
     cocos2d::Sprite *image;
     
     CC_SYNTHESIZE(int, damage, Damage);
+    
+    SB_SYNTHESIZE_BOOL(fall, Fall);         // 추락 여부 
 };
 
 #endif /* Ball_hpp */

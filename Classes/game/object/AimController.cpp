@@ -359,19 +359,19 @@ void AimController::initAimObject() {
     
     // 슈팅 오브젝트
     {
+        // Line
+        shootingObj.line = createAimLine();
+        
         // Ball
         shootingObj.ballBody = Ball::createBody();
         
         // End Mark
-        shootingObj.endMark = Sprite::create("images/common/circle_white.png");
+        shootingObj.endMark = Sprite::create(BALL_IMAGE);
         shootingObj.endMark->setAnchorPoint(ANCHOR_M);
-        shootingObj.endMark->setColor(Color3B::RED);
+        shootingObj.endMark->setOpacity(255*0.75f);
         addChild(shootingObj.endMark);
         
         SBNodeUtils::scale(shootingObj.endMark, BALL_SIZE);
-        
-        // Line
-        shootingObj.line = createAimLine();
     }
     
     // 터치 기준 조준선
@@ -456,6 +456,7 @@ AimController::AimLine AimController::createAimLine() {
     aimLine.clippingNode = clippingNode;
     
     // 영역 확인용
+    /*
     {
         auto n = LayerColor::create(DEBUG_AIM_LINE_COLOR);
         n->setIgnoreAnchorPointForPosition(false);
@@ -464,7 +465,8 @@ AimController::AimLine AimController::createAimLine() {
         n->setContentSize(SB_WIN_SIZE);
         clippingNode->addChild(n);
     }
-    
+    */
+     
     // LineLayer 생성
     float LINE_DIST = MAP_DIAGONAL;
     int   LINE_COUNT = LINE_DIST / (LINE_SIZE.height + LINE_PADDING);
@@ -489,7 +491,7 @@ AimController::AimLine AimController::createAimLine() {
     int cnt = 0;
     
     for( int i = 0; i < LINE_COUNT /*posY <= MAX_Y*/; ++i ) {
-        auto line = Sprite::create("images/common/circle_white.png");
+        auto line = Sprite::create(DIR_IMG_COMMON + "circle_white.png");
         line->setAnchorPoint(ANCHOR_MB);
         line->setPosition(Vec2BC(LINE_SIZE, 0, getPosY(i)));
         lineLayer->addChild(line);

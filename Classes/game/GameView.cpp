@@ -56,6 +56,7 @@ bool GameView::init() {
     initBall();
     initTile();
     initAimController();
+    initTouchListener();
     initGameListener();
     initIAPListener();
     
@@ -103,6 +104,8 @@ void GameView::onGameExit() {
  */
 void GameView::onGameReset() {
     
+    isWithdrawEnabled = false;
+    isWithdraw = false;
 }
 
 /**
@@ -224,6 +227,7 @@ void GameView::onShootingReady() {
     // 볼 위치 설정
     for( auto ball : balls ) {
         ball->setPosition(aimController->getStartPosition());
+        ball->setSyncLocked(false);
         ball->syncNodeToBody();
     }
 }
@@ -265,34 +269,37 @@ void GameView::onBrickBreak(Brick *brick) {
 void GameView::onPhysicsUpdate() {
  
     // 터널링 체크
-    auto bricks = getBricks();
-    
-    for( auto brick : bricks ) {
-        auto brickBox = SBNodeUtils::getBoundingBoxInWorld(brick);
-    
-        vector<Ball*> needRemoveBalls;
+    if( !isWithdraw ) {
+        auto bricks = getBricks();
         
-        for( auto ball : balls ) {
-            auto body = ball->getBody();
+        for( auto brick : bricks ) {
+            auto brickBox = SBNodeUtils::getBoundingBoxInWorld(brick);
+        
+            vector<Ball*> needRemoveBalls;
             
-            if( !body || !body->IsActive() || !body->IsAwake() ) {
-                continue;
+            for( auto ball : balls ) {
+                auto body = ball->getBody();
+                
+                if( !body || !body->IsActive() || !body->IsAwake() ) {
+                    continue;
+                }
+                
+                Vec2 center = MTP(body->GetPosition());
+                
+                if( brickBox.containsPoint(center) ) {
+                // if( brickBox.intersectsCircle(center, BALL_RADIUS) ) {
+                    ++tunnelingCount;
+                    needRemoveBalls.push_back(ball);
+                }
             }
             
-            Vec2 center = MTP(body->GetPosition());
-            
-            if( brickBox.intersectsCircle(center, BALL_RADIUS) ) {
-                ++tunnelingCount;
-                needRemoveBalls.push_back(ball);
+            for( auto ball : needRemoveBalls ) {
+                removeBall(ball);
             }
         }
         
-        for( auto ball : needRemoveBalls ) {
-            removeBall(ball);
-        }
+        tunnelingCountLabel->setString(STR_FORMAT("Tunneling: %d", tunnelingCount));
     }
-    
-    tunnelingCountLabel->setString(STR_FORMAT("Tunneling: %d", tunnelingCount));
     
     // 바디 수 체크
     bodyCountLabel->setString(STR_FORMAT("Body Count: %d", world->GetBodyCount()));
@@ -311,6 +318,12 @@ void GameView::onContactBrick(Ball *ball, Brick *brick) {
  */
 void GameView::onContactFloor(Ball *ball) {
     
+    if( isWithdraw ) {
+        
+        return;
+    }
+
+    ball->setFall(true);
     ++fallenBallCount;
 
     // 볼 바디 비활성화
@@ -322,7 +335,7 @@ void GameView::onContactFloor(Ball *ball) {
         aimController->setStartPosition(Vec2(ball->getPosition().x, SHOOTING_POSITION_Y));
     }
     
-    // 첫번째 볼 위치로 이동
+    // 시작 위치로 이동
     auto pos = aimController->getStartPosition();
     ball->setPosition(Vec2(ball->getPositionX(), pos.y));
     ball->runAction(MoveTo::create(0.2f, pos));
@@ -340,7 +353,7 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     shootIndex = 0;
     fallenBallCount = 0;
-
+    
     // 속도 설정
     // b2Vec2 velocity(random(-30, 30), 30);
     Vec2 diff = endPosition - aimController->getStartPosition();
@@ -351,7 +364,7 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     // CCLOG("onShoot diff: %f,%f (%f,%f)", diff.x, diff.y, velocity.x, velocity.y);
     
-    // 볼 바디 활성화
+    // 볼 업데이트
     for( auto ball : balls ) {
         ball->awake();
     }
@@ -359,8 +372,16 @@ void GameView::shoot(const Vec2 &endPosition) {
     // 하나씩 발사
     schedule([=](float dt) {
 
+        if( shootIndex == balls.size() || isWithdraw ) {
+            // 모두 발사 or 볼 회수됨
+            this->unschedule(SCHEDULER_SHOOT);
+            this->onShootFinished();
+            return;
+        }
+        
         CCLOG("shoot! ball index: %d", shootIndex);
-
+        // SBAudioEngine::playEffect(DIR_SOUND + "shoot.wav");
+        
         auto ball = balls[shootIndex];
         ball->shoot(velocity);
 
@@ -368,12 +389,55 @@ void GameView::shoot(const Vec2 &endPosition) {
 
         ballCountLabel->setString(TO_STRING(balls.size() - shootIndex));
 
-        if( shootIndex == balls.size() ) {
-            this->unschedule(SCHEDULER_SHOOT);
-            this->onShootFinished();
-        }
-
     }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
+    
+    // 볼 회수 기능 활성화
+    isWithdrawEnabled = false;
+    isWithdraw = false;
+    
+    SBDirector::postDelayed(this, [=]() {
+        isWithdrawEnabled = true;
+    }, SHOOT_INTERVAL*2);
+}
+
+/**
+ * 모든 볼을 회수합니다
+ */
+void GameView::withdrawBalls() {
+ 
+    CCLOG("withdrawBalls shootIndex: %d", shootIndex);
+    
+    isWithdraw = true;
+    
+    // for( auto ball : balls ) {
+    for( int i = 0; i < shootIndex; ++i ) {
+        auto ball = balls[i];
+        
+        if( ball->isFall() ) {
+            continue;
+        }
+        
+        ball->sleep(false);
+        ball->setSyncLocked(true);
+        
+        // 시작 위치로 이동
+        // auto delay = DelayTime::create(0.3f);
+        Vec2 spreadPos(ball->getPosition() + Vec2(random<int>(-100, 100), random<int>(50, 100)));
+        spreadPos.x = MIN(MAP_BOUNDING_BOX.getMaxX()*0.9f, spreadPos.x);
+        spreadPos.x = MAX(MAP_BOUNDING_BOX.getMinX()*1.1f, spreadPos.x);
+        spreadPos.y = MIN(MAP_BOUNDING_BOX.getMaxY()*0.9f, spreadPos.y);
+        spreadPos.y = MAX(MAP_BOUNDING_BOX.getMinY()*1.1f, spreadPos.y);
+        
+        auto spread = MoveTo::create(0.07f, spreadPos);
+        auto delay = DelayTime::create(random<int>(0,3) * 0.1f);
+        auto move = MoveTo::create(0.25f, aimController->getStartPosition());
+        ball->runAction(Sequence::create(/*delay, */spread, delay, move, nullptr));
+    }
+    
+    // 모든 볼 추락 완료
+    SBDirector::postDelayed(this, [=]() {
+        this->onFallFinished();
+    }, 1.0f);
 }
 
 /**
@@ -398,7 +462,7 @@ void GameView::addBall(int count) {
         auto ball = Ball::create();
         ball->setPosition(aimController->getStartPosition());
         ball->sleep(false);
-        addChild(ball);
+        addChild(ball, ZOrder::BALL);
     
         balls.push_back(ball);
     }
@@ -474,7 +538,7 @@ void GameView::addTile(Game::Tile *tile) {
     
     tile->enterWithAction();
     
-    addChild(tile);
+    addChild(tile, ZOrder::TILE);
     tiles.push_back(tile);
 }
 
@@ -496,39 +560,66 @@ void GameView::removeTile(Game::Tile *tile) {
 }
 
 /**
- * 볼을 동기화합니다
- */
-void GameView::syncBalls() {
-    
-    for( auto ball : balls ) {
-        auto body = ball->getBody();
-
-        if( body->IsActive() && body->IsAwake() ) {
-            ball->syncBodyToNode();
-
-            // Velocity 보정
-            auto v = body->GetLinearVelocity();
-
-            if( abs(v.x) > 0 && abs(v.y) > 0 ) {
-                v.Normalize();
-                CCLOG("velocity1: %f,%f (%f,%f)", body->GetLinearVelocity().x, body->GetLinearVelocity().y, v.x, v.y);
-                //
-                //                    float max = MAX(abs(v.x), abs(v.y));
-                //                    float offset = 30 / max;
-                //                    body->SetLinearVelocity(b2Vec2(v.x * offset, v.y * offset));
-                //
-                //                    CCLOG("velocity2: %f,%f", body->GetLinearVelocity().x, body->GetLinearVelocity().y);
-            }
-        }
-    }
-}
-
-/**
  * 볼 갯수 UI 업데이트
  */
 void GameView::updateBallCountUI() {
     
     ballCountLabel->setString(TO_STRING(balls.size()));
+}
+
+/**
+ * 터치 시작
+ */
+bool GameView::onTouchBegan(Touch *touch, Event*) {
+    
+    if( !SBNodeUtils::hasVisibleParents(this) ) {
+        return false;
+    }
+    
+    if( superbomb::isMultiTouch(touch) ) {
+        return true;
+    }
+    
+    return true;
+}
+
+/**
+ * 터치 이동
+ */
+void GameView::onTouchMoved(Touch *touch, Event *event) {
+    
+    if( superbomb::isMultiTouch(touch) ) {
+        return;
+    }
+    
+    // drag 하여 볼 회수
+    if( isWithdrawEnabled && !isWithdraw ) {
+        float diffY = touch->getLocation().y - touch->getStartLocation().y;
+        bool isDragged = (diffY < -250);
+        CCLOG("onTouchMoved diffY: %f, isDragged: %d, fallenBallCount: %d", diffY, isDragged, fallenBallCount);
+        
+        if( isDragged ) {
+            withdrawBalls();
+        }
+    }
+}
+
+/**
+ * 터치 종료
+ */
+void GameView::onTouchEnded(Touch *touch, Event*) {
+    
+    if( superbomb::isMultiTouch(touch) ) {
+        return;
+    }
+}
+
+/**
+ * 터치 취소
+ */
+void GameView::onTouchCancelled(Touch *touch, Event *event) {
+    
+    onTouchEnded(touch, event);
 }
 
 /**
@@ -694,8 +785,9 @@ void GameView::initMap() {
 void GameView::initBall() {
     
     // 영역 확인용
+    /*
     {
-        auto ball = Sprite::create("images/common/circle_white.png");
+        auto ball = Sprite::create(BALL_IMAGE);
         ball->setAnchorPoint(ANCHOR_M);
         ball->setPosition(FIRST_SHOOTING_POSITION);
         ball->setColor(Color3B::RED);
@@ -703,12 +795,13 @@ void GameView::initBall() {
 
         SBNodeUtils::scale(ball, BALL_SIZE);
     }
-
+    */
+    
     // 볼 갯수 표시 라벨
     ballCountLabel = Label::createWithTTF("0", FONT_COMMODORE, 30, Size::ZERO,
                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
     ballCountLabel->setAnchorPoint(ANCHOR_MB);
-    ballCountLabel->setPosition(Vec2BC(0, 45));
+    ballCountLabel->setPosition(Vec2BC(0, 20));
     ballCountLabel->setTextColor(Color4B::WHITE);
     addChild(ballCountLabel);
 }
@@ -749,6 +842,21 @@ void GameView::initAimController() {
     aimController = AimController::create();
     aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
     addChild(aimController, SBZOrder::BOTTOM);
+}
+
+/**
+ * 터치 리스너 초기화
+ */
+void GameView::initTouchListener() {
+    
+    auto listener = EventListenerTouchOneByOne::create();
+    listener->setSwallowTouches(true);
+    listener->onTouchBegan = CC_CALLBACK_2(GameView::onTouchBegan, this);
+    listener->onTouchMoved = CC_CALLBACK_2(GameView::onTouchMoved, this);
+    listener->onTouchEnded = CC_CALLBACK_2(GameView::onTouchEnded, this);
+    listener->onTouchCancelled = CC_CALLBACK_2(GameView::onTouchCancelled, this);
+    
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 }
 
 /**
