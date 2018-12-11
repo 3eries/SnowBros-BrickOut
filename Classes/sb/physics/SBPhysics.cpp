@@ -27,7 +27,8 @@ void SBPhysics::syncBodyToNode(b2Body *body, cocos2d::Node *node) {
 SBPhysicsObject::SBPhysicsObject(Node *node) :
 node(node),
 body(nullptr),
-needRemove(false) {
+needRemove(false),
+syncLocked(false) {
     
 }
 
@@ -95,14 +96,14 @@ void SBPhysicsObject::sleep(bool updateVisible) {
 
 void SBPhysicsObject::syncNodeToBody() {
     
-    if( node && body ) {
+    if( node && body && !syncLocked ) {
         SBPhysics::syncNodeToBody(node, body);
     }
 }
 
 void SBPhysicsObject::syncBodyToNode() {
     
-    if( node && body ) {
+    if( node && body && !syncLocked ) {
         SBPhysics::syncBodyToNode(body, node);
     }
 }

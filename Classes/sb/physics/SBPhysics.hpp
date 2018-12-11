@@ -60,7 +60,8 @@ protected:
     cocos2d::Node *node;
     CC_SYNTHESIZE(b2Body*, body, Body);
     
-    SB_SYNTHESIZE_BOOL(needRemove, NeedRemove);
+    SB_SYNTHESIZE_BOOL(needRemove, NeedRemove);     // 제거 여부
+    SB_SYNTHESIZE_BOOL(syncLocked, SyncLocked);     // 동기화 잠금 여부
 };
 
 #endif /* SBPhysics_hpp */
