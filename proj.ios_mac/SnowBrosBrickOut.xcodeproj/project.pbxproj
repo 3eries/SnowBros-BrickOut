@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB07180E9839004C840B /* libcocos2d iOS.a */; };
+		1D13226C21C18045005F4370 /* brick in Resources */ = {isa = PBXBuildFile; fileRef = 1D13226A21C18045005F4370 /* brick */; };
+		1D13226D21C18045005F4370 /* db in Resources */ = {isa = PBXBuildFile; fileRef = 1D13226B21C18045005F4370 /* db */; };
+		1D13227121C18241005F4370 /* DBManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13226F21C18241005F4370 /* DBManager.cpp */; };
 		1D18E425215CA19D0069A888 /* ConsentForm-android.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D18E422215CA19C0069A888 /* ConsentForm-android.cpp */; };
 		1D18E428215CBE430069A888 /* ConsentManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D18E426215CBE430069A888 /* ConsentManager.cpp */; };
 		1D1DA434210EF80C00467E6E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D1DA433210EF80C00467E6E /* StoreKit.framework */; };
@@ -170,6 +173,13 @@
 /* Begin PBXFileReference section */
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
+		1D13226A21C18045005F4370 /* brick */ = {isa = PBXFileReference; lastKnownFileType = folder; path = brick; sourceTree = "<group>"; };
+		1D13226B21C18045005F4370 /* db */ = {isa = PBXFileReference; lastKnownFileType = folder; path = db; sourceTree = "<group>"; };
+		1D13226E21C181E6005F4370 /* BrickData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrickData.h; sourceTree = "<group>"; };
+		1D13226F21C18241005F4370 /* DBManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DBManager.cpp; sourceTree = "<group>"; };
+		1D13227021C18241005F4370 /* DBManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DBManager.hpp; sourceTree = "<group>"; };
+		1D13227221C19453005F4370 /* LevelData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelData.h; sourceTree = "<group>"; };
+		1D13227321C19576005F4370 /* StageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StageData.h; sourceTree = "<group>"; };
 		1D18E422215CA19C0069A888 /* ConsentForm-android.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ConsentForm-android.cpp"; sourceTree = "<group>"; };
 		1D18E426215CBE430069A888 /* ConsentManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConsentManager.cpp; sourceTree = "<group>"; };
 		1D18E427215CBE430069A888 /* ConsentManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConsentManager.hpp; sourceTree = "<group>"; };
@@ -475,6 +485,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1D13226721C18032005F4370 /* db */ = {
+			isa = PBXGroup;
+			children = (
+				1D13226E21C181E6005F4370 /* BrickData.h */,
+				1D13226F21C18241005F4370 /* DBManager.cpp */,
+				1D13227021C18241005F4370 /* DBManager.hpp */,
+				1D13227221C19453005F4370 /* LevelData.h */,
+				1D13227321C19576005F4370 /* StageData.h */,
+			);
+			path = db;
+			sourceTree = "<group>";
+		};
 		1D1F3C8020AC9F5E0035A36C /* audio */ = {
 			isa = PBXGroup;
 			children = (
@@ -542,6 +564,7 @@
 		1D45C44A20A8A7AC007E63AD /* game */ = {
 			isa = PBXGroup;
 			children = (
+				1D13226721C18032005F4370 /* db */,
 				1D599D8221AEFDC400E758D8 /* event */,
 				1D1F3C9020AD3A710035A36C /* GameDefine.h */,
 				1DA98BC620B46F61006BC169 /* GameManager.cpp */,
@@ -1031,7 +1054,9 @@
 		46880B7519C43A67006E1F66 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1D13226A21C18045005F4370 /* brick */,
 				1DE1DC0D20F693EE00BB3238 /* config */,
+				1D13226B21C18045005F4370 /* db */,
 				1DE1DC0E20F693EE00BB3238 /* fonts */,
 				1DE1DC1020F693EF00BB3238 /* images */,
 				1DFDEB1120C10C07001BC81D /* Images.xcassets */,
@@ -1189,12 +1214,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D13226D21C18045005F4370 /* db in Resources */,
 				1DE1DC1220F693EF00BB3238 /* config in Resources */,
 				1DE1DC1320F693EF00BB3238 /* fonts in Resources */,
 				1DFDEB1220C10C07001BC81D /* Images.xcassets in Resources */,
 				1DE1DC1520F693EF00BB3238 /* images in Resources */,
 				1DE1DC1420F693EF00BB3238 /* sounds in Resources */,
 				1DE1DC2820F75A3100BB3238 /* shaders in Resources */,
+				1D13226C21C18045005F4370 /* brick in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1276,6 +1303,7 @@
 				1D86439B21523AEC001841C9 /* NSData+AES.m in Sources */,
 				1DE1DC2620F759C800BB3238 /* SBEffect.cpp in Sources */,
 				1D45C48A20A8A7B8007E63AD /* SBStringUtils.cpp in Sources */,
+				1D13227121C18241005F4370 /* DBManager.cpp in Sources */,
 				1D2247C12150EADF00439BBD /* SBMath.cpp in Sources */,
 				1DF4B4FF21B6B0BC00835223 /* SettingPopup.cpp in Sources */,
 				1DA98BD220B47E66006BC169 /* User.cpp in Sources */,

@@ -10,6 +10,7 @@
 #include "GiftManager.hpp"
 
 #include "game/GameManager.hpp"
+#include "game/db/DBManager.hpp"
 
 USING_NS_CC;
 using namespace std;
@@ -23,6 +24,7 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate() 
 {
+    DBManager::destroyInstance();
     GiftManager::destroyInstance();
     RankingManager::destroyInstance();
     GameManager::destroyInstance();
@@ -95,6 +97,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     RankingManager::getInstance()->init();
 //    GameConfiguration::getInstance()->init();
     GiftManager::getInstance()->init();
+    DBManager::getInstance();
     
     // run
     SceneManager::getInstance()->replace(SceneType::SPLASH);

@@ -1,0 +1,63 @@
+[{
+    "level": 1,
+    "stages": [{
+        "stage": 1,
+        "brick_hp": "stage",
+        "brick_drop_count": "3",
+        "brick_list": ["brick_00001"],
+        "elite_brick_drop_rate": 5,
+        "elite_brick_list": ["brick_01000"],
+        "power_up_drop_rate": 100,
+        "friend_power_up_drop_rate": 0,
+        "money_drop_rate": 1
+    },
+    {
+        "stage": 2
+    },
+    {
+        "stage": 3
+    },
+    {
+        "stage": 4
+    },
+    {
+        "stage": 5,
+        "brick_hp": "stage",
+        "brick_list": ["brick_00001", "brick_00002"]
+    },
+    {
+        "stage": 6
+    },
+    {
+        "stage": 7
+    },
+    {
+        "stage": 8
+    },
+    {
+        "stage": 9
+    },
+    {
+        "stage": 10,
+        "brick_hp": "prev_brick_hp+2",
+        "brick_list": ["brick_00003", "brick_00004"]
+    },
+    {
+        "stage": 11,
+        "brick_drop_count": "2~4"
+    },
+    {
+        "stage": 12
+    },
+    {
+        "stage": 13
+    },
+    {
+        "stage": 14
+    },
+    {
+        "stage": 15,
+        "boss_brick_list": ["brick_10000"]
+    }
+    ]
+}]

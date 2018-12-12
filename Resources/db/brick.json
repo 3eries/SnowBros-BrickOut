@@ -1,0 +1,43 @@
+[{
+    "id": "brick_00001",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "image": ""
+},
+{
+    "id": "brick_00002",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "image": ""
+},
+{
+    "id": "brick_00003",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "image": ""
+},
+{
+    "id": "brick_00004",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "image": ""
+},
+{
+    "id": "brick_01000",
+    "type": 3,
+    "width": 1,
+    "height": 1,
+    "image": ""
+},
+{
+    "id": "brick_10000",
+    "type": 4,
+    "width": 2,
+    "height": 2,
+    "image": ""
+}
+]
