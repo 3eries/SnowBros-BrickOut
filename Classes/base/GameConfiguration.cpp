@@ -57,7 +57,11 @@ void GameConfiguration::parse(const string &json) {
     storeUrl = platformObj["store"].GetString();
     
     // game value
-    maxScore = doc["max_score"].GetInt();
+    tileRows             = doc["tile_rows"].GetInt();
+    tileColumns          = doc["tile_columns"].GetInt();
+    firstBallCount       = doc["first_ball_count"].GetInt();
+    maxBallCount         = doc["max_ball_count"].GetInt();
+    maxScore             = doc["max_score"].GetInt();
     
     // levels
     levelInfos.clear();

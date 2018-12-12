@@ -61,6 +61,7 @@ public:
     // Getter
     static GameEventDispatcher* getEventDispatcher();
     static PhysicsManager*      getPhysicsManager();
+    static GameConfiguration*   getConfig();
     static int                  getPlayCount();
     static int                  getScore();
     static bool                 isContinuable();
@@ -69,7 +70,7 @@ private:
     GameEventDispatcher *eventDispatcher;
     PhysicsManager *physicsManager;
     
-    CC_SYNTHESIZE_READONLY(GameConfiguration*, config, Config);
+    GameConfiguration *config;
     CC_SYNTHESIZE_READONLY(GameState, state, State);              // 게임 상태
     CC_SYNTHESIZE(GameView*, view, View);                         // 게임 View
     

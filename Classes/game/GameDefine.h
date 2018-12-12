@@ -37,19 +37,18 @@ enum GameState {
 };
 
 // Map
-static const float                            MAP_CONTENT_WIDTH                = 660;
-static const float                            MAP_CONTENT_HEIGHT               = 1100;
-static const cocos2d::Size                    MAP_CONTENT_SIZE                 = cocos2d::Size(MAP_CONTENT_WIDTH, MAP_CONTENT_HEIGHT);
+// game_brick_01_idle1.png Vec2BL(60, 278) , Size(116, 120)
+#define                                       MAP_CONTENT_WIDTH                  720
+#define                                       MAP_CONTENT_HEIGHT                 1100
+#define                                       MAP_CONTENT_SIZE                   cocos2d::Size(MAP_CONTENT_WIDTH, MAP_CONTENT_HEIGHT)
 
 #define                                       MAP_POSITION                       Vec2MC(0, -30)
 #define                                       MAP_ORIGIN                         cocos2d::Vec2(MAP_POSITION.x - MAP_CONTENT_WIDTH*0.5f, MAP_POSITION.y - MAP_CONTENT_HEIGHT*0.5f)
 #define                                       MAP_BOUNDING_BOX                   cocos2d::Rect(MAP_ORIGIN, MAP_CONTENT_SIZE)
 
-static const float                            MAP_DIAGONAL                     = MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE));  // 대각선
+#define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE))  // 대각선
 
 // Ball
-static const int                              FIRST_BALL_COUNT                 = 30;        // 최초 볼 갯수
-static const int                              MAX_BALL_COUNT                   = 1000;      // 최대 볼 갯수
 static const float                            SHOOT_INTERVAL                   = 0.08f;     // 발사 시간 간격
 
 #define                                       BALL_IMAGE                         std::string(DIR_IMG_GAME + "game_ball.png")
@@ -65,20 +64,16 @@ static const float                            BALL_MAX_VELOCITY                =
 static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f;   // 벽 두께
 
 // Tile
-static const int                              TILE_ROWS                        = 6;     // 맵의 가로줄에 표시되는 타일 갯수
-static const int                              TILE_COLUMNS                     = 9;     // 맵의 세로줄에 표시되는 타일 갯수
-
 static const float                            TILE_MARGIN_X                    = 2;
 // static const float                            TILE_MARGIN_Y                    = 2;
 static const float                            TILE_MARGIN_BOTTOM               = 120;
 static const float                            TILE_MARGIN_TOP                  = 2;
 
-static const float                            TILE_PADDING_X                   = 2;
+static const float                            TILE_PADDING_X                   = 4;
 static const float                            TILE_PADDING_Y                   = 2;
 
-static const float                            TILE_CONTENT_WIDTH               = (MAP_CONTENT_WIDTH - (TILE_MARGIN_X*2) - (TILE_PADDING_X*(TILE_ROWS-1))) / TILE_ROWS;
-// static const float                            TILE_CONTENT_HEIGHT              = (MAP_CONTENT_HEIGHT - (TILE_MARGIN_Y*2) - (TILE_PADDING_Y*(TILE_COLUMNS-1))) / TILE_COLUMNS;
-static const float                            TILE_CONTENT_HEIGHT              = 106;
+static const float                            TILE_CONTENT_WIDTH               = 116;
+static const float                            TILE_CONTENT_HEIGHT              = 120;
 static const cocos2d::Size                    TILE_CONTENT_SIZE                = cocos2d::Size(TILE_CONTENT_WIDTH, TILE_CONTENT_HEIGHT);
 
 #define MEASURE_TILE_SIZE(__rows__, __columns__)        cocos2d::Size(TILE_CONTENT_SIZE.width*__rows__, TILE_CONTENT_SIZE.height*__columns__)

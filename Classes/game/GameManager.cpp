@@ -135,7 +135,7 @@ void GameManager::setScore(int score) {
     auto mgr = getInstance();
     
     // 스코어 설정
-    score = MIN(mgr->getConfig()->getMaxScore(), score);
+    score = MIN(getConfig()->getMaxScore(), score);
     mgr->score = score;
     
     onScoreChanged();
@@ -163,6 +163,10 @@ GameEventDispatcher* GameManager::getEventDispatcher() {
 
 PhysicsManager* GameManager::getPhysicsManager() {
     return getInstance()->physicsManager;
+}
+
+GameConfiguration* GameManager::getConfig() {
+    return getInstance()->config;
 }
 
 int GameManager::getPlayCount() {

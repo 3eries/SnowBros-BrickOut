@@ -113,7 +113,7 @@ void GameView::onGameReset() {
  */
 void GameView::onGameStart() {
     
-    addBall(FIRST_BALL_COUNT);
+    addBall(GameManager::getConfig()->getFirstBallCount());
     addBrick(4);
     
     onTileAddFinished();
@@ -458,6 +458,8 @@ void GameView::downTile() {
  */
 void GameView::addBall(int count) {
     
+    const int MAX_BALL_COUNT = GameManager::getConfig()->getMaxBallCount();
+    
     for( int i = 0; i < count && balls.size() <= MAX_BALL_COUNT; ++i ) {
         auto ball = Ball::create();
         ball->setPosition(aimController->getStartPosition());
@@ -493,13 +495,13 @@ void GameView::removeBall(Ball *ball) {
  */
 void GameView::addBrick(int count) {
     
-    auto positions = getEmptyPositions(TILE_COLUMNS-1);
+    auto positions = getEmptyPositions(GameManager::getConfig()->getTileColumns()-1);
     CCASSERT(positions.size() >= count, "GameView::addBrick error.");
     
     random_shuffle(positions.begin(), positions.end());
     
     for( int i = 0; i < count; ++i ) {
-        auto brick = Brick::create(FIRST_BALL_COUNT);
+        auto brick = Brick::create(GameManager::getConfig()->getFirstBallCount());
         brick->setTilePosition(positions[i], false);
         addTile(brick);
         
@@ -514,7 +516,7 @@ void GameView::addBrick(int count) {
  */
 void GameView::addItem(int count) {
     
-    auto positions = getEmptyPositions(TILE_COLUMNS-1);
+    auto positions = getEmptyPositions(GameManager::getConfig()->getTileColumns()-1);
     
     if( positions.size() == 0 ) {
         return;
@@ -665,6 +667,7 @@ Game::Tile* GameView::getTile(const Game::Tile::Position &pos) {
  */
 Game::Tile::Positions GameView::getEmptyPositions(int y) {
     
+    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
     Game::Tile::Positions positions;
     
     for( int x = 0; x < TILE_ROWS; ++x ) {
@@ -682,6 +685,8 @@ Game::Tile::Positions GameView::getEmptyPositions(int y) {
  * y줄의 타일 유무를 반환합니다
  */
 bool GameView::isExistTile(int y) {
+    
+    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
     
     for( int x = 0; x < TILE_ROWS; ++x ) {
         Game::Tile::Position pos(x,y);
@@ -814,6 +819,9 @@ void GameView::initTile() {
 #if DEBUG_DRAW_TILE
     auto parent = getChildByTag(Tag::DEBUG_DRAW_VIEW);
 
+    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
+    const int TILE_COLUMNS = GameManager::getConfig()->getTileColumns();
+    
     for( int x = 0; x < TILE_ROWS; ++x ) {
         for( int y = 0; y < TILE_COLUMNS; ++y ) {
             auto tile = LayerColor::create(Color4B(255,255,0,255*0.3f));

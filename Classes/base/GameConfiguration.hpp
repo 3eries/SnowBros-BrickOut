@@ -42,8 +42,15 @@ public:
 private:
     CC_SYNTHESIZE_READONLY(std::string, storeUrl, StoreUrl);
     
-    // 최대 스코어
-    CC_SYNTHESIZE_READONLY(int, maxScore, MaxScore);
+    // 맵의 가로줄에 표시되는 타일 갯수
+    CC_SYNTHESIZE_READONLY(int, tileRows, TileRows);
+
+    // 맵의 세로줄에 표시되는 타일 갯수
+    CC_SYNTHESIZE_READONLY(int, tileColumns, TileColumns);
+
+    CC_SYNTHESIZE_READONLY(int, firstBallCount, FirstBallCount);        // 최초 볼 갯수
+    CC_SYNTHESIZE_READONLY(int, maxBallCount, MaxBallCount);            // 최초 볼 갯수
+    CC_SYNTHESIZE_READONLY(int, maxScore, MaxScore);                    // 최대 스코어
     
     // 레벨 정보
     CC_SYNTHESIZE(std::vector<LevelInfo>, levelInfos, LevelInfos);
