@@ -47,11 +47,16 @@ public:
     virtual void beginContact(b2Fixture *other, b2Contact *contact) {};
     virtual void endContact(b2Fixture *other, b2Contact *contact) {};
     
+    virtual void setNeedRemove(bool isNeedRemove);
+    
     virtual void setActive(bool isActive, bool updateVisible = true);
     
     virtual void setAwake(bool isAwake, bool updateVisible = true);
     virtual void awake(bool updateVisible = true);
     virtual void sleep(bool updateVisible = true);
+    
+    bool isActive();
+    bool isAwake();
     
     virtual void syncNodeToBody();
     virtual void syncBodyToNode();
@@ -60,8 +65,9 @@ protected:
     cocos2d::Node *node;
     CC_SYNTHESIZE(b2Body*, body, Body);
     
-    SB_SYNTHESIZE_BOOL(needRemove, NeedRemove);     // 제거 여부
-    SB_SYNTHESIZE_BOOL(syncLocked, SyncLocked);     // 동기화 잠금 여부
+    SB_SYNTHESIZE_BOOL(collisionLocked, CollisionLocked);   // 충돌 잠금 여부
+    SB_SYNTHESIZE_BOOL(syncLocked, SyncLocked);             // 동기화 잠금 여부
+    SB_SYNTHESIZE_READONLY_BOOL(needRemove, NeedRemove);    // 제거 여부
 };
 
 #endif /* SBPhysics_hpp */

@@ -27,8 +27,9 @@ void SBPhysics::syncBodyToNode(b2Body *body, cocos2d::Node *node) {
 SBPhysicsObject::SBPhysicsObject(Node *node) :
 node(node),
 body(nullptr),
-needRemove(false),
-syncLocked(false) {
+collisionLocked(false),
+syncLocked(false),
+needRemove(false) {
     
 }
 
@@ -61,6 +62,16 @@ bool SBPhysicsObject::afterStep() {
     return true;
 }
 
+void SBPhysicsObject::setNeedRemove(bool isNeedRemove) {
+    
+    this->needRemove = isNeedRemove;
+    
+    if( isNeedRemove ) {
+        sleep(false);
+        setCollisionLocked(true);
+    }
+}
+
 void SBPhysicsObject::setActive(bool isActive, bool updateVisible) {
     
     if( body ) {
@@ -73,11 +84,11 @@ void SBPhysicsObject::setActive(bool isActive, bool updateVisible) {
 }
 
 void SBPhysicsObject::setAwake(bool isAwake, bool updateVisible) {
-    
+
     if( body ) {
         body->SetAwake(isAwake);
     }
-    
+
     if( node && updateVisible ) {
         node->setVisible(isAwake);
     }
@@ -85,13 +96,21 @@ void SBPhysicsObject::setAwake(bool isAwake, bool updateVisible) {
 
 
 void SBPhysicsObject::awake(bool updateVisible) {
-    
+
     setAwake(true, updateVisible);
 }
 
 void SBPhysicsObject::sleep(bool updateVisible) {
-    
+
     setAwake(false, updateVisible);
+}
+
+bool SBPhysicsObject::isActive() {
+    return body && body->IsActive();
+}
+
+bool SBPhysicsObject::isAwake() {
+    return body && body->IsAwake();
 }
 
 void SBPhysicsObject::syncNodeToBody() {
