@@ -15,6 +15,8 @@
 
 struct LevelData {
     int            level;
+    int            stageBeginNum;
+    int            stageLen;
     StageList      stages;
     
     LevelData() : level(0) {}
@@ -22,6 +24,8 @@ struct LevelData {
     std::string toString() {
         std::string str = "LevelData {\n";
         str += STR_FORMAT("\tlevel: %d\n", level);
+        str += STR_FORMAT("\tstageBeginNum: %d\n", stageBeginNum);
+        str += STR_FORMAT("\tstageLen: %d\n", stageLen);
         
         for( auto stage : stages ) {
             str += stage.toString() + "\n";

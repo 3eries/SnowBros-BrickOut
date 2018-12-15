@@ -88,6 +88,10 @@ DBManager::DBManager() {
             
             LevelData level;
             level.level = levelValue["level"].GetInt();
+            level.stageBeginNum = levelValue["stage_begin_num"].GetInt();
+            level.stageLen = levelValue["stage_len"].GetInt();
+            
+            const int STAGE_BEGIN_INDEX = level.stageBeginNum-1;
             
             auto stageValueList = levelValue["stages"].GetArray();
             StageData prevStage;
@@ -109,7 +113,7 @@ DBManager::DBManager() {
                 
                 // 현재 stage 값으로 hp 설정
                 if( stage.brickHpOrigin == "stage" ) {
-                    stage.brickHp = stage.stage;
+                    stage.brickHp = stage.stage + STAGE_BEGIN_INDEX;
                 }
                 // 이전 stage 값으로 hp 설정
                 else if( stage.brickHpOrigin.find("prev_brick_hp") != string::npos ) {

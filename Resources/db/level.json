@@ -1,5 +1,7 @@
 [{
     "level": 1,
+    "stage_begin_num": 1,
+    "stage_len": 15,
     "stages": [{
         "stage": 1,
         "brick_hp": "stage",
