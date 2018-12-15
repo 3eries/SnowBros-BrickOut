@@ -13,15 +13,6 @@
 #include "superbomb.h"
 #include "Define.h"
 
-struct LevelInfo {
-    int level;
-    int score;         // 레벨 시작 스코어
-    
-    LevelInfo() {
-        level = -1;
-    }
-};
-
 class GameConfiguration : public cocos2d::Ref {
 public:
     static GameConfiguration* getInstance();
@@ -35,10 +26,6 @@ public:
     void init();
     void parse(const std::string &json);
     
-    LevelInfo getLevel(int level);
-    LevelInfo getLevelByScore(int score);
-    LevelInfo getMaxLevel();
-    
 private:
     CC_SYNTHESIZE_READONLY(std::string, storeUrl, StoreUrl);
     
@@ -51,9 +38,6 @@ private:
     CC_SYNTHESIZE_READONLY(int, firstBallCount, FirstBallCount);        // 최초 볼 갯수
     CC_SYNTHESIZE_READONLY(int, maxBallCount, MaxBallCount);            // 최초 볼 갯수
     CC_SYNTHESIZE_READONLY(int, maxScore, MaxScore);                    // 최대 스코어
-    
-    // 레벨 정보
-    CC_SYNTHESIZE(std::vector<LevelInfo>, levelInfos, LevelInfos);
 };
 
 #endif /* GameConfiguration_hpp */

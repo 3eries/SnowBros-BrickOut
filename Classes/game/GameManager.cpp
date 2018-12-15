@@ -9,7 +9,6 @@
 #include "UserDefaultKey.h"
 #include "RankingManager.hpp"
 
-#include "GameDefine.h"
 #include "GameView.hpp"
 
 USING_NS_CC;
@@ -51,8 +50,9 @@ void GameManager::reset() {
     view = nullptr;
     giftItems.clear();
     continueCount = 0;
-    level = config->getLevel(1);
     score = 0;
+    level = DBManager::getLevel(1);
+    stage = 1;
 }
 
 /**
@@ -139,17 +139,6 @@ void GameManager::setScore(int score) {
     mgr->score = score;
     
     onScoreChanged();
-    
-    // 레벨 설정
-    LevelInfo newLevel = mgr->getConfig()->getLevelByScore(score);
-    CCASSERT(newLevel.level > 0, "GameManager::setScore error: invalid level.");
-    
-    bool isLevelChanged = (mgr->getLevel().level != newLevel.level);
-    
-    if( isLevelChanged ) {
-        mgr->setLevel(newLevel);
-        onLevelChanged();
-    }
 }
 
 void GameManager::addScore(int score) {
@@ -175,6 +164,14 @@ int GameManager::getPlayCount() {
 
 int GameManager::getScore() {
     return getInstance()->score;
+}
+
+LevelData GameManager::getLevel() {
+    return getInstance()->level;
+}
+
+StageData GameManager::getStage() {
+    return DBManager::getStage(getInstance()->level.level, getInstance()->stage);
 }
 
 bool GameManager::isContinuable() {
@@ -431,6 +428,7 @@ void GameManager::onScoreChanged() {
  */
 void GameManager::onLevelChanged() {
     
+    getInstance()->stage = 1;
     getEventDispatcher()->dispatchOnLevelChanged(getInstance()->getLevel());
 }
 

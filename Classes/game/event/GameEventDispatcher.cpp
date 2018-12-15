@@ -219,11 +219,14 @@ void GameEventDispatcher::dispatchOnScoreChanged(int score) {
 /**
  * onLevelChanged 이벤트 전달
  */
-void GameEventDispatcher::dispatchOnLevelChanged(const LevelInfo &levelInfo) {
+void GameEventDispatcher::dispatchOnLevelChanged(const LevelData &level) {
     
     for( auto listener : listeners ) {
         if( listener->onLevelChanged ) {
-            listener->onLevelChanged(levelInfo);
+            listener->onLevelChanged(level);
+        }
+    }
+}
         }
     }
 }

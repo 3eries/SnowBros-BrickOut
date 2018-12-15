@@ -186,7 +186,7 @@ void GameView::onScoreChanged(int score) {
 /**
  * 레벨 변경
  */
-void GameView::onLevelChanged(const LevelInfo &level) {
+void GameView::onLevelChanged(const LevelData &level) {
 }
 
 /**

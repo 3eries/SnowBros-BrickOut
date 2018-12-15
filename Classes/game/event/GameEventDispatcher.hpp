@@ -48,7 +48,7 @@ public:
     void dispatchOnBoostEnd();
     
     void dispatchOnScoreChanged(int score);
-    void dispatchOnLevelChanged(const LevelInfo &levelInfo);
+    void dispatchOnLevelChanged(const LevelData &level);
     
 private:
     GameEventListeners listeners;

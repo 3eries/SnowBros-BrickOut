@@ -70,7 +70,7 @@ public:
     void onBoostEnd();
     
     void onScoreChanged(int score);
-    void onLevelChanged(const LevelInfo &level);
+    void onLevelChanged(const LevelData &level);
     
 public:
     void replaceScene(SceneType type, const GiftRewardItems &items = GiftRewardItems()) override;

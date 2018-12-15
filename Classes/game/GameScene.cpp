@@ -244,7 +244,7 @@ void GameScene::onScoreChanged(int score) {
 /**
  * 레벨 변경
  */
-void GameScene::onLevelChanged(const LevelInfo &level) {
+void GameScene::onLevelChanged(const LevelData &level) {
 }
 
 /**

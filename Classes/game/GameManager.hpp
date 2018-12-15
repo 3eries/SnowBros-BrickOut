@@ -20,6 +20,8 @@
 #include "event/GameEventDispatcher.hpp"
 #include "GamePhysics.hpp"
 
+#include "DBManager.hpp"
+
 class GameScene;
 class GameView;
 
@@ -64,6 +66,8 @@ public:
     static GameConfiguration*   getConfig();
     static int                  getPlayCount();
     static int                  getScore();
+    static LevelData            getLevel();
+    static StageData            getStage();
     static bool                 isContinuable();
     
 private:
@@ -76,8 +80,9 @@ private:
     
     GiftRewardItems giftItems;
     
-    int score;                                                    // 현재 스코어
-    CC_SYNTHESIZE(LevelInfo, level, Level);                       // 현재 레벨 정보
+    int score;                                                    // 스코어
+    LevelData level;                                              // 레벨
+    int stage;                                                    // 스테이지
     CC_SYNTHESIZE_READONLY(int, continueCount, ContinueCount);    // 이어하기한 횟수
     
 // Game Event

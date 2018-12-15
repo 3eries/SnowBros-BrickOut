@@ -12,8 +12,8 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#include "GameConfiguration.hpp"
 #include "../GameDefine.h"
+#include "../db/LevelData.h"
 
 class GameEventListener : public cocos2d::Ref {
 public:
@@ -39,8 +39,7 @@ public:
     std::function<void()>                   onBoostEnd;                 // 부스트 종료
     
     std::function<void(int)>                onScoreChanged;             // 스코어 변경
-    std::function<void(const LevelInfo&)>   onLevelChanged;             // 레벨 변경
-    
+    std::function<void(const LevelData&)>   onLevelChanged;             // 레벨 변경
 private:
     GameEventListener(cocos2d::Ref *target);
     

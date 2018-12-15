@@ -77,7 +77,7 @@ public:
     void onBoostEnd();
     
     void onScoreChanged(int score);
-    void onLevelChanged(const LevelInfo &level);
+    void onLevelChanged(const LevelData &level);
     
 private:
     void onTileAddFinished();               // 1. 타일 추가 완료
