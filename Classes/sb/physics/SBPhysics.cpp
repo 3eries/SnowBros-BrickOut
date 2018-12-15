@@ -38,6 +38,19 @@ SBPhysicsObject::~SBPhysicsObject() {
     removeBody();
 }
 
+void SBPhysicsObject::initPhysics() {
+    
+}
+
+Size SBPhysicsObject::getPhysicsSize() {
+    
+    if( node ) {
+        return node->getContentSize();
+    }
+    
+    return Size::ZERO;
+}
+
 void SBPhysicsObject::removeBody() {
     
     if( body ) {

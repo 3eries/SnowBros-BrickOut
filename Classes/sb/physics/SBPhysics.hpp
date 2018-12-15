@@ -39,6 +39,9 @@ public:
     ~SBPhysicsObject();
     
 public:
+    virtual void initPhysics();
+    virtual cocos2d::Size getPhysicsSize();
+    
     virtual void removeBody();
     
     virtual bool beforeStep();
