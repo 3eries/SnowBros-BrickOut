@@ -130,8 +130,8 @@ DBManager::DBManager() {
                     
                     // integer
                     if( SBStringUtils::isInteger(dropCount) ) {
-                        stage.brickDropMin = 1;
-                        stage.brickDropMax = SBStringUtils::toNumber<int>(dropCount);
+                        stage.brickDropMin = SBStringUtils::toNumber<int>(dropCount);
+                        stage.brickDropMax = stage.brickDropMin;
                     }
                     // range
                     else if( dropCount.find("~") != string::npos ) {
