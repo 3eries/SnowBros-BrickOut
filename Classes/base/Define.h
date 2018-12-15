@@ -57,7 +57,7 @@ static const std::string FA_EVENT_PARAM_ITEM_NAME               = "item_name";  
 // 현재는 아이디를 사용하지만, 추후 plugin_config.json에 이름과 아이디를 정의하여 사용
 static const std::string LEADER_BOARD_HIGH_SCORE                = "CgkIhM_O4eseEAIQAQ";
 
-// 이미지 경로
+// 리소스 경로
 static const std::string DIR_IMG                    = "images/";
 static const std::string DIR_IMG_COMMON             = DIR_ADD(DIR_IMG, "common");
 static const std::string DIR_IMG_SPLASH             = DIR_ADD(DIR_IMG, "splash");
@@ -65,6 +65,8 @@ static const std::string DIR_IMG_MAIN               = DIR_ADD(DIR_IMG, "main");
 static const std::string DIR_IMG_MAIN_IPAD          = DIR_ADD(DIR_IMG_MAIN, "ipad");
 static const std::string DIR_IMG_GAME               = DIR_ADD(DIR_IMG, "game");
 static const std::string DIR_IMG_GAME_IPAD          = DIR_ADD(DIR_IMG_GAME, "ipad");
+
+static const std::string DIR_BRICK                  = "brick/";
 
 // 스파인 애니메이션
 static const std::string ANIM_EXT                   = ".json";
