@@ -11,6 +11,8 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
+#include "BrickData.h"
+
 struct StageData {
     int                      level;                         // 레벨
     int                      stage;                         // 스테이지
@@ -23,9 +25,9 @@ struct StageData {
     int                      friendPowerUpDropRate;         // 프렌즈 볼 증가 아이템 드랍률
     int                      moneyDropRate;                 // 재화 드랍률
     
-    StringList               brickList;                     // 일반 벽돌 리스트
-    StringList               eliteBrickList;                // 엘리트 벽돌 리스트
-    StringList               bossBrickList;                 // 보스 벽돌 리스트
+    BrickList                brickList;                     // 일반 벽돌 리스트
+    BrickList                eliteBrickList;                // 엘리트 벽돌 리스트
+    BrickList                bossBrickList;                 // 보스 벽돌 리스트
     
     StageData() : level(0), stage(0) {}
     
@@ -35,6 +37,25 @@ struct StageData {
     eliteBrickDropRate(data.eliteBrickDropRate),
     powerUpDropRate(data.powerUpDropRate), friendPowerUpDropRate(data.friendPowerUpDropRate), moneyDropRate(data.moneyDropRate),
     brickList(data.brickList), eliteBrickList(data.eliteBrickList), bossBrickList(data.bossBrickList) {
+    }
+    
+    int getRandomDropCount() {
+        return cocos2d::random<int>(brickDropMin, brickDropMax);
+    }
+    
+    BrickData getRandomBrick() {
+        int i = cocos2d::random<int>(0, (int)brickList.size()-1);
+        return brickList[i];
+    }
+    
+    BrickData getRandomEliteBrick() {
+        int i = cocos2d::random<int>(0, (int)eliteBrickList.size()-1);
+        return eliteBrickList[i];
+    }
+    
+    BrickData getRandomBossBrick() {
+        int i = cocos2d::random<int>(0, (int)bossBrickList.size()-1);
+        return bossBrickList[i];
     }
     
     std::string toString() {
@@ -48,22 +69,22 @@ struct StageData {
         
         str += "\t\tbrickList: ";
         
-        for( std::string brick : brickList ) {
-            str += brick + ", ";
+        for( auto brick : brickList ) {
+            str += brick.brickId + ", ";
         }
         
         str += "\n";
         str += "\t\teliteBrickList: ";
         
-        for( std::string brick : eliteBrickList ) {
-            str += brick + ", ";
+        for( auto brick : eliteBrickList ) {
+            str += brick.brickId + ", ";
         }
         
         str += "\n";
         str += "\t\tbossBrickList: ";
         
-        for( std::string brick : bossBrickList ) {
-            str += brick + ", ";
+        for( auto brick : bossBrickList ) {
+            str += brick.brickId + ", ";
         }
         
         str += "\n\t}";

@@ -144,21 +144,21 @@ DBManager::DBManager() {
                 }
                 
                 // brick_list
-                auto getStringList = [&](string key) -> StringList {
+                auto getBrickList = [&](string key) -> BrickList {
                     
                     auto list = stageValue[SBJSON::value(key, allocator)].GetArray();
-                    StringList stringList;
+                    BrickList bricks;
                     
                     for( int i = 0; i < list.Size(); ++i ) {
-                        stringList.push_back(list[i].GetString());
+                        bricks.push_back(getBrick(list[i].GetString()));
                     }
                     
-                    return stringList;
+                    return bricks;
                 };
                 
-                if( stageValue.HasMember("brick_list") )          stage.brickList = getStringList("brick_list");
-                if( stageValue.HasMember("elite_brick_list") )    stage.eliteBrickList = getStringList("elite_brick_list");
-                if( stageValue.HasMember("boss_brick_list") )     stage.bossBrickList = getStringList("boss_brick_list");
+                if( stageValue.HasMember("brick_list") )          stage.brickList = getBrickList("brick_list");
+                if( stageValue.HasMember("elite_brick_list") )    stage.eliteBrickList = getBrickList("elite_brick_list");
+                if( stageValue.HasMember("boss_brick_list") )     stage.bossBrickList = getBrickList("boss_brick_list");
                 
                 // int values
                 {
