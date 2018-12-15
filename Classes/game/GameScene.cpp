@@ -424,47 +424,92 @@ void GameScene::showContinuePopup() {
  * 게임 결과 팝업 노출
  */
 void GameScene::showResultPopup() {
- 
-    // 선물 활성화
-    // GiftManager::setEnabled(GiftType::BOOST, true);
-    // GiftManager::setCheckEnabled(true);
+
+    // 연출용 레이어 생성
+    auto layer = SBNodeUtils::createTouchNode();
+    addChild(layer, SBZOrder::TOP);
     
-    // 팝업
-    auto popup = ResultPopup::create(GameManager::getScore());
-    popup->setOnPopupEventListener([=](Node *sender, PopupEventType eventType) {
-        
-        switch( eventType ) {
-            case PopupEventType::ENTER_ACTION_FINISHED: {
-                auto onAdFinished = [=]() {
-                    // 광고 닫힌 후 리뷰 유도
-                    this->checkReview();
-                };
-                
-                // 전면 광고 로딩됨, 1초 후 노출
-                if( !User::isOwnRemoveAdsItem() && AdsHelper::isInterstitialLoaded() ) {
-                    SBDirector::postDelayed(this, [=]() {
-                        auto listener = AdListener::create(AdType::INTERSTITIAL);
-                        listener->setTarget(this);
-                        listener->onAdOpened = [=]() {
-                        };
-                        listener->onAdClosed = onAdFinished;
-                        AdsHelper::getInstance()->showInterstitial(listener);
-                    }, 1.0f, true);
-                }
-                // 전면 광고 로딩되지 않음
-                else {
-                    onAdFinished();
-                }
-                
-            } break;
-                
-            case PopupEventType::EXIT_ACTION_FINISHED: {
-            } break;
-                
-            default: break;
-        }
+    layer->addChild(LayerColor::create(Color4B::BLACK));
+    
+    // 1st animation
+    const int LEN = 13;
+    vector<string> animFiles1;
+    
+    for( int i = 0; i < LEN; ++i ) {
+        animFiles1.push_back(DIR_IMG_GAME + STR_FORMAT("ui_gameover01_%02d.png", i+1));
+    }
+    
+    auto anim1 = SBAnimationSprite::create(animFiles1, 0.1f, 1);
+    anim1->setAnchorPoint(ANCHOR_MB);
+    anim1->setPosition(Vec2MC(0, 20));
+    layer->addChild(anim1);
+    
+    // 2nd animation
+    vector<string> animFiles2({
+        DIR_IMG_GAME + "ui_gameover02_01.png",
+        DIR_IMG_GAME + "ui_gameover02_02.png",
     });
-    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_BOTTOM);
+    
+    auto anim2 = SBAnimationSprite::create(animFiles2, 0.1f, 5);
+    anim2->setAnchorPoint(ANCHOR_MT);
+    anim2->setPosition(Vec2MC(0, -20));
+    anim2->setVisible(false);
+    layer->addChild(anim2);
+    
+    // run
+    anim1->runAnimation([=](Node *sender) {
+        
+        anim2->setVisible(true);
+        anim2->runAnimation([=](Node *sender) {
+            
+            anim1->setVisible(false);
+            anim2->setVisible(false);
+            
+            this->replaceScene(SceneType::MAIN);
+            // onCompletedListener();
+        });
+    });
+    
+//    // 선물 활성화
+//    // GiftManager::setEnabled(GiftType::BOOST, true);
+//    // GiftManager::setCheckEnabled(true);
+//
+//    // 팝업
+//    auto popup = ResultPopup::create(GameManager::getScore());
+//    popup->setOnPopupEventListener([=](Node *sender, PopupEventType eventType) {
+//
+//        switch( eventType ) {
+//            case PopupEventType::ENTER_ACTION_FINISHED: {
+//                auto onAdFinished = [=]() {
+//                    // 광고 닫힌 후 리뷰 유도
+//                    this->checkReview();
+//                };
+//
+//                // 전면 광고 로딩됨, 1초 후 노출
+//                if( !User::isOwnRemoveAdsItem() && AdsHelper::isInterstitialLoaded() ) {
+//                    SBDirector::postDelayed(this, [=]() {
+//                        auto listener = AdListener::create(AdType::INTERSTITIAL);
+//                        listener->setTarget(this);
+//                        listener->onAdOpened = [=]() {
+//                        };
+//                        listener->onAdClosed = onAdFinished;
+//                        AdsHelper::getInstance()->showInterstitial(listener);
+//                    }, 1.0f, true);
+//                }
+//                // 전면 광고 로딩되지 않음
+//                else {
+//                    onAdFinished();
+//                }
+//
+//            } break;
+//
+//            case PopupEventType::EXIT_ACTION_FINISHED: {
+//            } break;
+//
+//            default: break;
+//        }
+//    });
+//    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_BOTTOM);
 }
 
 /**
