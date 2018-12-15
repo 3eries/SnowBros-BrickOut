@@ -110,6 +110,7 @@ void DBManager::init() {
                 StageData stage(prevStage);
                 stage.level             = level.level;
                 stage.stage             = stageValue["stage"].GetInt();
+                stage.isLastStage       = stage.stage == level.stageLen;
                 
                 // brick_hp
                 if( stageValue.HasMember("brick_hp") ) {

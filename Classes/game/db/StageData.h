@@ -16,6 +16,7 @@
 struct StageData {
     int                      level;                         // 레벨
     int                      stage;                         // 스테이지
+    bool                     isLastStage;                   // 마지막 스테이지 여부
     std::string              brickHpOrigin;                 // 벽돌 HP 원본 json
     int                      brickHp;                       // 벽돌 HP
     int                      brickDropMin;                  // 벽돌 최소 드랍 수
@@ -29,10 +30,14 @@ struct StageData {
     BrickList                eliteBrickList;                // 엘리트 벽돌 리스트
     BrickList                bossBrickList;                 // 보스 벽돌 리스트
     
-    StageData() : level(0), stage(0) {}
+    StageData() : level(0), stage(0), isLastStage(false),
+    brickHpOrigin(""), brickHp(0), brickDropMin(0), brickDropMax(0),
+    eliteBrickDropRate(0),
+    powerUpDropRate(0), friendPowerUpDropRate(0), moneyDropRate(0) {
+    }
     
     StageData(const StageData &data) :
-    level(data.level), stage(data.stage),
+    level(data.level), stage(data.stage), isLastStage(data.isLastStage),
     brickHpOrigin(data.brickHpOrigin), brickHp(data.brickHp), brickDropMin(data.brickDropMin), brickDropMax(data.brickDropMax),
     eliteBrickDropRate(data.eliteBrickDropRate),
     powerUpDropRate(data.powerUpDropRate), friendPowerUpDropRate(data.friendPowerUpDropRate), moneyDropRate(data.moneyDropRate),
@@ -60,7 +65,7 @@ struct StageData {
     
     std::string toString() {
         std::string str = "\tStageData {\n";
-        str += STR_FORMAT("\t\tlevel: %d, stage: %d\n", level, stage);
+        str += STR_FORMAT("\t\tlevel: %d, stage: %d isLastStage: %d\n", level, stage, isLastStage);
         str += STR_FORMAT("\t\tbrickHpOrigin: %s, brickHp: %d, brickDropMin: %d, brickDropMax: %d\n", brickHpOrigin.c_str(), brickHp, brickDropMin, brickDropMax);
         str += STR_FORMAT("\t\teliteBrickDropRate: %d\n", eliteBrickDropRate);
         str += STR_FORMAT("\t\tpowerUpDropRate: %d, friendPowerUpDropRate: %d, moneyDropRate: %d\n",
