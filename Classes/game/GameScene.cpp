@@ -608,7 +608,7 @@ void GameScene::initGameView() {
 void GameScene::initMenu() {
     
     SBUIInfo infos[] = {
-        SBUIInfo(Tag::BTN_PAUSE,      ANCHOR_MR,   Vec2TR(-66 + (100*0.5f), -100),     "RSP_btn_pause.png"),
+        SBUIInfo(Tag::BTN_PAUSE,      ANCHOR_MR,   Vec2TR(-10, -37),     "btn_pause.png"),
     };
     
     for( int i = 0; i < sizeof(infos)/sizeof(SBUIInfo); ++i ) {
