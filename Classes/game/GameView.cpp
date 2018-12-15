@@ -224,7 +224,11 @@ void GameView::onStageChanged(const StageData &stage) {
         isEliteDropped = false;
         eliteBrickDropRate = stage.eliteBrickDropRate;
     } else {
-        eliteBrickDropRate *= 2;
+        if( eliteBrickDropRate == 0 ) {
+            eliteBrickDropRate = stage.eliteBrickDropRate;
+        } else {
+            eliteBrickDropRate *= 2;
+        }
     }
     
     // 타일 추가
