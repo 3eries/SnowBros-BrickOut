@@ -54,6 +54,10 @@ bool AimController::init() {
 
 void AimController::shoot() {
     
+    if( endPosition == Vec2::ZERO ) {
+        return;
+    }
+    
     setEnabled(false);
     
     if( onShootListener ) {
@@ -192,6 +196,7 @@ bool AimController::onTouchBegan(Touch *touch, Event*) {
     initCollisionBrick();
     
     isTouchCancelled = false;
+    endPosition = Vec2::ZERO;
     
     return true;
 }
@@ -220,6 +225,10 @@ void AimController::onTouchMoved(Touch *touch, Event *event) {
     const float angle = SBMath::getDegree(start, end);
     const float dist = start.getDistance(end);
 
+    if( dist < 10 ) {
+        return;
+    }
+    
     // 슈팅 오브젝트
     {
         shootingObj.endMark->setVisible(true);
