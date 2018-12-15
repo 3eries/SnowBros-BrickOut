@@ -308,8 +308,18 @@ void GameView::onFallFinished() {
     
     CCLOG("onFallFinished");
     
+    // 스테이지 클리어 체크
+    if( GameManager::getStage().isLastStage && getBricks().size() == 0 ) {
+        // TODO: 스테이지 클리어 함수 호출
+        CCLOG("STAGE CLEAR");
+        GameManager::onGameOver();
+        return;
+    }
+    
+    // Case 1. 다음 스테이지로 전환
     if( !GameManager::onNextStage() ) {
-        onTileAddFinished();
+        // Case 2. 진행할 스테이지 없다면 타일 이동
+        downTile();
     }
 }
 
