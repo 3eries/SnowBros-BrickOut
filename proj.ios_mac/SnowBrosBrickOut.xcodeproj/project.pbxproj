@@ -11,6 +11,8 @@
 		1D13226C21C18045005F4370 /* brick in Resources */ = {isa = PBXBuildFile; fileRef = 1D13226A21C18045005F4370 /* brick */; };
 		1D13226D21C18045005F4370 /* db in Resources */ = {isa = PBXBuildFile; fileRef = 1D13226B21C18045005F4370 /* db */; };
 		1D13227121C18241005F4370 /* DBManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13226F21C18241005F4370 /* DBManager.cpp */; };
+		1D13227921C1E522005F4370 /* Item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13227721C1E522005F4370 /* Item.cpp */; };
+		1D13228021C24D39005F4370 /* Friend.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13227E21C24D39005F4370 /* Friend.cpp */; };
 		1D18E425215CA19D0069A888 /* ConsentForm-android.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D18E422215CA19C0069A888 /* ConsentForm-android.cpp */; };
 		1D18E428215CBE430069A888 /* ConsentManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D18E426215CBE430069A888 /* ConsentManager.cpp */; };
 		1D1DA434210EF80C00467E6E /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D1DA433210EF80C00467E6E /* StoreKit.framework */; };
@@ -180,6 +182,11 @@
 		1D13227021C18241005F4370 /* DBManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DBManager.hpp; sourceTree = "<group>"; };
 		1D13227221C19453005F4370 /* LevelData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelData.h; sourceTree = "<group>"; };
 		1D13227321C19576005F4370 /* StageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StageData.h; sourceTree = "<group>"; };
+		1D13227621C1E157005F4370 /* ItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ItemData.h; sourceTree = "<group>"; };
+		1D13227721C1E522005F4370 /* Item.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Item.cpp; sourceTree = "<group>"; };
+		1D13227821C1E522005F4370 /* Item.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Item.hpp; sourceTree = "<group>"; };
+		1D13227E21C24D39005F4370 /* Friend.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Friend.cpp; sourceTree = "<group>"; };
+		1D13227F21C24D39005F4370 /* Friend.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Friend.hpp; sourceTree = "<group>"; };
 		1D18E422215CA19C0069A888 /* ConsentForm-android.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ConsentForm-android.cpp"; sourceTree = "<group>"; };
 		1D18E426215CBE430069A888 /* ConsentManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConsentManager.cpp; sourceTree = "<group>"; };
 		1D18E427215CBE430069A888 /* ConsentManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConsentManager.hpp; sourceTree = "<group>"; };
@@ -493,8 +500,18 @@
 				1D13227021C18241005F4370 /* DBManager.hpp */,
 				1D13227221C19453005F4370 /* LevelData.h */,
 				1D13227321C19576005F4370 /* StageData.h */,
+				1D13227621C1E157005F4370 /* ItemData.h */,
 			);
 			path = db;
+			sourceTree = "<group>";
+		};
+		1D13227B21C24D1B005F4370 /* friend */ = {
+			isa = PBXGroup;
+			children = (
+				1D13227E21C24D39005F4370 /* Friend.cpp */,
+				1D13227F21C24D39005F4370 /* Friend.hpp */,
+			);
+			path = friend;
 			sourceTree = "<group>";
 		};
 		1D1F3C8020AC9F5E0035A36C /* audio */ = {
@@ -918,6 +935,7 @@
 				1D69EBE621BC31A600DC5FF9 /* AimController.hpp */,
 				1DE5254C21BB0B94006CAE9F /* Ball.cpp */,
 				1DE5254D21BB0B94006CAE9F /* Ball.hpp */,
+				1D13227B21C24D1B005F4370 /* friend */,
 				1DD6979A21B84EAC005FDC62 /* GameMap.cpp */,
 				1DD6979B21B84EAC005FDC62 /* GameMap.hpp */,
 				1DD697A021B85467005FDC62 /* tile */,
@@ -930,6 +948,8 @@
 			children = (
 				1DD7A07321B9099F00C53730 /* Brick.cpp */,
 				1DD7A07421B9099F00C53730 /* Brick.hpp */,
+				1D13227721C1E522005F4370 /* Item.cpp */,
+				1D13227821C1E522005F4370 /* Item.hpp */,
 				1DD697A121B8546F005FDC62 /* Tile.cpp */,
 				1DD697A221B8546F005FDC62 /* Tile.hpp */,
 			);
@@ -1267,6 +1287,7 @@
 				1D45C48D20A8A7B8007E63AD /* SBTypes.cpp in Sources */,
 				1DE4B34C210DEE3800653FA8 /* IAPHelper-android.cpp in Sources */,
 				1D45C49120A8A7BD007E63AD /* SplashScene.cpp in Sources */,
+				1D13228021C24D39005F4370 /* Friend.cpp in Sources */,
 				1D45C49420A8A7C8007E63AD /* GameScene.cpp in Sources */,
 				1D599D9021AF0C7B00E758D8 /* GameEventListener.cpp in Sources */,
 				1D1F3C8320AC9F5E0035A36C /* SBAudioEngine.cpp in Sources */,
@@ -1301,6 +1322,7 @@
 				1D59F3D820FA69F100649A99 /* PopupListener.cpp in Sources */,
 				1DEA58172109A5B400CF6F98 /* AdsHelper-android.cpp in Sources */,
 				1D86439B21523AEC001841C9 /* NSData+AES.m in Sources */,
+				1D13227921C1E522005F4370 /* Item.cpp in Sources */,
 				1DE1DC2620F759C800BB3238 /* SBEffect.cpp in Sources */,
 				1D45C48A20A8A7B8007E63AD /* SBStringUtils.cpp in Sources */,
 				1D13227121C18241005F4370 /* DBManager.cpp in Sources */,

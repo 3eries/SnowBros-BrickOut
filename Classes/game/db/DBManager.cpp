@@ -34,6 +34,14 @@ void DBManager::destroyInstance() {
 
 DBManager::DBManager() {
     
+}
+
+DBManager::~DBManager() {
+    
+}
+
+void DBManager::init() {
+    
     // parse db json file
     // brick.json
     CCLOG("========== PARSE START (brick.json)  ==========");
@@ -42,7 +50,7 @@ DBManager::DBManager() {
         
         rapidjson::Document doc;
         doc.Parse(json.c_str());
-
+        
         auto list = doc.GetArray();
         
         for( int i = 0; i < list.Size(); ++i ) {
@@ -184,11 +192,17 @@ DBManager::DBManager() {
                         }
                     }
                 }
-             
+                
                 level.stages.push_back(stage);
                 prevStage = stage;
             }
             
+            // order by stage asc
+            sort(level.stages.begin(), level.stages.end(), [](const StageData &s1, const StageData &s2) {
+                return s1.stage < s2.stage;
+            });
+            
+            CCASSERT(level.stageLen == level.stages.size(), "DBManager level.json parse error: invalid stage length.");
             levels.push_back(level);
             
             CCLOG("%s", level.toString().c_str());
@@ -200,10 +214,6 @@ DBManager::DBManager() {
         });
     }
     CCLOG("========== PARSE END (level.json)  ==========");
-}
-
-DBManager::~DBManager() {
-    
 }
 
 LevelList DBManager::getLevels() {
@@ -220,10 +230,11 @@ LevelData DBManager::getLevel(int level) {
         }
     }
     
+    CCASSERT(false, "DBManager::getLevel error: invalid level.");
     return LevelData();
 }
 
-LevelData DBManager::getMaxLevel() {
+LevelData DBManager::getLastLevel() {
     
     auto levels = getLevels();
     
@@ -236,6 +247,22 @@ LevelData DBManager::getMaxLevel() {
 
 StageList DBManager::getStages(int level) {
     return getLevel(level).stages;
+}
+
+StageData DBManager::getStage(int level, int stage) {
+    
+    auto stages = getStages(level);
+    CCASSERT(stage-1 < stages.size(), "DBManager::getStage error: invalid stage.");
+    
+    return stages[stage-1];
+}
+
+bool DBManager::isLastStage(int level, int stage) {
+    return getLevel(level).stageLen == stage;
+}
+
+bool DBManager::isLastStage(const StageData &data) {
+    return isLastStage(data.level, data.stage);
 }
 
 BrickMap DBManager::getBricks() {

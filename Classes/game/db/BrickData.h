@@ -49,4 +49,15 @@ struct BrickData {
 typedef std::map<std::string, BrickData> BrickMap;
 typedef std::vector<BrickData>           BrickList;
 
+static inline int getTotalTileRows(BrickList bricks) {
+    
+    int total = 0;
+    
+    for( auto brick : bricks ) {
+        total += brick.width;
+    }
+    
+    return total;
+}
+
 #endif /* BrickData_h */

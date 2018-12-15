@@ -28,39 +28,43 @@ bool GameMap::init() {
         return false;
     }
     
-    setAnchorPoint(ANCHOR_M);
-    setPosition(MAP_POSITION);
-    setContentSize(MAP_CONTENT_SIZE);
+    setAnchorPoint(Vec2::ZERO);
+    setPosition(Vec2::ZERO);
+    setContentSize(SB_WIN_SIZE);
+    setSyncLocked(true);
     
     // image
-    // TODO:
-    auto image = LayerColor::create(Color4B::BLACK);
-    image->setIgnoreAnchorPointForPosition(false);
-    image->setAnchorPoint(ANCHOR_M);
-    image->setPosition(Vec2MC(MAP_CONTENT_SIZE, 0, 0));
-    image->setContentSize(MAP_CONTENT_SIZE);
-    addChild(image);
+    // game_bg_01.png Vec2BC(0, 640) , Size(720, 1280)
+    auto bg = Sprite::create(DIR_IMG_GAME + "game_bg_01.png");
+    bg->setAnchorPoint(ANCHOR_M);
+    bg->setPosition(Vec2MC(0,0));
+    addChild(bg);
+    
+    // game_bg_bottom.png Vec2BC(0, 26) , Size(720, 52)
+    auto bottomBg = Sprite::create(DIR_IMG_GAME + "game_bg_bottom.png");
+    bottomBg->setAnchorPoint(ANCHOR_M);
+    bottomBg->setPosition(Vec2BC(0, 26));
+    addChild(bottomBg);
+    
+    // game_dead_line.png Vec2BC(0, 216) , Size(715, 3)
+    auto deadLine = Sprite::create(DIR_IMG_GAME + "game_dead_line.png");
+    deadLine->setAnchorPoint(ANCHOR_M);
+    deadLine->setPosition(Vec2BC(0, 216));
+    addChild(deadLine);
     
     // 영역 확인용
+    /*
     {
-        /*
-         auto n = LayerColor::create(Color4B(50, 50, 50, 255));
-         n->setIgnoreAnchorPointForPosition(false);
-         n->setAnchorPoint(bg->getAnchorPoint());
-         n->setPosition(bg->getPosition());
-         n->setContentSize(MAP_CONTENT_SIZE);
-         addChild(n);
-         */
-        auto n = LayerColor::create(Color4B(50, 50, 50, 255));
+        auto n = LayerColor::create(Color4B(255, 0, 0, 255*0.2f));
         n->setIgnoreAnchorPointForPosition(false);
         n->setAnchorPoint(ANCHOR_M);
-        n->setPosition(Vec2MC(MAP_CONTENT_SIZE, 0, 0));
+        n->setPosition(MAP_POSITION);
         n->setContentSize(MAP_CONTENT_SIZE);
         addChild(n);
     }
-    
+    */
+     
     // 물리 객체 초기화
-    // TODO: 노드 좌표를 월드 좌표로 변환하여 사용
     b2BodyDef bodyDef;
     bodyDef.position = PTM(MAP_POSITION);
     bodyDef.userData = (SBPhysicsObject*)this;

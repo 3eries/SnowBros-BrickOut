@@ -432,6 +432,19 @@ void GameManager::onLevelChanged() {
     getEventDispatcher()->dispatchOnLevelChanged(getInstance()->getLevel());
 }
 
-
+/**
+ * 다음 스테이지로 전환
+ */
+bool GameManager::onNextStage() {
+    
+    if( !DBManager::isLastStage(getStage()) ) {
+        getInstance()->stage++;
+        getEventDispatcher()->dispatchOnStageChanged(getStage());
+        
+        return true;
+    }
+    
+    return false;
+}
 
 

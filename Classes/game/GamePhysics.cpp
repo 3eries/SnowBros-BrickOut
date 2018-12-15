@@ -11,6 +11,7 @@
 
 #include "object/Ball.hpp"
 #include "object/tile/Brick.hpp"
+#include "object/tile/Item.hpp"
 
 USING_NS_CC;
 using namespace std;
@@ -21,6 +22,7 @@ PhysicsManager::PhysicsManager() :
 world(nullptr), debugDrawView(nullptr), map(nullptr),
 onUpdateListener(nullptr),
 onContactBrickListener(nullptr),
+onContactItemListener(nullptr),
 onContactFloorListener(nullptr) {
     
 }
@@ -132,6 +134,70 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
         return false;
     }
     
+    auto userDataA = fixtureA->GetBody()->GetUserData();
+    auto userDataB = fixtureB->GetBody()->GetUserData();
+    
+    if( !userDataA || !userDataB ) {
+        return false;
+    }
+    
+    auto objA = (SBPhysicsObject*)userDataA;
+    auto objB = (SBPhysicsObject*)userDataB;
+    
+    if( objA->isCollisionLocked() || objB->isCollisionLocked() ) {
+        return false;
+    }
+    
+    if( !fixtureA->GetBody()->IsAwake() ||
+        !fixtureB->GetBody()->IsAwake() ) {
+        CCLOG("PhysicsManager::ShouldCollide body is sleep.");
+        // return false;
+    }
+    
+    // 벽돌 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, fixtureA, fixtureB);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            auto ball = (Ball*)objs.obj1;
+            auto brick = (Brick*)objs.obj2;
+            
+            // 볼 비활성화
+            if( !ball->isAwake() ) {
+                return false;
+            }
+            
+            // 벽돌이 깨짐
+            if( brick->isBroken() ) {
+                return false;
+            }
+        }
+    }
+    
+    // 아이템 체크
+    /*
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, fixtureA, fixtureB);
+        
+        if( objs.obj1 && objs.obj2 ) {
+        }
+    }
+    */
+    
+    // 바닥 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, fixtureA, fixtureB);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            auto ball = (Ball*)objs.obj1;
+            
+            // 볼 비활성화
+            if( !ball->isAwake() ) {
+                return false;
+            }
+        }
+    }
+    
     return true;
 }
 
@@ -140,85 +206,202 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
  */
 void PhysicsManager::BeginContact(b2Contact *contact) {
     
-    // CCLOG("BeginContact");
+    CCLOG("PhysicsManager::BeginContact");
     
     auto fixtureA = contact->GetFixtureA();
     auto fixtureB = contact->GetFixtureB();
 
-    auto userDataA = fixtureA->GetBody()->GetUserData();
-    auto userDataB = fixtureB->GetBody()->GetUserData();
-
-    if( !userDataA || !userDataB ) {
-        return;
+    if( !fixtureA->GetBody()->IsAwake() ||
+        !fixtureB->GetBody()->IsAwake() ) {
+        CCLOG("PhysicsManager::BeginContact body is sleep.");
+        // return;
     }
-
-    auto objA = (SBPhysicsObject*)userDataA;
-    auto objB = (SBPhysicsObject*)userDataB;
-
-    auto contactBrick = [=](SBPhysicsObject *ballObj, SBPhysicsObject *brickObj) {
-
-        auto ball = (Ball*)ballObj;
-        auto brick = (Brick*)brickObj;
-
-        this->onContactBrickListener(ball, brick);
-
-        // 벽돌이 깨진 경우, 충돌 객체 비활성화
-        if( brick->isBroken() ) {
-            // contact->SetEnabled(false);
+    
+    
+    // 벽돌 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, fixtureA, fixtureB);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            auto ball = (Ball*)objs.obj1;
+            auto brick = (Brick*)objs.obj2;
+            
+            CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
+            
+            return;
         }
-    };
-
-    auto contactFloor = [=](SBPhysicsObject *ballObj) {
-
-        auto ball = (Ball*)ballObj;
-        this->onContactFloorListener(ball);
-
-        contact->SetEnabled(false);
-    };
-
-    // Check Brick
-    if( fixtureA->GetFilterData().categoryBits == PhysicsCategory::BALL &&
-        fixtureB->GetFilterData().categoryBits == PhysicsCategory::BRICK ) {
-        contactBrick(objA, objB);
     }
-    else if( fixtureB->GetFilterData().categoryBits == PhysicsCategory::BALL &&
-             fixtureA->GetFilterData().categoryBits == PhysicsCategory::BRICK ) {
-        contactBrick(objB, objA);
+    
+    // 아이템 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, fixtureA, fixtureB);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            CCLOG("\t> Item ball awake: %d, item awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+            return;
+        }
     }
-    // Check Floor
-    else if( fixtureA->GetFilterData().categoryBits == PhysicsCategory::BALL &&
-             fixtureB->GetFilterData().categoryBits == PhysicsCategory::FLOOR ) {
-        contactFloor(objA);
-    }
-    else if( fixtureB->GetFilterData().categoryBits == PhysicsCategory::BALL &&
-             fixtureA->GetFilterData().categoryBits == PhysicsCategory::FLOOR ) {
-        contactFloor(objB);
+    
+    // 바닥 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, fixtureA, fixtureB);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            if( objs.obj1->isAwake() ) {
+                contact->SetEnabled(false);
+                this->onContactFloorListener((Ball*)objs.obj1);
+            } else {
+                CCLOG("\t>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Floor ball is sleep.");
+            }
+            
+            CCLOG("\t> Floor ball awake: %d, floor awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+            return;
+        }
     }
 }
 
 void PhysicsManager::EndContact(b2Contact *contact) {
     
-    // CCLOG("EndContact");
+    CCLOG("PhysicsManager::EndContact");
 }
 
 void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
     
-    auto fixtureA = contact->GetFixtureA();
-    auto fixtureB = contact->GetFixtureB();
+    CCLOG("PhysicsManager::PreSolve contact enabled: %d", contact->IsEnabled());
     
-    if( !fixtureA || !fixtureB ) {
-        MessageBox("fixture is null", "");
-        contact->SetEnabled(false);
+    // 벽돌 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, contact);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            auto ball = (Ball*)objs.obj1;
+            auto brick = (Brick*)objs.obj2;
+            
+            // 벽돌이 이미 깨진 경우, 충돌 비활성화
+            if( brick->isBroken() ) {
+                contact->SetEnabled(false);
+            }
+            
+            CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
+            
+            return;
+        }
     }
     
-    // 벽과의 충돌은 무시한다
-    /*
-     if( fixtureA->GetFilterData().categoryBits == PhysicsCategory::WALL ||
-     fixtureB->GetFilterData().categoryBits == PhysicsCategory::WALL ) {
-     contact->SetEnabled(false);
-     }
-     */
+    // 아이템 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            CCLOG("\t> Item ball awake: %d, item awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+        
+            // 충돌 비활성화
+            contact->SetEnabled(false);
+            
+            if( objs.obj1->isAwake() && objs.obj2->isAwake() ) {
+                this->onContactItemListener((Ball*)objs.obj1, (Item*)objs.obj2);
+            }
+            
+            return;
+        }
+    }
+    
+    // 바닥 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            CCLOG("\t> Floor ball awake: %d, floor awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+            
+            return;
+        }
+    }
 }
 
 void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
+    
+    CCLOG("PhysicsManager::PostSolve");
+    
+    // 벽돌 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, contact);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            auto ball = (Ball*)objs.obj1;
+            auto brick = (Brick*)objs.obj2;
+            
+            if( ball->isAwake() && brick->isAwake() ) {
+                this->onContactBrickListener(ball, brick);
+            }
+            
+            CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
+            
+            return;
+        }
+    }
+    
+    // 아이템 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            CCLOG("\t> Item ball awake: %d, item awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+            return;
+        }
+    }
+    
+    // 바닥 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            CCLOG("\t> Floor ball awake: %d, floor awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+            return;
+        }
+    }
 }
+
+PhysicsManager::CollisionObjects PhysicsManager::findObjects(uint16 categoryBits1, uint16 categoryBits2,
+                                                             b2Fixture *fixtureA, b2Fixture *fixtureB) {
+    
+    if( !fixtureA->GetBody()->GetUserData() ||
+        !fixtureB->GetBody()->GetUserData() ) {
+        return CollisionObjects();
+    }
+    
+    /*
+    if( !fixtureA->GetBody()->IsAwake() ||
+        !fixtureB->GetBody()->IsAwake() ) {
+        return;
+    }
+     */
+    
+    auto objA = (SBPhysicsObject*)fixtureA->GetBody()->GetUserData();
+    auto objB = (SBPhysicsObject*)fixtureB->GetBody()->GetUserData();
+    
+    if( objA->isCollisionLocked() || objB->isCollisionLocked() ) {
+        return CollisionObjects();
+    }
+    
+    CollisionObjects objs;
+    
+    if( fixtureA->GetFilterData().categoryBits == categoryBits1 &&
+        fixtureB->GetFilterData().categoryBits == categoryBits2 ) {
+        objs.obj1 = objA;
+        objs.obj2 = objB;
+    }
+    else if( fixtureB->GetFilterData().categoryBits == categoryBits1 &&
+             fixtureA->GetFilterData().categoryBits == categoryBits2 ) {
+        objs.obj1 = objB;
+        objs.obj2 = objA;
+    }
+    
+    return objs;
+}
+
+PhysicsManager::CollisionObjects PhysicsManager::findObjects(uint16 categoryBits1, uint16 categoryBits2,
+                                                             b2Contact *contact) {
+    
+    return findObjects(categoryBits1, categoryBits2, contact->GetFixtureA(), contact->GetFixtureB());
+}
+

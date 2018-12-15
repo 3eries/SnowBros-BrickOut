@@ -103,6 +103,7 @@ public:
     
     static void onScoreChanged();
     static void onLevelChanged();
+    static bool onNextStage();
 };
 
 #endif /* GameManager_hpp */

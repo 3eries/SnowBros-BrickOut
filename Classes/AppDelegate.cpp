@@ -97,7 +97,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
     RankingManager::getInstance()->init();
 //    GameConfiguration::getInstance()->init();
     GiftManager::getInstance()->init();
-    DBManager::getInstance();
+    DBManager::getInstance()->init();
     
     // run
     SceneManager::getInstance()->replace(SceneType::SPLASH);

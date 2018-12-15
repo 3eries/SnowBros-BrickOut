@@ -40,6 +40,7 @@ public:
     
     std::function<void(int)>                onScoreChanged;             // 스코어 변경
     std::function<void(const LevelData&)>   onLevelChanged;             // 레벨 변경
+    std::function<void(const StageData&)>   onStageChanged;             // 스테이지 변경
 private:
     GameEventListener(cocos2d::Ref *target);
     

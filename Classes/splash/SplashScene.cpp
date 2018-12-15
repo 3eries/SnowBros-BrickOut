@@ -95,6 +95,12 @@ void SplashScene::replaceMainScene() {
  */
 void SplashScene::initLaunchImage() {
 
+    SBDirector::postDelayed(this, [=]() {
+        this->launchImageFinished();
+    }, 1.0f, true);
+    
+    return;
+    
     // 시리즈 로고는 30분동안 재노출 하지 않음
     double now = SBSystemUtils::getCurrentTimeSeconds();
     double viewTime = UserDefault::getInstance()->getDoubleForKey(UserDefaultKey::SPLASH_LOGO_VIEW_TIME, 0);

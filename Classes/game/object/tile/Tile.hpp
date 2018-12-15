@@ -31,8 +31,8 @@ public:
     
     typedef std::vector<Position> Positions;
     
-    static cocos2d::Vec2 convertToTilePosition(int x, int y);
-    static cocos2d::Vec2 convertToTilePosition(Position tilePos);
+    static cocos2d::Vec2 convertToTilePosition(int x, int y, int w = 1, int h = 1);
+    static cocos2d::Vec2 convertToTilePosition(Position tilePos, int w = 1, int h = 1);
     
 public:
     static const float ENTER_DURATION;
@@ -44,7 +44,7 @@ public:
     
 protected:
     virtual bool init() override;
-    virtual void initPhysics();
+    virtual void initPhysics() override;
     
 public:
     virtual void enterWithAction();
@@ -54,6 +54,7 @@ public:
     
 public:
     virtual void setTilePosition(Position tilePos, bool action = true);
+    virtual bool isContainsPosition(const Position &p);
     
 protected:
     CC_SYNTHESIZE_READONLY(int, rows, Rows);        // 가로칸

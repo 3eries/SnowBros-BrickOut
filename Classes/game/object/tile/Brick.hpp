@@ -14,13 +14,15 @@
 #include "superbomb.h"
 #include "Tile.hpp"
 
+#include "../../db/BrickData.h"
+
 class Brick : public Game::Tile {
 public:
-    static Brick* create(int hp);
+    static Brick* create(const BrickData &data, int hp);
     virtual ~Brick();
     
 protected:
-    Brick(int hp);
+    Brick(const BrickData &data, int hp);
     
     virtual bool init() override;
     virtual void initPhysics() override;
@@ -40,12 +42,13 @@ public:
     float   getHpGageRatio();
     
 protected:
+    CC_SYNTHESIZE_READONLY(BrickData, data, Data);
+    CC_SYNTHESIZE_READONLY(int, originalHp, OriginalHp);
+    CC_SYNTHESIZE_READONLY(int, hp, Hp);
+    
     CC_SYNTHESIZE(SBCallbackNode, onBreakListener, OnBreakListener)
     
     SBAnimationSprite *image;
-    
-    CC_SYNTHESIZE_READONLY(int, originalHp, OriginalHp);
-    CC_SYNTHESIZE_READONLY(int, hp, Hp);
     
     struct HpNode {
         cocos2d::Node *bg;

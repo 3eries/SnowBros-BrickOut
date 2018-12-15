@@ -49,6 +49,7 @@ public:
     
     void dispatchOnScoreChanged(int score);
     void dispatchOnLevelChanged(const LevelData &level);
+    void dispatchOnStageChanged(const StageData &stage);
     
 private:
     GameEventListeners listeners;

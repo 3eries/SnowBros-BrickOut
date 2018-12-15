@@ -13,11 +13,14 @@
 #include "User.hpp"
 #include "UIHelper.hpp"
 #include "TestHelper.hpp"
+#include "RankingManager.hpp"
 
 #include "object/GameMap.hpp"
 #include "object/Ball.hpp"
+#include "object/friend/Friend.hpp"
 #include "object/AimController.hpp"
 #include "object/tile/Brick.hpp"
+#include "object/tile/Item.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -32,7 +35,9 @@ static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
 
 GameView::GameView() :
 gameMgr(GameManager::getInstance()),
-tunnelingCount(0) {
+tunnelingCount(0),
+tunnelingCountLabel(nullptr),
+bodyCountLabel(nullptr) {
 }
 
 GameView::~GameView() {
@@ -55,6 +60,7 @@ bool GameView::init() {
     initMap();
     initBall();
     initTile();
+    initFriends();
     initAimController();
     initTouchListener();
     initGameListener();
@@ -106,6 +112,12 @@ void GameView::onGameReset() {
     
     isWithdrawEnabled = false;
     isWithdraw = false;
+    
+    toAddBalls = 0;
+    toAddFriendsBalls = 0;
+    
+    eliteBrickDropRate = GameManager::getStage().eliteBrickDropRate;
+    isEliteDropped = false;
 }
 
 /**
@@ -114,7 +126,8 @@ void GameView::onGameReset() {
 void GameView::onGameStart() {
     
     addBall(GameManager::getConfig()->getFirstBallCount());
-    addBrick(4);
+    addBrick();
+    addItem();
     
     onTileAddFinished();
 }
@@ -187,12 +200,46 @@ void GameView::onScoreChanged(int score) {
  * 레벨 변경
  */
 void GameView::onLevelChanged(const LevelData &level) {
+    
+    eliteBrickDropRate = GameManager::getStage().eliteBrickDropRate;
+}
+
+/**
+ * 스테이지 변경됨
+ */
+void GameView::onStageChanged(const StageData &stage) {
+    
+    // 획득한 아이템 반영
+    if( toAddBalls > 0 ) {
+        addBall(toAddBalls);
+        toAddBalls = 0;
+    }
+
+    if( toAddFriendsBalls > 0 ) {
+        toAddFriendsBalls = 0;
+    }
+    
+    // 엘리트 벽돌 드랍률 업데이트
+    if( isEliteDropped ) {
+        isEliteDropped = false;
+        eliteBrickDropRate = stage.eliteBrickDropRate;
+    } else {
+        eliteBrickDropRate *= 2;
+    }
+    
+    // 타일 추가
+    addBrick();
+    addItem();
+    
+    onTileAddFinished();
 }
 
 /**
  * 타일 추가 완료
  */
 void GameView::onTileAddFinished() {
+    
+    CCLOG("onTileAddFinished");
     
     // 타일 등장 연출 완료 후 이동
     SBDirector::postDelayed(this, [=]() {
@@ -205,8 +252,10 @@ void GameView::onTileAddFinished() {
  */
 void GameView::onTileDownFinished() {
     
+    CCLOG("onTileDownFinished");
+    
     // 게임 오버 체크
-    if( isExistTile(0) ) {
+    if( isExistBrick(0) ) {
         GameManager::onGameOver();
         return;
     }
@@ -222,7 +271,16 @@ void GameView::onTileDownFinished() {
  */
 void GameView::onShootingReady() {
     
+    CCLOG("onShootingReady");
+    
     aimController->setEnabled(true, getBricks());
+    
+    // 아이템 비활성화
+    auto items = getItems();
+    
+    for( auto item : items ) {
+        item->setActive(false, false);
+    }
     
     // 볼 위치 설정
     for( auto ball : balls ) {
@@ -244,11 +302,11 @@ void GameView::onShootFinished() {
  */
 void GameView::onFallFinished() {
     
-    // 타일 추가
-    addBrick(random(1, 2)); // 벽돌
-    addItem(1);
+    CCLOG("onFallFinished");
     
-    onTileAddFinished();
+    if( !GameManager::onNextStage() ) {
+        onTileAddFinished();
+    }
 }
 
 /**
@@ -269,7 +327,7 @@ void GameView::onBrickBreak(Brick *brick) {
 void GameView::onPhysicsUpdate() {
  
     // 터널링 체크
-    if( !isWithdraw ) {
+    if( !isWithdraw && tunnelingCountLabel ) {
         auto bricks = getBricks();
         
         for( auto brick : bricks ) {
@@ -287,6 +345,7 @@ void GameView::onPhysicsUpdate() {
                 Vec2 center = MTP(body->GetPosition());
                 
                 if( brickBox.containsPoint(center) ) {
+                    CCLOG("Warning: 터널링 발생!!");
                 // if( brickBox.intersectsCircle(center, BALL_RADIUS) ) {
                     ++tunnelingCount;
                     needRemoveBalls.push_back(ball);
@@ -302,7 +361,9 @@ void GameView::onPhysicsUpdate() {
     }
     
     // 바디 수 체크
-    bodyCountLabel->setString(STR_FORMAT("Body Count: %d", world->GetBodyCount()));
+    if( bodyCountLabel ) {
+        bodyCountLabel->setString(STR_FORMAT("Body Count: %d", world->GetBodyCount()));
+    }
 }
 
 /**
@@ -310,7 +371,33 @@ void GameView::onPhysicsUpdate() {
  */
 void GameView::onContactBrick(Ball *ball, Brick *brick) {
     
+    if( brick->isBroken() ) {
+        CCLOG("Warning: 이미 깨진 벽돌 충돌 이벤트 발생!!");
+        return;
+    }
+    
     brick->sufferDamage(ball->getDamage());
+}
+
+/**
+ * 볼 & 아이템 충돌
+ */
+void GameView::onContactItem(Ball *ball, Item *item) {
+    
+    if( !item->isAwake() ) {
+        CCLOG("Warning: 아이템 sleep 상태에서 충돌 이벤트 발생!!");
+        return;
+    }
+    
+    switch( item->getData().type ) {
+        case ItemType::POWER_UP:            ++toAddBalls;              break;
+        case ItemType::FRIENDS_POWER_UP:    ++toAddFriendsBalls;       break;
+        default:
+            CCASSERT(false, "GameView::onContactItem error: invalid item.");
+            break;
+    }
+    
+    removeTile(item);
 }
 
 /**
@@ -319,16 +406,19 @@ void GameView::onContactBrick(Ball *ball, Brick *brick) {
 void GameView::onContactFloor(Ball *ball) {
     
     if( isWithdraw ) {
-        
+        CCLOG("Warning: 볼 회수 중 바닥 충돌 이벤트 발생!!");
         return;
     }
 
     ball->setFall(true);
     ++fallenBallCount;
 
+    CCLOG("onContactFloor fallenBallCount: %d", fallenBallCount);
+    
     // 볼 바디 비활성화
     // ball->sleepWithAction();
     ball->sleep(false);
+    ball->setCollisionLocked(true);
     
     // 첫번째 볼 추락
     if( fallenBallCount == 1 ) {
@@ -353,6 +443,13 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     shootIndex = 0;
     fallenBallCount = 0;
+    
+    // 아이템 활성화
+    auto items = getItems();
+    
+    for( auto item : items ) {
+        item->setActive(true);
+    }
     
     // 속도 설정
     // b2Vec2 velocity(random(-30, 30), 30);
@@ -387,7 +484,7 @@ void GameView::shoot(const Vec2 &endPosition) {
 
         ++shootIndex;
 
-        ballCountLabel->setString(TO_STRING(balls.size() - shootIndex));
+        ballCountLabel->setString("X" + TO_STRING(balls.size() - shootIndex));
 
     }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
     
@@ -418,6 +515,7 @@ void GameView::withdrawBalls() {
         }
         
         ball->sleep(false);
+        ball->setCollisionLocked(true);
         ball->setSyncLocked(true);
         
         // 시작 위치로 이동
@@ -445,7 +543,15 @@ void GameView::withdrawBalls() {
  */
 void GameView::downTile() {
     
-    for( auto tile : tiles ) {
+    auto list = tiles;
+    
+    for( auto tile : list ) {
+        // 아이템이 마지막 칸에 있으면 제거
+        if( tile->getTilePosition().y == 0 && dynamic_cast<Item*>(tile) ) {
+            removeTile(tile);
+            continue;
+        }
+        
         tile->down();
     }
 
@@ -464,18 +570,21 @@ void GameView::addBall(int count) {
         auto ball = Ball::create();
         ball->setPosition(aimController->getStartPosition());
         ball->sleep(false);
-        addChild(ball, ZOrder::BALL);
+        ball->setCollisionLocked(true);
+        addChild(ball, (int)ZOrder::BALL);
     
         balls.push_back(ball);
     }
 
-    ballCountLabel->setString(TO_STRING(balls.size()));
+    updateBallCountUI();
 }
 
 /**
  * 볼 제거
  */
 void GameView::removeBall(Ball *ball) {
+    
+    CCLOG("GameView::removeBall");
     
     auto it = std::find(balls.begin(), balls.end(), ball);
     if( it == balls.end() ) {
@@ -486,48 +595,97 @@ void GameView::removeBall(Ball *ball) {
     balls.erase(it);
     
     // remove ball
-    ball->sleep();
     ball->setNeedRemove(true);
 }
 
 /**
  * 벽돌 추가
  */
-void GameView::addBrick(int count) {
+void GameView::addBrick() {
     
-    auto positions = getEmptyPositions(GameManager::getConfig()->getTileColumns()-1);
-    CCASSERT(positions.size() >= count, "GameView::addBrick error.");
+    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
+    const int TILE_POSITION_Y = GameManager::getConfig()->getTileColumns()-1;
+    auto stage = GameManager::getStage();
     
-    random_shuffle(positions.begin(), positions.end());
+    // 비어있는 좌표 리스트 생성
+    auto positions = getEmptyPositions(TILE_POSITION_Y);
+    if( positions.size() == 0 ) {
+        return;
+    }
     
-    for( int i = 0; i < count; ++i ) {
-        auto brick = Brick::create(GameManager::getConfig()->getFirstBallCount());
-        brick->setTilePosition(positions[i], false);
-        addTile(brick);
+    CCASSERT(positions.size() == TILE_ROWS, "GameView::addBrick error.");
+    
+    auto addBrick = [=](const BrickData &data, int hp) -> Brick* {
+        auto brick = Brick::create(data, hp);
+        this->addTile(brick);
         
         brick->setOnBreakListener([=](Node*) {
             this->onBrickBreak(brick);
         });
+        
+        return brick;
+    };
+    
+    // 보스 벽돌
+    // FIXME: 보스 1개, 가운데 위치하도록 하드코딩 되어있음
+    for( int i = 0; i < stage.bossBrickList.size() && positions.size() > 0; ++i ) {
+    }
+    
+    if( stage.bossBrickList.size() > 0 ) {
+        auto brick = addBrick(stage.bossBrickList[0], stage.brickHp*10);
+        brick->setTilePosition(Game::Tile::Position(2, TILE_POSITION_Y), false);
+    }
+    
+    // 엘리트 벽돌
+    positions = getEmptyRandomPositions(TILE_POSITION_Y);
+    
+    int  dropCount = stage.getRandomDropCount();
+    isEliteDropped = (random<int>(1,100) <= eliteBrickDropRate);
+    
+    CCLOG("addBrick eliteBrickDropRate: %d isEliteDropped: %d", eliteBrickDropRate, isEliteDropped);
+    
+    if( isEliteDropped ) {
+        auto brick = addBrick(stage.getRandomEliteBrick(), stage.brickHp*3);
+        brick->setTilePosition(positions[0], false);
+        
+        positions.erase(positions.begin());
+    }
+    
+    // 일반 벽돌
+    for( int i = 0; i < dropCount && positions.size() > 0; ++i ) {
+        auto brick = addBrick(stage.getRandomBrick(), stage.brickHp);
+        brick->setTilePosition(positions[0], false);
+        
+        positions.erase(positions.begin());
     }
 }
 
 /**
  * 아이템 추가
  */
-void GameView::addItem(int count) {
+void GameView::addItem() {
     
-    auto positions = getEmptyPositions(GameManager::getConfig()->getTileColumns()-1);
+    const int TILE_POSITION_Y = GameManager::getConfig()->getTileColumns()-1;
+    auto stage = GameManager::getStage();
     
+    // 비어있는 좌표 리스트 생성
+    auto positions = getEmptyRandomPositions(TILE_POSITION_Y);
     if( positions.size() == 0 ) {
         return;
     }
     
-    CCASSERT(positions.size() >= count, "GameView::addItem error.");
+    // Power Up
+    bool isDrop = (random<int>(1,100) <= stage.powerUpDropRate);
     
-    random_shuffle(positions.begin(), positions.end());
-    
-    for( int i = 0; i < count; ++i ) {
+    if( isDrop ) {
+        ItemData data;
+        data.type = ItemType::POWER_UP;
         
+        auto item = Item::create(data);
+        item->setTilePosition(positions[0], false);
+        addTile(item);
+        
+        positions.erase(positions.begin());
     }
 }
 
@@ -540,7 +698,7 @@ void GameView::addTile(Game::Tile *tile) {
     
     tile->enterWithAction();
     
-    addChild(tile, ZOrder::TILE);
+    addChild(tile, (int)ZOrder::TILE);
     tiles.push_back(tile);
 }
 
@@ -566,7 +724,7 @@ void GameView::removeTile(Game::Tile *tile) {
  */
 void GameView::updateBallCountUI() {
     
-    ballCountLabel->setString(TO_STRING(balls.size()));
+    ballCountLabel->setString("X" + TO_STRING(balls.size()));
 }
 
 /**
@@ -648,13 +806,20 @@ vector<Game::Tile*> GameView::getBricks() {
     });
 }
 
+vector<Game::Tile*> GameView::getItems() {
+    
+    return SBCollection::find(tiles, [](Game::Tile *tile) -> bool {
+        return dynamic_cast<Item*>(tile);
+    });
+}
+
 /**
  * 좌표에 해당하는 타일을 반환합니다
  */
 Game::Tile* GameView::getTile(const Game::Tile::Position &pos) {
     
     for( auto tile : tiles ) {
-        if( tile->getTilePosition().x == pos.x && tile->getTilePosition().y == pos.y ) {
+        if( tile->isContainsPosition(pos) ) {
             return tile;
         }
     }
@@ -681,6 +846,14 @@ Game::Tile::Positions GameView::getEmptyPositions(int y) {
     return positions;
 }
 
+Game::Tile::Positions GameView::getEmptyRandomPositions(int y) {
+    
+    auto positions = getEmptyPositions(y);
+    random_shuffle(positions.begin(), positions.end());
+    
+    return positions;
+}
+
 /**
  * y줄의 타일 유무를 반환합니다
  */
@@ -699,6 +872,22 @@ bool GameView::isExistTile(int y) {
     return false;
 }
 
+bool GameView::isExistBrick(int y) {
+    
+    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
+    
+    for( int x = 0; x < TILE_ROWS; ++x ) {
+        Game::Tile::Position pos(x,y);
+        auto tile = getTile(pos);
+        
+        if( tile && dynamic_cast<Brick*>(tile) ) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 /**
  * 물리 초기화
  */
@@ -709,6 +898,7 @@ void GameView::initPhysics() {
     
     physicsMgr->setOnUpdateListener(CC_CALLBACK_0(GameView::onPhysicsUpdate, this));
     physicsMgr->setOnContactBrickListener(CC_CALLBACK_2(GameView::onContactBrick, this));
+    physicsMgr->setOnContactItemListener(CC_CALLBACK_2(GameView::onContactItem, this));
     physicsMgr->setOnContactFloorListener(CC_CALLBACK_1(GameView::onContactFloor, this));
     
 #if DEBUG_DRAW_PHYSICS
@@ -728,10 +918,12 @@ void GameView::initPhysics() {
 //        flags += b2Draw::e_centerOfMassBit;
     view->getDebugDraw()->SetFlags(flags);
     
+    float posY = -100;
+    
     auto btn = SBButton::create("DebugDraw", FONT_COMMODORE, 30);
     btn->setZoomScale(0.1f);
     btn->setAnchorPoint(ANCHOR_TL);
-    btn->setPosition(Vec2TL(10, -20));
+    btn->setPosition(Vec2TL(10, posY));
     btn->setContentSize(Size(250, 50));
     addChild(btn, view->getLocalZOrder());
     
@@ -745,15 +937,14 @@ void GameView::initPhysics() {
     tunnelingCountLabel = Label::createWithTTF("", FONT_COMMODORE, 30,
                                                Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
     tunnelingCountLabel->setAnchorPoint(ANCHOR_TL);
-    tunnelingCountLabel->setPosition(Vec2TL(30, -70));
+    tunnelingCountLabel->setPosition(Vec2TL(30, posY-70));
     view->addChild(tunnelingCountLabel);
 
     bodyCountLabel = Label::createWithTTF("", FONT_COMMODORE, 30,
                                           Size::ZERO, TextHAlignment::LEFT, TextVAlignment::CENTER);
     bodyCountLabel->setAnchorPoint(ANCHOR_TL);
-    bodyCountLabel->setPosition(Vec2TL(30, -120));
+    bodyCountLabel->setPosition(Vec2TL(30, posY-120));
     view->addChild(bodyCountLabel);
-    
 #endif
 }
 
@@ -761,6 +952,7 @@ void GameView::initPhysics() {
  * 배경 초기화
  */
 void GameView::initBg() {
+
 }
 
 /**
@@ -774,14 +966,54 @@ void GameView::initMap() {
     
     GameManager::getPhysicsManager()->setMap(map);
     
+    // 상단 배경
+    // game_bg_top.png Vec2TC(0, -37) , Size(720, 74)
+    auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
+    topBg->setAnchorPoint(ANCHOR_M);
+    topBg->setPosition(Vec2TC(0, -37));
+    addChild(topBg, (int)ZOrder::SCORE);
+    
     // 스코어 라벨 초기화
-    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 40, Size::ZERO,
-                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
+    // SCORE size:28 stroke:3 Vec2TL(92, -37) , Size(122, 29)
+    auto scoreTitleLabel = Label::createWithTTF("SCORE:", FONT_COMMODORE, 28, Size::ZERO,
+                                                TextHAlignment::CENTER, TextVAlignment::CENTER);
+    scoreTitleLabel->setAnchorPoint(ANCHOR_M);
+    scoreTitleLabel->setPosition(Vec2TL(92, -37));
+    scoreTitleLabel->setTextColor(Color4B::WHITE);
+    scoreTitleLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(scoreTitleLabel, (int)ZOrder::SCORE);
+    
+    // 1234 size:28 stroke:3 Vec2TL(202, -37) , Size(90, 29)
+    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 28, Size::ZERO,
+                                           TextHAlignment::LEFT, TextVAlignment::CENTER);
     scoreLabel->setTag(Tag::SCORE);
-    scoreLabel->setAnchorPoint(ANCHOR_MT);
-    scoreLabel->setPosition(Vec2TC(0, -20));
+    scoreLabel->setAnchorPoint(ANCHOR_ML);
+    scoreLabel->setPosition(Vec2TL(202 - 90*0.5f, -37));
     scoreLabel->setTextColor(Color4B::WHITE);
-    addChild(scoreLabel);
+    scoreLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(scoreLabel, (int)ZOrder::SCORE);
+    
+    // High Score
+    // HIGH SCORE size:28 stroke:3 color:255,217,0 Vec2TR(-272, -37) , Size(222, 29)
+    /*
+    auto highScoreTitleLabel = Label::createWithTTF("HIGH SCORE:", FONT_COMMODORE, 28, Size::ZERO,
+                                                    TextHAlignment::CENTER, TextVAlignment::CENTER);
+    highScoreTitleLabel->setAnchorPoint(ANCHOR_M);
+    highScoreTitleLabel->setPosition(Vec2TR(-272, -37));
+    highScoreTitleLabel->setTextColor(Color4B(255,217,0,255));
+    highScoreTitleLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(highScoreTitleLabel, (int)ZOrder::SCORE);
+    
+    // 123456 size:28 stroke:3 color:255,217,0 Vec2TR(-90, -37) , Size(127, 29)
+    auto highScoreLabel = Label::createWithTTF(TO_STRING(RankingManager::getBestScore()), FONT_COMMODORE, 28, Size::ZERO,
+                                               TextHAlignment::LEFT, TextVAlignment::CENTER);
+    highScoreLabel->setTag(Tag::HIGH_SCORE);
+    highScoreLabel->setAnchorPoint(ANCHOR_ML);
+    highScoreLabel->setPosition(Vec2TR(-90 - 127*0.5f, -37));
+    highScoreLabel->setTextColor(Color4B(255,217,0,255));
+    highScoreLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(highScoreLabel, (int)ZOrder::SCORE);
+    */
 }
 
 /**
@@ -803,11 +1035,13 @@ void GameView::initBall() {
     */
     
     // 볼 갯수 표시 라벨
-    ballCountLabel = Label::createWithTTF("0", FONT_COMMODORE, 30, Size::ZERO,
+    // X50 size:26 stroke:3 Vec2BC(0, 29) , Size(66, 28)
+    ballCountLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
-    ballCountLabel->setAnchorPoint(ANCHOR_MB);
-    ballCountLabel->setPosition(Vec2BC(0, 20));
+    ballCountLabel->setAnchorPoint(ANCHOR_M);
+    ballCountLabel->setPosition(Vec2BC(0, 29));
     ballCountLabel->setTextColor(Color4B::WHITE);
+    ballCountLabel->enableOutline(Color4B::BLACK, 3);
     addChild(ballCountLabel);
 }
 
@@ -824,7 +1058,7 @@ void GameView::initTile() {
     
     for( int x = 0; x < TILE_ROWS; ++x ) {
         for( int y = 0; y < TILE_COLUMNS; ++y ) {
-            auto tile = LayerColor::create(Color4B(255,255,0,255*0.3f));
+            auto tile = LayerColor::create(Color4B(255,255,0,255*0.1f));
             tile->setIgnoreAnchorPointForPosition(false);
             tile->setCascadeOpacityEnabled(true);
             tile->setAnchorPoint(ANCHOR_M);
@@ -843,13 +1077,26 @@ void GameView::initTile() {
 }
 
 /**
+ * 프렌즈 초기화
+ */
+void GameView::initFriends() {
+    
+    // game_friends_02_idle1.png Vec2BL(46, 85) , Size(63, 75)
+    auto friendNode = Friend::create();
+    friendNode->setPosition(Vec2BL(46, 85));
+    addChild(friendNode);
+    
+    friends.push_back(friendNode);
+}
+
+/**
  * 조준 컨트롤러 초기화
  */
 void GameView::initAimController() {
     
     aimController = AimController::create();
     aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
-    addChild(aimController, SBZOrder::BOTTOM);
+    addChild(aimController, (int)ZOrder::AIM_CONTROLLER);
 }
 
 /**
@@ -887,6 +1134,7 @@ void GameView::initGameListener() {
     listener->onBoostEnd             = CC_CALLBACK_0(GameView::onBoostEnd, this);
     listener->onScoreChanged         = CC_CALLBACK_1(GameView::onScoreChanged, this);
     listener->onLevelChanged         = CC_CALLBACK_1(GameView::onLevelChanged, this);
+    listener->onStageChanged         = CC_CALLBACK_1(GameView::onStageChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }
 

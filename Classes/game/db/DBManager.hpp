@@ -15,6 +15,7 @@
 
 #include "LevelData.h"
 #include "BrickData.h"
+#include "ItemData.h"
 
 /** @class DBManager
  * @brief 이 클래스는 게임 DB를 관리합니다
@@ -25,14 +26,20 @@ public:
     static void destroyInstance();
     ~DBManager();
     
+    void init();
+    
 private:
     DBManager();
     
 public:
     static LevelList    getLevels();
     static LevelData    getLevel(int level);
-    static LevelData    getMaxLevel();
+    static LevelData    getLastLevel();
+    
     static StageList    getStages(int level);
+    static StageData    getStage(int level, int stage);
+    static bool         isLastStage(int level, int stage);
+    static bool         isLastStage(const StageData &data);
     
     static BrickMap     getBricks();
     static BrickData    getBrick(const std::string &brickId);

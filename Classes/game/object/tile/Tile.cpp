@@ -16,28 +16,28 @@ using namespace std;
 
 namespace Game {
     
-Vec2 Tile::convertToTilePosition(int x, int y) {
+Vec2 Tile::convertToTilePosition(int x, int y, int w, int h) {
     
-    Vec2 pos(MAP_ORIGIN);
+    Vec2 pos(TILE_ORIGIN);
     // content size
     pos.x += x * TILE_CONTENT_WIDTH;
     pos.y += y * TILE_CONTENT_HEIGHT;
     // margin & padding
     pos.x += TILE_MARGIN_X + (x * TILE_PADDING_X);
-    pos.y += TILE_MARGIN_BOTTOM + (y * TILE_PADDING_Y);
+    pos.y += (y * TILE_PADDING_Y);
     // anchor middle
-    pos.x += TILE_CONTENT_WIDTH*0.5f;
-    pos.y += TILE_CONTENT_HEIGHT*0.5f;
+    pos.x += (TILE_CONTENT_WIDTH * w) * 0.5f;
+    pos.y += (TILE_CONTENT_HEIGHT * h) * 0.5f;
     
     return pos;
 }
 
-Vec2 Tile::convertToTilePosition(Position tilePos) {
-    return convertToTilePosition(tilePos.x, tilePos.y);
+Vec2 Tile::convertToTilePosition(Position tilePos, int w, int h) {
+    return convertToTilePosition(tilePos.x, tilePos.y, w, h);
 }
 
-const float Tile::ENTER_DURATION         = 0.2f;
-const float Tile::MOVE_DURATION          = 0.2f;
+const float Tile::ENTER_DURATION         = 0.1f;
+const float Tile::MOVE_DURATION          = 0.1f;
 
 Tile::Tile(int rows, int columns) : SBPhysicsObject(this),
 rows(rows),
@@ -56,8 +56,6 @@ bool Tile::init() {
     
     setAnchorPoint(ANCHOR_M);
     setContentSize(MEASURE_TILE_SIZE(rows, columns));
-    
-    initPhysics();
     
     return true;
 }
@@ -81,6 +79,16 @@ void Tile::enterWithAction() {
 void Tile::removeWithAction() {
     
     sleep(false);
+    setCollisionLocked(true);
+    
+    b2Filter filter;
+    filter.categoryBits = 0; // 0x0001;
+    filter.maskBits = 0; // 0xFFFF;
+    
+    for( auto f = getBody()->GetFixtureList(); f; f = f->GetNext() ) {
+        f->SetFilterData(filter);
+    }
+    
 }
 
 /**
@@ -99,17 +107,28 @@ void Tile::setTilePosition(Position tilePos, bool action) {
     
     this->tilePos = tilePos;
     
+    Vec2 p = convertToTilePosition(tilePos, rows, columns);
+    
     if( action ) {
-        auto move = MoveTo::create(MOVE_DURATION, convertToTilePosition(tilePos));
+        auto move = MoveTo::create(MOVE_DURATION, p);
         auto callFunc = CallFunc::create([=]() {
             this->syncNodeToBody();
         });
         runAction(Sequence::create(move, callFunc, nullptr));
         
     } else {
-        setPosition(convertToTilePosition(tilePos));
+        setPosition(p);
         syncNodeToBody();
     }
+}
+    
+/**
+ * 좌표가 타일에 포함됐는지 반환합니다
+ */
+bool Tile::isContainsPosition(const Position &p) {
+
+    return p.x >= tilePos.x && p.y >= tilePos.y &&
+           p.x <= tilePos.x + (rows-1) && p.y <= tilePos.y + (columns-1);
 }
     
 } // namespace Game

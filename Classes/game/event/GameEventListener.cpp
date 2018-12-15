@@ -30,7 +30,7 @@ onGameStart(nullptr), onGameRestart(nullptr),
 onGamePause(nullptr), onGameResume(nullptr),
 onGameOver(nullptr), onGameContinue(nullptr), onGameResult(nullptr),
 onBoostStart(nullptr), onBoostEnd(nullptr),
-onScoreChanged(nullptr), onLevelChanged(nullptr) {
+onScoreChanged(nullptr), onLevelChanged(nullptr), onStageChanged(nullptr) {
 }
 
 GameEventListener::~GameEventListener() {

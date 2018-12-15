@@ -195,15 +195,16 @@ void GameScene::onGameOver() {
     setSceneTouchLocked(true);
     
     SBDirector::postDelayed(this, [=]() {
-        
-        // 이어하기
-        if( GameManager::isContinuable() ) {
-            this->showContinuePopup();
-        }
-        // 게임 결과
-        else {
-            GameManager::onGameResult();
-        }
+
+        GameManager::onGameResult();
+//        // 이어하기
+//        if( GameManager::isContinuable() ) {
+//            this->showContinuePopup();
+//        }
+//        // 게임 결과
+//        else {
+//            GameManager::onGameResult();
+//        }
     }, GAME_RESULT_DELAY, true);
 }
 
@@ -607,7 +608,7 @@ void GameScene::initGameView() {
 void GameScene::initMenu() {
     
     SBUIInfo infos[] = {
-        SBUIInfo(Tag::BTN_PAUSE,      ANCHOR_MR,   Vec2TR(-66 + (100*0.5f), -62),     "RSP_btn_pause.png"),
+        SBUIInfo(Tag::BTN_PAUSE,      ANCHOR_MR,   Vec2TR(-66 + (100*0.5f), -100),     "RSP_btn_pause.png"),
     };
     
     for( int i = 0; i < sizeof(infos)/sizeof(SBUIInfo); ++i ) {

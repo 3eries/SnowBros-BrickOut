@@ -52,6 +52,7 @@ b2Body* Ball::createBody(SBPhysicsObject *userData) {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
     bodyDef.fixedRotation = true;
+    bodyDef.awake = false;
     bodyDef.userData = userData;
     
     b2CircleShape circle;
@@ -61,7 +62,7 @@ b2Body* Ball::createBody(SBPhysicsObject *userData) {
     
     b2Filter filter;
     filter.categoryBits = PhysicsCategory::BALL;
-    filter.maskBits = PhysicsCategory::WALL | PhysicsCategory::FLOOR | PhysicsCategory::BRICK;
+    filter.maskBits = PhysicsCategory::WALL | PhysicsCategory::FLOOR | PhysicsCategory::BRICK | PhysicsCategory::ITEM;
     
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circle;
@@ -116,6 +117,7 @@ bool Ball::afterStep() {
 void Ball::shoot(b2Vec2 velocity) {
     
     setFall(false);
+    setCollisionLocked(false);
     setOpacity(255);
     
     getBody()->SetLinearVelocity(velocity);

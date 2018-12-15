@@ -37,13 +37,12 @@ enum GameState {
 };
 
 // Map
-// game_brick_01_idle1.png Vec2BL(60, 278) , Size(116, 120)
 #define                                       MAP_CONTENT_WIDTH                  720
-#define                                       MAP_CONTENT_HEIGHT                 1100
+#define                                       MAP_CONTENT_HEIGHT                 1154
 #define                                       MAP_CONTENT_SIZE                   cocos2d::Size(MAP_CONTENT_WIDTH, MAP_CONTENT_HEIGHT)
 
-#define                                       MAP_POSITION                       Vec2MC(0, -30)
-#define                                       MAP_ORIGIN                         cocos2d::Vec2(MAP_POSITION.x - MAP_CONTENT_WIDTH*0.5f, MAP_POSITION.y - MAP_CONTENT_HEIGHT*0.5f)
+#define                                       MAP_ORIGIN                         Vec2(0, 68-40*0.5f)
+#define                                       MAP_POSITION                       (MAP_ORIGIN + (MAP_CONTENT_SIZE*0.5f))
 #define                                       MAP_BOUNDING_BOX                   cocos2d::Rect(MAP_ORIGIN, MAP_CONTENT_SIZE)
 
 #define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE))  // 대각선
@@ -55,31 +54,34 @@ static const float                            SHOOT_INTERVAL                   =
 
 static const float                            BALL_RADIUS                      = 20;
 static const cocos2d::Size                    BALL_SIZE                        = cocos2d::Size(BALL_RADIUS*2, BALL_RADIUS*2);
-static const float                            BALL_MAX_VELOCITY                = 30;
+static const float                            BALL_MAX_VELOCITY                = 35;
 
-#define                                       SHOOTING_POSITION_Y                (MAP_ORIGIN.y+BALL_RADIUS+2)
+#define                                       SHOOTING_POSITION_Y                68
 #define                                       FIRST_SHOOTING_POSITION            Vec2BC(0, SHOOTING_POSITION_Y)
 
 // Wall
 static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f;   // 벽 두께
 
 // Tile
+#define                                       TILE_ORIGIN                        Vec2(0, 278 - 120*0.5f)
 static const float                            TILE_MARGIN_X                    = 2;
 // static const float                            TILE_MARGIN_Y                    = 2;
-static const float                            TILE_MARGIN_BOTTOM               = 120;
-static const float                            TILE_MARGIN_TOP                  = 2;
 
 static const float                            TILE_PADDING_X                   = 4;
-static const float                            TILE_PADDING_Y                   = 2;
+static const float                            TILE_PADDING_Y                   = 4;
 
 static const float                            TILE_CONTENT_WIDTH               = 116;
 static const float                            TILE_CONTENT_HEIGHT              = 120;
 static const cocos2d::Size                    TILE_CONTENT_SIZE                = cocos2d::Size(TILE_CONTENT_WIDTH, TILE_CONTENT_HEIGHT);
 
-#define MEASURE_TILE_SIZE(__rows__, __columns__)        cocos2d::Size(TILE_CONTENT_SIZE.width*__rows__, TILE_CONTENT_SIZE.height*__columns__)
+#define MEASURE_TILE_SIZE(__rows__, __columns__) \
+cocos2d::Size((TILE_CONTENT_SIZE.width*__rows__) + (TILE_PADDING_X*(__rows__-1)), (TILE_CONTENT_SIZE.height*__columns__) + (TILE_PADDING_Y*(__columns__-1)))
+
+// Item
+static const cocos2d::Size                    ITEM_CONTENT_SIZE                = cocos2d::Size(40, 48);
 
 // Physics
-static const float                            PHYSICS_FPS                      = 1 / 40.0f;
+static const float                            PHYSICS_FPS                      = 1 / 50.0f;
 
 enum PhysicsCategory {
     WALL        = (1 << 0),
@@ -90,7 +92,7 @@ enum PhysicsCategory {
 };
 
 // Game Value
-static const float                            GAME_RESULT_DELAY                = 1.0f;    // 게임 오버 -> 결과 노출까지의 지연 시간
+static const float                            GAME_RESULT_DELAY                = 0.2f;    // 게임 오버 -> 결과 노출까지의 지연 시간
 
 #endif /* GameDefine_h */
 

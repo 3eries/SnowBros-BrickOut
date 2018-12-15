@@ -14,9 +14,9 @@
 USING_NS_CC;
 using namespace std;
 
-Brick* Brick::create(int hp) {
+Brick* Brick::create(const BrickData &data, int hp) {
     
-    auto brick = new Brick(hp);
+    auto brick = new Brick(data, hp);
     
     if( brick && brick->init() ) {
         brick->autorelease();
@@ -27,7 +27,8 @@ Brick* Brick::create(int hp) {
     return nullptr;
 }
 
-Brick::Brick(int hp) : Game::Tile(1,1),
+Brick::Brick(const BrickData &data, int hp) : Game::Tile(data.width, data.height),
+data(data),
 originalHp(hp),
 hp(hp),
 onBreakListener(nullptr) {
@@ -43,31 +44,97 @@ bool Brick::init() {
         return false;
     }
     
-    // 이미지 초기화
-    auto n = LayerColor::create(Color4B(255, 211, 196, 255));
-    n->setIgnoreAnchorPointForPosition(false);
-    n->setAnchorPoint(Vec2::ZERO);
-    n->setPosition(Vec2::ZERO);
-    n->setContentSize(getContentSize());
-    addChild(n);
+    initPhysics();
     
-    // n->setVisible(false);
+    // 이미지 초기화
+    image = SBAnimationSprite::create(data.idleAnims, 0.1f);
+    image->setAnchorPoint(ANCHOR_M);
+    image->setPosition(Vec2MC(getContentSize(), 0, 0));
+    addChild(image);
+    
+    image->runAnimation();
+    
+    CCLOG("Brick %s contentSize: %f,%f physicsSize: %f,%f, imageSize: %f, %f", data.brickId.c_str(),
+          getContentSize().width, getContentSize().height,
+          getPhysicsSize().width, getPhysicsSize().height,
+          image->getContentSize().width, image->getContentSize().height);
     
     // HP UI 초기화
-    hpNode.bg = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_bg.png");
-    hpNode.bg->setAnchorPoint(ANCHOR_MT);
-    hpNode.bg->setPosition(Vec2TC(getContentSize(), 0, -10));
-    hpNode.bg->setScale((getContentSize().width*0.95f) / hpNode.bg->getContentSize().width);
-    addChild(hpNode.bg);
+    auto addHpGage = [=](string file) -> Sprite* {
+        
+        auto hpBgSize = hpNode.bg->getContentSize();
+        
+        hpNode.gage = Sprite::create(DIR_IMG_GAME + file);
+        hpNode.gage->setAnchorPoint(ANCHOR_ML);
+        hpNode.gage->setPosition(Vec2ML(hpBgSize, (hpBgSize.width-hpNode.gage->getContentSize().width)*0.5f, 0));
+        hpNode.gage->setScaleX(1);
+        hpNode.bg->addChild(hpNode.gage);
+        
+        return hpNode.gage;
+    };
     
-    auto hpBgSize = hpNode.bg->getContentSize();
+    auto addHpLabel = [=](int fontSize) -> Label* {
+      
+        hpNode.label = Label::createWithTTF("", FONT_COMMODORE, fontSize,
+                                            Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+        hpNode.label->setAnchorPoint(ANCHOR_M);
+        hpNode.label->setTextColor(Color4B::WHITE);
+        hpNode.label->enableOutline(Color4B::BLACK, 3);
+        this->addChild(hpNode.label);
+        
+        return hpNode.label;
+    };
     
-    // HP gage
-    hpNode.gage = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_green.png");
-    hpNode.gage->setAnchorPoint(ANCHOR_ML);
-    hpNode.gage->setPosition(Vec2ML(hpBgSize, (hpBgSize.width-hpNode.gage->getContentSize().width)*0.5f, 0));
-    hpNode.gage->setScaleX(1);
-    hpNode.bg->addChild(hpNode.gage);
+    switch( data.type ) {
+        case BrickType::NORMAL: {
+            // game_gage_brick_elite_bg.png Vec2MC(0, 36) , Size(104, 16)
+            // 2850 size:21 stroke:3px Vec2MC(0, 46) , Size(71, 24)
+            hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_normal_bg.png");
+            hpNode.bg->setAnchorPoint(ANCHOR_M);
+            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 36));
+            addChild(hpNode.bg);
+            
+            // HP gage
+            addHpGage("game_gage_brick_normal.png");
+            
+            // HP Label
+            auto label = addHpLabel(21);
+            label->setPosition(Vec2MC(getContentSize(), 0, 46));
+        } break;
+            
+        case BrickType::ELITE: {
+            hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_elite_bg.png");
+            hpNode.bg->setAnchorPoint(ANCHOR_M);
+            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 36));
+            addChild(hpNode.bg);
+            
+            // HP gage
+            addHpGage("game_gage_brick_elite.png");
+            
+            // HP Label
+            auto label = addHpLabel(21);
+            label->setPosition(Vec2MC(getContentSize(), 0, 46));
+        } break;
+            
+        case BrickType::BOSS: {
+            // game_gage_brick_boss_bg.png Vec2MC(0, 97) , Size(204, 28)
+            // 16850 size:28 stroke:3 Vec2MC(0, 106) , Size(112, 29)
+            hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_boss_bg.png");
+            hpNode.bg->setAnchorPoint(ANCHOR_M);
+            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 97));
+            addChild(hpNode.bg);
+            
+            // HP gage
+            addHpGage("game_gage_brick_boss.png");
+            
+            // HP Label
+            auto label = addHpLabel(28);
+            label->setPosition(Vec2MC(getContentSize(), 0, 106));
+        } break;
+            
+        default:
+            break;
+    }
     
     // HP gage effect
     hpNode.gageEffect = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_white.png");
@@ -75,15 +142,6 @@ bool Brick::init() {
     hpNode.gageEffect->setAnchorPoint(hpNode.gage->getAnchorPoint());
     hpNode.gageEffect->setPosition(hpNode.gage->getPosition());
     hpNode.bg->addChild(hpNode.gageEffect);
-    
-    // HP Label
-    hpNode.label = Label::createWithTTF("", FONT_COMMODORE, 35,
-                                        Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-    hpNode.label->setAnchorPoint(ANCHOR_M);
-    hpNode.label->setPosition(Vec2MC(hpBgSize, 0, 10));
-    hpNode.label->setTextColor(Color4B::WHITE);
-    hpNode.label->enableOutline(Color4B::BLACK, 4);
-    hpNode.bg->addChild(hpNode.label);
     
     updateHpUI();
     
@@ -95,7 +153,7 @@ bool Brick::init() {
  */
 void Brick::initPhysics() {
     
-    Size size(getContentSize());
+    Size size(getPhysicsSize());
     
     b2BodyDef bodyDef;
     bodyDef.userData = (SBPhysicsObject*)this;
@@ -139,7 +197,7 @@ void Brick::removeWithAction() {
  
     setOnBreakListener(nullptr);
     
-    auto scale = ScaleTo::create(0.2f, 0);
+    auto scale = ScaleTo::create(ENTER_DURATION, 0);
     auto callFunc = CallFunc::create([=]() {
         // this->removeFromParent();
         this->setVisible(false);
@@ -169,8 +227,11 @@ void Brick::sufferDamage(int damage) {
     
     // 게이지 연출
     if( hpNode.gageEffect->getNumberOfRunningActions() == 0 ) {
+        float scaleX = hpNode.gage->getContentSize().width / hpNode.gageEffect->getContentSize().width;
+        scaleX *= getHpGageRatio();
+        
         hpNode.gageEffect->setVisible(true);
-        hpNode.gageEffect->setScaleX(getHpGageRatio());
+        hpNode.gageEffect->setScaleX(scaleX);
         
         auto delay = DelayTime::create(0.04f);
         auto hide = Hide::create();

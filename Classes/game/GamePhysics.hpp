@@ -18,6 +18,7 @@
 
 class Ball;
 class Brick;
+class Item;
 
 // velocityIterations : 바디들을 정상적으로 이동시키기 위해서 필요한 충돌들을 반복적으로 계산
 // positionIterations : 조인트 분리와, 겹침현상을 줄이기 위해서 바디의 위치를 반복적으로 적용
@@ -50,7 +51,7 @@ public:
     void loopBodies(std::function<void(b2Body*)> callback);
     void loopObjects(std::function<void(SBPhysicsObject*)> callback);
     
-public:
+private:
     // b2ContactFilter
     bool ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) override;
     
@@ -59,6 +60,56 @@ public:
     void EndContact(b2Contact *contact) override;
     void PreSolve(b2Contact *contact, const b2Manifold *oldManifold) override;
     void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) override;
+    
+    struct CollisionObjects {
+        SBPhysicsObject *obj1;
+        SBPhysicsObject *obj2;
+        
+        CollisionObjects() : obj1(nullptr), obj2(nullptr) {}
+    };
+
+    CollisionObjects findObjects(uint16 categoryBits1, uint16 categoryBits2,
+                                 b2Fixture *fixtureA, b2Fixture *fixtureB);
+    CollisionObjects findObjects(uint16 categoryBits1, uint16 categoryBits2,
+                                 b2Contact *contact);
+private:
+    /*
+    template <class T1, class T2>
+    static void findObjects(std::function<void(T1,T2)> callback, b2Contact *contact) {
+        
+        auto fixtureA = contact->GetFixtureA();
+        auto fixtureB = contact->GetFixtureB();
+        
+        if( !fixtureA->GetBody()->GetUserData() ||
+            !fixtureB->GetBody()->GetUserData() ) {
+            return;
+        }
+        
+        if( !fixtureA->GetBody()->IsAwake() ||
+            !fixtureB->GetBody()->IsAwake() ) {
+            return;
+        }
+        
+        auto userDataA = (SBPhysicsObject*)fixtureA->GetBody()->GetUserData();
+        auto userDataB = (SBPhysicsObject*)fixtureB->GetBody()->GetUserData();
+        
+        T1 obj1 = dynamic_cast<T1>(userDataA);
+        T2 obj2 = dynamic_cast<T2>(userDataA);
+        
+        if( !obj1 ) obj1 = dynamic_cast<T1>(userDataB);
+        if( !obj2 ) obj2 = dynamic_cast<T2>(userDataB);
+        
+        if( obj1 && obj2 ) {
+            callback(obj1, obj2);
+        }
+    }*/
+//    auto contactItem = [=](SBPhysicsObject *ballObj, SBPhysicsObject *itemObj) {
+//
+//        auto ball = (Ball*)ballObj;
+//        auto item = (Item*)itemObj;
+//
+//
+//    };
     
 private:
     CC_SYNTHESIZE_READONLY(b2World*, world, World);
@@ -69,6 +120,8 @@ private:
                   onUpdateListener, OnUpdateListener);
     CC_SYNTHESIZE(std::function<void(Ball*,Brick*)>,
                   onContactBrickListener, OnContactBrickListener);
+    CC_SYNTHESIZE(std::function<void(Ball*,Item*)>,
+                  onContactItemListener, OnContactItemListener);
     CC_SYNTHESIZE(std::function<void(Ball*)>,
                   onContactFloorListener, OnContactFloorListener);
 };

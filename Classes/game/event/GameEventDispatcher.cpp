@@ -227,6 +227,15 @@ void GameEventDispatcher::dispatchOnLevelChanged(const LevelData &level) {
         }
     }
 }
+
+/**
+ * onStageChanged 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnStageChanged(const StageData &stage) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onStageChanged ) {
+            listener->onStageChanged(stage);
         }
     }
 }

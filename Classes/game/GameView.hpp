@@ -21,6 +21,8 @@
 
 class Ball;
 class Brick;
+class Item;
+class Friend;
 class AimController;
 
 class GameView : public cocos2d::Node {
@@ -36,9 +38,11 @@ private:
         DEBUG_DRAW_VIEW = 1000,
     };
     
-    enum ZOrder {
+    enum class ZOrder {
         TILE = 0,
         BALL,
+        AIM_CONTROLLER = 100,
+        SCORE,
     };
     
 private:
@@ -55,6 +59,7 @@ private:
     void initMap();
     void initBall();
     void initTile();
+    void initFriends();
     void initAimController();
     void initTouchListener();
     void initGameListener();
@@ -78,6 +83,7 @@ public:
     
     void onScoreChanged(int score);
     void onLevelChanged(const LevelData &level);
+    void onStageChanged(const StageData &stage);
     
 private:
     void onTileAddFinished();               // 1. 타일 추가 완료
@@ -90,6 +96,7 @@ private:
     
     void onPhysicsUpdate();
     void onContactBrick(Ball *ball, Brick *brick);
+    void onContactItem(Ball *ball, Item *item);
     void onContactFloor(Ball *ball);
     
 private:
@@ -101,8 +108,8 @@ private:
     void addBall(int count = 1);
     void removeBall(Ball *ball);
     
-    void addBrick(int count = 1);
-    void addItem(int count);
+    void addBrick();
+    void addItem();
     
     void addTile(Game::Tile *tile);
     void removeTile(Game::Tile *tile);
@@ -119,10 +126,13 @@ private:
     std::vector<Game::Tile*> getTiles(int y);
     std::vector<Game::Tile*> getBricks(int y);
     std::vector<Game::Tile*> getBricks();
+    std::vector<Game::Tile*> getItems();
     
     Game::Tile*              getTile(const Game::Tile::Position &pos);
     Game::Tile::Positions    getEmptyPositions(int y);
+    Game::Tile::Positions    getEmptyRandomPositions(int y);
     bool                     isExistTile(int y);
+    bool                     isExistBrick(int y);
     
 private:
     GameManager *gameMgr;
@@ -131,14 +141,22 @@ private:
     std::vector<Ball*> balls;
     cocos2d::Label*    ballCountLabel;
     int                shootIndex;       // 발사된 볼 인덱스
-    int                fallenBallCount;  // 떨어진 볼 갯수
+    int                fallenBallCount;  // 떨어진 볼 개수
     
     std::vector<Game::Tile*> tiles;      // 타일 리스트
-    
+    std::vector<Friend*> friends;
     AimController *aimController;
     
     bool isWithdrawEnabled;              // 볼 회수 기능 활성화 여부
     bool isWithdraw;                     // 볼 회수 여부
+    
+    int toAddBalls;                      // 추가돼야 할 볼 개수
+    int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수
+    
+    // 엘리트 벽돌 드랍률
+    // 엘리트 벽돌이 생성되지 않은 경우, 다음 Stage에서 확률 2배 증가
+    CC_SYNTHESIZE_READONLY(int, eliteBrickDropRate, EliteBrickDropRate);
+    bool isEliteDropped;
     
     // Debug
     int             tunnelingCount;
