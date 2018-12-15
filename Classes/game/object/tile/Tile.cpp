@@ -38,8 +38,8 @@ Vec2 Tile::convertToTilePosition(Position tilePos, int w, int h) {
     return convertToTilePosition(tilePos.x, tilePos.y, w, h);
 }
 
-const float Tile::ENTER_DURATION         = 0.1f;
-const float Tile::MOVE_DURATION          = 0.1f;
+const float Tile::ENTER_DURATION         = 0.15f;
+const float Tile::MOVE_DURATION          = 0.18f;
 
 Tile::Tile(int rows, int columns) : SBPhysicsObject(this),
 rows(rows),

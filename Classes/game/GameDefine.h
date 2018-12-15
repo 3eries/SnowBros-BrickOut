@@ -54,7 +54,7 @@ static const float                            SHOOT_INTERVAL                   =
 
 static const float                            BALL_RADIUS                      = 20;
 static const cocos2d::Size                    BALL_SIZE                        = cocos2d::Size(BALL_RADIUS*2, BALL_RADIUS*2);
-static const float                            BALL_MAX_VELOCITY                = 35;
+static const float                            BALL_MAX_VELOCITY                = 32;
 
 #define                                       SHOOTING_POSITION_Y                68
 #define                                       FIRST_SHOOTING_POSITION            Vec2BC(0, SHOOTING_POSITION_Y)

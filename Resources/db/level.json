@@ -7,8 +7,7 @@
         "brick_hp": "stage",
         "brick_drop_count": "3",
         "brick_list": ["brick_00001"],
-        "elite_brick_drop_rate": 5,
-        "elite_brick_list": ["brick_01000"],
+        "elite_brick_drop_rate": 0,
         "power_up_drop_rate": 100,
         "friend_power_up_drop_rate": 0,
         "money_drop_rate": 1
@@ -25,7 +24,9 @@
     {
         "stage": 5,
         "brick_hp": "stage",
-        "brick_list": ["brick_00001", "brick_00002"]
+        "brick_list": ["brick_00001", "brick_00002"],
+        "elite_brick_drop_rate": 5,
+        "elite_brick_list": ["brick_01000"]
     },
     {
         "stage": 6

@@ -54,11 +54,6 @@ bool Brick::init() {
     
     image->runAnimation();
     
-    CCLOG("Brick %s contentSize: %f,%f physicsSize: %f,%f, imageSize: %f, %f", data.brickId.c_str(),
-          getContentSize().width, getContentSize().height,
-          getPhysicsSize().width, getPhysicsSize().height,
-          image->getContentSize().width, image->getContentSize().height);
-    
     // HP UI 초기화
     auto addHpGage = [=](string file) -> Sprite* {
         

@@ -248,7 +248,7 @@ void GameView::onTileAddFinished() {
     // 타일 등장 연출 완료 후 이동
     SBDirector::postDelayed(this, [=]() {
         this->downTile();
-    }, Game::Tile::ENTER_DURATION + 0.2f);
+    }, Game::Tile::ENTER_DURATION + 0.1f);
 }
 
 /**
@@ -570,7 +570,7 @@ void GameView::downTile() {
     }
 
     SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onTileDownFinished, this),
-                            Game::Tile::MOVE_DURATION + 0.2f);
+                            Game::Tile::MOVE_DURATION + 0.1f);
 }
 
 /**
@@ -873,33 +873,12 @@ Game::Tile::Positions GameView::getEmptyRandomPositions(int y) {
  */
 bool GameView::isExistTile(int y) {
     
-    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
-    
-    for( int x = 0; x < TILE_ROWS; ++x ) {
-        Game::Tile::Position pos(x,y);
-        
-        if( getTile(pos) ) {
-            return true;
-        }
-    }
-    
-    return false;
+    return getTiles(y).size() > 0;
 }
 
 bool GameView::isExistBrick(int y) {
     
-    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
-    
-    for( int x = 0; x < TILE_ROWS; ++x ) {
-        Game::Tile::Position pos(x,y);
-        auto tile = getTile(pos);
-        
-        if( tile && dynamic_cast<Brick*>(tile) ) {
-            return true;
-        }
-    }
-    
-    return false;
+    return getBricks(y).size() > 0;
 }
 
 /**
@@ -920,7 +899,7 @@ void GameView::initPhysics() {
     auto view = DebugDrawView::create(world);
     view->setTag(Tag::DEBUG_DRAW_VIEW);
     view->setVisible(false);
-    addChild(view, SBZOrder::BOTTOM);
+    addChild(view, SBZOrder::MIDDLE);
     
     physicsMgr->setDebugDrawView(view);
 
