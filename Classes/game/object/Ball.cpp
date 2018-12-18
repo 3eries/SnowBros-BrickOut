@@ -51,6 +51,7 @@ b2Body* Ball::createBody(SBPhysicsObject *userData) {
     
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
+    bodyDef.bullet = true;
     bodyDef.fixedRotation = true;
     bodyDef.awake = false;
     bodyDef.userData = userData;
