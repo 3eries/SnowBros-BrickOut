@@ -739,6 +739,7 @@ void GameView::addBrick() {
         auto brick = addBrick(stage.getRandomEliteBrick(), stage.brickHp*3);
         brick->setTilePosition(positions[0], false);
         
+        --dropCount;
         positions.erase(positions.begin());
     }
     
