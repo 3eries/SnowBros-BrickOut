@@ -105,7 +105,8 @@ private:
     
     void downTile();
     
-    void addBall(int count = 1);
+    void addBall(int count = 1, bool updateUI = true);
+    void addBallFromQueue();
     void removeBall(Ball *ball);
     
     void addBrick();
@@ -150,7 +151,8 @@ private:
     bool isWithdrawEnabled;              // 볼 회수 기능 활성화 여부
     bool isWithdraw;                     // 볼 회수 여부
     
-    int toAddBalls;                      // 추가돼야 할 볼 개수
+    // 추가돼야 할 볼
+    std::vector<cocos2d::Sprite*> addBallQueue;
     int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수
     
     // 엘리트 벽돌 드랍률

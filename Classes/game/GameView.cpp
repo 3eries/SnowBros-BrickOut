@@ -30,6 +30,9 @@ using namespace std;
 
 static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
 
+static const float  BALL_MOVE_DURATION              = 0.2f;
+static const float  BALL_WITHDRAW_MOVE_DURATION     = 0.25f;
+
 #define DEBUG_DRAW_PHYSICS      1
 #define DEBUG_DRAW_TILE         1
 
@@ -113,7 +116,7 @@ void GameView::onGameReset() {
     isWithdrawEnabled = false;
     isWithdraw = false;
     
-    toAddBalls = 0;
+    addBallQueue.clear();
     toAddFriendsBalls = 0;
     
     eliteBrickDropRate = GameManager::getStage().eliteBrickDropRate;
@@ -209,15 +212,7 @@ void GameView::onLevelChanged(const LevelData &level) {
  */
 void GameView::onStageChanged(const StageData &stage) {
     
-    // 획득한 아이템 반영
-    if( toAddBalls > 0 ) {
-        addBall(toAddBalls);
-        toAddBalls = 0;
-    }
-
-    if( toAddFriendsBalls > 0 ) {
-        toAddFriendsBalls = 0;
-    }
+    CCLOG("onStageChangetd: %d", stage.stage);
     
     // 엘리트 벽돌 드랍률 업데이트
     if( isEliteDropped ) {
@@ -263,8 +258,6 @@ void GameView::onTileDownFinished() {
         GameManager::onGameOver();
         return;
     }
-    
-    updateBallCountUI();
 
     // 다음 턴
     onShootingReady();
@@ -314,6 +307,15 @@ void GameView::onFallFinished() {
         CCLOG("STAGE CLEAR");
         GameManager::onGameOver();
         return;
+    }
+    
+    updateBallCountUI();
+    
+    // 획득한 아이템 반영
+    addBallFromQueue();
+    
+    if( toAddFriendsBalls > 0 ) {
+        toAddFriendsBalls = 0;
     }
     
     // Case 1. 다음 스테이지로 전환
@@ -404,8 +406,30 @@ void GameView::onContactItem(Ball *ball, Item *item) {
     }
     
     switch( item->getData().type ) {
-        case ItemType::POWER_UP:            ++toAddBalls;              break;
-        case ItemType::FRIENDS_POWER_UP:    ++toAddFriendsBalls;       break;
+        // 기본 볼 개수 증가
+        case ItemType::POWER_UP: {
+            auto ball = Sprite::create(BALL_IMAGE);
+            ball->setAnchorPoint(ANCHOR_M);
+            ball->setPosition(item->getPosition());
+            ball->setColor(Color3B(255, 20, 20));
+            addChild(ball, (int)ZOrder::BALL);
+            
+            addBallQueue.push_back(ball);
+            
+            // 볼 추락 연출
+            Vec2 pos = Vec2(ball->getPositionX(), SHOOTING_POSITION_Y);
+            float dist = pos.getDistance(ball->getPosition());
+            
+            ball->runAction(MoveTo::create(0.8f, pos));
+            // ball->runAction(MoveTo::create(dist * 0.001f, pos));
+            
+        } break;
+        
+        // 프렌즈 볼 개수 증가
+        case ItemType::FRIENDS_POWER_UP: {
+            ++toAddFriendsBalls;
+        } break;
+            
         default:
             CCASSERT(false, "GameView::onContactItem error: invalid item.");
             break;
@@ -442,11 +466,11 @@ void GameView::onContactFloor(Ball *ball) {
     // 시작 위치로 이동
     auto pos = aimController->getStartPosition();
     ball->setPosition(Vec2(ball->getPositionX(), pos.y));
-    ball->runAction(MoveTo::create(0.2f, pos));
+    ball->runAction(MoveTo::create(BALL_MOVE_DURATION, pos));
     
     // 모든 볼 추락
     if( fallenBallCount == balls.size() ) {
-        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), 1.0f);
+        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), 0.1f);
     }
 }
 
@@ -498,8 +522,10 @@ void GameView::shoot(const Vec2 &endPosition) {
 
         ++shootIndex;
 
+        // 볼 개수 UI 업데이트
+        ballCountLabel->setVisible(shootIndex < balls.size());
         ballCountLabel->setString("X" + TO_STRING(balls.size() - shootIndex));
-
+        
     }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
     
     // 볼 회수 기능 활성화
@@ -542,14 +568,14 @@ void GameView::withdrawBalls() {
         
         auto spread = MoveTo::create(0.07f, spreadPos);
         auto delay = DelayTime::create(random<int>(0,3) * 0.1f);
-        auto move = MoveTo::create(0.25f, aimController->getStartPosition());
+        auto move = MoveTo::create(BALL_WITHDRAW_MOVE_DURATION, aimController->getStartPosition());
         ball->runAction(Sequence::create(/*delay, */spread, delay, move, nullptr));
     }
     
     // 모든 볼 추락 완료
     SBDirector::postDelayed(this, [=]() {
         this->onFallFinished();
-    }, 1.0f);
+    }, BALL_WITHDRAW_MOVE_DURATION+0.5f);
 }
 
 /**
@@ -576,7 +602,7 @@ void GameView::downTile() {
 /**
  * 볼 추가
  */
-void GameView::addBall(int count) {
+void GameView::addBall(int count, bool updateUI) {
     
     const int MAX_BALL_COUNT = GameManager::getConfig()->getMaxBallCount();
     
@@ -590,7 +616,57 @@ void GameView::addBall(int count) {
         balls.push_back(ball);
     }
 
-    updateBallCountUI();
+    if( updateUI ) {
+        updateBallCountUI();
+    }
+}
+
+/**
+ * 큐에 있는 볼 추가
+ */
+void GameView::addBallFromQueue() {
+ 
+    const int ADD_BALL_COUNT = (int)addBallQueue.size();
+    
+    if( ADD_BALL_COUNT == 0 ) {
+        return;
+    }
+    
+    // Step 1. 볼 합체 연출
+    auto pos = aimController->getStartPosition();
+    auto move = MoveTo::create(BALL_MOVE_DURATION, pos);
+    auto moveCallback = CallFunc::create([=]() {
+        
+        // Step 2. 연출 후 실제로 추가
+        this->addBall(1, false);
+    });
+    
+    for( auto ball : addBallQueue ) {
+        auto action = Sequence::create(move->clone(), moveCallback->clone(), RemoveSelf::create(), nullptr);
+        ball->runAction(action);
+    }
+    
+    addBallQueue.clear();
+    
+    SBDirector::postDelayed(this, [=]() {
+        
+        this->updateBallCountUI();
+        
+        // UP 효과
+        auto label = Label::createWithTTF(STR_FORMAT("%dUP", ADD_BALL_COUNT),
+                                          FONT_COMMODORE, 26, Size::ZERO,
+                                          TextHAlignment::CENTER, TextVAlignment::CENTER);
+        label->setAnchorPoint(ANCHOR_MB);
+        label->setPosition(ballCountLabel->getPosition() + Vec2(0, 40));
+        label->setColor(Color3B(119, 255, 0));
+        label->enableOutline(Color4B::BLACK, 3);
+        addChild(label, SBZOrder::BOTTOM);
+        
+        auto move = MoveBy::create(0.8f, Vec2(0, 70));
+        auto remove = RemoveSelf::create();
+        label->runAction(Sequence::create(move, remove, nullptr));
+        
+    }, BALL_MOVE_DURATION+0.05f);
 }
 
 /**
@@ -656,7 +732,8 @@ void GameView::addBrick() {
     int  dropCount = stage.getRandomDropCount();
     isEliteDropped = (random<int>(1,100) <= eliteBrickDropRate);
     
-    CCLOG("addBrick eliteBrickDropRate: %d isEliteDropped: %d", eliteBrickDropRate, isEliteDropped);
+    CCLOG("addBrick(%d) dropCount: %d eliteBrickDropRate: %d isEliteDropped: %d",
+          stage.stage, dropCount, eliteBrickDropRate, isEliteDropped);
     
     if( isEliteDropped ) {
         auto brick = addBrick(stage.getRandomEliteBrick(), stage.brickHp*3);
@@ -734,10 +811,12 @@ void GameView::removeTile(Game::Tile *tile) {
 }
 
 /**
- * 볼 갯수 UI 업데이트
+ * 볼 개수 UI 업데이트
  */
 void GameView::updateBallCountUI() {
     
+    ballCountLabel->setVisible(true);
+    ballCountLabel->setPosition(Vec2(aimController->getStartPosition().x, ballCountLabel->getPositionY()));
     ballCountLabel->setString("X" + TO_STRING(balls.size()));
 }
 
