@@ -217,6 +217,26 @@ void DBManager::init() {
     CCLOG("========== PARSE END (level.json)  ==========");
 }
 
+/**
+ * 임시 레벨 추가
+ */
+void DBManager::addTempLevel() {
+    
+    auto level = getLastLevel();
+    level.level++;
+    level.stageBeginNum += level.stageLen;
+    
+    for( auto &stage : level.stages ) {
+        stage.level++;
+    }
+    
+    auto &levels = getInstance()->levels;
+    levels.push_back(level);
+}
+
+/**
+ * 레벨 데이터를 반환합니다
+ */
 LevelList DBManager::getLevels() {
     return getInstance()->levels;
 }
@@ -250,6 +270,9 @@ bool DBManager::isLastLevel(int level) {
     return getLastLevel().level == level;
 }
 
+/**
+ * 스테이지 데이터를 반환합니다
+ */
 StageList DBManager::getStages(int level) {
     return getLevel(level).stages;
 }

@@ -45,13 +45,15 @@ GameManager::~GameManager() {
 }
 
 void GameManager::reset() {
+ 
+    CCLOG("GameManager::reset");
     
     state = GameState::NONE;
     view = nullptr;
     giftItems.clear();
     continueCount = 0;
     score = 0;
-    level = DBManager::getLevel(1);
+    level = 1;
     stage = 1;
 }
 
@@ -167,11 +169,11 @@ int GameManager::getScore() {
 }
 
 LevelData GameManager::getLevel() {
-    return getInstance()->level;
+    return DBManager::getLevel(getInstance()->level);
 }
 
 StageData GameManager::getStage() {
-    return DBManager::getStage(getInstance()->level.level, getInstance()->stage);
+    return DBManager::getStage(getInstance()->level, getInstance()->stage);
 }
 
 bool GameManager::isContinuable() {
@@ -416,30 +418,35 @@ void GameManager::onBoostEnd() {
 }
 
 /**
- * 스코어 변경
+ * 레벨 클리어
  */
-void GameManager::onScoreChanged() {
+void GameManager::onLevelClear() {
     
-    getEventDispatcher()->dispatchOnScoreChanged(getInstance()->getScore());
+    getEventDispatcher()->dispatchOnLevelClear();
 }
 
 /**
- * 레벨 변경
+ * 다음 레벨
  */
-void GameManager::onLevelChanged() {
+void GameManager::onNextLevel() {
+ 
+    // 현재 레벨이 정의된 마지막 레벨이면 임시 레벨 추가
+    if( DBManager::isLastLevel(getLevel().level) ) {
+        DBManager::addTempLevel();
+    }
     
-    getInstance()->stage = 1;
-    getEventDispatcher()->dispatchOnLevelChanged(getInstance()->getLevel());
+    getInstance()->level++;
+    getEventDispatcher()->dispatchOnNextLevel(getLevel());
 }
 
 /**
- * 다음 스테이지로 전환
+ * 다음 스테이지
  */
 bool GameManager::onNextStage() {
     
     if( !DBManager::isLastStage(getStage()) ) {
         getInstance()->stage++;
-        getEventDispatcher()->dispatchOnStageChanged(getStage());
+        getEventDispatcher()->dispatchOnNextStage(getStage());
         
         return true;
     }
@@ -447,4 +454,10 @@ bool GameManager::onNextStage() {
     return false;
 }
 
-
+/**
+ * 스코어 변경
+ */
+void GameManager::onScoreChanged() {
+    
+    getEventDispatcher()->dispatchOnScoreChanged(getInstance()->getScore());
+}

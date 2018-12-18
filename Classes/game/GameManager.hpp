@@ -81,7 +81,7 @@ private:
     GiftRewardItems giftItems;
     
     int score;                                                    // 스코어
-    LevelData level;                                              // 레벨
+    int level;                                                    // 레벨
     int stage;                                                    // 스테이지
     CC_SYNTHESIZE_READONLY(int, continueCount, ContinueCount);    // 이어하기한 횟수
     
@@ -100,10 +100,12 @@ public:
     
     static void onBoostStart();
     static void onBoostEnd();
+
+    static void onLevelClear();
+    static void onNextLevel();
+    static bool onNextStage();
     
     static void onScoreChanged();
-    static void onLevelChanged();
-    static bool onNextStage();
 };
 
 #endif /* GameManager_hpp */

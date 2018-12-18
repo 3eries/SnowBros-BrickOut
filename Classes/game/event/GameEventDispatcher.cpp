@@ -205,6 +205,42 @@ void GameEventDispatcher::dispatchOnBoostEnd() {
 }
 
 /**
+ * onLevelClear 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnLevelClear() {
+    
+    for( auto listener : listeners ) {
+        if( listener->onLevelClear ) {
+            listener->onLevelClear();
+        }
+    }
+}
+
+/**
+ * onNextLevel 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnNextLevel(const LevelData &level) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onNextLevel ) {
+            listener->onNextLevel(level);
+        }
+    }
+}
+
+/**
+ * onNextStage 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnNextStage(const StageData &stage) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onNextStage ) {
+            listener->onNextStage(stage);
+        }
+    }
+}
+
+/**
  * onScoreChanged 이벤트 전달
  */
 void GameEventDispatcher::dispatchOnScoreChanged(int score) {
@@ -212,30 +248,6 @@ void GameEventDispatcher::dispatchOnScoreChanged(int score) {
     for( auto listener : listeners ) {
         if( listener->onScoreChanged ) {
             listener->onScoreChanged(score);
-        }
-    }
-}
-
-/**
- * onLevelChanged 이벤트 전달
- */
-void GameEventDispatcher::dispatchOnLevelChanged(const LevelData &level) {
-    
-    for( auto listener : listeners ) {
-        if( listener->onLevelChanged ) {
-            listener->onLevelChanged(level);
-        }
-    }
-}
-
-/**
- * onStageChanged 이벤트 전달
- */
-void GameEventDispatcher::dispatchOnStageChanged(const StageData &stage) {
-    
-    for( auto listener : listeners ) {
-        if( listener->onStageChanged ) {
-            listener->onStageChanged(stage);
         }
     }
 }

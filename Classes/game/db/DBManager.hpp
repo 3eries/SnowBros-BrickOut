@@ -32,6 +32,8 @@ private:
     DBManager();
     
 public:
+    static void         addTempLevel();
+    
     static LevelList    getLevels();
     static LevelData    getLevel(int level);
     static LevelData    getLastLevel();

@@ -38,9 +38,12 @@ public:
     std::function<void()>                   onBoostStart;               // 부스트 시작
     std::function<void()>                   onBoostEnd;                 // 부스트 종료
     
+    std::function<void()>                   onLevelClear;               // 레벨 클리어
+    std::function<void(const LevelData&)>   onNextLevel;                // 다음 레벨
+    std::function<void(const StageData&)>   onNextStage;                // 다음 스테이지
+    
     std::function<void(int)>                onScoreChanged;             // 스코어 변경
-    std::function<void(const LevelData&)>   onLevelChanged;             // 레벨 변경
-    std::function<void(const StageData&)>   onStageChanged;             // 스테이지 변경
+    
 private:
     GameEventListener(cocos2d::Ref *target);
     

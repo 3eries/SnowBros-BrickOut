@@ -188,31 +188,32 @@ void GameView::onBoostEnd() {
 }
 
 /**
- * 스코어 변경
+ * 레벨 클리어
  */
-void GameView::onScoreChanged(int score) {
+void GameView::onLevelClear() {
     
-    auto scoreLabel = getChildByTag<Label*>(Tag::SCORE);
-    
-    if( scoreLabel ) {
-        scoreLabel->setString(TO_STRING(score));
-    }
+    GameManager::onNextLevel();
 }
 
 /**
- * 레벨 변경
+ * 다음 레벨
  */
-void GameView::onLevelChanged(const LevelData &level) {
+void GameView::onNextLevel(const LevelData &level) {
+    
+    CCLOG("onNextLevel: %d", level.level);
     
     eliteBrickDropRate = GameManager::getStage().eliteBrickDropRate;
+    
+    // TODO: 다음 레벨 처리
+    GameManager::onGameOver();
 }
 
 /**
- * 스테이지 변경됨
+ * 다음 스테이지
  */
-void GameView::onStageChanged(const StageData &stage) {
+void GameView::onNextStage(const StageData &stage) {
     
-    CCLOG("onStageChangetd: %d", stage.stage);
+    CCLOG("onNextStage: %d", stage.stage);
     
     // 엘리트 벽돌 드랍률 업데이트
     if( isEliteDropped ) {
@@ -231,6 +232,18 @@ void GameView::onStageChanged(const StageData &stage) {
     addItem();
     
     onTileAddFinished();
+}
+
+/**
+ * 스코어 변경
+ */
+void GameView::onScoreChanged(int score) {
+    
+    auto scoreLabel = getChildByTag<Label*>(Tag::SCORE);
+    
+    if( scoreLabel ) {
+        scoreLabel->setString(TO_STRING(score));
+    }
 }
 
 /**
@@ -301,11 +314,9 @@ void GameView::onFallFinished() {
     
     CCLOG("onFallFinished");
     
-    // 스테이지 클리어 체크
+    // 레벨 클리어 체크
     if( GameManager::getStage().isLastStage && getBricks().size() == 0 ) {
-        // TODO: 스테이지 클리어 함수 호출
-        CCLOG("STAGE CLEAR");
-        GameManager::onGameOver();
+        GameManager::onLevelClear();
         return;
     }
     
@@ -1205,9 +1216,10 @@ void GameView::initGameListener() {
     listener->onGameResult           = CC_CALLBACK_0(GameView::onGameResult, this);
     listener->onBoostStart           = CC_CALLBACK_0(GameView::onBoostStart, this);
     listener->onBoostEnd             = CC_CALLBACK_0(GameView::onBoostEnd, this);
+    listener->onLevelClear           = CC_CALLBACK_0(GameView::onLevelClear, this);
+    listener->onNextLevel            = CC_CALLBACK_1(GameView::onNextLevel, this);
+    listener->onNextStage            = CC_CALLBACK_1(GameView::onNextStage, this);
     listener->onScoreChanged         = CC_CALLBACK_1(GameView::onScoreChanged, this);
-    listener->onLevelChanged         = CC_CALLBACK_1(GameView::onLevelChanged, this);
-    listener->onStageChanged         = CC_CALLBACK_1(GameView::onStageChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }
 

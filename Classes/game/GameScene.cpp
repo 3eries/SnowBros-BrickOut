@@ -237,15 +237,21 @@ void GameScene::onBoostEnd() {
 }
 
 /**
- * 스코어 변경
+ * 레벨 클리어
  */
-void GameScene::onScoreChanged(int score) {
+void GameScene::onLevelClear() {
 }
 
 /**
- * 레벨 변경
+ * 다음 레벨
  */
-void GameScene::onLevelChanged(const LevelData &level) {
+void GameScene::onNextLevel(const LevelData &level) {
+}
+
+/**
+ * 다음 스테이지
+ */
+void GameScene::onNextStage(const StageData &stage) {
 }
 
 /**
@@ -641,8 +647,9 @@ void GameScene::initGameListener() {
     listener->onGameResult           = CC_CALLBACK_0(GameScene::onGameResult, this);
     listener->onBoostStart           = CC_CALLBACK_0(GameScene::onBoostStart, this);
     listener->onBoostEnd             = CC_CALLBACK_0(GameScene::onBoostEnd, this);
-    listener->onScoreChanged         = CC_CALLBACK_1(GameScene::onScoreChanged, this);
-    listener->onLevelChanged         = CC_CALLBACK_1(GameScene::onLevelChanged, this);
+    listener->onLevelClear           = CC_CALLBACK_0(GameScene::onLevelClear, this);
+    listener->onNextLevel            = CC_CALLBACK_1(GameScene::onNextLevel, this);
+    listener->onNextStage            = CC_CALLBACK_1(GameScene::onNextStage, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }
 

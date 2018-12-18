@@ -69,8 +69,9 @@ public:
     void onBoostStart();
     void onBoostEnd();
     
-    void onScoreChanged(int score);
-    void onLevelChanged(const LevelData &level);
+    void onLevelClear();
+    void onNextLevel(const LevelData &level);
+    void onNextStage(const StageData &stage);
     
 public:
     void replaceScene(SceneType type, const GiftRewardItems &items = GiftRewardItems()) override;

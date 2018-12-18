@@ -47,9 +47,11 @@ public:
     void dispatchOnBoostStart();
     void dispatchOnBoostEnd();
     
+    void dispatchOnLevelClear();
+    void dispatchOnNextLevel(const LevelData &level);
+    void dispatchOnNextStage(const StageData &stage);
+    
     void dispatchOnScoreChanged(int score);
-    void dispatchOnLevelChanged(const LevelData &level);
-    void dispatchOnStageChanged(const StageData &stage);
     
 private:
     GameEventListeners listeners;
