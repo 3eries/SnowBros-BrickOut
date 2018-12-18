@@ -246,6 +246,10 @@ LevelData DBManager::getLastLevel() {
     return levels[levels.size()-1];
 }
 
+bool DBManager::isLastLevel(int level) {
+    return getLastLevel().level == level;
+}
+
 StageList DBManager::getStages(int level) {
     return getLevel(level).stages;
 }

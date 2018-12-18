@@ -35,6 +35,7 @@ public:
     static LevelList    getLevels();
     static LevelData    getLevel(int level);
     static LevelData    getLastLevel();
+    static bool         isLastLevel(int level);
     
     static StageList    getStages(int level);
     static StageData    getStage(int level, int stage);
