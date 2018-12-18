@@ -18,6 +18,8 @@ using namespace std;
 
 static const string SCHEDULER_UPDATE                  = "SCHEDULER_UPDATE";
 
+#define DEBUG_LOG               0
+
 PhysicsManager::PhysicsManager() :
 world(nullptr), debugDrawView(nullptr), map(nullptr),
 onUpdateListener(nullptr),
@@ -151,6 +153,7 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
     if( !fixtureA->GetBody()->IsAwake() ||
         !fixtureB->GetBody()->IsAwake() ) {
         CCLOG("PhysicsManager::ShouldCollide body is sleep.");
+        MessageBox("PhysicsManager::ShouldCollide body is sleep.", "");
         // return false;
     }
     
@@ -206,7 +209,9 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
  */
 void PhysicsManager::BeginContact(b2Contact *contact) {
     
+#if DEBUG_LOG
     CCLOG("PhysicsManager::BeginContact");
+#endif
     
     auto fixtureA = contact->GetFixtureA();
     auto fixtureB = contact->GetFixtureB();
@@ -214,6 +219,7 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
     if( !fixtureA->GetBody()->IsAwake() ||
         !fixtureB->GetBody()->IsAwake() ) {
         CCLOG("PhysicsManager::BeginContact body is sleep.");
+        MessageBox("PhysicsManager::BeginContact body is sleep.", "");
         // return;
     }
     
@@ -226,7 +232,9 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
             auto ball = (Ball*)objs.obj1;
             auto brick = (Brick*)objs.obj2;
             
+#if DEBUG_LOG
             CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
+#endif
             
             return;
         }
@@ -237,7 +245,9 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
         auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
+#if DEBUG_LOG
             CCLOG("\t> Item ball awake: %d, item awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+#endif
             return;
         }
     }
@@ -252,9 +262,12 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
                 this->onContactFloorListener((Ball*)objs.obj1);
             } else {
                 CCLOG("\t>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Floor ball is sleep.");
+                MessageBox("Floor ball is sleep.", "");
             }
             
+#if DEBUG_LOG
             CCLOG("\t> Floor ball awake: %d, floor awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+#endif
             return;
         }
     }
@@ -262,12 +275,16 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
 
 void PhysicsManager::EndContact(b2Contact *contact) {
     
+#if DEBUG_LOG
     CCLOG("PhysicsManager::EndContact");
+#endif
 }
 
 void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
     
+#if DEBUG_LOG
     CCLOG("PhysicsManager::PreSolve contact enabled: %d", contact->IsEnabled());
+#endif
     
     // 벽돌 체크
     {
@@ -282,7 +299,9 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
                 contact->SetEnabled(false);
             }
             
+#if DEBUG_LOG
             CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
+#endif
             
             return;
         }
@@ -293,7 +312,9 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
         auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
         
         if( objs.obj1 && objs.obj2 ) {
+#if DEBUG_LOG
             CCLOG("\t> Item ball awake: %d, item awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+#endif
         
             // 충돌 비활성화
             contact->SetEnabled(false);
@@ -311,8 +332,9 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
         auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
         
         if( objs.obj1 && objs.obj2 ) {
+#if DEBUG_LOG
             CCLOG("\t> Floor ball awake: %d, floor awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
-            
+#endif
             return;
         }
     }
@@ -320,7 +342,9 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
 
 void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
     
+#if DEBUG_LOG
     CCLOG("PhysicsManager::PostSolve");
+#endif
     
     // 벽돌 체크
     {
@@ -334,7 +358,9 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
                 this->onContactBrickListener(ball, brick);
             }
             
+#if DEBUG_LOG
             CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
+#endif
             
             return;
         }
@@ -345,7 +371,9 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
         auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
         
         if( objs.obj1 && objs.obj2 ) {
+#if DEBUG_LOG
             CCLOG("\t> Item ball awake: %d, item awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+#endif
             return;
         }
     }
@@ -355,7 +383,9 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
         auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
         
         if( objs.obj1 && objs.obj2 ) {
+#if DEBUG_LOG
             CCLOG("\t> Floor ball awake: %d, floor awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+#endif
             return;
         }
     }
