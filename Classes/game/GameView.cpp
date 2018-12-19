@@ -729,8 +729,9 @@ void GameView::addBrick() {
     
     CCASSERT(positions.size() == TILE_ROWS, "GameView::addBrick error.");
     
-    auto addBrick = [=](const BrickData &data, int hp) -> Brick* {
+    auto addBrick = [=](const BrickData &data, int hp, Game::Tile::Position tilePos) -> Brick* {
         auto brick = Brick::create(data, hp);
+        brick->setTilePosition(tilePos, false);
         this->addTile(brick);
         
         brick->setOnBreakListener([=](Node*) {
@@ -746,8 +747,7 @@ void GameView::addBrick() {
     }
     
     if( stage.bossBrickList.size() > 0 ) {
-        auto brick = addBrick(stage.bossBrickList[0], stage.brickHp*10);
-        brick->setTilePosition(Game::Tile::Position(2, TILE_POSITION_Y), false);
+        addBrick(stage.bossBrickList[0], stage.brickHp*10, Game::Tile::Position(2, TILE_POSITION_Y));
     }
     
     // 엘리트 벽돌
@@ -760,8 +760,7 @@ void GameView::addBrick() {
           stage.stage, dropCount, eliteBrickDropRate, isEliteDropped);
     
     if( isEliteDropped ) {
-        auto brick = addBrick(stage.getRandomEliteBrick(), stage.brickHp*3);
-        brick->setTilePosition(positions[0], false);
+        addBrick(stage.getRandomEliteBrick(), stage.brickHp*3, positions[0]);
         
         --dropCount;
         positions.erase(positions.begin());
@@ -769,8 +768,7 @@ void GameView::addBrick() {
     
     // 일반 벽돌
     for( int i = 0; i < dropCount && positions.size() > 0; ++i ) {
-        auto brick = addBrick(stage.getRandomBrick(), stage.brickHp);
-        brick->setTilePosition(positions[0], false);
+        addBrick(stage.getRandomBrick(), stage.brickHp, positions[0]);
         
         positions.erase(positions.begin());
     }
