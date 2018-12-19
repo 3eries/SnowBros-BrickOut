@@ -44,6 +44,10 @@ struct StageData {
     brickList(data.brickList), eliteBrickList(data.eliteBrickList), bossBrickList(data.bossBrickList) {
     }
     
+    bool isNull() const {
+        return stage == 0;
+    }
+    
     int getRandomDropCount() {
         return cocos2d::random<int>(brickDropMin, brickDropMax);
     }

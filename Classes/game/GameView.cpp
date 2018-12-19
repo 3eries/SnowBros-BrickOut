@@ -215,23 +215,30 @@ void GameView::onNextStage(const StageData &stage) {
     
     CCLOG("onNextStage: %d", stage.stage);
     
-    // 엘리트 벽돌 드랍률 업데이트
-    if( isEliteDropped ) {
-        isEliteDropped = false;
-        eliteBrickDropRate = stage.eliteBrickDropRate;
-    } else {
-        if( eliteBrickDropRate == 0 ) {
+    // 다음 스테이지 진행
+    if( !stage.isNull() ) {
+        // 엘리트 벽돌 드랍률 업데이트
+        if( isEliteDropped ) {
+            isEliteDropped = false;
             eliteBrickDropRate = stage.eliteBrickDropRate;
         } else {
-            eliteBrickDropRate *= 2;
+            if( eliteBrickDropRate == 0 ) {
+                eliteBrickDropRate = stage.eliteBrickDropRate;
+            } else {
+                eliteBrickDropRate *= 2;
+            }
         }
+        
+        // 타일 추가
+        addBrick();
+        addItem();
+        
+        onTileAddFinished();
     }
-    
-    // 타일 추가
-    addBrick();
-    addItem();
-    
-    onTileAddFinished();
+    // 다음 스테이지 없다면 타일만 이동
+    else {
+        downTile();
+    }
 }
 
 /**
@@ -329,11 +336,8 @@ void GameView::onFallFinished() {
         toAddFriendsBalls = 0;
     }
     
-    // Case 1. 다음 스테이지로 전환
-    if( !GameManager::onNextStage() ) {
-        // Case 2. 진행할 스테이지 없다면 타일 이동
-        downTile();
-    }
+    // 다음 스테이지로 전환
+    GameManager::onNextStage();
 }
 
 /**

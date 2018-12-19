@@ -103,7 +103,7 @@ public:
 
     static void onLevelClear();
     static void onNextLevel();
-    static bool onNextStage();
+    static void onNextStage();
     
     static void onScoreChanged();
 };

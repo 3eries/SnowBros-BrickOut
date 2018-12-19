@@ -442,16 +442,14 @@ void GameManager::onNextLevel() {
 /**
  * 다음 스테이지
  */
-bool GameManager::onNextStage() {
+void GameManager::onNextStage() {
     
     if( !DBManager::isLastStage(getStage()) ) {
         getInstance()->stage++;
         getEventDispatcher()->dispatchOnNextStage(getStage());
-        
-        return true;
+    } else {
+        getEventDispatcher()->dispatchOnNextStage(StageData());
     }
-    
-    return false;
 }
 
 /**
