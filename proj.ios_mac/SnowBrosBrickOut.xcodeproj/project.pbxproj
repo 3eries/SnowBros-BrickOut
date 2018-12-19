@@ -59,6 +59,7 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1D622140214F500400567075 /* SBJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D62213E214F500400567075 /* SBJSON.cpp */; };
 		1D69EBE721BC31A600DC5FF9 /* AimController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D69EBE521BC31A600DC5FF9 /* AimController.cpp */; };
+		1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709321C9786400CF907F /* TopMenu.cpp */; };
 		1D7F2CE721B706CF00516469 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F2CE021B706CF00516469 /* GLES-Render.cpp */; };
 		1D7F2CE821B706CF00516469 /* DebugDrawView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F2CE321B706CF00516469 /* DebugDrawView.cpp */; };
 		1D7F2CE921B706CF00516469 /* SBPhysics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F2CE421B706CF00516469 /* SBPhysics.cpp */; };
@@ -279,6 +280,8 @@
 		1D62213F214F500400567075 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
 		1D69EBE521BC31A600DC5FF9 /* AimController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AimController.cpp; sourceTree = "<group>"; };
 		1D69EBE621BC31A600DC5FF9 /* AimController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AimController.hpp; sourceTree = "<group>"; };
+		1D7E709321C9786400CF907F /* TopMenu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TopMenu.cpp; sourceTree = "<group>"; };
+		1D7E709421C9786400CF907F /* TopMenu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TopMenu.hpp; sourceTree = "<group>"; };
 		1D7F2CDF21B706CF00516469 /* DebugDrawView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DebugDrawView.hpp; sourceTree = "<group>"; };
 		1D7F2CE021B706CF00516469 /* GLES-Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "GLES-Render.cpp"; sourceTree = "<group>"; };
 		1D7F2CE121B706CF00516469 /* SBPhysics.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SBPhysics.hpp; sourceTree = "<group>"; };
@@ -1013,6 +1016,8 @@
 				1D1F3C9C20AD74220035A36C /* PausePopup.hpp */,
 				1DEEE24D21B57FCA00DD4776 /* ResultPopup.cpp */,
 				1DEEE24E21B57FCB00DD4776 /* ResultPopup.hpp */,
+				1D7E709321C9786400CF907F /* TopMenu.cpp */,
+				1D7E709421C9786400CF907F /* TopMenu.hpp */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -1258,6 +1263,7 @@
 				1D7F2CE921B706CF00516469 /* SBPhysics.cpp in Sources */,
 				1DA0408A21034661001980BA /* FirebaseManager-ios.mm in Sources */,
 				1DA723EC2109FEAE002B7ADE /* CommonLoadingBar.cpp in Sources */,
+				1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */,
 				1DE5254E21BB0B94006CAE9F /* Ball.cpp in Sources */,
 				1D45C47C20A8A7B8007E63AD /* SBUIInfo.cpp in Sources */,
 				1D1F3C9A20AD6D040035A36C /* SBBasePopup.cpp in Sources */,

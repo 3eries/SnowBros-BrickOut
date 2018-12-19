@@ -33,9 +33,6 @@ public:
 private:
     enum Tag {
         MAP = 10,
-        LEVEL = 100,
-        SCORE,
-        
         BTN_BRICK_DOWN,
         
         DEBUG_DRAW_VIEW = 1000,
@@ -45,7 +42,7 @@ private:
         TILE = 0,
         BALL,
         AIM_CONTROLLER = 100,
-        TOP_MENU,
+        MENU,
     };
     
 private:
@@ -59,6 +56,7 @@ private:
     
     void initPhysics();
     void initBg();
+    void initMenu();
     void initMap();
     void initBall();
     void initTile();

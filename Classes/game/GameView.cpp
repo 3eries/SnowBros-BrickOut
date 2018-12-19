@@ -22,6 +22,7 @@
 #include "object/tile/Brick.hpp"
 #include "object/tile/Item.hpp"
 
+#include "ui/TopMenu.hpp"
 USING_NS_CC;
 USING_NS_SB;
 using namespace cocos2d::ui;
@@ -60,6 +61,7 @@ bool GameView::init() {
     
     initPhysics();
     initBg();
+    initMenu();
     initMap();
     initBall();
     initTile();
@@ -245,12 +247,6 @@ void GameView::onNextStage(const StageData &stage) {
  * 스코어 변경
  */
 void GameView::onScoreChanged(int score) {
-    
-    auto scoreLabel = getChildByTag<Label*>(Tag::SCORE);
-    
-    if( scoreLabel ) {
-        scoreLabel->setString(TO_STRING(score));
-    }
 }
 
 /**
@@ -1053,69 +1049,15 @@ void GameView::initPhysics() {
  * 배경 초기화
  */
 void GameView::initBg() {
+}
 
-    // 상단 배경
-    // game_bg_top.png Vec2TC(0, -37) , Size(720, 74)
-    auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
-    topBg->setAnchorPoint(ANCHOR_M);
-    topBg->setPosition(Vec2TC(0, -37));
-    addChild(topBg, (int)ZOrder::TOP_MENU);
+/**
+ * 메뉴 초기화
+ */
+void GameView::initMenu() {
     
-    auto topBox = SBNodeUtils::getBoundingBoxInWorld(topBg);
-    
-    // 레벨
-    auto lvLabel = Label::createWithTTF("Lv.1", FONT_COMMODORE, 28, Size::ZERO,
-                                        TextHAlignment::LEFT, TextVAlignment::CENTER);
-    lvLabel->setTag(Tag::LEVEL);
-    lvLabel->setAnchorPoint(ANCHOR_ML);
-    lvLabel->setPosition(Vec2TL(92 - 122*0.5f, -37));
-    lvLabel->setTextColor(Color4B::WHITE);
-    lvLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(lvLabel, (int)ZOrder::TOP_MENU);
-    
-    // 스코어
-    // SCORE size:28 stroke:3 Vec2TL(92, -37) , Size(122, 29)
-    auto scoreTitleLabel = Label::createWithTTF("SCORE:", FONT_COMMODORE, 28, Size::ZERO,
-                                                TextHAlignment::CENTER, TextVAlignment::CENTER);
-    scoreTitleLabel->setAnchorPoint(ANCHOR_M);
-    scoreTitleLabel->setPosition(Vec2TL(92 + 200, -37));
-    scoreTitleLabel->setTextColor(Color4B::WHITE);
-    scoreTitleLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(scoreTitleLabel, (int)ZOrder::TOP_MENU);
-    
-    // 1234 size:28 stroke:3 Vec2TL(202, -37) , Size(90, 29)
-    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 28, Size::ZERO,
-                                           TextHAlignment::LEFT, TextVAlignment::CENTER);
-    scoreLabel->setTag(Tag::SCORE);
-    scoreLabel->setAnchorPoint(ANCHOR_ML);
-    scoreLabel->setPosition(Vec2TL(202 - 90*0.5f + 200, -37));
-    scoreLabel->setTextColor(Color4B::WHITE);
-    scoreLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(scoreLabel, (int)ZOrder::TOP_MENU);
-    
-    // High Score
-    // HIGH SCORE size:28 stroke:3 color:255,217,0 Vec2TR(-272, -37) , Size(222, 29)
-    /*
-     auto highScoreTitleLabel = Label::createWithTTF("HIGH SCORE:", FONT_COMMODORE, 28, Size::ZERO,
-     TextHAlignment::CENTER, TextVAlignment::CENTER);
-     highScoreTitleLabel->setAnchorPoint(ANCHOR_M);
-     highScoreTitleLabel->setPosition(Vec2TR(-272, -37));
-     highScoreTitleLabel->setTextColor(Color4B(255,217,0,255));
-     highScoreTitleLabel->enableOutline(Color4B::BLACK, 3);
-     addChild(highScoreTitleLabel, (int)ZOrder::SCORE);
-     
-     // 123456 size:28 stroke:3 color:255,217,0 Vec2TR(-90, -37) , Size(127, 29)
-     auto highScoreLabel = Label::createWithTTF(TO_STRING(RankingManager::getBestScore()), FONT_COMMODORE, 28, Size::ZERO,
-     TextHAlignment::LEFT, TextVAlignment::CENTER);
-     highScoreLabel->setTag(Tag::HIGH_SCORE);
-     highScoreLabel->setAnchorPoint(ANCHOR_ML);
-     highScoreLabel->setPosition(Vec2TR(-90 - 127*0.5f, -37));
-     highScoreLabel->setTextColor(Color4B(255,217,0,255));
-     highScoreLabel->enableOutline(Color4B::BLACK, 3);
-     addChild(highScoreLabel, (int)ZOrder::SCORE);
-     */
-    
-    // 스테이지 진행도
+    auto topMenu = TopMenu::create();
+    addChild(topMenu, (int)ZOrder::MENU);
     
     // 벽돌 아래로 이동 버튼
     // game_bg_bottom.png Vec2BC(0, 26) , Size(720, 52)
@@ -1128,7 +1070,7 @@ void GameView::initBg() {
         btn->setContentSize(Size(SB_WIN_SIZE.width, 52*0.8f));
         btn->setCascadeOpacityEnabled(true);
         btn->setOpacity(255*0.5f);
-        addChild(btn, (int)ZOrder::AIM_CONTROLLER);
+        addChild(btn, (int)ZOrder::MENU);
         
         btn->addClickEventListener([=](Ref*) {
             this->onClickDownButton();
