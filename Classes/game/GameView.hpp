@@ -33,7 +33,10 @@ public:
 private:
     enum Tag {
         MAP = 10,
-        SCORE = 100,
+        LEVEL = 100,
+        SCORE,
+        
+        BTN_BRICK_DOWN,
         
         DEBUG_DRAW_VIEW = 1000,
     };
@@ -42,7 +45,7 @@ private:
         TILE = 0,
         BALL,
         AIM_CONTROLLER = 100,
-        SCORE,
+        TOP_MENU,
     };
     
 private:
@@ -106,6 +109,8 @@ private:
     void withdrawBalls();
     
     void downTile();
+    
+    void onClickDownButton();
     
     void addBall(int count = 1, bool updateUI = true);
     void addBallFromQueue();

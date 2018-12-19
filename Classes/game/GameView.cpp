@@ -291,6 +291,7 @@ void GameView::onShootingReady() {
     CCLOG("onShootingReady");
     
     aimController->setEnabled(true, getBricks());
+    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(true);
     
     // 아이템 비활성화
     auto items = getItems();
@@ -496,6 +497,7 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     shootIndex = 0;
     fallenBallCount = 0;
+    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(false);
     
     // 아이템 활성화
     auto items = getItems();
@@ -612,6 +614,17 @@ void GameView::downTile() {
 
     SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onTileDownFinished, this),
                             Game::Tile::MOVE_DURATION + 0.1f);
+}
+
+/**
+ * 벽돌 아래로 이동 버튼 클릭
+ */
+void GameView::onClickDownButton() {
+    
+    aimController->setEnabled(false);
+    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(false);
+    
+    GameManager::onNextStage();
 }
 
 /**
@@ -1041,6 +1054,105 @@ void GameView::initPhysics() {
  */
 void GameView::initBg() {
 
+    // 상단 배경
+    // game_bg_top.png Vec2TC(0, -37) , Size(720, 74)
+    auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
+    topBg->setAnchorPoint(ANCHOR_M);
+    topBg->setPosition(Vec2TC(0, -37));
+    addChild(topBg, (int)ZOrder::TOP_MENU);
+    
+    auto topBox = SBNodeUtils::getBoundingBoxInWorld(topBg);
+    
+    // 레벨
+    auto lvLabel = Label::createWithTTF("Lv.1", FONT_COMMODORE, 28, Size::ZERO,
+                                        TextHAlignment::LEFT, TextVAlignment::CENTER);
+    lvLabel->setTag(Tag::LEVEL);
+    lvLabel->setAnchorPoint(ANCHOR_ML);
+    lvLabel->setPosition(Vec2TL(92 - 122*0.5f, -37));
+    lvLabel->setTextColor(Color4B::WHITE);
+    lvLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(lvLabel, (int)ZOrder::TOP_MENU);
+    
+    // 스코어
+    // SCORE size:28 stroke:3 Vec2TL(92, -37) , Size(122, 29)
+    auto scoreTitleLabel = Label::createWithTTF("SCORE:", FONT_COMMODORE, 28, Size::ZERO,
+                                                TextHAlignment::CENTER, TextVAlignment::CENTER);
+    scoreTitleLabel->setAnchorPoint(ANCHOR_M);
+    scoreTitleLabel->setPosition(Vec2TL(92 + 200, -37));
+    scoreTitleLabel->setTextColor(Color4B::WHITE);
+    scoreTitleLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(scoreTitleLabel, (int)ZOrder::TOP_MENU);
+    
+    // 1234 size:28 stroke:3 Vec2TL(202, -37) , Size(90, 29)
+    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 28, Size::ZERO,
+                                           TextHAlignment::LEFT, TextVAlignment::CENTER);
+    scoreLabel->setTag(Tag::SCORE);
+    scoreLabel->setAnchorPoint(ANCHOR_ML);
+    scoreLabel->setPosition(Vec2TL(202 - 90*0.5f + 200, -37));
+    scoreLabel->setTextColor(Color4B::WHITE);
+    scoreLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(scoreLabel, (int)ZOrder::TOP_MENU);
+    
+    // High Score
+    // HIGH SCORE size:28 stroke:3 color:255,217,0 Vec2TR(-272, -37) , Size(222, 29)
+    /*
+     auto highScoreTitleLabel = Label::createWithTTF("HIGH SCORE:", FONT_COMMODORE, 28, Size::ZERO,
+     TextHAlignment::CENTER, TextVAlignment::CENTER);
+     highScoreTitleLabel->setAnchorPoint(ANCHOR_M);
+     highScoreTitleLabel->setPosition(Vec2TR(-272, -37));
+     highScoreTitleLabel->setTextColor(Color4B(255,217,0,255));
+     highScoreTitleLabel->enableOutline(Color4B::BLACK, 3);
+     addChild(highScoreTitleLabel, (int)ZOrder::SCORE);
+     
+     // 123456 size:28 stroke:3 color:255,217,0 Vec2TR(-90, -37) , Size(127, 29)
+     auto highScoreLabel = Label::createWithTTF(TO_STRING(RankingManager::getBestScore()), FONT_COMMODORE, 28, Size::ZERO,
+     TextHAlignment::LEFT, TextVAlignment::CENTER);
+     highScoreLabel->setTag(Tag::HIGH_SCORE);
+     highScoreLabel->setAnchorPoint(ANCHOR_ML);
+     highScoreLabel->setPosition(Vec2TR(-90 - 127*0.5f, -37));
+     highScoreLabel->setTextColor(Color4B(255,217,0,255));
+     highScoreLabel->enableOutline(Color4B::BLACK, 3);
+     addChild(highScoreLabel, (int)ZOrder::SCORE);
+     */
+    
+    // 스테이지 진행도
+    
+    // 벽돌 아래로 이동 버튼
+    // game_bg_bottom.png Vec2BC(0, 26) , Size(720, 52)
+    {
+        auto btn = SBNodeUtils::createTouchNode();
+        btn->setTag(Tag::BTN_BRICK_DOWN);
+        btn->setVisible(false);
+        btn->setAnchorPoint(ANCHOR_MB);
+        btn->setPosition(Vec2BC(0,0));
+        btn->setContentSize(Size(SB_WIN_SIZE.width, 52*0.8f));
+        btn->setCascadeOpacityEnabled(true);
+        btn->setOpacity(255*0.5f);
+        addChild(btn, (int)ZOrder::AIM_CONTROLLER);
+        
+        btn->addClickEventListener([=](Ref*) {
+            this->onClickDownButton();
+        });
+        
+        auto bg = LayerColor::create(Color4B::BLACK);
+        bg->setIgnoreAnchorPointForPosition(false);
+        bg->setAnchorPoint(Vec2::ZERO);
+        bg->setPosition(Vec2::ZERO);
+        bg->setContentSize(btn->getContentSize());
+        btn->addChild(bg);
+        
+        // BRICK DOWN
+        // Tap to move down bricks
+        // TAP TO MOVE DOWN BRICKS
+        auto label = Label::createWithTTF("BRICK DOWN", FONT_COMMODORE, 28, Size::ZERO,
+                                          TextHAlignment::CENTER, TextVAlignment::CENTER);
+        label->setAnchorPoint(ANCHOR_M);
+        label->setPosition(Vec2MC(btn->getContentSize(), 0, 0));
+        label->setScale(btn->getContentSize().height*0.9f / label->getContentSize().height);
+        label->setTextColor(Color4B::WHITE);
+        // label->enableOutline(Color4B::BLACK, 3);
+        btn->addChild(label);
+    }
 }
 
 /**
@@ -1053,55 +1165,6 @@ void GameView::initMap() {
     addChild(map);
     
     GameManager::getPhysicsManager()->setMap(map);
-    
-    // 상단 배경
-    // game_bg_top.png Vec2TC(0, -37) , Size(720, 74)
-    auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
-    topBg->setAnchorPoint(ANCHOR_M);
-    topBg->setPosition(Vec2TC(0, -37));
-    addChild(topBg, (int)ZOrder::SCORE);
-    
-    // 스코어 라벨 초기화
-    // SCORE size:28 stroke:3 Vec2TL(92, -37) , Size(122, 29)
-    auto scoreTitleLabel = Label::createWithTTF("SCORE:", FONT_COMMODORE, 28, Size::ZERO,
-                                                TextHAlignment::CENTER, TextVAlignment::CENTER);
-    scoreTitleLabel->setAnchorPoint(ANCHOR_M);
-    scoreTitleLabel->setPosition(Vec2TL(92, -37));
-    scoreTitleLabel->setTextColor(Color4B::WHITE);
-    scoreTitleLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(scoreTitleLabel, (int)ZOrder::SCORE);
-    
-    // 1234 size:28 stroke:3 Vec2TL(202, -37) , Size(90, 29)
-    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 28, Size::ZERO,
-                                           TextHAlignment::LEFT, TextVAlignment::CENTER);
-    scoreLabel->setTag(Tag::SCORE);
-    scoreLabel->setAnchorPoint(ANCHOR_ML);
-    scoreLabel->setPosition(Vec2TL(202 - 90*0.5f, -37));
-    scoreLabel->setTextColor(Color4B::WHITE);
-    scoreLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(scoreLabel, (int)ZOrder::SCORE);
-    
-    // High Score
-    // HIGH SCORE size:28 stroke:3 color:255,217,0 Vec2TR(-272, -37) , Size(222, 29)
-    /*
-    auto highScoreTitleLabel = Label::createWithTTF("HIGH SCORE:", FONT_COMMODORE, 28, Size::ZERO,
-                                                    TextHAlignment::CENTER, TextVAlignment::CENTER);
-    highScoreTitleLabel->setAnchorPoint(ANCHOR_M);
-    highScoreTitleLabel->setPosition(Vec2TR(-272, -37));
-    highScoreTitleLabel->setTextColor(Color4B(255,217,0,255));
-    highScoreTitleLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(highScoreTitleLabel, (int)ZOrder::SCORE);
-    
-    // 123456 size:28 stroke:3 color:255,217,0 Vec2TR(-90, -37) , Size(127, 29)
-    auto highScoreLabel = Label::createWithTTF(TO_STRING(RankingManager::getBestScore()), FONT_COMMODORE, 28, Size::ZERO,
-                                               TextHAlignment::LEFT, TextVAlignment::CENTER);
-    highScoreLabel->setTag(Tag::HIGH_SCORE);
-    highScoreLabel->setAnchorPoint(ANCHOR_ML);
-    highScoreLabel->setPosition(Vec2TR(-90 - 127*0.5f, -37));
-    highScoreLabel->setTextColor(Color4B(255,217,0,255));
-    highScoreLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(highScoreLabel, (int)ZOrder::SCORE);
-    */
 }
 
 /**
@@ -1183,6 +1246,7 @@ void GameView::initFriends() {
 void GameView::initAimController() {
     
     aimController = AimController::create();
+    aimController->setEnabled(false);
     aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
     addChild(aimController, (int)ZOrder::AIM_CONTROLLER);
 }
