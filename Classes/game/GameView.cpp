@@ -254,7 +254,7 @@ void GameView::onScoreChanged(int score) {
  */
 void GameView::onTileAddFinished() {
     
-    CCLOG("onTileAddFinished");
+    Log::i("onTileAddFinished");
     
     // 타일 등장 연출 완료 후 이동
     SBDirector::postDelayed(this, [=]() {
@@ -267,7 +267,7 @@ void GameView::onTileAddFinished() {
  */
 void GameView::onTileDownFinished() {
     
-    CCLOG("onTileDownFinished");
+    Log::i("onTileDownFinished");
     
     // 게임 오버 체크
     if( isExistBrick(0) ) {
@@ -284,7 +284,7 @@ void GameView::onTileDownFinished() {
  */
 void GameView::onShootingReady() {
     
-    CCLOG("onShootingReady");
+    Log::i("onShootingReady");
     
     aimController->setEnabled(true, getBricks());
     getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(true);
@@ -316,7 +316,7 @@ void GameView::onShootFinished() {
  */
 void GameView::onFallFinished() {
     
-    CCLOG("onFallFinished");
+    Log::i("onFallFinished");
     
     // 레벨 클리어 체크
     if( GameManager::getStage().isLastStage && getBricks().size() == 0 ) {
@@ -373,7 +373,7 @@ void GameView::onPhysicsUpdate() {
                 Vec2 center = MTP(body->GetPosition());
                 
                 if( brickBox.containsPoint(center) ) {
-                    CCLOG("Warning: 터널링 발생!!");
+                    Log::w("터널링 발생!!", true);
                 // if( brickBox.intersectsCircle(center, BALL_RADIUS) ) {
                     ++tunnelingCount;
                     needRemoveBalls.push_back(ball);
@@ -400,7 +400,7 @@ void GameView::onPhysicsUpdate() {
 void GameView::onContactBrick(Ball *ball, Brick *brick) {
     
     if( brick->isBroken() ) {
-        CCLOG("Warning: 이미 깨진 벽돌 충돌 이벤트 발생!!");
+        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!", true);
         return;
     }
     
@@ -413,7 +413,7 @@ void GameView::onContactBrick(Ball *ball, Brick *brick) {
 void GameView::onContactItem(Ball *ball, Item *item) {
     
     if( !item->isAwake() ) {
-        CCLOG("Warning: 아이템 sleep 상태에서 충돌 이벤트 발생!!");
+        Log::w("아이템 sleep 상태에서 충돌 이벤트 발생!!", true);
         return;
     }
     
@@ -456,7 +456,7 @@ void GameView::onContactItem(Ball *ball, Item *item) {
 void GameView::onContactFloor(Ball *ball) {
     
     if( isWithdraw ) {
-        CCLOG("Warning: 볼 회수 중 바닥 충돌 이벤트 발생!!");
+        Log::w("볼 회수 중 바닥 충돌 이벤트 발생!!", true);
         return;
     }
 

@@ -9,6 +9,7 @@
 #define superbomb_h
 
 // base
+#include "base/SBDebug.hpp"
 #include "base/SBDirector.hpp"
 #include "base/SBMacros.h"
 #include "base/SBScheduleHelper.hpp"
