@@ -60,6 +60,7 @@
 		1D622140214F500400567075 /* SBJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D62213E214F500400567075 /* SBJSON.cpp */; };
 		1D69EBE721BC31A600DC5FF9 /* AimController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D69EBE521BC31A600DC5FF9 /* AimController.cpp */; };
 		1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709321C9786400CF907F /* TopMenu.cpp */; };
+		1D7E709B21CA355A00CF907F /* StageClearPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709921CA355A00CF907F /* StageClearPopup.cpp */; };
 		1D7F2CE721B706CF00516469 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F2CE021B706CF00516469 /* GLES-Render.cpp */; };
 		1D7F2CE821B706CF00516469 /* DebugDrawView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F2CE321B706CF00516469 /* DebugDrawView.cpp */; };
 		1D7F2CE921B706CF00516469 /* SBPhysics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F2CE421B706CF00516469 /* SBPhysics.cpp */; };
@@ -86,6 +87,7 @@
 		1DA723EC2109FEAE002B7ADE /* CommonLoadingBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA723E82109FEAE002B7ADE /* CommonLoadingBar.cpp */; };
 		1DA98BC820B46F64006BC169 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA98BC620B46F61006BC169 /* GameManager.cpp */; };
 		1DA98BD220B47E66006BC169 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA98BD020B47E66006BC169 /* User.cpp */; };
+		1DACEF9C21CB8CAA003FF4AC /* SBDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DACEF9A21CB8CAA003FF4AC /* SBDebug.cpp */; };
 		1DBC68E820E49B9300CA85F0 /* CreditPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */; };
 		1DBCE73421AEB9F4002D8DC3 /* SBEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBCE73221AEB9F4002D8DC3 /* SBEvent.cpp */; };
 		1DC8553721902C9F007E180C /* GiftManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8553521902C9F007E180C /* GiftManager.cpp */; };
@@ -181,8 +183,8 @@
 		1D13226E21C181E6005F4370 /* BrickData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BrickData.h; sourceTree = "<group>"; };
 		1D13226F21C18241005F4370 /* DBManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DBManager.cpp; sourceTree = "<group>"; };
 		1D13227021C18241005F4370 /* DBManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DBManager.hpp; sourceTree = "<group>"; };
-		1D13227221C19453005F4370 /* LevelData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LevelData.h; sourceTree = "<group>"; };
-		1D13227321C19576005F4370 /* StageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StageData.h; sourceTree = "<group>"; };
+		1D13227221C19453005F4370 /* StageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StageData.h; sourceTree = "<group>"; };
+		1D13227321C19576005F4370 /* FloorData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FloorData.h; sourceTree = "<group>"; };
 		1D13227621C1E157005F4370 /* ItemData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ItemData.h; sourceTree = "<group>"; };
 		1D13227721C1E522005F4370 /* Item.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Item.cpp; sourceTree = "<group>"; };
 		1D13227821C1E522005F4370 /* Item.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Item.hpp; sourceTree = "<group>"; };
@@ -282,6 +284,8 @@
 		1D69EBE621BC31A600DC5FF9 /* AimController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AimController.hpp; sourceTree = "<group>"; };
 		1D7E709321C9786400CF907F /* TopMenu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TopMenu.cpp; sourceTree = "<group>"; };
 		1D7E709421C9786400CF907F /* TopMenu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TopMenu.hpp; sourceTree = "<group>"; };
+		1D7E709921CA355A00CF907F /* StageClearPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StageClearPopup.cpp; sourceTree = "<group>"; };
+		1D7E709A21CA355A00CF907F /* StageClearPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = StageClearPopup.hpp; sourceTree = "<group>"; };
 		1D7F2CDF21B706CF00516469 /* DebugDrawView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DebugDrawView.hpp; sourceTree = "<group>"; };
 		1D7F2CE021B706CF00516469 /* GLES-Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "GLES-Render.cpp"; sourceTree = "<group>"; };
 		1D7F2CE121B706CF00516469 /* SBPhysics.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SBPhysics.hpp; sourceTree = "<group>"; };
@@ -331,6 +335,8 @@
 		1DA98BC720B46F62006BC169 /* GameManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = GameManager.hpp; sourceTree = "<group>"; };
 		1DA98BD020B47E66006BC169 /* User.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = User.cpp; sourceTree = "<group>"; };
 		1DA98BD120B47E66006BC169 /* User.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = User.hpp; sourceTree = "<group>"; };
+		1DACEF9A21CB8CAA003FF4AC /* SBDebug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBDebug.cpp; sourceTree = "<group>"; };
+		1DACEF9B21CB8CAA003FF4AC /* SBDebug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBDebug.hpp; sourceTree = "<group>"; };
 		1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CreditPopup.cpp; sourceTree = "<group>"; };
 		1DBC68E720E49B9300CA85F0 /* CreditPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CreditPopup.hpp; sourceTree = "<group>"; };
 		1DBCE71C21AE8A3E002D8DC3 /* SBPluginConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBPluginConfig.h; sourceTree = "<group>"; };
@@ -501,8 +507,8 @@
 				1D13226E21C181E6005F4370 /* BrickData.h */,
 				1D13226F21C18241005F4370 /* DBManager.cpp */,
 				1D13227021C18241005F4370 /* DBManager.hpp */,
-				1D13227221C19453005F4370 /* LevelData.h */,
-				1D13227321C19576005F4370 /* StageData.h */,
+				1D13227221C19453005F4370 /* StageData.h */,
+				1D13227321C19576005F4370 /* FloorData.h */,
 				1D13227621C1E157005F4370 /* ItemData.h */,
 			);
 			path = db;
@@ -690,6 +696,8 @@
 			isa = PBXGroup;
 			children = (
 				1DBCE72821AEB74B002D8DC3 /* event */,
+				1DACEF9A21CB8CAA003FF4AC /* SBDebug.cpp */,
+				1DACEF9B21CB8CAA003FF4AC /* SBDebug.hpp */,
 				1D1F3C8820ACD12A0035A36C /* SBDirector.cpp */,
 				1D1F3C8920ACD12B0035A36C /* SBDirector.hpp */,
 				1D45C47B20A8A7B8007E63AD /* SBMacros.h */,
@@ -1016,6 +1024,8 @@
 				1D1F3C9C20AD74220035A36C /* PausePopup.hpp */,
 				1DEEE24D21B57FCA00DD4776 /* ResultPopup.cpp */,
 				1DEEE24E21B57FCB00DD4776 /* ResultPopup.hpp */,
+				1D7E709921CA355A00CF907F /* StageClearPopup.cpp */,
+				1D7E709A21CA355A00CF907F /* StageClearPopup.hpp */,
 				1D7E709321C9786400CF907F /* TopMenu.cpp */,
 				1D7E709421C9786400CF907F /* TopMenu.hpp */,
 			);
@@ -1320,6 +1330,7 @@
 				1D622140214F500400567075 /* SBJSON.cpp in Sources */,
 				1DBC68E820E49B9300CA85F0 /* CreditPopup.cpp in Sources */,
 				1D45C44820A8A787007E63AD /* SceneManager.cpp in Sources */,
+				1D7E709B21CA355A00CF907F /* StageClearPopup.cpp in Sources */,
 				1DEEE25321B59DF300DD4776 /* BasePopup.cpp in Sources */,
 				1DA0408921034661001980BA /* Analytics-android.cpp in Sources */,
 				1D24F6EB21218A56002461A7 /* ReviewHelper.cpp in Sources */,
@@ -1345,6 +1356,7 @@
 				1D86439C21523AEC001841C9 /* NSData+Base64.m in Sources */,
 				1D8F54B120D2D114009E2201 /* SBSpineHelper.cpp in Sources */,
 				1DF7736D20EEF7F000BB3261 /* FunnyHelper.cpp in Sources */,
+				1DACEF9C21CB8CAA003FF4AC /* SBDebug.cpp in Sources */,
 				1D1F3C8A20ACD12B0035A36C /* SBDirector.cpp in Sources */,
 				1D86439D21523AEC001841C9 /* NSString+Base64.m in Sources */,
 				1D45C48920A8A7B8007E63AD /* SBSystemUtils.cpp in Sources */,

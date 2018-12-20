@@ -53,8 +53,8 @@ void GameManager::reset() {
     giftItems.clear();
     continueCount = 0;
     score = 0;
-    level = 1;
     stage = 1;
+    floor = 1;
 }
 
 /**
@@ -168,12 +168,12 @@ int GameManager::getScore() {
     return getInstance()->score;
 }
 
-LevelData GameManager::getLevel() {
-    return DBManager::getLevel(getInstance()->level);
+StageData GameManager::getStage() {
+    return DBManager::getStage(getInstance()->stage);
 }
 
-StageData GameManager::getStage() {
-    return DBManager::getStage(getInstance()->level, getInstance()->stage);
+FloorData GameManager::getFloor() {
+    return DBManager::getFloor(getInstance()->stage, getInstance()->floor);
 }
 
 bool GameManager::isContinuable() {
@@ -418,37 +418,37 @@ void GameManager::onBoostEnd() {
 }
 
 /**
- * 레벨 클리어
+ * 스테이지 클리어
  */
-void GameManager::onLevelClear() {
+void GameManager::onStageClear() {
     
-    getEventDispatcher()->dispatchOnLevelClear();
-}
-
-/**
- * 다음 레벨
- */
-void GameManager::onNextLevel() {
- 
-    // 현재 레벨이 정의된 마지막 레벨이면 임시 레벨 추가
-    if( DBManager::isLastLevel(getLevel().level) ) {
-        DBManager::addTempLevel();
-    }
-    
-    getInstance()->level++;
-    getEventDispatcher()->dispatchOnNextLevel(getLevel());
+    getEventDispatcher()->dispatchOnStageClear();
 }
 
 /**
  * 다음 스테이지
  */
 void GameManager::onNextStage() {
+ 
+    // 현재 스테이지가 정의된 마지막 스테이지면 임시 스테이지 추가
+    if( DBManager::isLastStage(getStage().stage) ) {
+        DBManager::addTempStage();
+    }
     
-    if( !DBManager::isLastStage(getStage()) ) {
-        getInstance()->stage++;
-        getEventDispatcher()->dispatchOnNextStage(getStage());
+    getInstance()->stage++;
+    getEventDispatcher()->dispatchOnNextStage(getStage());
+}
+
+/**
+ * 다음 층
+ */
+void GameManager::onNextFloor() {
+    
+    if( !DBManager::isLastFloor(getFloor()) ) {
+        getInstance()->floor++;
+        getEventDispatcher()->dispatchOnNextFloor(getFloor());
     } else {
-        getEventDispatcher()->dispatchOnNextStage(StageData());
+        getEventDispatcher()->dispatchOnNextFloor(FloorData());
     }
 }
 

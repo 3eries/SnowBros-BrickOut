@@ -148,7 +148,7 @@ void TopMenu::onGameReset() {
  */
 void TopMenu::onGameStart() {
     
-    updateFloorProgressUI(GameManager::getStage().stage, GameManager::getLevel().stageLen);
+    updateFloorProgressUI(GameManager::getFloor().floor, GameManager::getStage().floorLen);
 }
 
 /**
@@ -188,21 +188,9 @@ void TopMenu::onBoostEnd() {
 }
 
 /**
- * 레벨 클리어
+ * 스테이지 클리어
  */
-void TopMenu::onLevelClear() {
-}
-
-/**
- * 다음 레벨
- */
-void TopMenu::onNextLevel(const LevelData &level) {
-    
-    auto stageLabel = getChildByTag<Label*>(Tag::STAGE);
-    
-    if( stageLabel ) {
-        stageLabel->setString(TO_STRING(level.level));
-    }
+void TopMenu::onStageClear() {
 }
 
 /**
@@ -210,8 +198,20 @@ void TopMenu::onNextLevel(const LevelData &level) {
  */
 void TopMenu::onNextStage(const StageData &stage) {
     
-    if( !stage.isNull() ) {
-        updateFloorProgressUI(stage.stage, GameManager::getLevel().stageLen);
+    auto stageLabel = getChildByTag<Label*>(Tag::STAGE);
+    
+    if( stageLabel ) {
+        stageLabel->setString(TO_STRING(stage.stage));
+    }
+}
+
+/**
+ * 다음 층
+ */
+void TopMenu::onNextFloor(const FloorData &floor) {
+    
+    if( !floor.isNull() ) {
+        updateFloorProgressUI(floor.floor, GameManager::getStage().floorLen);
     }
 }
 
@@ -243,9 +243,9 @@ void TopMenu::initGameListener() {
     listener->onGameResult           = CC_CALLBACK_0(TopMenu::onGameResult, this);
     listener->onBoostStart           = CC_CALLBACK_0(TopMenu::onBoostStart, this);
     listener->onBoostEnd             = CC_CALLBACK_0(TopMenu::onBoostEnd, this);
-    listener->onLevelClear           = CC_CALLBACK_0(TopMenu::onLevelClear, this);
-    listener->onNextLevel            = CC_CALLBACK_1(TopMenu::onNextLevel, this);
+    listener->onStageClear           = CC_CALLBACK_0(TopMenu::onStageClear, this);
     listener->onNextStage            = CC_CALLBACK_1(TopMenu::onNextStage, this);
+    listener->onNextFloor            = CC_CALLBACK_1(TopMenu::onNextFloor, this);
     listener->onScoreChanged         = CC_CALLBACK_1(TopMenu::onScoreChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }

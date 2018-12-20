@@ -14,7 +14,7 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-#define LEVEL_FILE              "db/level.json"
+#define STAGE_FILE              "db/stage.json"
 #define BRICK_FILE              "db/brick.json"
 
 static DBManager *instance = nullptr;
@@ -79,10 +79,10 @@ void DBManager::init() {
     }
     CCLOG("========== PARSE END (brick.json)  ==========");
     
-    // level.json
-    CCLOG("========== PARSE START (level.json)  ==========");
+    // stage.json
+    CCLOG("========== PARSE START (stage.json)  ==========");
     {
-        string json = SBStringUtils::readTextFile(LEVEL_FILE);
+        string json = SBStringUtils::readTextFile(STAGE_FILE);
         
         rapidjson::Document doc;
         doc.Parse(json.c_str());
@@ -92,70 +92,70 @@ void DBManager::init() {
         auto list = doc.GetArray();
         
         for( int i = 0; i < list.Size(); ++i ) {
-            const rapidjson::Value &levelValue = list[i];
+            const rapidjson::Value &stageValue = list[i];
             
-            LevelData level;
-            level.level = levelValue["level"].GetInt();
-            level.stageBeginNum = levelValue["stage_begin_num"].GetInt();
-            level.stageLen = levelValue["stage_len"].GetInt();
+            StageData stage;
+            stage.stage = stageValue["stage"].GetInt();
+            stage.floorBeginNum = stageValue["floor_begin_num"].GetInt();
+            stage.floorLen = stageValue["floor_len"].GetInt();
             
-            const int STAGE_BEGIN_INDEX = level.stageBeginNum-1;
+            const int FLOOR_BEGIN_INDEX = stage.floorBeginNum-1;
             
-            auto stageValueList = levelValue["stages"].GetArray();
-            StageData prevStage;
+            auto floorValueList = stageValue["floors"].GetArray();
+            FloorData prevFloor;
             
-            for( int j = 0; j < stageValueList.Size(); ++j ) {
-                const rapidjson::Value &stageValue = stageValueList[j];
+            for( int j = 0; j < floorValueList.Size(); ++j ) {
+                const rapidjson::Value &floorValue = floorValueList[j];
                 
-                StageData stage(prevStage);
-                stage.level             = level.level;
-                stage.stage             = stageValue["stage"].GetInt();
-                stage.isLastStage       = stage.stage == level.stageLen;
+                FloorData floor(prevFloor);
+                floor.stage             = stage.stage;
+                floor.floor             = floorValue["floor"].GetInt();
+                floor.isLastFloor       = floor.floor == stage.floorLen;
                 
                 // brick_hp
-                if( stageValue.HasMember("brick_hp") ) {
-                    string hp = stageValue["brick_hp"].GetString();
+                if( floorValue.HasMember("brick_hp") ) {
+                    string hp = floorValue["brick_hp"].GetString();
                     hp = SBStringUtils::replaceAll(hp, " ", "");
                     
-                    stage.brickHpOrigin = hp;
+                    floor.brickHpOrigin = hp;
                 }
                 
-                // 현재 stage 값으로 hp 설정
-                if( stage.brickHpOrigin == "stage" ) {
-                    stage.brickHp = stage.stage + STAGE_BEGIN_INDEX;
+                // 현재 floor 값으로 hp 설정
+                if( floor.brickHpOrigin == "floor" ) {
+                    floor.brickHp = floor.floor + FLOOR_BEGIN_INDEX;
                 }
-                // 이전 stage 값으로 hp 설정
-                else if( stage.brickHpOrigin.find("prev_brick_hp") != string::npos ) {
-                    auto arr = SBStringUtils::split(stage.brickHpOrigin, '+');
-                    CCASSERT(arr.size() == 2, "DBManager level.json parse error: invalid brick_hp.");
+                // 이전 floor 값으로 hp 설정
+                else if( floor.brickHpOrigin.find("prev_brick_hp") != string::npos ) {
+                    auto arr = SBStringUtils::split(floor.brickHpOrigin, '+');
+                    CCASSERT(arr.size() == 2, "DBManager stage.json parse error: invalid brick_hp.");
                     
-                    stage.brickHp = prevStage.brickHp + SBStringUtils::toNumber<int>(arr[1]);
+                    floor.brickHp = prevFloor.brickHp + SBStringUtils::toNumber<int>(arr[1]);
                 }
                 
                 // brick_drop_count
-                if( stageValue.HasMember("brick_drop_count") ) {
-                    string dropCount = stageValue["brick_drop_count"].GetString();
+                if( floorValue.HasMember("brick_drop_count") ) {
+                    string dropCount = floorValue["brick_drop_count"].GetString();
                     dropCount = SBStringUtils::replaceAll(dropCount, " ", "");
                     
                     // integer
                     if( SBStringUtils::isInteger(dropCount) ) {
-                        stage.brickDropMin = SBStringUtils::toNumber<int>(dropCount);
-                        stage.brickDropMax = stage.brickDropMin;
+                        floor.brickDropMin = SBStringUtils::toNumber<int>(dropCount);
+                        floor.brickDropMax = floor.brickDropMin;
                     }
                     // range
                     else if( dropCount.find("~") != string::npos ) {
                         auto arr = SBStringUtils::split(dropCount, '~');
-                        CCASSERT(arr.size() == 2, "DBManager level.json parse error: invalid brick_drop_count.");
+                        CCASSERT(arr.size() == 2, "DBManager stage.json parse error: invalid brick_drop_count.");
                         
-                        stage.brickDropMin = SBStringUtils::toNumber<int>(arr[0]);
-                        stage.brickDropMax = SBStringUtils::toNumber<int>(arr[1]);
+                        floor.brickDropMin = SBStringUtils::toNumber<int>(arr[0]);
+                        floor.brickDropMax = SBStringUtils::toNumber<int>(arr[1]);
                     }
                 }
                 
                 // brick_list
                 auto getBrickList = [&](string key) -> BrickList {
                     
-                    auto list = stageValue[SBJSON::value(key, allocator)].GetArray();
+                    auto list = floorValue[SBJSON::value(key, allocator)].GetArray();
                     BrickList bricks;
                     
                     for( int i = 0; i < list.Size(); ++i ) {
@@ -165,9 +165,9 @@ void DBManager::init() {
                     return bricks;
                 };
                 
-                if( stageValue.HasMember("brick_list") )          stage.brickList = getBrickList("brick_list");
-                if( stageValue.HasMember("elite_brick_list") )    stage.eliteBrickList = getBrickList("elite_brick_list");
-                if( stageValue.HasMember("boss_brick_list") )     stage.bossBrickList = getBrickList("boss_brick_list");
+                if( floorValue.HasMember("brick_list") )          floor.brickList = getBrickList("brick_list");
+                if( floorValue.HasMember("elite_brick_list") )    floor.eliteBrickList = getBrickList("elite_brick_list");
+                if( floorValue.HasMember("boss_brick_list") )     floor.bossBrickList = getBrickList("boss_brick_list");
                 
                 // int values
                 {
@@ -179,120 +179,123 @@ void DBManager::init() {
                     };
                     
                     int *values[] = {
-                        &stage.eliteBrickDropRate,
-                        &stage.powerUpDropRate,
-                        &stage.friendPowerUpDropRate,
-                        &stage.moneyDropRate,
+                        &floor.eliteBrickDropRate,
+                        &floor.powerUpDropRate,
+                        &floor.friendPowerUpDropRate,
+                        &floor.moneyDropRate,
                     };
                     
                     for( int i = 0; i < sizeof(keys)/sizeof(string); ++i ) {
                         auto key = SBJSON::value(keys[i], allocator);
                         
-                        if( stageValue.HasMember(key) ) {
-                            *values[i] = stageValue[key].GetInt();
+                        if( floorValue.HasMember(key) ) {
+                            *values[i] = floorValue[key].GetInt();
                         }
                     }
                 }
                 
-                level.stages.push_back(stage);
-                prevStage = stage;
+                stage.floors.push_back(floor);
+                prevFloor = floor;
             }
             
-            // order by stage asc
-            sort(level.stages.begin(), level.stages.end(), [](const StageData &s1, const StageData &s2) {
-                return s1.stage < s2.stage;
+            // order by floor asc
+            sort(stage.floors.begin(), stage.floors.end(), [](const FloorData &f1, const FloorData &f2) {
+                return f1.floor < f2.floor;
             });
             
-            CCASSERT(level.stageLen == level.stages.size(), "DBManager level.json parse error: invalid stage length.");
-            levels.push_back(level);
+            CCASSERT(stage.floorLen == stage.floors.size(), "DBManager stage.json parse error: invalid floor length.");
+            stages.push_back(stage);
             
-            CCLOG("%s", level.toString().c_str());
+            CCLOG("%s", stage.toString().c_str());
         }
         
-        // order by level asc
-        sort(levels.begin(), levels.end(), [](const LevelData &l1, const LevelData &l2) {
-            return l1.level < l2.level;
+        // order by stage asc
+        sort(stages.begin(), stages.end(), [](const StageData &s1, const StageData &s2) {
+            return s1.stage < s2.stage;
         });
     }
-    CCLOG("========== PARSE END (level.json)  ==========");
+    CCLOG("========== PARSE END (stage.json)  ==========");
 }
 
 /**
- * 임시 레벨 추가
+ * 임시 스테이지 추가
  */
-void DBManager::addTempLevel() {
+void DBManager::addTempStage() {
     
-    auto level = getLastLevel();
-    level.level++;
-    level.stageBeginNum += level.stageLen;
+    auto stage = getLastStage();
+    stage.stage++;
+    stage.floorBeginNum += stage.floorLen;
     
-    for( auto &stage : level.stages ) {
-        stage.level++;
+    for( auto &floor : stage.floors ) {
+        floor.stage++;
     }
     
-    auto &levels = getInstance()->levels;
-    levels.push_back(level);
-}
-
-/**
- * 레벨 데이터를 반환합니다
- */
-LevelList DBManager::getLevels() {
-    return getInstance()->levels;
-}
-
-LevelData DBManager::getLevel(int level) {
-    
-    auto levels = getLevels();
-    
-    for( auto data : levels ) {
-        if( data.level == level ) {
-            return data;
-        }
-    }
-    
-    CCASSERT(false, "DBManager::getLevel error: invalid level.");
-    return LevelData();
-}
-
-LevelData DBManager::getLastLevel() {
-    
-    auto levels = getLevels();
-    
-    if( levels.size() == 0 ) {
-        return LevelData();
-    }
-    
-    return levels[levels.size()-1];
-}
-
-bool DBManager::isLastLevel(int level) {
-    return getLastLevel().level == level;
+    auto &stages = getInstance()->stages;
+    stages.push_back(stage);
 }
 
 /**
  * 스테이지 데이터를 반환합니다
  */
-StageList DBManager::getStages(int level) {
-    return getLevel(level).stages;
+StageList DBManager::getStages() {
+    return getInstance()->stages;
 }
 
-StageData DBManager::getStage(int level, int stage) {
+StageData DBManager::getStage(int stage) {
     
-    auto stages = getStages(level);
-    CCASSERT(stage-1 < stages.size(), "DBManager::getStage error: invalid stage.");
+    auto stages = getStages();
     
-    return stages[stage-1];
+    for( auto data : stages ) {
+        if( data.stage == stage ) {
+            return data;
+        }
+    }
+    
+    CCASSERT(false, "DBManager::getStage error: invalid stage.");
+    return StageData();
 }
 
-bool DBManager::isLastStage(int level, int stage) {
-    return getLevel(level).stageLen == stage;
+StageData DBManager::getLastStage() {
+    
+    auto stages = getStages();
+    
+    if( stages.size() == 0 ) {
+        return StageData();
+    }
+    
+    return stages[stages.size()-1];
 }
 
-bool DBManager::isLastStage(const StageData &data) {
-    return isLastStage(data.level, data.stage);
+bool DBManager::isLastStage(int stage) {
+    return getLastStage().stage == stage;
 }
 
+/**
+ * 층 데이터를 반환합니다
+ */
+FloorList DBManager::getFloors(int stage) {
+    return getStage(stage).floors;
+}
+
+FloorData DBManager::getFloor(int stage, int floor) {
+    
+    auto floors = getFloors(stage);
+    CCASSERT(floor-1 < floors.size(), "DBManager::getFloor error: invalid floor.");
+    
+    return floors[floor-1];
+}
+
+bool DBManager::isLastFloor(int stage, int floor) {
+    return getStage(stage).floorLen == floor;
+}
+
+bool DBManager::isLastFloor(const FloorData &data) {
+    return isLastFloor(data.stage, data.floor);
+}
+
+/**
+ * 벽돌 데이터를 반환합니다
+ */
 BrickMap DBManager::getBricks() {
     return getInstance()->bricks;
 }

@@ -47,9 +47,9 @@ public:
     void dispatchOnBoostStart();
     void dispatchOnBoostEnd();
     
-    void dispatchOnLevelClear();
-    void dispatchOnNextLevel(const LevelData &level);
+    void dispatchOnStageClear();
     void dispatchOnNextStage(const StageData &stage);
+    void dispatchOnNextFloor(const FloorData &floor);
     
     void dispatchOnScoreChanged(int score);
     

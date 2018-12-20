@@ -82,9 +82,9 @@ public:
     void onBoostStart();
     void onBoostEnd();
     
-    void onLevelClear();
-    void onNextLevel(const LevelData &level);
+    void onStageClear();
     void onNextStage(const StageData &stage);
+    void onNextFloor(const FloorData &floor);
     
     void onScoreChanged(int score);
     
@@ -161,7 +161,7 @@ private:
     int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수
     
     // 엘리트 벽돌 드랍률
-    // 엘리트 벽돌이 생성되지 않은 경우, 다음 Stage에서 확률 2배 증가
+    // 엘리트 벽돌이 생성되지 않은 경우, 다음 층에서 확률 2배 증가
     CC_SYNTHESIZE_READONLY(int, eliteBrickDropRate, EliteBrickDropRate);
     bool isEliteDropped;
     

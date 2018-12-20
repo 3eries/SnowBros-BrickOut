@@ -121,7 +121,7 @@ void GameView::onGameReset() {
     addBallQueue.clear();
     toAddFriendsBalls = 0;
     
-    eliteBrickDropRate = GameManager::getStage().eliteBrickDropRate;
+    eliteBrickDropRate = GameManager::getFloor().eliteBrickDropRate;
     isEliteDropped = false;
 }
 
@@ -190,24 +190,11 @@ void GameView::onBoostEnd() {
 }
 
 /**
- * 레벨 클리어
+ * 스테이지 클리어
  */
-void GameView::onLevelClear() {
+void GameView::onStageClear() {
     
-    GameManager::onNextLevel();
-}
-
-/**
- * 다음 레벨
- */
-void GameView::onNextLevel(const LevelData &level) {
-    
-    CCLOG("onNextLevel: %d", level.level);
-    
-    eliteBrickDropRate = GameManager::getStage().eliteBrickDropRate;
-    
-    // TODO: 다음 레벨 처리
-    GameManager::onGameOver();
+    GameManager::onNextStage();
 }
 
 /**
@@ -217,15 +204,30 @@ void GameView::onNextStage(const StageData &stage) {
     
     CCLOG("onNextStage: %d", stage.stage);
     
-    // 다음 스테이지 진행
-    if( !stage.isNull() ) {
+    eliteBrickDropRate = GameManager::getFloor().eliteBrickDropRate;
+    
+    showStageLabel(stage.stage);
+    
+    // TODO: 다음 스테이지 처리
+    GameManager::onGameOver();
+}
+
+/**
+ * 다음 층
+ */
+void GameView::onNextFloor(const FloorData &floor) {
+    
+    Log::i("onNextFloor: %d", floor.floor);
+    
+    // 다음 층 진행
+    if( !floor.isNull() ) {
         // 엘리트 벽돌 드랍률 업데이트
         if( isEliteDropped ) {
             isEliteDropped = false;
-            eliteBrickDropRate = stage.eliteBrickDropRate;
+            eliteBrickDropRate = floor.eliteBrickDropRate;
         } else {
             if( eliteBrickDropRate == 0 ) {
-                eliteBrickDropRate = stage.eliteBrickDropRate;
+                eliteBrickDropRate = floor.eliteBrickDropRate;
             } else {
                 eliteBrickDropRate *= 2;
             }
@@ -237,7 +239,7 @@ void GameView::onNextStage(const StageData &stage) {
         
         onTileAddFinished();
     }
-    // 다음 스테이지 없다면 타일만 이동
+    // 다음 층 없다면 타일만 이동
     else {
         downTile();
     }
@@ -318,9 +320,9 @@ void GameView::onFallFinished() {
     
     Log::i("onFallFinished");
     
-    // 레벨 클리어 체크
-    if( GameManager::getStage().isLastStage && getBricks().size() == 0 ) {
-        GameManager::onLevelClear();
+    // 스테이지 클리어 체크
+    if( GameManager::getFloor().isLastFloor && getBricks().size() == 0 ) {
+        GameManager::onStageClear();
         return;
     }
     
@@ -333,8 +335,8 @@ void GameView::onFallFinished() {
         toAddFriendsBalls = 0;
     }
     
-    // 다음 스테이지로 전환
-    GameManager::onNextStage();
+    // 다음 층으로 전환
+    GameManager::onNextFloor();
 }
 
 /**
@@ -620,7 +622,7 @@ void GameView::onClickDownButton() {
     aimController->setEnabled(false);
     getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(false);
     
-    GameManager::onNextStage();
+    GameManager::onNextFloor();
 }
 
 /**
@@ -719,7 +721,7 @@ void GameView::addBrick() {
     
     const int TILE_ROWS = GameManager::getConfig()->getTileRows();
     const int TILE_POSITION_Y = GameManager::getConfig()->getTileColumns()-1;
-    auto stage = GameManager::getStage();
+    auto floor = GameManager::getFloor();
     
     // 비어있는 좌표 리스트 생성
     auto positions = getEmptyPositions(TILE_POSITION_Y);
@@ -743,24 +745,24 @@ void GameView::addBrick() {
     
     // 보스 벽돌
     // FIXME: 보스 1개, 가운데 위치하도록 하드코딩 되어있음
-    for( int i = 0; i < stage.bossBrickList.size() && positions.size() > 0; ++i ) {
+    for( int i = 0; i < floor.bossBrickList.size() && positions.size() > 0; ++i ) {
     }
     
-    if( stage.bossBrickList.size() > 0 ) {
-        addBrick(stage.bossBrickList[0], stage.brickHp*10, Game::Tile::Position(2, TILE_POSITION_Y));
+    if( floor.bossBrickList.size() > 0 ) {
+        addBrick(floor.bossBrickList[0], floor.brickHp*10, Game::Tile::Position(2, TILE_POSITION_Y));
     }
     
     // 엘리트 벽돌
     positions = getEmptyRandomPositions(TILE_POSITION_Y);
     
-    int  dropCount = stage.getRandomDropCount();
+    int  dropCount = floor.getRandomDropCount();
     isEliteDropped = (random<int>(1,100) <= eliteBrickDropRate);
     
     CCLOG("addBrick(%d) dropCount: %d eliteBrickDropRate: %d isEliteDropped: %d",
-          stage.stage, dropCount, eliteBrickDropRate, isEliteDropped);
+          floor.floor, dropCount, eliteBrickDropRate, isEliteDropped);
     
     if( isEliteDropped ) {
-        addBrick(stage.getRandomEliteBrick(), stage.brickHp*3, positions[0]);
+        addBrick(floor.getRandomEliteBrick(), floor.brickHp*3, positions[0]);
         
         --dropCount;
         positions.erase(positions.begin());
@@ -768,7 +770,7 @@ void GameView::addBrick() {
     
     // 일반 벽돌
     for( int i = 0; i < dropCount && positions.size() > 0; ++i ) {
-        addBrick(stage.getRandomBrick(), stage.brickHp, positions[0]);
+        addBrick(floor.getRandomBrick(), floor.brickHp, positions[0]);
         
         positions.erase(positions.begin());
     }
@@ -780,7 +782,7 @@ void GameView::addBrick() {
 void GameView::addItem() {
     
     const int TILE_POSITION_Y = GameManager::getConfig()->getTileColumns()-1;
-    auto stage = GameManager::getStage();
+    auto floor = GameManager::getFloor();
     
     // 비어있는 좌표 리스트 생성
     auto positions = getEmptyRandomPositions(TILE_POSITION_Y);
@@ -789,7 +791,7 @@ void GameView::addItem() {
     }
     
     // Power Up
-    bool isDrop = (random<int>(1,100) <= stage.powerUpDropRate);
+    bool isDrop = (random<int>(1,100) <= floor.powerUpDropRate);
     
     if( isDrop ) {
         ItemData data;
@@ -1224,9 +1226,9 @@ void GameView::initGameListener() {
     listener->onGameResult           = CC_CALLBACK_0(GameView::onGameResult, this);
     listener->onBoostStart           = CC_CALLBACK_0(GameView::onBoostStart, this);
     listener->onBoostEnd             = CC_CALLBACK_0(GameView::onBoostEnd, this);
-    listener->onLevelClear           = CC_CALLBACK_0(GameView::onLevelClear, this);
-    listener->onNextLevel            = CC_CALLBACK_1(GameView::onNextLevel, this);
+    listener->onStageClear           = CC_CALLBACK_0(GameView::onStageClear, this);
     listener->onNextStage            = CC_CALLBACK_1(GameView::onNextStage, this);
+    listener->onNextFloor            = CC_CALLBACK_1(GameView::onNextFloor, this);
     listener->onScoreChanged         = CC_CALLBACK_1(GameView::onScoreChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }

@@ -205,25 +205,13 @@ void GameEventDispatcher::dispatchOnBoostEnd() {
 }
 
 /**
- * onLevelClear 이벤트 전달
+ * onStageClear 이벤트 전달
  */
-void GameEventDispatcher::dispatchOnLevelClear() {
+void GameEventDispatcher::dispatchOnStageClear() {
     
     for( auto listener : listeners ) {
-        if( listener->onLevelClear ) {
-            listener->onLevelClear();
-        }
-    }
-}
-
-/**
- * onNextLevel 이벤트 전달
- */
-void GameEventDispatcher::dispatchOnNextLevel(const LevelData &level) {
-    
-    for( auto listener : listeners ) {
-        if( listener->onNextLevel ) {
-            listener->onNextLevel(level);
+        if( listener->onStageClear ) {
+            listener->onStageClear();
         }
     }
 }
@@ -236,6 +224,18 @@ void GameEventDispatcher::dispatchOnNextStage(const StageData &stage) {
     for( auto listener : listeners ) {
         if( listener->onNextStage ) {
             listener->onNextStage(stage);
+        }
+    }
+}
+
+/**
+ * onNextFloor 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnNextFloor(const FloorData &floor) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onNextFloor ) {
+            listener->onNextFloor(floor);
         }
     }
 }

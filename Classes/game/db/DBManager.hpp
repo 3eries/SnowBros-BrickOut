@@ -13,7 +13,7 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#include "LevelData.h"
+#include "StageData.h"
 #include "BrickData.h"
 #include "ItemData.h"
 
@@ -32,23 +32,23 @@ private:
     DBManager();
     
 public:
-    static void         addTempLevel();
+    static void         addTempStage();
     
-    static LevelList    getLevels();
-    static LevelData    getLevel(int level);
-    static LevelData    getLastLevel();
-    static bool         isLastLevel(int level);
+    static StageList    getStages();
+    static StageData    getStage(int stage);
+    static StageData    getLastStage();
+    static bool         isLastStage(int stage);
     
-    static StageList    getStages(int level);
-    static StageData    getStage(int level, int stage);
-    static bool         isLastStage(int level, int stage);
-    static bool         isLastStage(const StageData &data);
+    static FloorList    getFloors(int stage);
+    static FloorData    getFloor(int stage, int floor);
+    static bool         isLastFloor(int stage, int floor);
+    static bool         isLastFloor(const FloorData &data);
     
     static BrickMap     getBricks();
     static BrickData    getBrick(const std::string &brickId);
     
 private:
-    LevelList levels;
+    StageList stages;
     BrickMap bricks;
 };
 

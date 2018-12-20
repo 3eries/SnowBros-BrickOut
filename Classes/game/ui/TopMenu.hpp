@@ -52,9 +52,9 @@ public:
     void onBoostStart();
     void onBoostEnd();
     
-    void onLevelClear();
-    void onNextLevel(const LevelData &level);
+    void onStageClear();
     void onNextStage(const StageData &stage);
+    void onNextFloor(const FloorData &floor);
     
     void onScoreChanged(int score);
     
