@@ -103,6 +103,8 @@ public:
 
     static void onStageClear();
     static void onNextStage();
+    
+    static void onFloorChanged();
     static void onNextFloor();
     
     static void onScoreChanged();

@@ -229,6 +229,18 @@ void GameEventDispatcher::dispatchOnNextStage(const StageData &stage) {
 }
 
 /**
+ * onFloorChanged 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnFloorChanged(const FloorData &floor) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onFloorChanged ) {
+            listener->onFloorChanged(floor);
+        }
+    }
+}
+
+/**
  * onNextFloor 이벤트 전달
  */
 void GameEventDispatcher::dispatchOnNextFloor(const FloorData &floor) {

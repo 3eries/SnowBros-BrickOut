@@ -227,6 +227,7 @@ void GameManager::onGameReset() {
     getPhysicsManager()->startScheduler();
     
     getEventDispatcher()->dispatchOnGameReset();
+    getEventDispatcher()->dispatchOnFloorChanged(getFloor());
 }
 
 /**
@@ -436,7 +437,18 @@ void GameManager::onNextStage() {
     }
     
     getInstance()->stage++;
+    getInstance()->floor = 1;
+    
     getEventDispatcher()->dispatchOnNextStage(getStage());
+    getEventDispatcher()->dispatchOnFloorChanged(getFloor());
+}
+
+/**
+ * 층 변경
+ */
+void GameManager::onFloorChanged() {
+    
+    getEventDispatcher()->dispatchOnFloorChanged(getFloor());
 }
 
 /**
@@ -444,12 +456,15 @@ void GameManager::onNextStage() {
  */
 void GameManager::onNextFloor() {
     
+    FloorData floor;
+    
     if( !DBManager::isLastFloor(getFloor()) ) {
         getInstance()->floor++;
-        getEventDispatcher()->dispatchOnNextFloor(getFloor());
-    } else {
-        getEventDispatcher()->dispatchOnNextFloor(FloorData());
+        floor = getFloor();
     }
+    
+    getEventDispatcher()->dispatchOnNextFloor(floor);
+    getEventDispatcher()->dispatchOnFloorChanged(floor);
 }
 
 /**

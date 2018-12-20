@@ -49,6 +49,8 @@ public:
     
     void dispatchOnStageClear();
     void dispatchOnNextStage(const StageData &stage);
+    
+    void dispatchOnFloorChanged(const FloorData &floor);
     void dispatchOnNextFloor(const FloorData &floor);
     
     void dispatchOnScoreChanged(int score);

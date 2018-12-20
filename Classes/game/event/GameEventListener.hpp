@@ -40,6 +40,8 @@ public:
     
     std::function<void()>                   onStageClear;               // 스테이지 클리어
     std::function<void(const StageData&)>   onNextStage;                // 다음 스테이지
+    
+    std::function<void(const FloorData&)>   onFloorChanged;             // 층 변경
     std::function<void(const FloorData&)>   onNextFloor;                // 다음 층
     
     std::function<void(int)>                onScoreChanged;             // 스코어 변경
