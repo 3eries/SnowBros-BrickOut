@@ -37,7 +37,7 @@ private:
     
 private:
     void updateStageUI(const StageData &stage);
-    void updateFloorProgressUI(int floor, int floorLen);
+    void updateFloorProgressUI(const FloorData &floor);
     
 // Game Event
 public:
@@ -55,12 +55,15 @@ public:
     
     void onStageClear();
     void onNextStage(const StageData &stage);
+    
+    void onFloorChanged(const FloorData &floor);
     void onNextFloor(const FloorData &floor);
     
     void onScoreChanged(int score);
     
 private:
     struct FloorProgressBar {
+        cocos2d::Node *layer;
         cocos2d::Sprite *gage;
         cocos2d::Sprite *hero;
         cocos2d::Sprite *enemy;

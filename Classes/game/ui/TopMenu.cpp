@@ -76,13 +76,18 @@ bool TopMenu::init() {
     addChild(scoreLabel);
     
     // Floor 진행바
+    auto layer = SBNodeUtils::createZeroSizeNode();
+    addChild(layer);
+    
+    floorProgressBar.layer = layer;
+    
     const float posY = -20;
     
     // Gage
     auto gageBg = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_bg.png");
     gageBg->setAnchorPoint(ANCHOR_M);
     gageBg->setPosition(Vec2BC(bgSize, 0, posY));
-    addChild(gageBg);
+    layer->addChild(gageBg);
     
     auto gageBgSize = gageBg->getContentSize();
     
@@ -101,7 +106,7 @@ bool TopMenu::init() {
     floorProgressBar.label->setPosition(Vec2BC(bgSize, 100, posY));
     floorProgressBar.label->setTextColor(Color4B::WHITE);
     floorProgressBar.label->enableOutline(Color4B::BLACK, 3);
-    addChild(floorProgressBar.label);
+    layer->addChild(floorProgressBar.label);
     
     // Listener
     initGameListener();
@@ -131,10 +136,18 @@ void TopMenu::updateStageUI(const StageData &stage) {
 /**
  * Floor 진행바 UI 업데이트
  */
-void TopMenu::updateFloorProgressUI(int floor, int floorLen) {
+void TopMenu::updateFloorProgressUI(const FloorData &floor) {
     
-    floorProgressBar.gage->setScaleX((float)floor / floorLen);
-    floorProgressBar.label->setString(STR_FORMAT("%d/%d", floor, floorLen));
+    if( floor.isNull() || floor.isExistsBoss() ) {
+        floorProgressBar.layer->setVisible(false);
+        return;
+    }
+    
+    int floorLen = GameManager::getStage().floorLen;
+    
+    floorProgressBar.layer->setVisible(true);
+    floorProgressBar.gage->setScaleX((float)floor.floor / floorLen);
+    floorProgressBar.label->setString(STR_FORMAT("%d/%d", floor.floor, floorLen));
 }
 
 /**
@@ -153,17 +166,17 @@ void TopMenu::onGameExit() {
  * 게임 리셋
  */
 void TopMenu::onGameReset() {
+    
+    auto stage = GameManager::getStage();
+    
+    updateStageUI(stage);
+    updateFloorProgressUI(GameManager::getFloor());
 }
 
 /**
  * 게임 시작
  */
 void TopMenu::onGameStart() {
-    
-    auto stage = GameManager::getStage();
-    
-    updateStageUI(stage);
-    updateFloorProgressUI(GameManager::getFloor().floor, stage.floorLen);
 }
 
 /**
@@ -214,7 +227,14 @@ void TopMenu::onStageClear() {
 void TopMenu::onNextStage(const StageData &stage) {
     
     updateStageUI(stage);
-    updateFloorProgressUI(1, stage.floorLen);
+}
+
+/**
+ * 층 변경
+ */
+void TopMenu::onFloorChanged(const FloorData &floor) {
+    
+    updateFloorProgressUI(floor);
 }
 
 /**
@@ -222,9 +242,6 @@ void TopMenu::onNextStage(const StageData &stage) {
  */
 void TopMenu::onNextFloor(const FloorData &floor) {
     
-    if( !floor.isNull() ) {
-        updateFloorProgressUI(floor.floor, GameManager::getStage().floorLen);
-    }
 }
 
 /**
@@ -257,6 +274,7 @@ void TopMenu::initGameListener() {
     listener->onBoostEnd             = CC_CALLBACK_0(TopMenu::onBoostEnd, this);
     listener->onStageClear           = CC_CALLBACK_0(TopMenu::onStageClear, this);
     listener->onNextStage            = CC_CALLBACK_1(TopMenu::onNextStage, this);
+    listener->onFloorChanged         = CC_CALLBACK_1(TopMenu::onFloorChanged, this);
     listener->onNextFloor            = CC_CALLBACK_1(TopMenu::onNextFloor, this);
     listener->onScoreChanged         = CC_CALLBACK_1(TopMenu::onScoreChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
