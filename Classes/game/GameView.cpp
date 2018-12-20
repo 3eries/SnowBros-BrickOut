@@ -375,7 +375,7 @@ void GameView::onPhysicsUpdate() {
                 Vec2 center = MTP(body->GetPosition());
                 
                 if( brickBox.containsPoint(center) ) {
-                    Log::w("터널링 발생!!", true);
+                    Log::w("터널링 발생!!").showMessageBox();
                 // if( brickBox.intersectsCircle(center, BALL_RADIUS) ) {
                     ++tunnelingCount;
                     needRemoveBalls.push_back(ball);
@@ -402,7 +402,7 @@ void GameView::onPhysicsUpdate() {
 void GameView::onContactBrick(Ball *ball, Brick *brick) {
     
     if( brick->isBroken() ) {
-        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!", true);
+        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
         return;
     }
     
@@ -415,7 +415,7 @@ void GameView::onContactBrick(Ball *ball, Brick *brick) {
 void GameView::onContactItem(Ball *ball, Item *item) {
     
     if( !item->isAwake() ) {
-        Log::w("아이템 sleep 상태에서 충돌 이벤트 발생!!", true);
+        Log::w("아이템 sleep 상태에서 충돌 이벤트 발생!!").showMessageBox();
         return;
     }
     
@@ -458,7 +458,7 @@ void GameView::onContactItem(Ball *ball, Item *item) {
 void GameView::onContactFloor(Ball *ball) {
     
     if( isWithdraw ) {
-        Log::w("볼 회수 중 바닥 충돌 이벤트 발생!!", true);
+        Log::w("볼 회수 중 바닥 충돌 이벤트 발생!!").showMessageBox();
         return;
     }
 
