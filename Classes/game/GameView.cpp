@@ -823,7 +823,7 @@ void GameView::addTile(Game::Tile *tile) {
     
     tile->enterWithAction();
     
-    addChild(tile, (int)ZOrder::TILE);
+    tileLayer->addChild(tile);
     tiles.push_back(tile);
 }
 
@@ -1170,6 +1170,18 @@ void GameView::initBall() {
  * 타일 초기화
  */
 void GameView::initTile() {
+    
+    auto stencil = LayerColor::create(Color4B::RED);
+    stencil->setIgnoreAnchorPointForPosition(false);
+    stencil->setAnchorPoint(Vec2::ZERO);
+    stencil->setPosition(MAP_ORIGIN);
+    stencil->setContentSize(MAP_CONTENT_SIZE);
+    
+    tileLayer = ClippingNode::create(stencil);
+    tileLayer->setAnchorPoint(Vec2::ZERO);
+    tileLayer->setPosition(Vec2::ZERO);
+    tileLayer->setContentSize(SB_WIN_SIZE);
+    addChild(tileLayer, (int)ZOrder::TILE);
     
 #if DEBUG_DRAW_TILE
     auto parent = getChildByTag(Tag::DEBUG_DRAW_VIEW);

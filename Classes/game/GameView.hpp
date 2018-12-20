@@ -145,21 +145,25 @@ private:
     GameManager *gameMgr;
     b2World *world;
     
+    // Ball
     std::vector<Ball*> balls;
     cocos2d::Label*    ballCountLabel;
-    int                shootIndex;       // 발사된 볼 인덱스
-    int                fallenBallCount;  // 떨어진 볼 개수
+    int                shootIndex;               // 발사된 볼 인덱스
+    int                fallenBallCount;          // 떨어진 볼 개수
+    std::vector<cocos2d::Sprite*> addBallQueue;  // 추가돼야 할 볼
     
-    std::vector<Game::Tile*> tiles;      // 타일 리스트
+    // Tile
+    cocos2d::Node *tileLayer;
+    std::vector<Game::Tile*> tiles;
+    
+    // Friends
     std::vector<Friend*> friends;
+    int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수
+    
     AimController *aimController;
     
     bool isWithdrawEnabled;              // 볼 회수 기능 활성화 여부
     bool isWithdraw;                     // 볼 회수 여부
-    
-    // 추가돼야 할 볼
-    std::vector<cocos2d::Sprite*> addBallQueue;
-    int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수
     
     // 엘리트 벽돌 드랍률
     // 엘리트 벽돌이 생성되지 않은 경우, 다음 층에서 확률 2배 증가
