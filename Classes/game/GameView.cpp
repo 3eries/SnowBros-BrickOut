@@ -220,7 +220,24 @@ void GameView::onNextStage(const StageData &stage) {
  */
 void GameView::onNextFloor(const FloorData &floor) {
     
-    Log::i("onNextFloor: %d", floor.floor);
+    Log::i("onNextFloor(%d-%d)", floor.stage, floor.floor);
+    
+    // 마지막 칸에 있는 아이템 획득
+    auto tiles = getTiles(1);
+    
+    for( auto tile : tiles ) {
+        auto item = dynamic_cast<Item*>(tile);
+        if( item ) {
+            onContactItem(nullptr, item);
+        }
+    }
+    
+    // 획득한 아이템 반영
+    addBallFromQueue();
+    
+    if( toAddFriendsBalls > 0 ) {
+        toAddFriendsBalls = 0;
+    }
     
     // 다음 층 진행
     if( !floor.isNull() ) {
@@ -331,13 +348,6 @@ void GameView::onFallFinished() {
     
     updateBallCountUI();
     
-    // 획득한 아이템 반영
-    addBallFromQueue();
-    
-    if( toAddFriendsBalls > 0 ) {
-        toAddFriendsBalls = 0;
-    }
-    
     // 다음 층으로 전환
     GameManager::onNextFloor();
 }
@@ -425,20 +435,22 @@ void GameView::onContactItem(Ball *ball, Item *item) {
     switch( item->getData().type ) {
         // 기본 볼 개수 증가
         case ItemType::POWER_UP: {
-            auto ball = Sprite::create(BALL_IMAGE);
-            ball->setAnchorPoint(ANCHOR_M);
-            ball->setPosition(item->getPosition());
-            ball->setColor(Color3B(255, 20, 20));
-            addChild(ball, (int)ZOrder::BALL);
+            auto ballItem = Sprite::create(BALL_IMAGE);
+            ballItem->setAnchorPoint(ANCHOR_M);
+            ballItem->setPosition(item->getPosition());
+            ballItem->setColor(Color3B(255, 20, 20));
+            addChild(ballItem, (int)ZOrder::BALL);
             
-            addBallQueue.push_back(ball);
+            addBallQueue.push_back(ballItem);
             
-            // 볼 추락 연출
-            Vec2 pos = Vec2(ball->getPositionX(), SHOOTING_POSITION_Y);
-            float dist = pos.getDistance(ball->getPosition());
-            
-            ball->runAction(MoveTo::create(0.8f, pos));
-            // ball->runAction(MoveTo::create(dist * 0.001f, pos));
+            // 아이템 추락 연출
+            if( ball ) {
+                Vec2 pos = Vec2(ballItem->getPositionX(), SHOOTING_POSITION_Y);
+                float dist = pos.getDistance(ballItem->getPosition());
+                
+                ballItem->runAction(MoveTo::create(0.8f, pos));
+                // ballItem->runAction(MoveTo::create(dist * 0.001f, pos));
+            }
             
         } break;
         
@@ -604,12 +616,6 @@ void GameView::downTile() {
     auto list = tiles;
     
     for( auto tile : list ) {
-        // 아이템이 마지막 칸에 있으면 제거
-        if( tile->getTilePosition().y == 0 && dynamic_cast<Item*>(tile) ) {
-            removeTile(tile);
-            continue;
-        }
-        
         tile->down();
     }
 
