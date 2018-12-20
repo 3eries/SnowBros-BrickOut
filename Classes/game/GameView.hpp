@@ -120,6 +120,7 @@ private:
     void addTile(Game::Tile *tile);
     void removeTile(Game::Tile *tile);
     
+    void showStageLabel(int stage);
     void updateBallCountUI();
     
 private:

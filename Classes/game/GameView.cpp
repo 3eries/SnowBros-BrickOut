@@ -23,6 +23,7 @@
 #include "object/tile/Item.hpp"
 
 #include "ui/TopMenu.hpp"
+
 USING_NS_CC;
 USING_NS_SB;
 using namespace cocos2d::ui;
@@ -129,6 +130,8 @@ void GameView::onGameReset() {
  * 게임 시작
  */
 void GameView::onGameStart() {
+    
+    showStageLabel(1);
     
     addBall(GameManager::getConfig()->getFirstBallCount());
     addBrick();
@@ -833,6 +836,25 @@ void GameView::removeTile(Game::Tile *tile) {
     
     // remove tile
     tile->removeWithAction();
+}
+
+/**
+ * 중앙에 Stage 라벨 표시
+ */
+void GameView::showStageLabel(int stage) {
+    
+    auto label = Label::createWithTTF(STR_FORMAT("STAGE %d", stage), FONT_COMMODORE, 30, Size::ZERO,
+                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
+    label->setAnchorPoint(ANCHOR_M);
+    label->setPosition(Vec2MC(0, 0));
+    label->setTextColor(Color4B(244,0,137,255));
+    label->enableOutline(Color4B::BLACK, 3);
+    addChild(label);
+    
+    auto delay = DelayTime::create(1.5f);
+    auto remove = RemoveSelf::create();
+    label->runAction(Sequence::create(delay, remove, nullptr));
+    
 }
 
 /**
