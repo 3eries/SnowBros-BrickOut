@@ -41,8 +41,8 @@ enum GameState {
 #define                                       MAP_CONTENT_HEIGHT                 1154
 #define                                       MAP_CONTENT_SIZE                   cocos2d::Size(MAP_CONTENT_WIDTH, MAP_CONTENT_HEIGHT)
 
-#define                                       MAP_ORIGIN                         Vec2(0, 68-40*0.5f)
-#define                                       MAP_POSITION                       (MAP_ORIGIN + (MAP_CONTENT_SIZE*0.5f))
+#define                                       MAP_ORIGIN                         Vec2(0, SHOOTING_POSITION_Y-BALL_RADIUS-1)
+#define                                       MAP_POSITION                       (MAP_ORIGIN + (MAP_CONTENT_SIZE*0.5f)) // Vec2MC(0, -11)
 #define                                       MAP_BOUNDING_BOX                   cocos2d::Rect(MAP_ORIGIN, MAP_CONTENT_SIZE)
 
 #define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE))  // 대각선
@@ -63,7 +63,7 @@ static const float                            BALL_MAX_VELOCITY                =
 static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f;   // 벽 두께
 
 // Tile
-#define                                       TILE_ORIGIN                        Vec2(0, 278 - 120*0.5f)
+#define                                       TILE_ORIGIN                        Vec2(0, 68 - 116*0.5f)
 static const float                            TILE_MARGIN_X                    = 2;
 // static const float                            TILE_MARGIN_Y                    = 2;
 
@@ -71,7 +71,7 @@ static const float                            TILE_PADDING_X                   =
 static const float                            TILE_PADDING_Y                   = 4;
 
 static const float                            TILE_CONTENT_WIDTH               = 116;
-static const float                            TILE_CONTENT_HEIGHT              = 120;
+static const float                            TILE_CONTENT_HEIGHT              = 116;
 static const cocos2d::Size                    TILE_CONTENT_SIZE                = cocos2d::Size(TILE_CONTENT_WIDTH, TILE_CONTENT_HEIGHT);
 
 #define MEASURE_TILE_SIZE(__rows__, __columns__) \

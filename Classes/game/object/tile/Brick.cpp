@@ -82,11 +82,11 @@ bool Brick::init() {
     
     switch( data.type ) {
         case BrickType::NORMAL: {
-            // game_gage_brick_elite_bg.png Vec2MC(0, 36) , Size(104, 16)
-            // 2850 size:21 stroke:3px Vec2MC(0, 46) , Size(71, 24)
+            // game_gage_brick_elite_bg.png Vec2MC(0, 34) , Size(104, 16)
+            // 2850 size:21 stroke:3px Vec2MC(0, 44) , Size(71, 24)
             hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_normal_bg.png");
             hpNode.bg->setAnchorPoint(ANCHOR_M);
-            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 36));
+            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 34));
             addChild(hpNode.bg);
             
             // HP gage
@@ -94,13 +94,13 @@ bool Brick::init() {
             
             // HP Label
             auto label = addHpLabel(21);
-            label->setPosition(Vec2MC(getContentSize(), 0, 46));
+            label->setPosition(Vec2MC(getContentSize(), 0, 44));
         } break;
             
         case BrickType::ELITE: {
             hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_elite_bg.png");
             hpNode.bg->setAnchorPoint(ANCHOR_M);
-            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 36));
+            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 34));
             addChild(hpNode.bg);
             
             // HP gage
@@ -108,15 +108,15 @@ bool Brick::init() {
             
             // HP Label
             auto label = addHpLabel(21);
-            label->setPosition(Vec2MC(getContentSize(), 0, 46));
+            label->setPosition(Vec2MC(getContentSize(), 0, 44));
         } break;
             
         case BrickType::BOSS: {
-            // game_gage_brick_boss_bg.png Vec2MC(0, 97) , Size(204, 28)
-            // 16850 size:28 stroke:3 Vec2MC(0, 106) , Size(112, 29)
+            // game_gage_brick_boss_bg.png Vec2MC(0, 93) , Size(204, 28)
+            // 16850 size:28 stroke:3 Vec2MC(0, 102) , Size(112, 29)
             hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_boss_bg.png");
             hpNode.bg->setAnchorPoint(ANCHOR_M);
-            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 97));
+            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 93));
             addChild(hpNode.bg);
             
             // HP gage
@@ -124,7 +124,7 @@ bool Brick::init() {
             
             // HP Label
             auto label = addHpLabel(28);
-            label->setPosition(Vec2MC(getContentSize(), 0, 106));
+            label->setPosition(Vec2MC(getContentSize(), 0, 102));
         } break;
             
         default:

@@ -6,7 +6,7 @@
         "store": "https://itunes.apple.com/app/id1410764042"
     },
     "tile_rows": 6,
-    "tile_columns": 8,
+    "tile_columns": 10,
     "first_ball_count": 1,
     "max_ball_count": 1000,
     "max_score": 999999999,
