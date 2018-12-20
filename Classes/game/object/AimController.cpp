@@ -14,7 +14,7 @@
 #include "../GameManager.hpp"
 
 #include "Ball.hpp"
-#include "Brick.hpp"
+#include "tile/Brick.hpp"
 
 USING_NS_CC;
 using namespace cocos2d::ui;

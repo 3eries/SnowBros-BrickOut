@@ -13,7 +13,7 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#include "Tile.hpp"
+#include "tile/Tile.hpp"
 
 class AimController : public cocos2d::Node {
 public:

@@ -20,7 +20,7 @@
 #include "event/GameEventDispatcher.hpp"
 #include "GamePhysics.hpp"
 
-#include "DBManager.hpp"
+#include "db/DBManager.hpp"
 
 class GameScene;
 class GameView;
