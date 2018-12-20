@@ -18,10 +18,26 @@ NS_SB_BEGIN
 
 class Log {
 public:
-    static void d(const std::string &msg, bool showMessageBox = false);
-    static void i(const std::string &msg, bool showMessageBox = false);
-    static void w(const std::string &msg, bool showMessageBox = false);
-    static void e(const std::string &msg, bool showMessageBox = false);
+    enum class Type {
+        DEBUG,
+        INFO,
+        WARNING,
+        ERROR,
+    };
+    
+    Log(Type type, const std::string &message) : type(type), message(message) {};
+    ~Log() {};
+    
+    static Log d(const char *format, ...);
+    static Log i(const char *format, ...);
+    static Log w(const char *format, ...);
+    static Log e(const char *format, ...);
+    
+    Log showMessageBox();
+    
+private:
+    Type type;
+    std::string message;
 };
 
 NS_SB_END

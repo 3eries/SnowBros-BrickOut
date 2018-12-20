@@ -11,40 +11,83 @@ using namespace std;
 
 NS_SB_BEGIN
 
-void Log::d(const string &msg, bool showMessageBox) {
+string stringFormat(const char *format, va_list args) {
     
-    CCLOG("D/%s", msg.c_str());
+    string ret;
     
-    if( showMessageBox ) {
-        MessageBox(msg.c_str(), "DEBUG");
+    char *buf = (char*)malloc(MAX_LOG_LENGTH);
+    if( buf ) {
+        vsnprintf(buf, MAX_LOG_LENGTH, format, args);
+        ret = buf;
+        free(buf);
     }
+    
+    return ret;
 }
 
-void Log::i(const string &msg, bool showMessageBox) {
+Log Log::d(const char *format, ...) {
     
-    CCLOG("I/%s", msg.c_str());
+    va_list args;
+    va_start(args, format);
+    string message = stringFormat(format, args);
+    va_end(args);
     
-    if( showMessageBox ) {
-        MessageBox(msg.c_str(), "INFO");
-    }
+    CCLOG("D/%s", message.c_str());
+    
+    return Log(Type::DEBUG, message);
 }
 
-void Log::w(const string &msg, bool showMessageBox) {
+Log Log::i(const char *format, ...) {
     
-    CCLOG("W/%s", msg.c_str());
+    va_list args;
+    va_start(args, format);
+    string message = stringFormat(format, args);
+    va_end(args);
     
-    if( showMessageBox ) {
-        MessageBox(msg.c_str(), "WARNING");
-    }
+    CCLOG("I/%s", message.c_str());
+    
+    return Log(Type::INFO, message);
 }
 
-void Log::e(const string &msg, bool showMessageBox) {
+Log Log::w(const char *format, ...) {
     
-    CCLOG("E/%s", msg.c_str());
+    va_list args;
+    va_start(args, format);
+    string message = stringFormat(format, args);
+    va_end(args);
     
-    if( showMessageBox ) {
-        MessageBox(msg.c_str(), "ERROR");
+    CCLOG("W/%s", message.c_str());
+    
+    return Log(Type::WARNING, message);
+}
+
+Log Log::e(const char *format, ...) {
+    
+    va_list args;
+    va_start(args, format);
+    string message = stringFormat(format, args);
+    va_end(args);
+    
+    CCLOG("E/%s", message.c_str());
+    
+    return Log(Type::ERROR, message);
+}
+
+Log Log::showMessageBox() {
+    
+    string title = "";
+    
+    switch( type ) {
+        case Type::DEBUG:       title = "DEBUG";            break;
+        case Type::INFO:        title = "INFO";             break;
+        case Type::WARNING:     title = "WARNING";          break;
+        case Type::ERROR:       title = "ERROR";            break;
+        default: break;
     }
+    
+    MessageBox(message.c_str(), title.c_str());
+    
+    return *this;
 }
 
 NS_SB_END
