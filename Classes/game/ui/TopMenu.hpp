@@ -36,6 +36,7 @@ private:
     void initGameListener();
     
 private:
+    void updateStageUI(const StageData &stage);
     void updateFloorProgressUI(int floor, int floorLen);
     
 // Game Event

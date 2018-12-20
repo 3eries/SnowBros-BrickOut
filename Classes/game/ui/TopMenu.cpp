@@ -56,7 +56,7 @@ bool TopMenu::init() {
     setContentSize(bgSize);
     
     // 스테이지
-    auto stageLabel = Label::createWithTTF("STAGE 1", FONT_COMMODORE, 28, Size::ZERO,
+    auto stageLabel = Label::createWithTTF("", FONT_COMMODORE, 28, Size::ZERO,
                                            TextHAlignment::LEFT, TextVAlignment::CENTER);
     stageLabel->setTag(Tag::STAGE);
     stageLabel->setAnchorPoint(ANCHOR_ML);
@@ -117,6 +117,18 @@ void TopMenu::cleanup() {
 }
 
 /**
+ * Stage UI 업데이트
+ */
+void TopMenu::updateStageUI(const StageData &stage) {
+    
+    auto stageLabel = getChildByTag<Label*>(Tag::STAGE);
+    
+    if( stageLabel ) {
+        stageLabel->setString(STR_FORMAT("STAGE %d", stage.stage));
+    }
+}
+
+/**
  * Floor 진행바 UI 업데이트
  */
 void TopMenu::updateFloorProgressUI(int floor, int floorLen) {
@@ -148,7 +160,10 @@ void TopMenu::onGameReset() {
  */
 void TopMenu::onGameStart() {
     
-    updateFloorProgressUI(GameManager::getFloor().floor, GameManager::getStage().floorLen);
+    auto stage = GameManager::getStage();
+    
+    updateStageUI(stage);
+    updateFloorProgressUI(GameManager::getFloor().floor, stage.floorLen);
 }
 
 /**
@@ -198,11 +213,8 @@ void TopMenu::onStageClear() {
  */
 void TopMenu::onNextStage(const StageData &stage) {
     
-    auto stageLabel = getChildByTag<Label*>(Tag::STAGE);
-    
-    if( stageLabel ) {
-        stageLabel->setString(TO_STRING(stage.stage));
-    }
+    updateStageUI(stage);
+    updateFloorProgressUI(1, stage.floorLen);
 }
 
 /**
