@@ -15,6 +15,7 @@
 #include "GameView.hpp"
 
 #include "ui/PausePopup.hpp"
+#include "ui/StageClearPopup.hpp"
 #include "ui/ContinuePopup.hpp"
 #include "ui/ResultPopup.hpp"
 
@@ -240,12 +241,15 @@ void GameScene::onBoostEnd() {
  * 스테이지 클리어
  */
 void GameScene::onStageClear() {
+    
+    showStageClearPopup(GameManager::getStage());
 }
 
 /**
  * 다음 스테이지
  */
 void GameScene::onNextStage(const StageData &stage) {
+    
 }
 
 /**
@@ -320,6 +324,20 @@ void GameScene::showPausePopup() {
     });
 
     SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
+}
+
+/**
+ * 스테이지 클리어 팝업 노출
+ */
+void GameScene::showStageClearPopup(const StageData &stage) {
+    
+    auto popup = StageClearPopup::create(stage);
+    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
+    
+    popup->setOnNextListener([=]() {
+        popup->dismissWithAction();
+        GameManager::onNextStage();
+    });
 }
 
 /**
