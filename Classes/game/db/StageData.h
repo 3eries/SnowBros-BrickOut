@@ -17,6 +17,7 @@ struct StageData {
     int            stage;
     int            floorBeginNum;
     int            floorLen;
+    int            bossFloor;
     FloorList      floors;
     
     StageData() : stage(0) {}
@@ -30,6 +31,7 @@ struct StageData {
         str += STR_FORMAT("\tstage: %d\n", stage);
         str += STR_FORMAT("\tfloorBeginNum: %d\n", floorBeginNum);
         str += STR_FORMAT("\tfloorLen: %d\n", floorLen);
+        str += STR_FORMAT("\tbossFloor: %d\n", bossFloor);
         
         for( auto floor : floors ) {
             str += floor.toString() + "\n";

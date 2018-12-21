@@ -169,6 +169,10 @@ void DBManager::init() {
                 if( floorValue.HasMember("elite_brick_list") )    floor.eliteBrickList = getBrickList("elite_brick_list");
                 if( floorValue.HasMember("boss_brick_list") )     floor.bossBrickList = getBrickList("boss_brick_list");
                 
+                if( floor.isExistBoss() ) {
+                    stage.bossFloor = floor.floor;
+                }
+                
                 // int values
                 {
                     string keys[] = {
@@ -228,7 +232,11 @@ void DBManager::addTempStage() {
     
     for( auto &floor : stage.floors ) {
         floor.stage++;
+        floor.brickHp += stage.floorBeginNum-1;
+        floor.brickHp *= 1.03f;
     }
+    
+    Log::i("addTempStage:\n%s", stage.toString().c_str());
     
     auto &stages = getInstance()->stages;
     stages.push_back(stage);

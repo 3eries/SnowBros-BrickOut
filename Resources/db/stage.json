@@ -1,7 +1,7 @@
 [{
     "stage": 1,
     "floor_begin_num": 1,
-    "floor_len": 15,
+    "floor_len": 16,
     "floors": [{
         "floor": 1,
         "brick_hp": "floor",
@@ -27,7 +27,7 @@
         "brick_drop_count": "2~3",
         "brick_list": ["brick_00001", "brick_00002"],
         "elite_brick_drop_rate": 5,
-        "elite_brick_list": ["brick_01000"]
+        "elite_brick_list": ["brick_01001"]
     },
     {
         "floor": 6
@@ -62,8 +62,14 @@
     },
     {
         "floor": 15,
-        "brick_drop_count": "4",
-        "boss_brick_list": ["brick_10000"]
+        "brick_drop_count": "3~4",
+        "boss_brick_list": ["brick_10001"],
+        "power_up_drop_rate": 0
+    },
+    {
+        "floor": 16,
+        "brick_drop_count": "3~4",
+        "boss_brick_list": []
     }
     ]
 }]

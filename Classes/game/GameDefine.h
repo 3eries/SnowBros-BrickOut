@@ -12,17 +12,6 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-/*
-enum class GameState {
-    NONE,
-    IDLE,            // 대기
-    PLAY,            // 게임 진행중, 일시정지 여부와 관계없음
-    BOOSTING,        // 부스트 진행중
-    GAME_OVER,       // 게임 오버
-    RESULT,          // 결과 화면
-};
-*/
-
 enum GameState {
     NONE            = (1 << 0),
     ENTERED         = (1 << 1),     // 게임 진입
@@ -35,6 +24,9 @@ enum GameState {
     CONTINUE        = (1 << 8),     // 이어하기
     RESULT          = (1 << 9),     // 결과 화면
 };
+
+static const float                            STAGE_CLEAR_DELAY                = 0.8f;
+static const float                            GAME_RESULT_DELAY                = 0.4f;    // 게임 오버 -> 결과 노출까지의 지연 시간
 
 // Map
 #define                                       MAP_CONTENT_WIDTH                  720
@@ -63,6 +55,8 @@ static const float                            BALL_MAX_VELOCITY                =
 static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f;   // 벽 두께
 
 // Tile
+#define                                       TILE_POSITION_MAX_Y               (GameManager::getConfig()->getTileColumns()-1)
+
 #define                                       TILE_ORIGIN                        Vec2(0, 68 - 116*0.5f)
 static const float                            TILE_MARGIN_X                    = 2;
 // static const float                            TILE_MARGIN_Y                    = 2;
@@ -90,9 +84,6 @@ enum PhysicsCategory {
     BRICK       = (1 << 3),
     ITEM        = (1 << 4),
 };
-
-// Game Value
-static const float                            GAME_RESULT_DELAY                = 0.2f;    // 게임 오버 -> 결과 노출까지의 지연 시간
 
 #endif /* GameDefine_h */
 

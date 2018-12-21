@@ -32,6 +32,9 @@ public:
     void shoot(b2Vec2 velocity);
     void sleepWithAction();
     
+    void startRotate();
+    void stopRotate();
+    
 private:
     cocos2d::Sprite *image;
     

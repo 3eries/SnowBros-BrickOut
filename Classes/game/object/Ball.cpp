@@ -120,6 +120,7 @@ void Ball::shoot(b2Vec2 velocity) {
     setFall(false);
     setCollisionLocked(false);
     setOpacity(255);
+    startRotate();
     
     getBody()->SetLinearVelocity(velocity);
 }
@@ -134,4 +135,14 @@ void Ball::sleepWithAction() {
     auto fadeOut = FadeOut::create(0.1f);
     auto hide = Hide::create();
     runAction(Sequence::create(fadeOut, hide, nullptr));
+}
+
+void Ball::startRotate() {
+    
+    image->runAction(RepeatForever::create(RotateBy::create(0.5f, 360)));
+}
+
+void Ball::stopRotate() {
+
+    image->stopAllActions();
 }

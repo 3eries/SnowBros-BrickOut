@@ -192,8 +192,6 @@ void GameView::onBoostEnd() {
  * 스테이지 클리어
  */
 void GameView::onStageClear() {
-    
-    GameManager::onNextStage();
 }
 
 /**
@@ -340,7 +338,7 @@ void GameView::onTileDownFinished() {
         GameManager::onGameOver();
         return;
     }
-
+    
     // 다음 턴
     onShootingReady();
 }
@@ -353,7 +351,7 @@ void GameView::onShootingReady() {
     Log::i("onShootingReady");
     
     aimController->setEnabled(true, getBricks());
-    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(true);
+    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(!GameManager::getFloor().isLastFloor && !isExistBrick(1));
     
     // 아이템 비활성화
     auto items = getItems();
@@ -386,7 +384,10 @@ void GameView::onFallFinished() {
     
     // 스테이지 클리어 체크
     if( GameManager::getFloor().isLastFloor && getBricks().size() == 0 ) {
-        GameManager::onStageClear();
+        SBDirector::postDelayed(this, [=]() {
+            GameManager::onStageClear();
+        }, STAGE_CLEAR_DELAY, true);
+        
         return;
     }
     
@@ -492,8 +493,8 @@ void GameView::onContactItem(Ball *ball, Item *item) {
                 Vec2 pos = Vec2(ballItem->getPositionX(), SHOOTING_POSITION_Y);
                 float dist = pos.getDistance(ballItem->getPosition());
                 
-                ballItem->runAction(MoveTo::create(0.8f, pos));
-                // ballItem->runAction(MoveTo::create(dist * 0.001f, pos));
+                // ballItem->runAction(MoveTo::create(0.8f, pos));
+                ballItem->runAction(MoveTo::create(dist * 0.001f, pos));
             }
             
         } break;
@@ -524,12 +525,13 @@ void GameView::onContactFloor(Ball *ball) {
     ball->setFall(true);
     ++fallenBallCount;
 
-    CCLOG("onContactFloor fallenBallCount: %d", fallenBallCount);
+    // Log::i("onContactFloor fallenBallCount: %d", fallenBallCount);
     
     // 볼 바디 비활성화
     // ball->sleepWithAction();
     ball->sleep(false);
     ball->setCollisionLocked(true);
+    ball->stopRotate();
     
     // 첫번째 볼 추락
     if( fallenBallCount == 1 ) {
@@ -588,7 +590,8 @@ void GameView::shoot(const Vec2 &endPosition) {
             return;
         }
         
-        CCLOG("shoot! ball index: %d", shootIndex);
+        // Log::i("shoot! ball index: %d", shootIndex);
+        
         // SBAudioEngine::playEffect(DIR_SOUND + "shoot.wav");
         
         auto ball = balls[shootIndex];
@@ -631,6 +634,7 @@ void GameView::withdrawBalls() {
         ball->sleep(false);
         ball->setCollisionLocked(true);
         ball->setSyncLocked(true);
+        ball->stopRotate();
         
         // 시작 위치로 이동
         // auto delay = DelayTime::create(0.3f);
@@ -753,11 +757,12 @@ void GameView::addBallFromQueue() {
  */
 void GameView::removeBall(Ball *ball) {
     
-    CCLOG("GameView::removeBall");
+    Log::w("볼이 제거됨").showMessageBox();
     
     auto it = std::find(balls.begin(), balls.end(), ball);
     if( it == balls.end() ) {
         CCASSERT(false, "GameView::removeBall error.");
+        return;
     }
     
     // remove from list
@@ -772,8 +777,8 @@ void GameView::removeBall(Ball *ball) {
  */
 void GameView::addBrick() {
     
-    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
-    const int TILE_POSITION_Y = GameManager::getConfig()->getTileColumns()-1;
+    // const int TILE_ROWS = GameManager::getConfig()->getTileRows();
+    const int TILE_POSITION_Y = TILE_POSITION_MAX_Y;
     auto floor = GameManager::getFloor();
     
     // 비어있는 좌표 리스트 생성
@@ -782,7 +787,8 @@ void GameView::addBrick() {
         return;
     }
     
-    CCASSERT(positions.size() == TILE_ROWS, "GameView::addBrick error.");
+    Log::i("GameView::addBrick empty position count: %d", (int)positions.size());
+    // CCASSERT(positions.size() == TILE_ROWS, "GameView::addBrick error.");
     
     auto addBrick = [=](const BrickData &data, int hp, Game::Tile::Position tilePos) -> Brick* {
         auto brick = Brick::create(data, hp);
@@ -811,8 +817,8 @@ void GameView::addBrick() {
     int  dropCount = floor.getRandomDropCount();
     isEliteDropped = (random<int>(1,100) <= eliteBrickDropRate);
     
-    CCLOG("addBrick(%d) dropCount: %d eliteBrickDropRate: %d isEliteDropped: %d",
-          floor.floor, dropCount, eliteBrickDropRate, isEliteDropped);
+    CCLOG("addBrick(%d-%d) dropCount: %d eliteBrickDropRate: %d isEliteDropped: %d",
+          floor.stage, floor.floor, dropCount, eliteBrickDropRate, isEliteDropped);
     
     if( isEliteDropped ) {
         addBrick(floor.getRandomEliteBrick(), floor.brickHp*3, positions[0]);
@@ -834,7 +840,7 @@ void GameView::addBrick() {
  */
 void GameView::addItem() {
     
-    const int TILE_POSITION_Y = GameManager::getConfig()->getTileColumns()-1;
+    const int TILE_POSITION_Y = TILE_POSITION_MAX_Y;;
     auto floor = GameManager::getFloor();
     
     // 비어있는 좌표 리스트 생성
@@ -893,7 +899,7 @@ void GameView::removeTile(Game::Tile *tile) {
  */
 void GameView::showStageLabel(int stage) {
     
-    auto label = Label::createWithTTF(STR_FORMAT("STAGE %d", stage), FONT_COMMODORE, 30, Size::ZERO,
+    auto label = Label::createWithTTF(STR_FORMAT("STAGE %d", stage), FONT_COMMODORE, 40, Size::ZERO,
                                       TextHAlignment::CENTER, TextVAlignment::CENTER);
     label->setAnchorPoint(ANCHOR_M);
     label->setPosition(Vec2MC(0, 0));
@@ -904,7 +910,6 @@ void GameView::showStageLabel(int stage) {
     auto delay = DelayTime::create(1.5f);
     auto remove = RemoveSelf::create();
     label->runAction(Sequence::create(delay, remove, nullptr));
-    
 }
 
 /**

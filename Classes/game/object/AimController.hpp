@@ -112,6 +112,8 @@ private:
     
     ShootingObject shootingObj; // 슈팅 오브젝트
     AimLine touchAimLine;       // 터치 기준 조준선
+    
+    float prevAngle;
 };
 
 #endif /* AimController_hpp */

@@ -21,12 +21,14 @@ void ResourceHelper::preload() {
         return SBStringUtils::replaceAll(anim, ANIM_EXT, ".png");
     };
     
+    /*
     auto addImageAsync = [textureCache](StringList list) {
       
         for( auto file : list ) {
             textureCache->addImageAsync(file, nullptr);
         }
     };
+    */
     
     // add image
     {

@@ -20,7 +20,7 @@ USING_NS_CC;
 using namespace cocos2d::ui;
 using namespace std;
 
-static const float LINE_PADDING         = 10;   // 조준선 간격
+static const float LINE_PADDING         = 25;   // 조준선 간격
 static const float MAX_ANGLE            = 80;   // 최대 각도
 static const Color4B DEBUG_AIM_LINE_COLOR               = Color4B(0,0,255,255*0.2f);
 
@@ -197,6 +197,7 @@ bool AimController::onTouchBegan(Touch *touch, Event*) {
     
     isTouchCancelled = false;
     endPosition = Vec2::ZERO;
+    prevAngle = 0;
     
     return true;
 }
@@ -229,6 +230,18 @@ void AimController::onTouchMoved(Touch *touch, Event *event) {
         return;
     }
     
+    /*
+    const float angleDiff = fabsf(angle - prevAngle);
+    prevAngle = angle;
+    
+    if( angleDiff < 0.08f ) {
+        CCLOG("ignore >>>>>>>>>> angle");
+        return;
+    }
+    
+    CCLOG("angle: %f diff: %f", angle, angleDiff);
+    */
+     
     // 슈팅 오브젝트
     {
         shootingObj.endMark->setVisible(true);
@@ -370,6 +383,7 @@ void AimController::initAimObject() {
     {
         // Line
         shootingObj.line = createAimLine();
+        shootingObj.line.line->setOpacity(255 * 0.4f);
         
         // Ball
         shootingObj.ballBody = Ball::createBody();
@@ -385,7 +399,7 @@ void AimController::initAimObject() {
     
     // 터치 기준 조준선
     touchAimLine = createAimLine();
-    touchAimLine.line->setOpacity(255 * 0.5f);
+    touchAimLine.line->setOpacity(255 * 0.4f);
 }
 
 /**
@@ -447,7 +461,7 @@ void AimController::initCollisionBrick() {
 
 AimController::AimLine AimController::createAimLine() {
     
-    Size  LINE_SIZE = BALL_SIZE * 0.5f;
+    Size  LINE_SIZE = BALL_SIZE * 0.65f;
     
     AimLine aimLine;
     
@@ -481,9 +495,9 @@ AimController::AimLine AimController::createAimLine() {
     int   LINE_COUNT = LINE_DIST / (LINE_SIZE.height + LINE_PADDING);
     
     auto lineLayer = Node::create();
-    lineLayer->setCascadeOpacityEnabled(true);
     lineLayer->setAnchorPoint(ANCHOR_MB);
     lineLayer->setContentSize(Size(LINE_SIZE.width, MAP_CONTENT_HEIGHT));
+    lineLayer->setCascadeOpacityEnabled(true);
     clippingNode->addChild(lineLayer);
     
     aimLine.line = lineLayer;
@@ -500,7 +514,8 @@ AimController::AimLine AimController::createAimLine() {
     int cnt = 0;
     
     for( int i = 0; i < LINE_COUNT /*posY <= MAX_Y*/; ++i ) {
-        auto line = Sprite::create(DIR_IMG_COMMON + "circle_white.png");
+        // auto line = Sprite::create(DIR_IMG_COMMON + "circle_white.png");
+        auto line = Sprite::create(BALL_IMAGE);
         line->setAnchorPoint(ANCHOR_MB);
         line->setPosition(Vec2BC(LINE_SIZE, 0, getPosY(i)));
         lineLayer->addChild(line);

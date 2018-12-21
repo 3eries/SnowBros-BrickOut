@@ -47,10 +47,12 @@ bool GameMap::init() {
     addChild(bottomBg);
     
     // game_dead_line.png Vec2BC(0, 216) , Size(715, 3)
+    /*
     auto deadLine = Sprite::create(DIR_IMG_GAME + "game_dead_line.png");
     deadLine->setAnchorPoint(ANCHOR_M);
     deadLine->setPosition(Vec2BC(0, 216));
     addChild(deadLine);
+    */
     
     // 영역 확인용
     /*

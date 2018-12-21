@@ -48,6 +48,10 @@ struct FloorData {
         return floor == 0;
     }
     
+    bool isExistBoss() const {
+        return bossBrickList.size() > 0;
+    }
+    
     int getRandomDropCount() {
         return cocos2d::random<int>(brickDropMin, brickDropMax);
     }

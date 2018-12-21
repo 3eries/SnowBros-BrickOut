@@ -138,12 +138,14 @@ void TopMenu::updateStageUI(const StageData &stage) {
  */
 void TopMenu::updateFloorProgressUI(const FloorData &floor) {
     
-    if( floor.isNull() || floor.isExistsBoss() ) {
+    auto stage = GameManager::getStage();
+    
+    if( floor.isNull() || floor.floor >= stage.bossFloor ) {
         floorProgressBar.layer->setVisible(false);
         return;
     }
     
-    int floorLen = GameManager::getStage().floorLen;
+    int floorLen = stage.bossFloor;
     
     floorProgressBar.layer->setVisible(true);
     floorProgressBar.gage->setScaleX((float)floor.floor / floorLen);
