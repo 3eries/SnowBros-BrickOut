@@ -84,6 +84,8 @@ public:
     
     void onStageClear();
     void onNextStage(const StageData &stage);
+    
+    void onFloorChanged(const FloorData &floor);
     void onNextFloor(const FloorData &floor);
     
     void onScoreChanged(int score);
