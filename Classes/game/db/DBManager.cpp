@@ -71,6 +71,7 @@ void DBManager::init() {
             }
             
             brick.idleAnims = ResourceHelper::getBrickIdleAnimationFiles(brick);
+            brick.damageAnims = ResourceHelper::getBrickDamageAnimationFiles(brick);
             
             bricks[brick.brickId] = brick;
             

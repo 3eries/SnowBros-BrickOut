@@ -21,6 +21,7 @@ public:
     static StringList getBrickAnimationFiles(const BrickData &brick,
                                              const std::string &key);
     static StringList getBrickIdleAnimationFiles(const BrickData &brick);
+    static StringList getBrickDamageAnimationFiles(const BrickData &brick);
 };
 
 #endif /* ResourceHelper_hpp */

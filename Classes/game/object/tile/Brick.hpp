@@ -20,12 +20,19 @@ class Brick : public Game::Tile {
 public:
     static Brick* create(const BrickData &data, int hp);
     virtual ~Brick();
+
+protected:
+    enum class ImageType {
+        IDLE,
+        DAMAGE,
+    };
     
 protected:
     Brick(const BrickData &data, int hp);
     
     virtual bool init() override;
     virtual void initPhysics() override;
+    virtual void setImage(ImageType type, bool isRunAnimation);
     
 public:
     virtual void enterWithAction() override;
@@ -39,7 +46,7 @@ public:
     
     bool    isBroken();
     
-    float   getHpGageRatio();
+    float   getHpRatio();
     
 protected:
     CC_SYNTHESIZE_READONLY(BrickData, data, Data);
@@ -48,6 +55,7 @@ protected:
     
     CC_SYNTHESIZE(SBCallbackNode, onBreakListener, OnBreakListener)
     
+    cocos2d::Sprite *bg;
     SBAnimationSprite *image;
     
     struct HpNode {

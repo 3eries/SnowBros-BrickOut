@@ -25,9 +25,19 @@ struct BrickData {
     int                      height;
     std::string              image;
     StringList               idleAnims;
+    StringList               damageAnims;
     
     BrickData() {
         brickId = "";
+        type = BrickType::NONE;
+    }
+    
+    bool isElite() const {
+        return type == BrickType::ELITE;
+    }
+    
+    bool isBoss() const {
+        return type == BrickType::BOSS;
     }
     
     std::string toString() {
@@ -37,6 +47,12 @@ struct BrickData {
         str += "\n\t\tidleAnims: ";
         
         for( std::string anim : idleAnims ) {
+            str += anim + ", ";
+        }
+        
+        str += "\n\t\tdamageAnims: ";
+        
+        for( std::string anim : damageAnims ) {
             str += anim + ", ";
         }
         

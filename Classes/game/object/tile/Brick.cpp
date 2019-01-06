@@ -14,6 +14,8 @@
 USING_NS_CC;
 using namespace std;
 
+static const float IDLE_ANIM_INTERVAL               = 0.6f;
+
 Brick* Brick::create(const BrickData &data, int hp) {
     
     auto brick = new Brick(data, hp);
@@ -46,13 +48,19 @@ bool Brick::init() {
     
     initPhysics();
     
+    // 배경 초기화
+    bg = Sprite::create();
+    bg->setAnchorPoint(ANCHOR_M);
+    bg->setPosition(Vec2MC(getContentSize(), 0, 0));
+    addChild(bg);
+    
     // 이미지 초기화
-    image = SBAnimationSprite::create(data.idleAnims, 0.1f);
+    image = SBAnimationSprite::create();
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(getContentSize(), 0, 0));
     addChild(image);
     
-    image->runAnimation();
+    setImage(ImageType::IDLE, true);
     
     // HP UI 초기화
     auto addHpGage = [=](string file) -> Sprite* {
@@ -80,55 +88,38 @@ bool Brick::init() {
         return hpNode.label;
     };
     
-    switch( data.type ) {
-        case BrickType::NORMAL: {
-            // game_gage_brick_elite_bg.png Vec2MC(0, 34) , Size(104, 16)
-            // 2850 size:21 stroke:3px Vec2MC(0, 44) , Size(71, 24)
-            hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_normal_bg.png");
-            hpNode.bg->setAnchorPoint(ANCHOR_M);
-            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 34));
-            addChild(hpNode.bg);
-            
-            // HP gage
-            addHpGage("game_gage_brick_normal.png");
-            
-            // HP Label
-            auto label = addHpLabel(21);
-            label->setPosition(Vec2MC(getContentSize(), 0, 44));
-        } break;
-            
-        case BrickType::ELITE: {
-            hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_elite_bg.png");
-            hpNode.bg->setAnchorPoint(ANCHOR_M);
-            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 34));
-            addChild(hpNode.bg);
-            
-            // HP gage
-            addHpGage("game_gage_brick_elite.png");
-            
-            // HP Label
-            auto label = addHpLabel(21);
-            label->setPosition(Vec2MC(getContentSize(), 0, 44));
-        } break;
-            
-        case BrickType::BOSS: {
-            // game_gage_brick_boss_bg.png Vec2MC(0, 93) , Size(204, 28)
-            // 16850 size:28 stroke:3 Vec2MC(0, 102) , Size(112, 29)
-            hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_boss_bg.png");
-            hpNode.bg->setAnchorPoint(ANCHOR_M);
-            hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 93));
-            addChild(hpNode.bg);
-            
-            // HP gage
-            addHpGage("game_gage_brick_boss.png");
-            
-            // HP Label
-            auto label = addHpLabel(28);
-            label->setPosition(Vec2MC(getContentSize(), 0, 102));
-        } break;
-            
-        default:
-            break;
+    // Normal
+    if( !data.isBoss() ) {
+        // game_gage_brick_elite_bg.png Vec2MC(0, 36) , Size(104, 16)
+        hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_normal_bg.png");
+        hpNode.bg->setAnchorPoint(ANCHOR_M);
+        hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 36));
+        addChild(hpNode.bg);
+        
+        // HP gage
+        string gageFile = !data.isElite() ? "game_gage_brick_normal.png" : "game_gage_brick_elite.png";
+        addHpGage(gageFile);
+        
+        // HP Label
+        // 2850 size:21 stroke:3px Vec2MC(0, 46) , Size(71, 24)
+        auto label = addHpLabel(21);
+        label->setPosition(Vec2MC(getContentSize(), 0, 46));
+    }
+    // Boss
+    else {
+        // game_gage_brick_boss_bg.png Vec2MC(0, 92) , Size(204, 28)
+        hpNode.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_boss_bg.png");
+        hpNode.bg->setAnchorPoint(ANCHOR_M);
+        hpNode.bg->setPosition(Vec2MC(getContentSize(), 0, 92));
+        addChild(hpNode.bg);
+        
+        // HP gage
+        addHpGage("game_gage_brick_boss.png");
+        
+        // HP Label
+        // 16850 size:28 stroke:3 Vec2MC(0, 101) , Size(112, 29)
+        auto label = addHpLabel(28);
+        label->setPosition(Vec2MC(getContentSize(), 0, 101));
     }
     
     // HP gage effect
@@ -136,6 +127,7 @@ bool Brick::init() {
     hpNode.gageEffect->setVisible(false);
     hpNode.gageEffect->setAnchorPoint(hpNode.gage->getAnchorPoint());
     hpNode.gageEffect->setPosition(hpNode.gage->getPosition());
+    hpNode.gageEffect->setScaleY(hpNode.gage->getContentSize().height / hpNode.gageEffect->getContentSize().height);
     hpNode.bg->addChild(hpNode.gageEffect);
     
     updateHpUI();
@@ -170,6 +162,32 @@ void Brick::initPhysics() {
     fixtureDef.friction = 0;
     fixtureDef.filter = filter;
     body->CreateFixture(&fixtureDef);
+}
+
+/**
+ * 벽돌 이미지 설정
+ */
+void Brick::setImage(ImageType type, bool isRunAnimation) {
+    
+    switch( type ) {
+        case ImageType::IDLE: {
+            auto anim = SBNodeUtils::createAnimation(data.idleAnims, IDLE_ANIM_INTERVAL);
+            image->setAnimation(anim);
+        } break;
+            
+        case ImageType::DAMAGE: {
+            auto anim = SBNodeUtils::createAnimation(data.damageAnims, 0.3f);
+            image->setAnimation(anim, 1);
+        } break;
+            
+        default:
+            CCASSERT(false, "Brick::setImage error.");
+            break;
+    }
+    
+    if( isRunAnimation ) {
+        image->runAnimation();
+    }
 }
 
 /**
@@ -220,10 +238,17 @@ void Brick::sufferDamage(int damage) {
     
     setHp(hp - damage);
     
-    // 게이지 연출
+    // 벽돌 데미지 연출
+    setImage(ImageType::DAMAGE, false);
+    
+    image->runAnimation([=](Node*) {
+        this->setImage(ImageType::IDLE, true);
+    });
+    
+    // 게이지 반짝 연출
     if( hpNode.gageEffect->getNumberOfRunningActions() == 0 ) {
         float scaleX = hpNode.gage->getContentSize().width / hpNode.gageEffect->getContentSize().width;
-        scaleX *= getHpGageRatio();
+        scaleX *= getHpRatio();
         
         hpNode.gageEffect->setVisible(true);
         hpNode.gageEffect->setScaleX(scaleX);
@@ -252,7 +277,20 @@ void Brick::setHp(int hp, bool updateUI) {
 
 void Brick::updateHpUI() {
     
-    hpNode.gage->setScaleX(getHpGageRatio());
+    const float hpRatio = getHpRatio();
+    
+    // 벽돌 배경
+    string bgFormat = (data.type != BrickType::BOSS) ? "game_brick_monster_%02d.png" : "game_brick_boss_%02d.png";
+    int bgIndex = 0;
+    
+    if( hpRatio >= 0.5f )        bgIndex = 1;
+    else if( hpRatio >= 0.25f )  bgIndex = 2;
+    else                         bgIndex = 3;
+    
+    bg->setTexture(DIR_IMG_GAME + STR_FORMAT(bgFormat.c_str(), bgIndex));
+    
+    // 게이지
+    hpNode.gage->setScaleX(hpRatio);
     hpNode.label->setString(TO_STRING(hp));
 }
 
@@ -261,7 +299,7 @@ bool Brick::isBroken() {
     return hp == 0;
 }
 
-float Brick::getHpGageRatio() {
+float Brick::getHpRatio() {
     
     return (float)hp / originalHp;
 }
