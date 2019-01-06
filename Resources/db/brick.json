@@ -28,14 +28,21 @@
 },
 {
     "id": "brick_01001",
-    "type": 3,
+    "type": 5,
+    "width": 1,
+    "height": 1,
+    "image": ""
+},
+{
+    "id": "brick_05001",
+    "type": 9,
     "width": 1,
     "height": 1,
     "image": ""
 },
 {
     "id": "brick_10001",
-    "type": 4,
+    "type": 10,
     "width": 2,
     "height": 2,
     "image": ""

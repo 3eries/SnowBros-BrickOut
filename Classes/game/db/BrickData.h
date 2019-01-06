@@ -12,9 +12,10 @@
 #include "superbomb.h"
 
 enum class BrickType {
-    NONE = 0,
+    NONE            = 0,
     NORMAL,
-    ELITE = 3,
+    ELITE           = 5,
+    BOSS_FRIENDS    = 9,
     BOSS,
 };
 
