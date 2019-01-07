@@ -127,6 +127,7 @@ void PausePopup::initContentView() {
     });
     
     // 닫기 버튼
+    /*
     auto closeBtn = SBButton::create(DIR_IMG_COMMON + "RSP_btn_go_back.png");
     closeBtn->setZoomScale(0.07f);
     closeBtn->setAnchorPoint(ANCHOR_MR);
@@ -137,6 +138,7 @@ void PausePopup::initContentView() {
         SBAudioEngine::playEffect(SOUND_BUTTON_CLICK);
         this->performListener(Tag::RESUME);
     });
+    */
     
     // 기타 메뉴
     {

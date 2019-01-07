@@ -565,9 +565,8 @@ void GameScene::onClick(Node *sender) {
             // replaceScene(SceneType::GAME);
         } break;
             
-        case Tag::BTN_PAUSE: {
-            GameManager::onGamePause();
-        } break;
+        default:
+            break;
     }
 }
 
@@ -630,21 +629,6 @@ void GameScene::initGameView() {
  * 메뉴 초기화
  */
 void GameScene::initMenu() {
-    
-    SBUIInfo infos[] = {
-        SBUIInfo(Tag::BTN_PAUSE,      ANCHOR_MR,   Vec2TR(-10, -37),     "btn_pause.png"),
-    };
-    
-    for( int i = 0; i < sizeof(infos)/sizeof(SBUIInfo); ++i ) {
-        auto info = infos[i];
-        
-        auto btn = SBButton::create(DIR_IMG_GAME + info.file);
-        info.apply(btn);
-        btn->setZoomScale(0.05f);
-        addChild(btn);
-        
-        btn->setOnClickListener(CC_CALLBACK_1(GameScene::onClick, this));
-    }
 }
 
 /**

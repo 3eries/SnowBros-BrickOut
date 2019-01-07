@@ -30,7 +30,6 @@ private:
         BANNER_LOADING           = 100,
         
         BTN_START,
-        BTN_PAUSE,
     };
     
 private:

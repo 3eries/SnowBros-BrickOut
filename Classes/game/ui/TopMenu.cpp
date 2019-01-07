@@ -42,71 +42,14 @@ bool TopMenu::init() {
         return false;
     }
     
-    // game_bg_top.png Vec2TC(0, -37) , Size(720, 74)
     setAnchorPoint(ANCHOR_MT);
     setPosition(Vec2TC(0,0));
     
-    // 배경
-    auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
-    topBg->setAnchorPoint(ANCHOR_M);
-    topBg->setPosition(Vec2MC(topBg->getContentSize(), 0, 0));
-    addChild(topBg);
-    
-    Size bgSize(topBg->getContentSize());
-    setContentSize(bgSize);
-    
-    // 스테이지
-    auto stageLabel = Label::createWithTTF("", FONT_COMMODORE, 28, Size::ZERO,
-                                           TextHAlignment::LEFT, TextVAlignment::CENTER);
-    stageLabel->setTag(Tag::STAGE);
-    stageLabel->setAnchorPoint(ANCHOR_ML);
-    stageLabel->setPosition(Vec2ML(bgSize, 92 - 122*0.5f, 0));
-    stageLabel->setTextColor(Color4B::WHITE);
-    stageLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(stageLabel);
-    
-    // 스코어
-    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 28, Size::ZERO,
-                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
-    scoreLabel->setTag(Tag::SCORE);
-    scoreLabel->setAnchorPoint(ANCHOR_M);
-    scoreLabel->setPosition(Vec2MC(bgSize, 0, 0));
-    scoreLabel->setTextColor(Color4B::WHITE);
-    scoreLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(scoreLabel);
-    
-    // Floor 진행바
-    auto layer = SBNodeUtils::createZeroSizeNode();
-    addChild(layer);
-    
-    floorProgressBar.layer = layer;
-    
-    const float posY = -20;
-    
-    // Gage
-    auto gageBg = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_bg.png");
-    gageBg->setAnchorPoint(ANCHOR_M);
-    gageBg->setPosition(Vec2BC(bgSize, 0, posY));
-    layer->addChild(gageBg);
-    
-    auto gageBgSize = gageBg->getContentSize();
-    
-    auto gage = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_green.png");
-    gage->setAnchorPoint(ANCHOR_ML);
-    gage->setPosition(Vec2ML(gageBgSize, (gageBgSize.width - gage->getContentSize().width)*0.5f, 0));
-    gage->setScaleX(1);
-    gageBg->addChild(gage);
-    
-    floorProgressBar.gage = gage;
-    
-    // Label
-    floorProgressBar.label = Label::createWithTTF("", FONT_COMMODORE, 22, Size::ZERO,
-                                                  TextHAlignment::LEFT, TextVAlignment::CENTER);
-    floorProgressBar.label->setAnchorPoint(ANCHOR_ML);
-    floorProgressBar.label->setPosition(Vec2BC(bgSize, 100, posY));
-    floorProgressBar.label->setTextColor(Color4B::WHITE);
-    floorProgressBar.label->enableOutline(Color4B::BLACK, 3);
-    layer->addChild(floorProgressBar.label);
+    // UI
+    initBg();
+    initStage();
+    initScore();
+    initMenu();
     
     // Listener
     initGameListener();
@@ -121,6 +64,17 @@ void TopMenu::cleanup() {
     Node::cleanup();
 }
 
+void TopMenu::onClick(Node *sender) {
+    
+    switch( sender->getTag() ) {
+        case Tag::BTN_PAUSE: {
+            GameManager::onGamePause();
+        } break;
+            
+        default: break;
+    }
+}
+
 /**
  * Stage UI 업데이트
  */
@@ -129,7 +83,7 @@ void TopMenu::updateStageUI(const StageData &stage) {
     auto stageLabel = getChildByTag<Label*>(Tag::STAGE);
     
     if( stageLabel ) {
-        stageLabel->setString(STR_FORMAT("STAGE %d", stage.stage));
+        stageLabel->setString(STR_FORMAT("%d", stage.stage));
     }
 }
 
@@ -140,14 +94,14 @@ void TopMenu::updateFloorProgressUI(const FloorData &floor) {
     
     auto stage = GameManager::getStage();
     
-    if( floor.isNull() || floor.floor >= stage.bossFloor ) {
-        floorProgressBar.layer->setVisible(false);
+    if( floor.isNull() || floor.floor > stage.bossFloor ) {
+        // floorProgressBar.layer->setVisible(false);
         return;
     }
     
     int floorLen = stage.bossFloor;
     
-    floorProgressBar.layer->setVisible(true);
+    // floorProgressBar.layer->setVisible(true);
     floorProgressBar.gage->setScaleX((float)floor.floor / floorLen);
     floorProgressBar.label->setString(STR_FORMAT("%d/%d", floor.floor, floorLen));
 }
@@ -255,6 +209,122 @@ void TopMenu::onScoreChanged(int score) {
     
     if( scoreLabel ) {
         scoreLabel->setString(TO_STRING(score));
+    }
+}
+
+/**
+ * 배경 UI 초기화
+ */
+void TopMenu::initBg() {
+    
+    auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
+    topBg->setAnchorPoint(ANCHOR_M);
+    topBg->setPosition(Vec2MC(topBg->getContentSize(), 0, 0));
+    addChild(topBg);
+    
+    Size bgSize(topBg->getContentSize());
+    setContentSize(bgSize);
+}
+
+/**
+ * 스테이지 UI 초기화
+ */
+void TopMenu::initStage() {
+    
+    const auto bgSize(getContentSize());
+    
+    // 스테이지
+    // game_bg_stage.png Vec2TL(76, -36) , Size(144, 72)
+    auto stageBg = Sprite::create(DIR_IMG_GAME + "game_bg_stage.png");
+    stageBg->setAnchorPoint(ANCHOR_M);
+    stageBg->setPosition(Vec2TL(bgSize, 76, -36));
+    addChild(stageBg, 1);
+    
+    // BM_font Vec2TL(76, -44) , Size(64, 40)
+    auto stageLabel = Label::createWithBMFont(FONT_GAME_STAGE, "1",
+                                              TextHAlignment::CENTER);
+    stageLabel->setTag(Tag::STAGE);
+    stageLabel->setAnchorPoint(ANCHOR_M);
+    stageLabel->setPosition(Vec2TL(bgSize, 76, -44 + 4));
+    addChild(stageLabel, 1);
+    
+    // Floor 진행바
+    auto layer = SBNodeUtils::createZeroSizeNode();
+    addChild(layer);
+    
+    floorProgressBar.layer = layer;
+    
+    // Gage
+    // game_gage_stage_bg.png Vec2TL(218, -38) , Size(164, 52)
+    auto gageBg = Sprite::create(DIR_IMG_GAME + "game_gage_stage_bg.png");
+    gageBg->setAnchorPoint(ANCHOR_M);
+    gageBg->setPosition(Vec2TL(bgSize, 218, -38));
+    layer->addChild(gageBg);
+    
+    auto gageBgSize = gageBg->getContentSize();
+    
+    auto gage = Sprite::create(DIR_IMG_GAME + "game_gage_stage.png");
+    gage->setAnchorPoint(ANCHOR_ML);
+    gage->setPosition(Vec2ML(gageBgSize, (gageBgSize.width - gage->getContentSize().width)*0.5f, 0));
+    gage->setScaleX(1);
+    gageBg->addChild(gage);
+    
+    floorProgressBar.gage = gage;
+    
+    // Label
+    // 12/34 size:28 stroke:3 Vec2TL(220, -16) , Size(110, 29)
+    floorProgressBar.label = Label::createWithTTF("", FONT_COMMODORE, 28, Size::ZERO,
+                                                  TextHAlignment::CENTER, TextVAlignment::CENTER);
+    floorProgressBar.label->setAnchorPoint(ANCHOR_M);
+    floorProgressBar.label->setPosition(Vec2TL(bgSize, 220, -16));
+    floorProgressBar.label->setTextColor(Color4B::WHITE);
+    floorProgressBar.label->enableOutline(Color4B::BLACK, 3);
+    layer->addChild(floorProgressBar.label);
+}
+
+/**
+ * 스코어 UI 초기화
+ */
+void TopMenu::initScore() {
+    
+    const auto bgSize(getContentSize());
+    
+    // game_bg_score.png Vec2TC(116, -32) , Size(336, 64)
+    auto scoreBg = Sprite::create(DIR_IMG_GAME + "game_bg_score.png");
+    scoreBg->setAnchorPoint(ANCHOR_M);
+    scoreBg->setPosition(Vec2TC(bgSize, 116, -32));
+    addChild(scoreBg);
+    
+    // 1234 size:33 stroke:3 Vec2TC(116, -42) , Size(105, 33)
+    auto scoreLabel = Label::createWithTTF("0", FONT_COMMODORE, 33, Size::ZERO,
+                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
+    scoreLabel->setTag(Tag::SCORE);
+    scoreLabel->setAnchorPoint(ANCHOR_M);
+    scoreLabel->setPosition(Vec2TC(bgSize, 116, -42));
+    scoreLabel->setTextColor(Color4B::WHITE);
+    scoreLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(scoreLabel);
+}
+
+/**
+ * 메뉴 초기화
+ */
+void TopMenu::initMenu() {
+    
+    // game_btn_pause.png Vec2TR(-38, -38) , Size(68, 68)
+    SBUIInfo infos[] = {
+        SBUIInfo(Tag::BTN_PAUSE,      ANCHOR_M,   Vec2TR(getContentSize(), -38, -38),     "game_btn_pause.png"),
+    };
+    
+    for( int i = 0; i < sizeof(infos)/sizeof(SBUIInfo); ++i ) {
+        auto info = infos[i];
+        
+        auto btn = SBButton::create(DIR_IMG_GAME + info.file);
+        info.apply(btn);
+        btn->setZoomScale(0.05f);
+        addChild(btn);
+        
+        btn->setOnClickListener(CC_CALLBACK_1(TopMenu::onClick, this));
     }
 }
 

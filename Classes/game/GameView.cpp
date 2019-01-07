@@ -1136,42 +1136,19 @@ void GameView::initMenu() {
     auto topMenu = TopMenu::create();
     addChild(topMenu, (int)ZOrder::MENU);
     
-    // 벽돌 아래로 이동 버튼
-    // game_bg_bottom.png Vec2BC(0, 26) , Size(720, 52)
-    {
-        auto btn = SBNodeUtils::createTouchNode();
-        btn->setTag(Tag::BTN_BRICK_DOWN);
-        btn->setVisible(false);
-        btn->setAnchorPoint(ANCHOR_MB);
-        btn->setPosition(Vec2BC(0,0));
-        btn->setContentSize(Size(SB_WIN_SIZE.width, 52*0.8f));
-        btn->setCascadeOpacityEnabled(true);
-        btn->setOpacity(255*0.5f);
-        addChild(btn, (int)ZOrder::MENU);
-        
-        btn->addClickEventListener([=](Ref*) {
-            this->onClickDownButton();
-        });
-        
-        auto bg = LayerColor::create(Color4B::BLACK);
-        bg->setIgnoreAnchorPointForPosition(false);
-        bg->setAnchorPoint(Vec2::ZERO);
-        bg->setPosition(Vec2::ZERO);
-        bg->setContentSize(btn->getContentSize());
-        btn->addChild(bg);
-        
-        // BRICK DOWN
-        // Tap to move down bricks
-        // TAP TO MOVE DOWN BRICKS
-        auto label = Label::createWithTTF("BRICK DOWN", FONT_COMMODORE, 28, Size::ZERO,
-                                          TextHAlignment::CENTER, TextVAlignment::CENTER);
-        label->setAnchorPoint(ANCHOR_M);
-        label->setPosition(Vec2MC(btn->getContentSize(), 0, 0));
-        label->setScale(btn->getContentSize().height*0.9f / label->getContentSize().height);
-        label->setTextColor(Color4B::WHITE);
-        // label->enableOutline(Color4B::BLACK, 3);
-        btn->addChild(label);
-    }
+    // 브릭 다운 버튼
+    // game_btn_brick_down.png Vec2BR(-60, 222) , Size(116, 108)
+    auto brickDownBtn = SBButton::create(DIR_IMG_GAME + "game_btn_brick_down.png");
+    brickDownBtn->setTag(Tag::BTN_BRICK_DOWN);
+    brickDownBtn->setZoomScale(0.1f);
+    brickDownBtn->setAnchorPoint(ANCHOR_M);
+    brickDownBtn->setPosition(Vec2BR(-60, 222));
+    brickDownBtn->setVisible(false);
+    addChild(brickDownBtn, (int)ZOrder::MENU);
+    
+    brickDownBtn->setOnClickListener([=](Node*) {
+        this->onClickDownButton();
+    });
 }
 
 /**
@@ -1205,11 +1182,11 @@ void GameView::initBall() {
     */
     
     // 볼 갯수 표시 라벨
-    // X50 size:26 stroke:3 Vec2BC(0, 29) , Size(66, 28)
+    // X50 size:26 stroke:3 Vec2BC(0, 25) , Size(66, 28)
     ballCountLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
     ballCountLabel->setAnchorPoint(ANCHOR_M);
-    ballCountLabel->setPosition(Vec2BC(0, 29));
+    ballCountLabel->setPosition(Vec2BC(0, 25));
     ballCountLabel->setTextColor(Color4B::WHITE);
     ballCountLabel->enableOutline(Color4B::BLACK, 3);
     addChild(ballCountLabel);

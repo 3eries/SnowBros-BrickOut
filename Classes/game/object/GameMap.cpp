@@ -40,10 +40,9 @@ bool GameMap::init() {
     bg->setPosition(Vec2MC(0,0));
     addChild(bg);
     
-    // game_bg_bottom.png Vec2BC(0, 26) , Size(720, 52)
     auto bottomBg = Sprite::create(DIR_IMG_GAME + "game_bg_bottom.png");
-    bottomBg->setAnchorPoint(ANCHOR_M);
-    bottomBg->setPosition(Vec2BC(0, 26));
+    bottomBg->setAnchorPoint(ANCHOR_MB);
+    bottomBg->setPosition(Vec2BC(0,0));
     addChild(bottomBg);
     
     // game_dead_line.png Vec2BC(0, 216) , Size(715, 3)

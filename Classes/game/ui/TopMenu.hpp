@@ -16,7 +16,7 @@
 
 #include "../GameManager.hpp"
 
-class TopMenu : public cocos2d::Node {
+class TopMenu : public cocos2d::Node, public SBNodeListener {
 public:
     static TopMenu* create();
     ~TopMenu();
@@ -25,6 +25,8 @@ private:
     enum Tag {
         STAGE = 10,
         SCORE,
+        
+        BTN_PAUSE = 100,
     };
     
 private:
@@ -33,9 +35,15 @@ private:
     bool init() override;
     void cleanup() override;
     
+    void initBg();
+    void initStage();
+    void initScore();
+    void initMenu();
     void initGameListener();
     
 private:
+    void onClick(cocos2d::Node *sender) override;
+    
     void updateStageUI(const StageData &stage);
     void updateFloorProgressUI(const FloorData &floor);
     

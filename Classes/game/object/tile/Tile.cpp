@@ -18,16 +18,16 @@ namespace Game {
     
 Vec2 Tile::convertToTilePosition(int x, int y, int w, int h) {
     
-    Size SIZE = MEASURE_TILE_SIZE(w,h);
-    
     Vec2 pos(TILE_ORIGIN);
+    
     // content size
     pos.x += x * TILE_CONTENT_WIDTH;
     pos.y += y * TILE_CONTENT_HEIGHT;
-    // margin & padding
-    pos.x += TILE_MARGIN_X + (x * TILE_PADDING_X);
-    pos.y += (y * TILE_PADDING_Y);
+    // padding
+    pos.x += x * TILE_PADDING_X;
+    pos.y += y * TILE_PADDING_Y;
     // anchor middle
+    Size SIZE = MEASURE_TILE_SIZE(w,h);
     pos.x += SIZE.width * 0.5f;
     pos.y += SIZE.height * 0.5f;
     
