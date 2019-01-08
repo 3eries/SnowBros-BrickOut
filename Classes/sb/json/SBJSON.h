@@ -11,6 +11,7 @@
 #include <string>
 
 #include "cocos2d.h"
+#include "../base/SBTypes.hpp"
 #include "json/document-wrapper.h"
 
 class SBJSON {
@@ -19,6 +20,20 @@ public:
     static std::string         toJSON(cocos2d::Value v);
     
     static bool isJSON(const std::string &json);
+    
+/**
+ * helper for parse
+ */
+public:
+    static void parse(const rapidjson::Value &v,
+                      rapidjson::Document::AllocatorType &allocator,
+                      StringList keys, std::vector<int*> ptrs);
+    static void parse(const rapidjson::Value &v,
+                      rapidjson::Document::AllocatorType &allocator,
+                      StringList keys, std::vector<float*> ptrs);
+    static void parse(const rapidjson::Value &v,
+                      rapidjson::Document::AllocatorType &allocator,
+                      StringList keys, std::vector<std::string*> ptrs);
     
 /**
  * convert to json value

@@ -50,6 +50,54 @@ bool SBJSON::isJSON(const string &json) {
     return !doc.HasParseError();
 }
 
+/**
+ * v의 값을 포인터에 설정합니다
+ */
+void SBJSON::parse(const rapidjson::Value &v,
+                   rapidjson::Document::AllocatorType &allocator,
+                   StringList keys, vector<int*> ptrs) {
+    
+    CCASSERT(keys.size() == ptrs.size(), "SBJSON::parse error: invalid list size.");
+    
+    for( int i = 0; i < keys.size(); ++i ) {
+        auto key = SBJSON::value(keys[i], allocator);
+        
+        if( v.HasMember(key) ) {
+            *ptrs[i] = v[key].GetInt();
+        }
+    }
+}
+
+void SBJSON::parse(const rapidjson::Value &v,
+                   rapidjson::Document::AllocatorType &allocator,
+                   StringList keys, vector<float*> ptrs) {
+    
+    CCASSERT(keys.size() == ptrs.size(), "SBJSON::parse error: invalid list size.");
+    
+    for( int i = 0; i < keys.size(); ++i ) {
+        auto key = SBJSON::value(keys[i], allocator);
+        
+        if( v.HasMember(key) ) {
+            *ptrs[i] = v[key].GetFloat();
+        }
+    }
+}
+
+void SBJSON::parse(const rapidjson::Value &v,
+                   rapidjson::Document::AllocatorType &allocator,
+                   StringList keys, vector<string*> ptrs) {
+    
+    CCASSERT(keys.size() == ptrs.size(), "SBJSON::parse error: invalid list size.");
+    
+    for( int i = 0; i < keys.size(); ++i ) {
+        auto key = SBJSON::value(keys[i], allocator);
+        
+        if( v.HasMember(key) ) {
+            *ptrs[i] = v[key].GetString();
+        }
+    }
+}
+
 rapidjson::Value SBJSON::value(Value v, rapidjson::Document::AllocatorType &allocator) {
 
     switch( v.getType() ) {
