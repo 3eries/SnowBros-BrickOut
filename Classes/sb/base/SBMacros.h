@@ -28,6 +28,7 @@
 #define HASH_STR(__str__)                       SBStringUtils::hashStr(__str__)
 #define STR_FORMAT(__format__, ...)             cocos2d::StringUtils::format(__format__, __VA_ARGS__)
 #define TO_STRING(__var__)                      SBStringUtils::toString(__var__)
+#define TO_INTEGER(__var__)                     SBStringUtils::toNumber<int>(__var__)
 
 #define SB_WIN_SIZE                             cocos2d::Director::getInstance()->getWinSize()
 #define SB_RUNNING_SCENE                        cocos2d::Director::getInstance()->getRunningScene()
