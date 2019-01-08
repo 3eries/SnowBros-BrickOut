@@ -137,9 +137,9 @@ private:
     std::vector<Game::Tile*> getBricks();
     std::vector<Game::Tile*> getItems();
     
-    Game::Tile*              getTile(const Game::Tile::Position &pos);
-    Game::Tile::Positions    getEmptyPositions(int y);
-    Game::Tile::Positions    getEmptyRandomPositions(int y);
+    Game::Tile*              getTile(const TilePosition &pos);
+    TilePositions            getEmptyPositions(int y);
+    TilePositions            getEmptyRandomPositions(int y);
     bool                     isExistTile(int y);
     bool                     isExistBrick(int y);
     

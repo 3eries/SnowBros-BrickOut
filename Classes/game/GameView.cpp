@@ -790,7 +790,7 @@ void GameView::addBrick() {
     Log::i("GameView::addBrick empty position count: %d", (int)positions.size());
     // CCASSERT(positions.size() == TILE_ROWS, "GameView::addBrick error.");
     
-    auto addBrick = [=](const BrickData &data, int hp, Game::Tile::Position tilePos) -> Brick* {
+    auto addBrick = [=](const BrickData &data, int hp, TilePosition tilePos) -> Brick* {
         auto brick = Brick::create(data, hp);
         brick->setTilePosition(tilePos, false);
         this->addTile(brick);
@@ -804,7 +804,7 @@ void GameView::addBrick() {
     
     // 보스 벽돌
     if( floor.isExistBoss() ) {
-        addBrick(floor.bossBrick, floor.brickHp*10, Game::Tile::Position(2, TILE_POSITION_Y));
+        addBrick(floor.bossBrick, floor.brickHp*10, TilePosition(2, TILE_POSITION_Y));
     }
     
     // 엘리트 벽돌
@@ -1007,7 +1007,7 @@ vector<Game::Tile*> GameView::getItems() {
 /**
  * 좌표에 해당하는 타일을 반환합니다
  */
-Game::Tile* GameView::getTile(const Game::Tile::Position &pos) {
+Game::Tile* GameView::getTile(const TilePosition &pos) {
     
     for( auto tile : tiles ) {
         if( tile->isContainsPosition(pos) ) {
@@ -1021,13 +1021,13 @@ Game::Tile* GameView::getTile(const Game::Tile::Position &pos) {
 /**
  * y줄의 비어있는 좌표를 반환합니다
  */
-Game::Tile::Positions GameView::getEmptyPositions(int y) {
+TilePositions GameView::getEmptyPositions(int y) {
     
     const int TILE_ROWS = GAME_CONFIG->getTileRows();
-    Game::Tile::Positions positions;
+    TilePositions positions;
     
     for( int x = 0; x < TILE_ROWS; ++x ) {
-        Game::Tile::Position pos(x,y);
+        TilePosition pos(x,y);
         
         if( !getTile(pos) ) {
             positions.push_back(pos);
@@ -1037,7 +1037,7 @@ Game::Tile::Positions GameView::getEmptyPositions(int y) {
     return positions;
 }
 
-Game::Tile::Positions GameView::getEmptyRandomPositions(int y) {
+TilePositions GameView::getEmptyRandomPositions(int y) {
     
     auto positions = getEmptyPositions(y);
     random_shuffle(positions.begin(), positions.end());

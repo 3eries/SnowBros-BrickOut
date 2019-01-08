@@ -15,28 +15,6 @@ USING_NS_CC;
 using namespace std;
 
 namespace Game {
-    
-Vec2 Tile::convertToTilePosition(int x, int y, int w, int h) {
-    
-    Vec2 pos(TILE_ORIGIN);
-    
-    // content size
-    pos.x += x * TILE_CONTENT_WIDTH;
-    pos.y += y * TILE_CONTENT_HEIGHT;
-    // padding
-    pos.x += x * TILE_PADDING_X;
-    pos.y += y * TILE_PADDING_Y;
-    // anchor middle
-    Size SIZE = MEASURE_TILE_SIZE(w,h);
-    pos.x += SIZE.width * 0.5f;
-    pos.y += SIZE.height * 0.5f;
-    
-    return pos;
-}
-
-Vec2 Tile::convertToTilePosition(Position tilePos, int w, int h) {
-    return convertToTilePosition(tilePos.x, tilePos.y, w, h);
-}
 
 const float Tile::ENTER_DURATION         = 0.15f;
 const float Tile::MOVE_DURATION          = 0.18f;
@@ -99,13 +77,13 @@ void Tile::removeWithAction() {
 void Tile::down() {
     
     CCASSERT(tilePos.y > 0, "Tile::down error.");
-    setTilePosition(Position(tilePos.x, tilePos.y-1));
+    setTilePosition(TilePosition(tilePos.x, tilePos.y-1));
 }
 
 /**
  * 타일 좌표 설정
  */
-void Tile::setTilePosition(Position tilePos, bool action) {
+void Tile::setTilePosition(const TilePosition &tilePos, bool action) {
     
     this->tilePos = tilePos;
     
@@ -127,10 +105,32 @@ void Tile::setTilePosition(Position tilePos, bool action) {
 /**
  * 좌표가 타일에 포함됐는지 반환합니다
  */
-bool Tile::isContainsPosition(const Position &p) {
+bool Tile::isContainsPosition(const TilePosition &p) {
 
     return p.x >= tilePos.x && p.y >= tilePos.y &&
            p.x <= tilePos.x + (rows-1) && p.y <= tilePos.y + (columns-1);
+}
+
+Vec2 Tile::convertToTilePosition(int x, int y, int w, int h) {
+    
+    Vec2 pos(TILE_ORIGIN);
+    
+    // content size
+    pos.x += x * TILE_CONTENT_WIDTH;
+    pos.y += y * TILE_CONTENT_HEIGHT;
+    // padding
+    pos.x += x * TILE_PADDING_X;
+    pos.y += y * TILE_PADDING_Y;
+    // anchor middle
+    Size SIZE = MEASURE_TILE_SIZE(w,h);
+    pos.x += SIZE.width * 0.5f;
+    pos.y += SIZE.height * 0.5f;
+    
+    return pos;
+}
+
+Vec2 Tile::convertToTilePosition(const TilePosition &p, int w, int h) {
+    return convertToTilePosition((int)p.x, (int)p.y, w, h);
 }
     
 } // namespace Game

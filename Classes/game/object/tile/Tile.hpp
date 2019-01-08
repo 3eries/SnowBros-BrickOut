@@ -12,6 +12,7 @@
 
 #include "cocos2d.h"
 #include "superbomb.h"
+#include "../../GameDefine.h"
 
 namespace Game {
     
@@ -20,20 +21,6 @@ namespace Game {
  * 벽돌, 아이템 등 맵에 표시되는 오브젝트는 Tile 클래스를 상속합니다
  */
 class Tile : public cocos2d::Node, public SBPhysicsObject {
-public:
-    struct Position {
-        int x;
-        int y;
-        
-        Position() : x(0), y(0) {}
-        Position(int _x, int _y) : x(_x), y(_y) {}
-    };
-    
-    typedef std::vector<Position> Positions;
-    
-    static cocos2d::Vec2 convertToTilePosition(int x, int y, int w = 1, int h = 1);
-    static cocos2d::Vec2 convertToTilePosition(Position tilePos, int w = 1, int h = 1);
-    
 public:
     static const float ENTER_DURATION;
     static const float MOVE_DURATION;
@@ -53,13 +40,16 @@ public:
     virtual void down();
     
 public:
-    virtual void setTilePosition(Position tilePos, bool action = true);
-    virtual bool isContainsPosition(const Position &p);
+    virtual void setTilePosition(const TilePosition &tilePos, bool action = true);
+    virtual bool isContainsPosition(const TilePosition &p);
+    
+    static cocos2d::Vec2 convertToTilePosition(int x, int y, int w = 1, int h = 1);
+    static cocos2d::Vec2 convertToTilePosition(const TilePosition &p, int w = 1, int h = 1);
     
 protected:
     CC_SYNTHESIZE_READONLY(int, rows, Rows);        // 가로칸
     CC_SYNTHESIZE_READONLY(int, columns, Columns);  // 세로칸
-    CC_SYNTHESIZE_READONLY(Position, tilePos, TilePosition);
+    CC_SYNTHESIZE_READONLY(TilePosition, tilePos, TilePosition);
 };
     
 } // namespace Game
