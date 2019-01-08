@@ -804,7 +804,37 @@ void GameView::addBrick() {
     
     // 보스 벽돌
     if( floor.isExistBoss() ) {
-        addBrick(floor.bossBrick, floor.brickHp*10, TilePosition(2, TILE_POSITION_Y));
+        auto boss = addBrick(floor.bossBrick, floor.brickHp*10, TilePosition(2, TILE_POSITION_Y));
+        
+        // 부하 벽돌
+        auto pattern = floor.bossPattern;
+        
+        auto addFriendBrick = [=](TilePosition pos, int offsetX) -> Brick* {
+            
+            if( pattern.isEmptyPosition(pos) ) {
+                return nullptr;
+            }
+            
+            pos   += boss->getTilePosition();
+            pos.x += offsetX;
+            return addBrick(pattern.friendBrick, floor.brickHp, pos);
+        };
+        
+        // 왼쪽
+        for( int x = 1; x <= 2; ++x ) {
+            for( int y = 0; y <= 1; ++y ) {
+                addFriendBrick(TilePosition(-x,y), 0);
+            }
+        }
+        
+        // 오른쪽
+        for( int x = 1; x <= 2; ++x ) {
+            for( int y = 0; y <= 1; ++y ) {
+                addFriendBrick(TilePosition(x,y), boss->getRows()-1);
+            }
+        }
+        
+        return;
     }
     
     // 엘리트 벽돌
@@ -836,7 +866,7 @@ void GameView::addBrick() {
  */
 void GameView::addItem() {
     
-    const int TILE_POSITION_Y = TILE_POSITION_MAX_Y;;
+    const int TILE_POSITION_Y = TILE_POSITION_MAX_Y;
     auto floor = GameManager::getFloor();
     
     // 비어있는 좌표 리스트 생성

@@ -12,6 +12,7 @@
 #include "superbomb.h"
 
 #include "BrickData.h"
+#include "BossPatternData.h"
 
 struct FloorData {
     int                      stage;                         // 스테이지
@@ -29,6 +30,7 @@ struct FloorData {
     BrickList                brickList;                     // 일반 벽돌 리스트
     BrickList                eliteBrickList;                // 엘리트 벽돌 리스트
     BrickData                bossBrick;                     // 보스 벽돌
+    BossPatternData          bossPattern;                   // 보스 패턴
     
     FloorData() : stage(0), floor(0), usePrevData(true),
     brickHpOrigin(""), brickHp(0), brickDropMin(0), brickDropMax(0),
@@ -41,7 +43,7 @@ struct FloorData {
     brickHpOrigin(data.brickHpOrigin), brickHp(data.brickHp), brickDropMin(data.brickDropMin), brickDropMax(data.brickDropMax),
     eliteBrickDropRate(data.eliteBrickDropRate),
     powerUpDropRate(data.powerUpDropRate), friendPowerUpDropRate(data.friendPowerUpDropRate), moneyDropRate(data.moneyDropRate),
-    brickList(data.brickList), eliteBrickList(data.eliteBrickList), bossBrick(data.bossBrick) {
+    brickList(data.brickList), eliteBrickList(data.eliteBrickList), bossBrick(data.bossBrick), bossPattern(data.bossPattern) {
     }
     
     void parse(const rapidjson::Value &v, rapidjson::Document::AllocatorType &allocator,

@@ -15,6 +15,7 @@ USING_NS_SB;
 using namespace std;
 
 #define BRICK_FILE              (DIR_DB + "brick.json")
+#define BOSS_PATTERN_FILE       (DIR_DB + "boss_pattern.json")
 
 static DBManager *instance = nullptr;
 DBManager* DBManager::getInstance() {
@@ -65,6 +66,32 @@ void DBManager::init() {
         }
     }
     CCLOG("========== PARSE END (brick.json)  ==========");
+
+    // boss_pattern.json
+    CCLOG("========== PARSE START (boss_pattern.json)  ==========");
+    {
+        string json = SBStringUtils::readTextFile(BOSS_PATTERN_FILE);
+        
+        rapidjson::Document doc;
+        doc.Parse(json.c_str());
+        
+        for( auto it = doc.MemberBegin(); it != doc.MemberEnd(); ++it ) {
+            const auto v = it->value.GetObject();
+            
+            BossPatternData bossPattern;
+            bossPattern.bossBrick = getBrick(it->name.GetString());
+            bossPattern.friendBrick = getBrick(v["friend"].GetString());
+            
+            if( v.HasMember("empty_positions") ) {
+                bossPattern.parseEmptyPositions(v["empty_positions"]);
+            }
+            
+            bossPatterns[bossPattern.bossBrick.brickId] = bossPattern;
+            
+            CCLOG("%s", bossPattern.toString().c_str());
+        }
+    }
+    CCLOG("========== PARSE END (boss_pattern.json)  ==========");
     
     // stage.json
     int stageIdx = 0;
@@ -121,7 +148,10 @@ void DBManager::init() {
             if( floorValue.HasMember("elite_brick_list") )    floor.eliteBrickList = getBrickList("elite_brick_list");
             
             // boss_brick_id
-            if( floorValue.HasMember("boss_brick_id") )       floor.bossBrick = getBrick(floorValue["boss_brick_id"].GetString());
+            if( floorValue.HasMember("boss_brick_id") ) {
+                floor.bossBrick = getBrick(floorValue["boss_brick_id"].GetString());
+                floor.bossPattern = getBossPattern(floor.bossBrick.brickId);
+            }
             
             stage.floors.push_back(floor);
             floors.push_back(floor);
@@ -253,6 +283,21 @@ bool DBManager::isStageLastFloor(int stage, int floor) {
 
 bool DBManager::isStageLastFloor(const FloorData &data) {
     return isStageLastFloor(data.stage, data.floor);
+}
+
+/**
+ * 보스 패턴 데이터를 반환합니다
+ */
+BossPatternData DBManager::getBossPattern(const string &bossBrickId) {
+    
+    auto patterns = getInstance()->bossPatterns;
+    auto it = patterns.find(bossBrickId);
+    
+    if( it == patterns.end() ) {
+        CCASSERT(false, "DBManager::getBossPattern error.");
+    }
+    
+    return it->second;
 }
 
 /**
