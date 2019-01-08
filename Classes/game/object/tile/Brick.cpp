@@ -52,6 +52,7 @@ bool Brick::init() {
     bg = Sprite::create();
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2MC(getContentSize(), 0, 0));
+    // bg->setOpacity(255*0.3f);
     addChild(bg);
     
     // 이미지 초기화
@@ -176,7 +177,7 @@ void Brick::setImage(ImageType type, bool isRunAnimation) {
         } break;
             
         case ImageType::DAMAGE: {
-            auto anim = SBNodeUtils::createAnimation(data.damageAnims, 0.3f);
+            auto anim = SBNodeUtils::createAnimation(data.damageAnims, 0.1f);
             image->setAnimation(anim, 1);
         } break;
             
@@ -209,7 +210,28 @@ void Brick::removeWithAction() {
     Game::Tile::removeWithAction();
  
     setOnBreakListener(nullptr);
+    setVisible(false);
     
+    auto particle = ParticleSystemQuad::create(DIR_IMG_GAME + "particle_brick.plist");
+    particle->setAnchorPoint(ANCHOR_M);
+    particle->setPosition(getPosition());
+    particle->setStartColor(Color4F(data.color));
+    particle->setEndColor(Color4F(data.color));
+    particle->setAutoRemoveOnFinish(true);
+    getParent()->addChild(particle, SBZOrder::BOTTOM);
+    
+    if( data.isBoss() ) {
+        particle->setScale(1.5f);
+    }
+    
+    auto delay = DelayTime::create(3.0f);
+    auto callFunc = CallFunc::create([=]() {
+        // this->setVisible(false);
+        this->setNeedRemove(true);
+    });
+    runAction(Sequence::create(delay, callFunc, nullptr));
+    
+    /*
     auto scale = ScaleTo::create(ENTER_DURATION, 0);
     auto callFunc = CallFunc::create([=]() {
         // this->removeFromParent();
@@ -217,6 +239,7 @@ void Brick::removeWithAction() {
         this->setNeedRemove(true);
     });
     runAction(Sequence::create(scale, callFunc, nullptr));
+    */
 }
 
 /**
