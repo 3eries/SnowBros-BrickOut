@@ -7,14 +7,7 @@
     },
     "tile_rows": 6,
     "tile_columns": 10,
-    "first_ball_count": 1,
+    "first_ball_count": 10,
     "max_ball_count": 1000,
-    "max_score": 999999999,
-    "levels": [{
-        "level": 1,
-        "score": 0
-    }, {
-        "level": 2,
-        "score": 20
-    }]
+    "max_score": 999999999
 }

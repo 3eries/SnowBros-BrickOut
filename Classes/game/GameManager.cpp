@@ -137,7 +137,7 @@ void GameManager::setScore(int score) {
     auto mgr = getInstance();
     
     // 스코어 설정
-    score = MIN(getConfig()->getMaxScore(), score);
+    score = MIN(GAME_CONFIG->getMaxScore(), score);
     mgr->score = score;
     
     onScoreChanged();
@@ -156,10 +156,6 @@ PhysicsManager* GameManager::getPhysicsManager() {
     return getInstance()->physicsManager;
 }
 
-GameConfiguration* GameManager::getConfig() {
-    return getInstance()->config;
-}
-
 int GameManager::getPlayCount() {
     return UserDefault::getInstance()->getIntegerForKey(UserDefaultKey::PLAY_COUNT, 0);
 }
@@ -173,7 +169,11 @@ StageData GameManager::getStage() {
 }
 
 FloorData GameManager::getFloor() {
-    return DBManager::getFloor(getInstance()->stage, getInstance()->floor);
+    return DBManager::getFloor(getInstance()->floor);
+}
+
+bool GameManager::isStageLastFloor() {
+    return DBManager::isStageLastFloor(getFloor());
 }
 
 bool GameManager::isContinuable() {
@@ -437,7 +437,7 @@ void GameManager::onNextStage() {
     }
     
     getInstance()->stage++;
-    getInstance()->floor = 1;
+    getInstance()->floor++;
     
     getEventDispatcher()->dispatchOnNextStage(getStage());
     getEventDispatcher()->dispatchOnFloorChanged(getFloor());
@@ -458,7 +458,7 @@ void GameManager::onNextFloor() {
     
     FloorData floor;
     
-    if( !DBManager::isLastFloor(getFloor()) ) {
+    if( !DBManager::isStageLastFloor(getFloor()) ) {
         getInstance()->floor++;
         floor = getFloor();
     }

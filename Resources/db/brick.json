@@ -3,48 +3,55 @@
     "type": 1,
     "width": 1,
     "height": 1,
-    "image": ""
+    "image": "",
+    "color": "239,82,115"
 },
 {
     "id": "brick_00002",
     "type": 1,
     "width": 1,
     "height": 1,
-    "image": ""
+    "image": "",
+    "color": "255,231,66"
 },
 {
     "id": "brick_00003",
     "type": 1,
     "width": 1,
     "height": 1,
-    "image": ""
+    "image": "",
+    "color": "41,231,66"
 },
 {
     "id": "brick_00004",
     "type": 1,
     "width": 1,
     "height": 1,
-    "image": ""
+    "image": "",
+    "color": "46,107,255"
 },
 {
     "id": "brick_01001",
     "type": 5,
     "width": 1,
     "height": 1,
-    "image": ""
+    "image": "",
+    "color": "188,188,134"
 },
 {
     "id": "brick_05001",
     "type": 9,
     "width": 1,
     "height": 1,
-    "image": ""
+    "image": "",
+    "color": "0,157,92"
 },
 {
     "id": "brick_10001",
     "type": 10,
     "width": 2,
     "height": 2,
-    "image": ""
+    "image": "",
+    "color": "0,157,92"
 }
 ]

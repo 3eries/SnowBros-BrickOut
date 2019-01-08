@@ -55,7 +55,7 @@ static const float                            BALL_MAX_VELOCITY                =
 static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f;   // 벽 두께
 
 // Tile
-#define                                       TILE_POSITION_MAX_Y                (GameManager::getConfig()->getTileColumns()-1)
+#define                                       TILE_POSITION_MAX_Y                (GAME_CONFIG->getTileColumns()-1)
 
 #define                                       TILE_ORIGIN                        (Vec2(60, 104) - (TILE_CONTENT_SIZE*0.5f))
 

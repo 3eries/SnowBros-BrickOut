@@ -94,16 +94,17 @@ void TopMenu::updateFloorProgressUI(const FloorData &floor) {
     
     auto stage = GameManager::getStage();
     
-    if( floor.isNull() || floor.floor > stage.bossFloor ) {
+    if( floor.isNull() ) {
         // floorProgressBar.layer->setVisible(false);
         return;
     }
     
-    int floorLen = stage.bossFloor;
+    int cnt = floor.floor - stage.getFirstFloor().floor + 1;
+    int end = (int)stage.floors.size();
     
     // floorProgressBar.layer->setVisible(true);
-    floorProgressBar.gage->setScaleX((float)floor.floor / floorLen);
-    floorProgressBar.label->setString(STR_FORMAT("%d/%d", floor.floor, floorLen));
+    floorProgressBar.gage->setScaleX((float)cnt / end);
+    floorProgressBar.label->setString(STR_FORMAT("%d/%d", cnt, end));
 }
 
 /**

@@ -13,6 +13,8 @@
 #include "superbomb.h"
 #include "Define.h"
 
+#define GAME_CONFIG     GameConfiguration::getInstance()
+
 class GameConfiguration : public cocos2d::Ref {
 public:
     static GameConfiguration* getInstance();

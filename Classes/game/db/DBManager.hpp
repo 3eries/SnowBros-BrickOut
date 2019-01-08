@@ -39,16 +39,20 @@ public:
     static StageData    getLastStage();
     static bool         isLastStage(int stage);
     
-    static FloorList    getFloors(int stage);
-    static FloorData    getFloor(int stage, int floor);
-    static bool         isLastFloor(int stage, int floor);
-    static bool         isLastFloor(const FloorData &data);
+    static FloorList    getFloors();
+    static FloorData    getFloor(int floor);
+    static bool         isLastFloor(int floor);
+    
+    static FloorList    getStageFloors(int stage);
+    static bool         isStageLastFloor(int stage, int floor);
+    static bool         isStageLastFloor(const FloorData &data);
     
     static BrickMap     getBricks();
     static BrickData    getBrick(const std::string &brickId);
     
 private:
     StageList stages;
+    FloorList floors;
     BrickMap bricks;
 };
 

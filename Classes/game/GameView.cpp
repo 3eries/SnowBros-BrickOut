@@ -133,7 +133,7 @@ void GameView::onGameStart() {
     
     showStageLabel(1);
     
-    addBall(GameManager::getConfig()->getFirstBallCount());
+    addBall(GAME_CONFIG->getFirstBallCount());
 }
 
 /**
@@ -351,7 +351,7 @@ void GameView::onShootingReady() {
     Log::i("onShootingReady");
     
     aimController->setEnabled(true, getBricks());
-    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(!GameManager::getFloor().isLastFloor && !isExistBrick(1));
+    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(!GameManager::isStageLastFloor() && !isExistBrick(1));
     
     // 아이템 비활성화
     auto items = getItems();
@@ -383,7 +383,7 @@ void GameView::onFallFinished() {
     Log::i("onFallFinished");
     
     // 스테이지 클리어 체크
-    if( GameManager::getFloor().isLastFloor && getBricks().size() == 0 ) {
+    if( GameManager::isStageLastFloor() && getBricks().size() == 0 ) {
         SBDirector::postDelayed(this, [=]() {
             GameManager::onStageClear();
         }, STAGE_CLEAR_DELAY, true);
@@ -687,7 +687,7 @@ void GameView::onClickDownButton() {
  */
 void GameView::addBall(int count, bool updateUI) {
     
-    const int MAX_BALL_COUNT = GameManager::getConfig()->getMaxBallCount();
+    const int MAX_BALL_COUNT = GAME_CONFIG->getMaxBallCount();
     
     for( int i = 0; i < count && balls.size() <= MAX_BALL_COUNT; ++i ) {
         auto ball = Ball::create();
@@ -803,12 +803,8 @@ void GameView::addBrick() {
     };
     
     // 보스 벽돌
-    // FIXME: 보스 1개, 가운데 위치하도록 하드코딩 되어있음
-    for( int i = 0; i < floor.bossBrickList.size() && positions.size() > 0; ++i ) {
-    }
-    
-    if( floor.bossBrickList.size() > 0 ) {
-        addBrick(floor.bossBrickList[0], floor.brickHp*10, Game::Tile::Position(2, TILE_POSITION_Y));
+    if( floor.isExistBoss() ) {
+        addBrick(floor.bossBrick, floor.brickHp*10, Game::Tile::Position(2, TILE_POSITION_Y));
     }
     
     // 엘리트 벽돌
@@ -1027,7 +1023,7 @@ Game::Tile* GameView::getTile(const Game::Tile::Position &pos) {
  */
 Game::Tile::Positions GameView::getEmptyPositions(int y) {
     
-    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
+    const int TILE_ROWS = GAME_CONFIG->getTileRows();
     Game::Tile::Positions positions;
     
     for( int x = 0; x < TILE_ROWS; ++x ) {
@@ -1212,8 +1208,8 @@ void GameView::initTile() {
 #if DEBUG_DRAW_TILE
     auto parent = getChildByTag(Tag::DEBUG_DRAW_VIEW);
 
-    const int TILE_ROWS = GameManager::getConfig()->getTileRows();
-    const int TILE_COLUMNS = GameManager::getConfig()->getTileColumns();
+    const int TILE_ROWS = GAME_CONFIG->getTileRows();
+    const int TILE_COLUMNS = GAME_CONFIG->getTileColumns();
     
     for( int x = 0; x < TILE_ROWS; ++x ) {
         for( int y = 0; y < TILE_COLUMNS; ++y ) {

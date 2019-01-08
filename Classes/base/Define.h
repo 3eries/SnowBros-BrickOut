@@ -66,6 +66,7 @@ static const std::string DIR_IMG_MAIN_IPAD          = DIR_ADD(DIR_IMG_MAIN, "ipa
 static const std::string DIR_IMG_GAME               = DIR_ADD(DIR_IMG, "game");
 static const std::string DIR_IMG_GAME_IPAD          = DIR_ADD(DIR_IMG_GAME, "ipad");
 
+static const std::string DIR_DB                     = "db/";
 static const std::string DIR_BRICK                  = "brick/";
 
 // 스파인 애니메이션

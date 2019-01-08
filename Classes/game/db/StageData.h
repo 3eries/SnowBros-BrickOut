@@ -14,10 +14,7 @@
 #include "FloorData.h"
 
 struct StageData {
-    int            stage;
-    int            floorBeginNum;
-    int            floorLen;
-    int            bossFloor;
+    int            stage;               // 스테이지 번호
     FloorList      floors;
     
     StageData() : stage(0) {}
@@ -26,12 +23,20 @@ struct StageData {
         return stage == 0;
     }
     
+    FloorData getFirstFloor() const {
+        return floors[0];
+    }
+
+    FloorData getLastFloor() const {
+        return floors[floors.size()-1];
+    }
+    
     std::string toString() {
         std::string str = "StageData {\n";
-        str += STR_FORMAT("\tstage: %d\n", stage);
-        str += STR_FORMAT("\tfloorBeginNum: %d\n", floorBeginNum);
-        str += STR_FORMAT("\tfloorLen: %d\n", floorLen);
-        str += STR_FORMAT("\tbossFloor: %d\n", bossFloor);
+        str += STR_FORMAT("\t stage: %d\n", stage);
+        str += STR_FORMAT("\t firstFloor: %d\n", getFirstFloor().floor);
+        str += STR_FORMAT("\t lastFloor: %d\n", getLastFloor().floor);
+        str += STR_FORMAT("\t floorLen: %d\n", (int)floors.size());
         
         for( auto floor : floors ) {
             str += floor.toString() + "\n";

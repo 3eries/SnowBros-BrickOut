@@ -69,13 +69,13 @@ void ResourceHelper::preload() {
     SBAudioEngine::preload(SOUND_BUTTON_CLICK);
 }
 
-StringList ResourceHelper::getBrickAnimationFiles(const BrickData &brick, const string &key) {
+StringList ResourceHelper::getBrickAnimationFiles(const string &image, const string &animKey) {
     
     StringList anims;
     int i = 0;
     
     while( true ) {
-        string file = DIR_BRICK + STR_FORMAT("%s_%s_%02d.png", brick.image.c_str(), key.c_str(), i+1);
+        string file = DIR_BRICK + STR_FORMAT("%s_%s_%02d.png", image.c_str(), animKey.c_str(), i+1);
         
         if( !FileUtils::getInstance()->isFileExist(file) ) {
             break;
@@ -88,13 +88,13 @@ StringList ResourceHelper::getBrickAnimationFiles(const BrickData &brick, const 
     return anims;
 }
 
-StringList ResourceHelper::getBrickIdleAnimationFiles(const BrickData &brick) {
+StringList ResourceHelper::getBrickIdleAnimationFiles(const string &image) {
     
-    return getBrickAnimationFiles(brick, "idle");
+    return getBrickAnimationFiles(image, "idle");
 }
 
-StringList ResourceHelper::getBrickDamageAnimationFiles(const BrickData &brick) {
+StringList ResourceHelper::getBrickDamageAnimationFiles(const string &image) {
     
-    return getBrickAnimationFiles(brick, "damage");
+    return getBrickAnimationFiles(image, "damage");
 }
 

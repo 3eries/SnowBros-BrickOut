@@ -63,11 +63,13 @@ public:
     // Getter
     static GameEventDispatcher* getEventDispatcher();
     static PhysicsManager*      getPhysicsManager();
-    static GameConfiguration*   getConfig();
     static int                  getPlayCount();
     static int                  getScore();
+    
     static StageData            getStage();
     static FloorData            getFloor();
+    static bool                 isStageLastFloor();
+    
     static bool                 isContinuable();
     
 private:
