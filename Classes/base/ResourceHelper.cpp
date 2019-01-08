@@ -75,7 +75,7 @@ StringList ResourceHelper::getBrickAnimationFiles(const BrickData &brick, const 
     int i = 0;
     
     while( true ) {
-        string file = DIR_BRICK + STR_FORMAT("%s_%s_%02d.png", brick.brickId.c_str(), key.c_str(), i+1);
+        string file = DIR_BRICK + STR_FORMAT("%s_%s_%02d.png", brick.image.c_str(), key.c_str(), i+1);
         
         if( !FileUtils::getInstance()->isFileExist(file) ) {
             break;
