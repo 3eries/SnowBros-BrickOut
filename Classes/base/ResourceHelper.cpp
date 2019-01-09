@@ -33,7 +33,7 @@ void ResourceHelper::preload() {
     // add image
     {
         string files[] = {
-            ANIM_CLOUD,
+            ANIM_BOSS_WARNING,
         };
         
         for( string file : files ) {

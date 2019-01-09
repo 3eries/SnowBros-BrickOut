@@ -238,41 +238,13 @@ void GameView::onFloorChanged(const FloorData &floor) {
             this->onTileAddFinished();
         };
         
-        // 보스 존재, 연출 후 타일 추가
+        // 보스 연출 후 타일 추가
         if( floor.isExistBoss() ) {
-            Size size(SB_WIN_SIZE.width, 300);
-            
-            auto effectLayer = Node::create();
-            effectLayer->setAnchorPoint(ANCHOR_M);
-            effectLayer->setContentSize(size);
-            addChild(effectLayer, SBZOrder::BOTTOM);
-            
-            auto bg = LayerColor::create(Color4B(0,0,0,255*0.5f));
-            bg->setIgnoreAnchorPointForPosition(false);
-            bg->setAnchorPoint(Vec2::ZERO);
-            bg->setPosition(Vec2::ZERO);
-            bg->setContentSize(effectLayer->getContentSize());
-            effectLayer->addChild(bg);
-            
-            auto label = Label::createWithTTF("WARNING!!", FONT_COMMODORE, 100, Size::ZERO,
-                                              TextHAlignment::CENTER, TextVAlignment::CENTER);
-            label->setAnchorPoint(ANCHOR_M);
-            label->setPosition(Vec2MC(size, 0, 0));
-            label->setTextColor(Color4B::RED);
-            label->enableOutline(Color4B::BLACK, 3);
-            effectLayer->addChild(label);
-            
-            const float MOVE_DURATION = 0.2f;
-            SBActionHelper::runMoveAction(effectLayer, Vec2TC(0, size.height*0.5f), Vec2MC(0,0), MOVE_DURATION);
-            
-            SBDirector::postDelayed(this, [=]() {
-                
-                effectLayer->removeFromParent();
-                addTiles();
-                
-            }, MOVE_DURATION + 1.0f);
-            
-        } else {
+            auto anim = SBSpineHelper::runAnimation(addTiles, ANIM_BOSS_WARNING, ANIM_NAME_RUN, true);
+            addChild(anim, SBZOrder::BOTTOM);
+        }
+        // 연출 없이 타일 추가
+        else {
             addTiles();
         }
     }
