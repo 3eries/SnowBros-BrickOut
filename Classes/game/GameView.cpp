@@ -322,8 +322,26 @@ void GameView::onShootingReady() {
     
     Log::i("onShootingReady");
     
+    // update aim controller
     aimController->setEnabled(true, getBricks());
-    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(!GameManager::isStageLastFloor() && !isExistBrick(1));
+    
+    // update brick down button
+    auto brickDownBtn = getChildByTag(Tag::BTN_BRICK_DOWN);
+    brickDownBtn->stopAllActions();
+    brickDownBtn->setOpacity(255);
+    
+    if( !GameManager::isStageLastFloor() && !isExistBrick(1) ) {
+        brickDownBtn->setVisible(true);
+        brickDownBtn->setOpacity(0);
+        
+        auto fadeIn = FadeIn::create(1.3f);
+        auto fadeOut = FadeOut::create(2.0f);
+        auto seq = Sequence::create(fadeIn, DelayTime::create(0.2f), fadeOut, nullptr);
+        brickDownBtn->runAction(RepeatForever::create(seq));
+        
+    } else {
+        brickDownBtn->setVisible(false);
+    }
     
     // 아이템 비활성화
     auto items = getItems();
