@@ -16,13 +16,13 @@ SkeletonAnimation* SBSpineHelper::runAnimation(SBCallback completeListener,
                                                const string &jsonFile, const string &animName,
                                                bool autoRemove) {
     
+    CCASSERT(animName != "", "SBSpineHelper::runAnimation error: invalid anim name.");
+    
     auto anim = SkeletonAnimation::createWithJsonFile(jsonFile);
     anim->setAnchorPoint(Vec2::ZERO);
     anim->setPosition(Vec2(SB_WIN_SIZE*0.5f));
     
-    if( animName != "" ) {
-        runAnimation(completeListener, anim, animName, autoRemove);
-    }
+    runAnimation(completeListener, anim, animName, autoRemove);
     
     return anim;
 }
