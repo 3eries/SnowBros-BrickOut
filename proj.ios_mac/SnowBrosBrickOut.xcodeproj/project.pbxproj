@@ -282,6 +282,7 @@
 		1D62213F214F500400567075 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
 		1D69EBE521BC31A600DC5FF9 /* AimController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AimController.cpp; sourceTree = "<group>"; };
 		1D69EBE621BC31A600DC5FF9 /* AimController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AimController.hpp; sourceTree = "<group>"; };
+		1D78512121E4F5EC0005E531 /* BossPatternData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BossPatternData.h; sourceTree = "<group>"; };
 		1D7E709321C9786400CF907F /* TopMenu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TopMenu.cpp; sourceTree = "<group>"; };
 		1D7E709421C9786400CF907F /* TopMenu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TopMenu.hpp; sourceTree = "<group>"; };
 		1D7E709921CA355A00CF907F /* StageClearPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StageClearPopup.cpp; sourceTree = "<group>"; };
@@ -504,12 +505,13 @@
 		1D13226721C18032005F4370 /* db */ = {
 			isa = PBXGroup;
 			children = (
+				1D78512121E4F5EC0005E531 /* BossPatternData.h */,
 				1D13226E21C181E6005F4370 /* BrickData.h */,
 				1D13226F21C18241005F4370 /* DBManager.cpp */,
 				1D13227021C18241005F4370 /* DBManager.hpp */,
-				1D13227221C19453005F4370 /* StageData.h */,
 				1D13227321C19576005F4370 /* FloorData.h */,
 				1D13227621C1E157005F4370 /* ItemData.h */,
+				1D13227221C19453005F4370 /* StageData.h */,
 			);
 			path = db;
 			sourceTree = "<group>";
