@@ -234,7 +234,13 @@ void MainScene::initBg() {
     
     addChild(LayerColor::create(Color4B::BLACK));
     
+    auto bg = Sprite::create(DIR_IMG_MAIN + "main_bg.png");
+    bg->setAnchorPoint(ANCHOR_M);
+    bg->setPosition(Vec2MC(0,0));
+    addChild(bg);
+    
     // title
+    /*
     auto title = SBButton::create(DIR_IMG_MAIN + "main_title.png");
     title->setZoomScale(0);
     title->setTag(Tag::BTN_TITLE);
@@ -243,17 +249,17 @@ void MainScene::initBg() {
     addChild(title);
     
     title->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
-    
+    */
+     
     // tap to start
-    auto label = Label::createWithTTF("TAP TO START", FONT_RETRO, 35);
-    label->setAnchorPoint(ANCHOR_M);
-    label->setPosition(Vec2MC(0, -300));
-    label->setTextColor(Color4B::WHITE);
-    addChild(label);
+    auto tapToStart = Sprite::create(DIR_IMG_MAIN + "main_tap_to_start.png");
+    tapToStart->setAnchorPoint(ANCHOR_M);
+    tapToStart->setPosition(Vec2BC(0, 318));
+    addChild(tapToStart);
     
     {
         auto blink = Blink::create(1.0f, 1);
-        label->runAction(RepeatForever::create(blink));
+        tapToStart->runAction(RepeatForever::create(blink));
     }
     
     auto btn = SBNodeUtils::createTouchNode();
