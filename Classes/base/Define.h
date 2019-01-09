@@ -72,7 +72,6 @@ static const std::string DIR_BRICK                  = "brick/";
 // 스파인 애니메이션
 static const std::string ANIM_EXT                   = ".json";
 static const std::string ANIM_LOGO                  = DIR_IMG_SPLASH + "3eries_logo.json";
-static const std::string ANIM_CLOUD                 = DIR_IMG_GAME + "RSP_cloud.json";
 static const std::string ANIM_CONTINUE              = DIR_IMG_GAME + "continue.json";
 
 static const std::string ANIM_NAME_RUN              = "run";
