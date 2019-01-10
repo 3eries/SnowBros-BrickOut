@@ -145,4 +145,5 @@ void Ball::startRotate() {
 void Ball::stopRotate() {
 
     image->stopAllActions();
+    image->setRotation(0);
 }

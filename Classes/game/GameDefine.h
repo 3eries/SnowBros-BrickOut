@@ -33,8 +33,8 @@ static const float                            GAME_RESULT_DELAY                =
 #define                                       MAP_CONTENT_HEIGHT                 1156
 #define                                       MAP_CONTENT_SIZE                   cocos2d::Size(MAP_CONTENT_WIDTH, MAP_CONTENT_HEIGHT)
 
-#define                                       MAP_ORIGIN                         Vec2(0, SHOOTING_POSITION_Y-BALL_RADIUS-2)
-#define                                       MAP_POSITION                       (MAP_ORIGIN + (MAP_CONTENT_SIZE*0.5f)) // Vec2MC(0, -11)
+#define                                       MAP_ORIGIN                         (MAP_POSITION - (MAP_CONTENT_SIZE*0.5f))
+#define                                       MAP_POSITION                       Vec2MC(0, -14)
 #define                                       MAP_BOUNDING_BOX                   cocos2d::Rect(MAP_ORIGIN, MAP_CONTENT_SIZE)
 
 #define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE))  // 대각선

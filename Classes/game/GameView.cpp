@@ -381,6 +381,7 @@ void GameView::onFallFinished() {
         return;
     }
     
+    // update ui
     updateBallCountUI();
     
     // 다음 층으로 전환
@@ -524,18 +525,29 @@ void GameView::onContactFloor(Ball *ball) {
     ball->stopRotate();
     
     // 첫번째 볼 추락
-    if( fallenBallCount == 1 ) {
+    const bool isFallenFirstBall = (fallenBallCount == 1);
+    
+    if( isFallenFirstBall ) {
         aimController->setStartPosition(Vec2(ball->getPosition().x, SHOOTING_POSITION_Y));
     }
     
     // 시작 위치로 이동
     auto pos = aimController->getStartPosition();
     ball->setPosition(Vec2(ball->getPositionX(), pos.y));
-    ball->runAction(MoveTo::create(BALL_MOVE_DURATION, pos));
+    
+    auto move = MoveTo::MoveTo::create(BALL_MOVE_DURATION, pos);
+    auto callFunc = CallFunc::create([=]() {
+        
+        // 두번째 볼부터 hide
+        if( !isFallenFirstBall ) {
+            ball->setVisible(false);
+        }
+    });
+    ball->runAction(Sequence::create(move, callFunc, nullptr));
     
     // 모든 볼 추락
     if( fallenBallCount == balls.size() ) {
-        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), 0.1f);
+        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), BALL_MOVE_DURATION*0.5f);
     }
 }
 
@@ -567,8 +579,16 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     // 볼 업데이트
     for( auto ball : balls ) {
+        // 발사 직후 바닥 충돌 방지를 위해 좌표 보정
+        ball->setSyncLocked(true);
+        ball->setBodyPosition(ball->getPosition() + Vec2(0,4));
+        
+        // awake
         ball->awake();
+        ball->setVisible(false);
     }
+    
+    balls[0]->setVisible(true);
     
     // 하나씩 발사
     schedule([=](float dt) {
@@ -585,9 +605,17 @@ void GameView::shoot(const Vec2 &endPosition) {
         // SBAudioEngine::playEffect(DIR_SOUND + "shoot.wav");
         
         auto ball = balls[shootIndex];
+        
+        // 발사
+        ball->setSyncLocked(false);
         ball->shoot(velocity);
 
         ++shootIndex;
+        
+        // 다음볼 show
+        if( shootIndex < balls.size() ) {
+            balls[shootIndex]->setVisible(true);
+        }
 
         // 볼 개수 UI 업데이트
         ballCountLabel->setVisible(shootIndex < balls.size());
@@ -637,7 +665,14 @@ void GameView::withdrawBalls() {
         auto spread = MoveTo::create(0.07f, spreadPos);
         auto delay = DelayTime::create(random<int>(0,3) * 0.1f);
         auto move = MoveTo::create(BALL_WITHDRAW_MOVE_DURATION, aimController->getStartPosition());
-        ball->runAction(Sequence::create(/*delay, */spread, delay, move, nullptr));
+        auto callFunc = CallFunc::create([=]() {
+            
+            // 두번째 볼부터 hide
+            if( i > 0 ) {
+                ball->setVisible(false);
+            }
+        });
+        ball->runAction(Sequence::create(/*delay, */spread, delay, move, callFunc, nullptr));
     }
     
     // 모든 볼 추락 완료
@@ -1189,8 +1224,8 @@ void GameView::initBall() {
     {
         auto ball = Sprite::create(BALL_IMAGE);
         ball->setAnchorPoint(ANCHOR_M);
-        ball->setPosition(FIRST_SHOOTING_POSITION);
-        ball->setColor(Color3B::RED);
+        ball->setPosition(FIRST_SHOOTING_POSITION + Vec2(100,0));
+        // ball->setColor(Color3B::RED);
         addChild(ball);
 
         SBNodeUtils::scale(ball, BALL_SIZE);
