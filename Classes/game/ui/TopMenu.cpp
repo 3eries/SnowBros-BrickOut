@@ -206,11 +206,13 @@ void TopMenu::onNextFloor(const FloorData &floor) {
  */
 void TopMenu::onScoreChanged(int score) {
     
+    /*
     auto scoreLabel = getChildByTag<Label*>(Tag::SCORE);
     
     if( scoreLabel ) {
         scoreLabel->setString(TO_STRING(score));
     }
+    */
 }
 
 /**
@@ -288,6 +290,7 @@ void TopMenu::initStage() {
  */
 void TopMenu::initScore() {
     
+    /*
     const auto bgSize(getContentSize());
     
     // game_bg_score.png Vec2TC(116, -32) , Size(336, 64)
@@ -305,6 +308,7 @@ void TopMenu::initScore() {
     scoreLabel->setTextColor(Color4B::WHITE);
     scoreLabel->enableOutline(Color4B::BLACK, 3);
     addChild(scoreLabel);
+    */
 }
 
 /**

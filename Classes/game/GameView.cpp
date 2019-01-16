@@ -409,7 +409,7 @@ void GameView::onFallFinished() {
 void GameView::onBrickBreak(Brick *brick) {
     
     // 스코어 업데이트
-    GameManager::addScore(brick->getOriginalHp());
+    // GameManager::addScore(brick->getOriginalHp());
     
     // remove brick
     removeTile(brick);
