@@ -240,8 +240,23 @@ void GameView::onFloorChanged(const FloorData &floor) {
         
         // 보스 연출 후 타일 추가
         if( floor.isExistBoss() ) {
-            auto anim = SBSpineHelper::runAnimation(addTiles, ANIM_BOSS_WARNING, ANIM_NAME_RUN, true);
-            addChild(anim, SBZOrder::BOTTOM);
+            auto effectLayer = SBNodeUtils::createTouchNode();
+            addChild(effectLayer, SBZOrder::BOTTOM);
+            
+            auto anim = spine::SkeletonAnimation::createWithJsonFile(ANIM_BOSS_WARNING);
+            anim->setAnchorPoint(Vec2::ZERO);
+            anim->setPosition(Vec2(SB_WIN_SIZE*0.5f));
+            effectLayer->addChild(anim);
+            
+            auto track = anim->setAnimation(0, ANIM_NAME_RUN, false);
+            anim->setTrackCompleteListener(track, [=](spTrackEntry *entry) {
+                
+                addTiles();
+                
+                anim->clearTracks();
+                anim->removeFromParent();
+                effectLayer->removeFromParent();
+            });
         }
         // 연출 없이 타일 추가
         else {
