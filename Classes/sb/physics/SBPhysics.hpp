@@ -60,6 +60,8 @@ public:
     
     bool isActive();
     bool isAwake();
+
+    virtual void setBodyPosition(const cocos2d::Vec2 &p);
     
     virtual void syncNodeToBody();
     virtual void syncBodyToNode();

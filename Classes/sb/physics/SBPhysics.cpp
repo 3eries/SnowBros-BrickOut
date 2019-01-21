@@ -126,6 +126,13 @@ bool SBPhysicsObject::isAwake() {
     return body && body->IsAwake();
 }
 
+void SBPhysicsObject::setBodyPosition(const Vec2 &p) {
+
+    if( body ) {
+        body->SetTransform(PTM(p), body->GetAngle());
+    }
+}
+
 void SBPhysicsObject::syncNodeToBody() {
     
     if( node && body && !syncLocked ) {
