@@ -210,8 +210,11 @@ void Brick::removeWithAction() {
     Game::Tile::removeWithAction();
  
     setOnBreakListener(nullptr);
-    setVisible(false);
     
+    setVisible(false);
+    setNeedRemove(true);
+    
+    // 연출
     auto particle = ParticleSystemQuad::create(DIR_IMG_GAME + "particle_brick.plist");
     particle->setAnchorPoint(ANCHOR_M);
     particle->setPosition(getPosition());
@@ -223,23 +226,6 @@ void Brick::removeWithAction() {
     if( data.isBoss() ) {
         particle->setScale(1.5f);
     }
-    
-    auto delay = DelayTime::create(3.0f);
-    auto callFunc = CallFunc::create([=]() {
-        // this->setVisible(false);
-        this->setNeedRemove(true);
-    });
-    runAction(Sequence::create(delay, callFunc, nullptr));
-    
-    /*
-    auto scale = ScaleTo::create(ENTER_DURATION, 0);
-    auto callFunc = CallFunc::create([=]() {
-        // this->removeFromParent();
-        this->setVisible(false);
-        this->setNeedRemove(true);
-    });
-    runAction(Sequence::create(scale, callFunc, nullptr));
-    */
 }
 
 /**
