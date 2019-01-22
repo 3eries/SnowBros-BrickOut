@@ -35,6 +35,8 @@ static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
 static const float  BALL_MOVE_DURATION              = 0.2f;
 static const float  BALL_WITHDRAW_MOVE_DURATION     = 0.25f;
 
+static const float  DRAG_MIN_DIST                   = 200;           // 드래그 판단 거리
+
 #define DEBUG_DRAW_PHYSICS      1
 #define DEBUG_DRAW_TILE         1
 
@@ -1015,9 +1017,10 @@ void GameView::onTouchMoved(Touch *touch, Event *event) {
     
     // drag 하여 볼 회수
     if( isWithdrawEnabled && !isWithdraw ) {
-        float diffY = touch->getLocation().y - touch->getStartLocation().y;
-        bool isDragged = (diffY < -250);
-        CCLOG("onTouchMoved diffY: %f, isDragged: %d, fallenBallCount: %d", diffY, isDragged, fallenBallCount);
+        float dist = touch->getLocation().y - touch->getStartLocation().y;
+        bool isDragged = (dist < -DRAG_MIN_DIST);
+        
+        Log::i("onTouchMoved dist: %f, isDragged: %d, fallenBallCount: %d", dist, isDragged, fallenBallCount);
         
         if( isDragged ) {
             withdrawBalls();
