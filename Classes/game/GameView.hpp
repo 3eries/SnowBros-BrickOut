@@ -64,6 +64,7 @@ private:
     void initAimController();
     void initTouchListener();
     void initGameListener();
+    void initPhysicsListener();
     void initIAPListener();
     
 // Game Event
@@ -100,8 +101,9 @@ private:
     void onBrickBreak(Brick *brick);
     
     void onPhysicsUpdate();
-    void onContactBrick(Ball *ball, Brick *brick);
-    void onContactItem(Ball *ball, Item *item);
+    void onContactBrick(Ball *ball, Game::Tile *brickTile);
+    void onContactItem(Ball *ball, Game::Tile *itemTile);
+    void onContactWall(Ball *ball);
     void onContactFloor(Ball *ball);
     
 private:

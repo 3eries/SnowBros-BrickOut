@@ -16,6 +16,8 @@
 
 #include "../../db/BrickData.h"
 
+class Ball;
+
 class Brick : public Game::Tile {
 public:
     static Brick* create(const BrickData &data, int hp);
@@ -33,6 +35,8 @@ protected:
     virtual bool init() override;
     virtual void initPhysics() override;
     virtual void setImage(ImageType type, bool isRunAnimation);
+    
+    virtual void onContactBrick(Ball *ball, Game::Tile *brick);
     
 public:
     virtual void enterWithAction() override;

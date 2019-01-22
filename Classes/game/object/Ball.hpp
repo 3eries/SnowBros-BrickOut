@@ -13,6 +13,10 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
+namespace Game {
+    class Tile;
+}
+
 class Ball : public cocos2d::Node, public SBPhysicsObject {
 public:
     CREATE_FUNC(Ball);
@@ -22,6 +26,9 @@ private:
     Ball();
     
     bool init() override;
+    void cleanup() override;
+    
+    void initPhysicsListener();
     
 public:
     static b2Body* createBody(SBPhysicsObject *userData = nullptr);
@@ -34,6 +41,12 @@ public:
     
     void startRotate();
     void stopRotate();
+    
+private:
+    void onContactBrick(Ball *ball, Game::Tile *brick);
+    void onContactItem(Ball *ball, Game::Tile *item);
+    void onContactWall(Ball *ball);
+    void onContactFloor(Ball *ball);
     
 private:
     cocos2d::Sprite *image;

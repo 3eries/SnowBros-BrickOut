@@ -72,6 +72,7 @@ bool GameView::init() {
     initAimController();
     initTouchListener();
     initGameListener();
+    initPhysicsListener();
     initIAPListener();
     
     return true;
@@ -465,20 +466,15 @@ void GameView::onPhysicsUpdate() {
 /**
  * 볼 & 벽돌 충돌
  */
-void GameView::onContactBrick(Ball *ball, Brick *brick) {
-    
-    if( brick->isBroken() ) {
-        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
-        return;
-    }
-    
-    brick->sufferDamage(ball->getDamage());
+void GameView::onContactBrick(Ball *ball, Game::Tile *brickTile) {
 }
 
 /**
  * 볼 & 아이템 충돌
  */
-void GameView::onContactItem(Ball *ball, Item *item) {
+void GameView::onContactItem(Ball *ball, Game::Tile *itemTile) {
+    
+    auto item = dynamic_cast<Item*>(itemTile);
     
     if( !item->isAwake() ) {
         Log::w("아이템 sleep 상태에서 충돌 이벤트 발생!!").showMessageBox();
@@ -521,6 +517,12 @@ void GameView::onContactItem(Ball *ball, Item *item) {
 }
 
 /**
+ * 볼 & 벽 충돌
+ */
+void GameView::onContactWall(Ball *ball) {
+}
+
+/**
  * 볼 & 바닥 충돌
  */
 void GameView::onContactFloor(Ball *ball) {
@@ -530,16 +532,8 @@ void GameView::onContactFloor(Ball *ball) {
         return;
     }
 
-    ball->setFall(true);
     ++fallenBallCount;
-
-    // Log::i("onContactFloor fallenBallCount: %d", fallenBallCount);
-    
-    // 볼 바디 비활성화
-    // ball->sleepWithAction();
-    ball->sleep(false);
-    ball->setCollisionLocked(true);
-    ball->stopRotate();
+//    Log::i("onContactFloor fallenBallCount: %d", fallenBallCount);
     
     // 첫번째 볼 추락
     const bool isFallenFirstBall = (fallenBallCount == 1);
@@ -1138,11 +1132,6 @@ void GameView::initPhysics() {
     auto physicsMgr = GameManager::getPhysicsManager();
     this->world = physicsMgr->initWorld();
     
-    physicsMgr->setOnUpdateListener(CC_CALLBACK_0(GameView::onPhysicsUpdate, this));
-    physicsMgr->setOnContactBrickListener(CC_CALLBACK_2(GameView::onContactBrick, this));
-    physicsMgr->setOnContactItemListener(CC_CALLBACK_2(GameView::onContactItem, this));
-    physicsMgr->setOnContactFloorListener(CC_CALLBACK_1(GameView::onContactFloor, this));
-    
 #if DEBUG_DRAW_PHYSICS
     // DebugDrawView
     auto view = DebugDrawView::create(world);
@@ -1366,6 +1355,21 @@ void GameView::initGameListener() {
     listener->onNextFloor            = CC_CALLBACK_1(GameView::onNextFloor, this);
     listener->onScoreChanged         = CC_CALLBACK_1(GameView::onScoreChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
+}
+
+/**
+ * 물리 리스너 초기화
+ */
+void GameView::initPhysicsListener() {
+
+    auto listener = GamePhysicsListener::create();
+    listener->setTarget(this);
+    listener->onUpdate              = CC_CALLBACK_0(GameView::onPhysicsUpdate, this);
+    listener->onContactBrick        = CC_CALLBACK_2(GameView::onContactBrick, this);
+    listener->onContactItem         = CC_CALLBACK_2(GameView::onContactItem, this);
+    listener->onContactWall         = CC_CALLBACK_1(GameView::onContactWall, this);
+    listener->onContactFloor        = CC_CALLBACK_1(GameView::onContactFloor, this);
+    GameManager::getPhysicsManager()->addListener(listener);
 }
 
 /**

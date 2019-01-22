@@ -11,7 +11,10 @@
 #include "../../GameDefine.h"
 #include "../../GameManager.hpp"
 
+#include "../Ball.hpp"
+
 USING_NS_CC;
+USING_NS_SB;
 using namespace std;
 
 static const float IDLE_ANIM_INTERVAL               = 0.6f;
@@ -52,6 +55,7 @@ bool Brick::init() {
     bg = Sprite::create();
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2MC(getContentSize(), 0, 0));
+    // bg->setColor(Color3B(0,0,0));
     // bg->setOpacity(255*0.3f);
     addChild(bg);
     
@@ -163,6 +167,13 @@ void Brick::initPhysics() {
     fixtureDef.friction = 0;
     fixtureDef.filter = filter;
     body->CreateFixture(&fixtureDef);
+    
+    // 리스너 등록
+    auto listener = GamePhysicsListener::create();
+    listener->setTarget(this);
+    listener->setContactTarget(this);
+    listener->onContactBrick = CC_CALLBACK_2(Brick::onContactBrick, this);
+    GameManager::getPhysicsManager()->addListener(listener);
 }
 
 /**
@@ -186,9 +197,24 @@ void Brick::setImage(ImageType type, bool isRunAnimation) {
             break;
     }
     
+    // image->setColor(Color3B(255, 255*0.5f, 255*0.5f));
+    
     if( isRunAnimation ) {
         image->runAnimation();
     }
+}
+
+/**
+ * 볼 & 벽돌 충돌
+ */
+void Brick::onContactBrick(Ball *ball, Game::Tile *brick) {
+    
+    if( isBroken() ) {
+        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
+        return;
+    }
+    
+    sufferDamage(ball->getDamage());
 }
 
 /**

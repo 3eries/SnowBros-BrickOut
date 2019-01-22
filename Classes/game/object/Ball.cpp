@@ -11,6 +11,8 @@
 #include "../GameDefine.h"
 #include "../GameManager.hpp"
 
+#include "tile/Tile.hpp"
+
 USING_NS_CC;
 using namespace std;
 
@@ -44,7 +46,31 @@ bool Ball::init() {
     // 물리 객체 초기화
     setBody(createBody((SBPhysicsObject*)this));
     
+    initPhysicsListener();
+    
     return true;
+}
+
+void Ball::cleanup() {
+    
+    removeListeners(this);
+    
+    Node::cleanup();
+}
+
+/**
+ * 물리 리스너 초기화
+ */
+void Ball::initPhysicsListener() {
+    
+    auto listener = GamePhysicsListener::create();
+    listener->setTarget(this);
+    listener->setContactTarget(this);
+    listener->onContactBrick        = CC_CALLBACK_2(Ball::onContactBrick, this);
+    listener->onContactItem         = CC_CALLBACK_2(Ball::onContactItem, this);
+    listener->onContactWall         = CC_CALLBACK_1(Ball::onContactWall, this);
+    listener->onContactFloor        = CC_CALLBACK_1(Ball::onContactFloor, this);
+    GameManager::getPhysicsManager()->addListener(listener);
 }
 
 b2Body* Ball::createBody(SBPhysicsObject *userData) {
@@ -117,11 +143,14 @@ bool Ball::afterStep() {
  */
 void Ball::shoot(b2Vec2 velocity) {
     
+    // 활성화
     setFall(false);
+    awake(false);
     setCollisionLocked(false);
-    setOpacity(255);
     startRotate();
+    setOpacity(255);
     
+    // 발사
     getBody()->SetLinearVelocity(velocity);
 }
 
@@ -146,4 +175,34 @@ void Ball::stopRotate() {
 
     image->stopAllActions();
     image->setRotation(0);
+}
+
+/**
+ * 볼 & 벽돌 충돌
+ */
+void Ball::onContactBrick(Ball *ball, Game::Tile *brick) {
+}
+
+/**
+ * 볼 & 아이템 충돌
+ */
+void Ball::onContactItem(Ball *ball, Game::Tile *item) {
+}
+
+/**
+ * 볼 & 벽 충돌
+ */
+void Ball::onContactWall(Ball *ball) {
+}
+
+/**
+ * 볼 & 바닥 충돌
+ */
+void Ball::onContactFloor(Ball *ball) {
+    
+    // 비활성화
+    setFall(true);
+    sleep(false);
+    setCollisionLocked(true);
+    stopRotate();
 }

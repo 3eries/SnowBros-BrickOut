@@ -17,8 +17,36 @@
 #include "object/GameMap.hpp"
 
 class Ball;
-class Brick;
-class Item;
+
+namespace Game {
+class Tile;
+}
+
+class GamePhysicsListener : public cocos2d::Ref {
+public:
+    SB_REF_CREATE_FUNC(GamePhysicsListener);
+    ~GamePhysicsListener() {}
+    
+public:
+    std::function<void()>                   onUpdate;               // 물리 세계 업데이트
+    std::function<void(Ball*,Game::Tile*)>  onContactBrick;
+    std::function<void(Ball*,Game::Tile*)>  onContactItem;
+    std::function<void(Ball*)>              onContactWall;
+    std::function<void(Ball*)>              onContactFloor;
+    
+private:
+    GamePhysicsListener() : target(nullptr), contactTarget(nullptr),
+    onUpdate(nullptr),
+    onContactBrick(nullptr), onContactItem(nullptr),
+    onContactWall(nullptr), onContactFloor(nullptr) {}
+    
+    CC_SYNTHESIZE(cocos2d::Ref*, target, Target);
+    
+    // 충돌 타겟
+    // 타겟이 속한 충돌일 경우만 충돌 리스너 실행
+    // null인 경우, 검사 없이 리스너 실행
+    CC_SYNTHESIZE(cocos2d::Ref*, contactTarget, ContactTarget);
+};
 
 // velocityIterations : 바디들을 정상적으로 이동시키기 위해서 필요한 충돌들을 반복적으로 계산
 // positionIterations : 조인트 분리와, 겹침현상을 줄이기 위해서 바디의 위치를 반복적으로 적용
@@ -72,58 +100,25 @@ private:
                                  b2Fixture *fixtureA, b2Fixture *fixtureB);
     CollisionObjects findObjects(uint16 categoryBits1, uint16 categoryBits2,
                                  b2Contact *contact);
+    
+public:
+    void addListener(GamePhysicsListener *listener);
+    void removeListener(GamePhysicsListener *listener);
+    void removeListener(cocos2d::Ref *target);
+
 private:
-    /*
-    template <class T1, class T2>
-    static void findObjects(std::function<void(T1,T2)> callback, b2Contact *contact) {
-        
-        auto fixtureA = contact->GetFixtureA();
-        auto fixtureB = contact->GetFixtureB();
-        
-        if( !fixtureA->GetBody()->GetUserData() ||
-            !fixtureB->GetBody()->GetUserData() ) {
-            return;
-        }
-        
-        if( !fixtureA->GetBody()->IsAwake() ||
-            !fixtureB->GetBody()->IsAwake() ) {
-            return;
-        }
-        
-        auto userDataA = (SBPhysicsObject*)fixtureA->GetBody()->GetUserData();
-        auto userDataB = (SBPhysicsObject*)fixtureB->GetBody()->GetUserData();
-        
-        T1 obj1 = dynamic_cast<T1>(userDataA);
-        T2 obj2 = dynamic_cast<T2>(userDataA);
-        
-        if( !obj1 ) obj1 = dynamic_cast<T1>(userDataB);
-        if( !obj2 ) obj2 = dynamic_cast<T2>(userDataB);
-        
-        if( obj1 && obj2 ) {
-            callback(obj1, obj2);
-        }
-    }*/
-//    auto contactItem = [=](SBPhysicsObject *ballObj, SBPhysicsObject *itemObj) {
-//
-//        auto ball = (Ball*)ballObj;
-//        auto item = (Item*)itemObj;
-//
-//
-//    };
+    void dispatchOnUpdate();
+    void dispatchOnContactBrick(Ball *ball, Game::Tile *brick);
+    void dispatchOnContactItem(Ball *ball, Game::Tile *item);
+    void dispatchOnContactWall(Ball *ball);
+    void dispatchOnContactFloor(Ball *ball);
     
 private:
     CC_SYNTHESIZE_READONLY(b2World*, world, World);
     CC_SYNTHESIZE(DebugDrawView*, debugDrawView, DebugDrawView);
     CC_SYNTHESIZE(GameMap*, map, Map);
     
-    CC_SYNTHESIZE(std::function<void()>,
-                  onUpdateListener, OnUpdateListener);
-    CC_SYNTHESIZE(std::function<void(Ball*,Brick*)>,
-                  onContactBrickListener, OnContactBrickListener);
-    CC_SYNTHESIZE(std::function<void(Ball*,Item*)>,
-                  onContactItemListener, OnContactItemListener);
-    CC_SYNTHESIZE(std::function<void(Ball*)>,
-                  onContactFloorListener, OnContactFloorListener);
+    cocos2d::Vector<GamePhysicsListener*> listeners;
 };
 
 #endif /* GamePhysics_hpp */

@@ -10,8 +10,8 @@
 #include "GameDefine.h"
 
 #include "object/Ball.hpp"
+#include "object/tile/Tile.hpp"
 #include "object/tile/Brick.hpp"
-#include "object/tile/Item.hpp"
 
 USING_NS_CC;
 using namespace std;
@@ -21,17 +21,13 @@ static const string SCHEDULER_UPDATE                  = "SCHEDULER_UPDATE";
 #define DEBUG_LOG_ENABLED               0
 
 PhysicsManager::PhysicsManager() :
-world(nullptr), debugDrawView(nullptr), map(nullptr),
-onUpdateListener(nullptr),
-onContactBrickListener(nullptr),
-onContactItemListener(nullptr),
-onContactFloorListener(nullptr) {
-    
+world(nullptr), debugDrawView(nullptr), map(nullptr) {
 }
 
 PhysicsManager::~PhysicsManager() {
     
     CC_SAFE_DELETE(world);
+    listeners.clear();
 }
 
 b2World* PhysicsManager::initWorld() {
@@ -89,7 +85,7 @@ void PhysicsManager::update(float dt) {
     world->Step(PHYSICS_FPS, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     loopObjects([](SBPhysicsObject *obj) { obj->afterStep(); });
     
-    onUpdateListener();
+    dispatchOnUpdate();
 }
 
 /**
@@ -228,13 +224,27 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
         }
     }
     
+    // 벽 체크
+    {
+        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::WALL, fixtureA, fixtureB);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            dispatchOnContactWall((Ball*)objs.obj1);
+            
+#if DEBUG_LOG_ENABLED
+            CCLOG("\t> Wall ball awake: %d, wall awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+#endif
+            return;
+        }
+    }
+    
     // 바닥 체크
     {
         auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
             contact->SetEnabled(false);
-            this->onContactFloorListener((Ball*)objs.obj1);
+            dispatchOnContactFloor((Ball*)objs.obj1);
             
 #if DEBUG_LOG_ENABLED
             CCLOG("\t> Floor ball awake: %d, floor awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
@@ -288,7 +298,7 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
 #endif
         
             contact->SetEnabled(false);
-            this->onContactItemListener((Ball*)objs.obj1, (Item*)objs.obj2);
+            dispatchOnContactItem((Ball*)objs.obj1, (Game::Tile*)objs.obj2);
             
             return;
         }
@@ -319,9 +329,9 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
         
         if( objs.obj1 && objs.obj2 ) {
             auto ball = (Ball*)objs.obj1;
-            auto brick = (Brick*)objs.obj2;
+            auto brick = (Game::Tile*)objs.obj2;
             
-            this->onContactBrickListener(ball, brick);
+            dispatchOnContactBrick(ball, brick);
             
 #if DEBUG_LOG_ENABLED
             CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
@@ -398,5 +408,118 @@ PhysicsManager::CollisionObjects PhysicsManager::findObjects(uint16 categoryBits
                                                              b2Contact *contact) {
     
     return findObjects(categoryBits1, categoryBits2, contact->GetFixtureA(), contact->GetFixtureB());
+}
+
+/**
+ * 이벤트 리스너 추가
+ */
+void PhysicsManager::addListener(GamePhysicsListener *listener) {
+    
+    if( listener ) {
+        if( listeners.contains(listener) ) {
+            CCASSERT(false, "PhysicsManager::addListener error: already exists.");
+            return;
+        }
+        
+        this->listeners.pushBack(listener);
+    }
+}
+
+/**
+ * 이벤트 리스너 삭제
+ */
+void PhysicsManager::removeListener(GamePhysicsListener *listener) {
+    
+    if( listener && listeners.contains(listener) ) {
+        this->listeners.eraseObject(listener);
+    }
+}
+
+void PhysicsManager::removeListener(Ref *target) {
+    
+    if( !target ) {
+        return;
+    }
+    
+    SBCollection::remove(this->listeners, [=](GamePhysicsListener *listener) {
+        return listener->getTarget() == target;
+    });
+}
+
+void PhysicsManager::dispatchOnUpdate() {
+    
+    for( auto listener : listeners ) {
+        if( listener->onUpdate ) {
+            listener->onUpdate();
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnContactBrick(Ball *ball, Game::Tile *brick) {
+
+    for( auto listener : listeners ) {
+        if( listener->onContactBrick ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == ball || contactTarget == brick ) {
+                    listener->onContactBrick(ball, brick);
+                }
+            } else {
+                listener->onContactBrick(ball, brick);
+            }
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnContactItem(Ball *ball, Game::Tile *item) {
+
+    for( auto listener : listeners ) {
+        if( listener->onContactItem ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == ball || contactTarget == item ) {
+                    listener->onContactItem(ball, item);
+                }
+            } else {
+                listener->onContactItem(ball, item);
+            }
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnContactWall(Ball *ball) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onContactWall ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == ball ) {
+                    listener->onContactWall(ball);
+                }
+            } else {
+                listener->onContactWall(ball);
+            }
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnContactFloor(Ball *ball) {
+
+    for( auto listener : listeners ) {
+        if( listener->onContactFloor ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == ball ) {
+                    listener->onContactFloor(ball);
+                }
+            } else {
+                listener->onContactFloor(ball);
+            }
+        }
+    }
 }
 

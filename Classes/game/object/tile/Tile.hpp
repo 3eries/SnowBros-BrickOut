@@ -31,6 +31,7 @@ public:
     
 protected:
     virtual bool init() override;
+    virtual void cleanup() override;
     virtual void initPhysics() override;
     
 public:

@@ -9,7 +9,7 @@
 
 #include "Define.h"
 #include "../../GameDefine.h"
-#include "../../GamePhysics.hpp"
+#include "../../GameManager.hpp"
 
 USING_NS_CC;
 using namespace std;
@@ -40,6 +40,13 @@ bool Tile::init() {
     return true;
 }
 
+void Tile::cleanup() {
+    
+    removeListeners(this);
+    
+    Node::cleanup();
+}
+    
 /**
  * 물리 객체 초기화
  */
