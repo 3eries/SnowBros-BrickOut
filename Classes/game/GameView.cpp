@@ -670,10 +670,9 @@ void GameView::withdrawBalls() {
         ball->setCollisionLocked(true);
         ball->setSyncLocked(true);
         ball->stopRotate();
-        
+         
         // 시작 위치로 이동
-        // auto delay = DelayTime::create(0.3f);
-        Vec2 spreadPos(ball->getPosition() + Vec2(random<int>(-100, 100), random<int>(50, 100)));
+        Vec2 spreadPos(ball->getPosition() + Vec2(random<int>(-80, 80), random<int>(50, 80)));
         spreadPos.x = MIN(MAP_BOUNDING_BOX.getMaxX()*0.9f, spreadPos.x);
         spreadPos.x = MAX(MAP_BOUNDING_BOX.getMinX()*1.1f, spreadPos.x);
         spreadPos.y = MIN(MAP_BOUNDING_BOX.getMaxY()*0.9f, spreadPos.y);
@@ -689,7 +688,7 @@ void GameView::withdrawBalls() {
                 ball->setVisible(false);
             }
         });
-        ball->runAction(Sequence::create(/*delay, */spread, delay, move, callFunc, nullptr));
+        ball->runAction(Sequence::create(spread, delay, move, callFunc, nullptr));
     }
     
     // 모든 볼 추락 완료
