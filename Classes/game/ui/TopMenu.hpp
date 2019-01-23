@@ -61,6 +61,7 @@ public:
     void onBoostStart();
     void onBoostEnd();
     
+    void onStageChanged(const StageData &stage);
     void onStageClear();
     void onNextStage(const StageData &stage);
     

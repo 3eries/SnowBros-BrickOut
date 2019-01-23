@@ -123,11 +123,6 @@ void TopMenu::onGameExit() {
  * 게임 리셋
  */
 void TopMenu::onGameReset() {
-    
-    auto stage = GameManager::getStage();
-    
-    updateStageUI(stage);
-    updateFloorProgressUI(GameManager::getFloor());
 }
 
 /**
@@ -173,6 +168,14 @@ void TopMenu::onBoostEnd() {
 }
 
 /**
+ * 스테이지 변경
+ */
+void TopMenu::onStageChanged(const StageData &stage) {
+    
+    updateStageUI(stage);
+}
+
+/**
  * 스테이지 클리어
  */
 void TopMenu::onStageClear() {
@@ -182,8 +185,6 @@ void TopMenu::onStageClear() {
  * 다음 스테이지
  */
 void TopMenu::onNextStage(const StageData &stage) {
-    
-    updateStageUI(stage);
 }
 
 /**
@@ -349,6 +350,7 @@ void TopMenu::initGameListener() {
     listener->onGameResult           = CC_CALLBACK_0(TopMenu::onGameResult, this);
     listener->onBoostStart           = CC_CALLBACK_0(TopMenu::onBoostStart, this);
     listener->onBoostEnd             = CC_CALLBACK_0(TopMenu::onBoostEnd, this);
+    listener->onStageChanged         = CC_CALLBACK_1(TopMenu::onStageChanged, this);
     listener->onStageClear           = CC_CALLBACK_0(TopMenu::onStageClear, this);
     listener->onNextStage            = CC_CALLBACK_1(TopMenu::onNextStage, this);
     listener->onFloorChanged         = CC_CALLBACK_1(TopMenu::onFloorChanged, this);
