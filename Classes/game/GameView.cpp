@@ -119,9 +119,6 @@ void GameView::onGameExit() {
  */
 void GameView::onGameReset() {
     
-    isWithdrawEnabled = false;
-    isWithdraw = false;
-    
     addBallQueue.clear();
     toAddFriendsBalls = 0;
 }
@@ -190,6 +187,9 @@ void GameView::onBoostEnd() {
  * 스테이지 변경
  */
 void GameView::onStageChanged(const StageData &stage) {
+    
+    isWithdrawEnabled = false;
+    isWithdraw = false;
     
     std::random_device rd;
     brickPositionRandomEngine = std::mt19937(rd());
