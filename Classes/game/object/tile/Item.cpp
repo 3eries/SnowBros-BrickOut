@@ -127,8 +127,11 @@ void Item::removeWithAction() {
         this->setNeedRemove(true);
     };
     
+    remove();
+    
+    /*
     // 제일 아래칸, 바로 제거
-    if( getTilePosition().y == 0 ) {
+    if( getTilePosition().y <= 1 ) {
         remove();
     }
     // 제거 액션
@@ -137,4 +140,5 @@ void Item::removeWithAction() {
         auto callFunc = CallFunc::create(remove);
         runAction(Sequence::create(scale, callFunc, nullptr));
     }
+    */
 }
