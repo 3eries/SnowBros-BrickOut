@@ -177,7 +177,11 @@ void GameScene::onGameRestart() {
 void GameScene::onGamePause() {
     
     setSceneTouchLocked(true);
-    showPausePopup();
+    
+    if( !GameManager::getInstance()->hasState(GameState::GAME_OVER) &&
+        !GameManager::getInstance()->hasState(GameState::RESULT) ) {
+        showPausePopup();
+    }
 }
 
 /**
