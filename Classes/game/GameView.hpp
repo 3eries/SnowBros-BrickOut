@@ -108,11 +108,13 @@ private:
     
 private:
     void shoot(const cocos2d::Vec2 &endPosition);
+    void shootStop();
     void withdrawBalls();
     
     void downTile();
-    
     void onClickDownButton();
+    
+    void eatItem(Item *item, bool isFallAction);
     
     void addBall(int count = 1, bool updateUI = true);
     void addBallFromQueue();
@@ -123,6 +125,8 @@ private:
     
     void addTile(Game::Tile *tile);
     void removeTile(Game::Tile *tile);
+    
+    bool checkStageClear();
     
     void showStageLabel(int stage);
     void updateBallCountUI();

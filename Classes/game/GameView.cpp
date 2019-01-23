@@ -285,7 +285,7 @@ void GameView::onNextFloor(const FloorData &floor) {
     for( auto tile : tiles ) {
         auto item = dynamic_cast<Item*>(tile);
         if( item ) {
-            onContactItem(nullptr, item);
+            eatItem(item, false);
         }
     }
     
@@ -390,12 +390,8 @@ void GameView::onFallFinished() {
     
     Log::i("onFallFinished");
     
-    // 스테이지 클리어 체크
-    if( GameManager::isStageLastFloor() && getBricks().size() == 0 ) {
-        SBDirector::postDelayed(this, [=]() {
-            GameManager::onStageClear();
-        }, STAGE_CLEAR_DELAY, true);
-        
+    // 스테이지 클리어
+    if( checkStageClear() ) {
         return;
     }
     
@@ -416,13 +412,34 @@ void GameView::onBrickBreak(Brick *brick) {
     
     // remove brick
     removeTile(brick);
+    
+    // 스테이지 클리어
+    if( checkStageClear() ) {
+        SBDirector::postDelayed(this, [=]() {
+            GameManager::onStageClear();
+        }, STAGE_CLEAR_DELAY, true);
+        
+        // 볼 회수
+        SBDirector::postDelayed(this, [=]() {
+            this->withdrawBalls();
+        }, STAGE_CLEAR_DELAY*0.5f);
+        
+        // 남아있는 아이템 획득
+        auto items = getItems();
+        
+        for( auto item : items ) {
+            eatItem((Item*)item, false);
+        }
+        
+        addBallFromQueue();
+    }
 }
 
 /**
  * 물리 세계 업데이트
  */
 void GameView::onPhysicsUpdate() {
- 
+    
     // 터널링 체크
     if( !isWithdraw && tunnelingCountLabel ) {
         auto bricks = getBricks();
@@ -435,7 +452,7 @@ void GameView::onPhysicsUpdate() {
             for( auto ball : balls ) {
                 auto body = ball->getBody();
                 
-                if( !body || !body->IsActive() || !body->IsAwake() ) {
+                if( !body || !ball->isActive() || !ball->isAwake() || ball->isCollisionLocked() ) {
                     continue;
                 }
                 
@@ -481,39 +498,7 @@ void GameView::onContactItem(Ball *ball, Game::Tile *itemTile) {
         return;
     }
     
-    switch( item->getData().type ) {
-        // 기본 볼 개수 증가
-        case ItemType::POWER_UP: {
-            auto ballItem = Sprite::create(BALL_IMAGE);
-            ballItem->setAnchorPoint(ANCHOR_M);
-            ballItem->setPosition(item->getPosition());
-            ballItem->setColor(Color3B(255, 20, 20));
-            addChild(ballItem, (int)ZOrder::BALL);
-            
-            addBallQueue.push_back(ballItem);
-            
-            // 아이템 추락 연출
-            if( ball ) {
-                Vec2 pos = Vec2(ballItem->getPositionX(), SHOOTING_POSITION_Y);
-                float dist = pos.getDistance(ballItem->getPosition());
-                
-                // ballItem->runAction(MoveTo::create(0.8f, pos));
-                ballItem->runAction(MoveTo::create(dist * 0.001f, pos));
-            }
-            
-        } break;
-        
-        // 프렌즈 볼 개수 증가
-        case ItemType::FRIENDS_POWER_UP: {
-            ++toAddFriendsBalls;
-        } break;
-            
-        default:
-            CCASSERT(false, "GameView::onContactItem error: invalid item.");
-            break;
-    }
-    
-    removeTile(item);
+    eatItem(item, true);
 }
 
 /**
@@ -604,10 +589,16 @@ void GameView::shoot(const Vec2 &endPosition) {
     // 하나씩 발사
     schedule([=](float dt) {
 
-        if( shootIndex == balls.size() || isWithdraw ) {
-            // 모두 발사 or 볼 회수됨
-            this->unschedule(SCHEDULER_SHOOT);
+        // 모두 발사됨
+        if( shootIndex == balls.size() ) {
+            this->shootStop();
             this->onShootFinished();
+            return;
+        }
+        
+        // 볼 회수됨
+        if( isWithdraw ) {
+            this->shootStop();
             return;
         }
         
@@ -643,14 +634,26 @@ void GameView::shoot(const Vec2 &endPosition) {
     }, SHOOT_INTERVAL*2);
 }
 
+void GameView::shootStop() {
+    
+    unschedule(SCHEDULER_SHOOT);
+}
+
 /**
  * 모든 볼을 회수합니다
  */
 void GameView::withdrawBalls() {
- 
+    
+    if( isWithdraw ) {
+        return;
+    }
+    
     CCLOG("withdrawBalls shootIndex: %d", shootIndex);
     
+    isWithdrawEnabled = false;
     isWithdraw = true;
+    
+    shootStop();
     
     // for( auto ball : balls ) {
     for( int i = 0; i < shootIndex; ++i ) {
@@ -715,6 +718,46 @@ void GameView::onClickDownButton() {
     getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(false);
     
     GameManager::onNextFloor();
+}
+
+/**
+ * 아이템 획득
+ */
+void GameView::eatItem(Item *item, bool isFallAction) {
+    
+    switch( item->getData().type ) {
+        // 기본 볼 개수 증가
+        case ItemType::POWER_UP: {
+            auto ballItem = Sprite::create(BALL_IMAGE);
+            ballItem->setAnchorPoint(ANCHOR_M);
+            ballItem->setPosition(item->getPosition());
+            ballItem->setColor(Color3B(255, 20, 20));
+            addChild(ballItem, (int)ZOrder::BALL);
+            
+            addBallQueue.push_back(ballItem);
+            
+            // 아이템 추락 연출
+            if( isFallAction ) {
+                Vec2 pos = Vec2(ballItem->getPositionX(), SHOOTING_POSITION_Y);
+                float dist = pos.getDistance(ballItem->getPosition());
+                
+                // ballItem->runAction(MoveTo::create(0.8f, pos));
+                ballItem->runAction(MoveTo::create(dist * 0.001f, pos));
+            }
+            
+        } break;
+            
+        // 프렌즈 볼 개수 증가
+        case ItemType::FRIENDS_POWER_UP: {
+            ++toAddFriendsBalls;
+        } break;
+            
+        default:
+            CCASSERT(false, "GameView::eatItem error: invalid item.");
+            break;
+    }
+    
+    removeTile(item);
 }
 
 /**
@@ -956,6 +999,14 @@ void GameView::removeTile(Game::Tile *tile) {
 }
 
 /**
+ * 스테이지 클리어 체크
+ */
+bool GameView::checkStageClear() {
+    
+    return GameManager::isStageLastFloor() && getBricks().size() == 0;
+}
+
+/**
  * 중앙에 Stage 라벨 표시
  */
 void GameView::showStageLabel(int stage) {
@@ -989,6 +1040,10 @@ void GameView::updateBallCountUI() {
 bool GameView::onTouchBegan(Touch *touch, Event*) {
     
     if( !SBNodeUtils::hasVisibleParents(this) ) {
+        return false;
+    }
+    
+    if( !isWithdrawEnabled || isWithdraw ) {
         return false;
     }
     
