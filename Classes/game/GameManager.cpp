@@ -227,7 +227,7 @@ void GameManager::onGameReset() {
     getPhysicsManager()->startScheduler();
     
     getEventDispatcher()->dispatchOnGameReset();
-    getEventDispatcher()->dispatchOnFloorChanged(getFloor());
+    onStageChanged();
 }
 
 /**
@@ -419,6 +419,15 @@ void GameManager::onBoostEnd() {
 }
 
 /**
+ * 스테이지 변경
+ */
+void GameManager::onStageChanged() {
+    
+    getEventDispatcher()->dispatchOnStageChanged(getStage());
+    onFloorChanged();
+}
+
+/**
  * 스테이지 클리어
  */
 void GameManager::onStageClear() {
@@ -440,7 +449,7 @@ void GameManager::onNextStage() {
     getInstance()->floor++;
     
     getEventDispatcher()->dispatchOnNextStage(getStage());
-    getEventDispatcher()->dispatchOnFloorChanged(getFloor());
+    onStageChanged();
 }
 
 /**

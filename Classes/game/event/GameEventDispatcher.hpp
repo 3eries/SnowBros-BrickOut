@@ -47,6 +47,7 @@ public:
     void dispatchOnBoostStart();
     void dispatchOnBoostEnd();
     
+    void dispatchOnStageChanged(const StageData &stage);
     void dispatchOnStageClear();
     void dispatchOnNextStage(const StageData &stage);
     

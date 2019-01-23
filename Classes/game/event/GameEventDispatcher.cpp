@@ -205,6 +205,18 @@ void GameEventDispatcher::dispatchOnBoostEnd() {
 }
 
 /**
+ * onStageChanged 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnStageChanged(const StageData &stage) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onStageChanged ) {
+            listener->onStageChanged(stage);
+        }
+    }
+}
+
+/**
  * onStageClear 이벤트 전달
  */
 void GameEventDispatcher::dispatchOnStageClear() {

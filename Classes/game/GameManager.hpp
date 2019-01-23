@@ -103,6 +103,7 @@ public:
     static void onBoostStart();
     static void onBoostEnd();
 
+    static void onStageChanged();
     static void onStageClear();
     static void onNextStage();
     

@@ -124,17 +124,12 @@ void GameView::onGameReset() {
     
     addBallQueue.clear();
     toAddFriendsBalls = 0;
-    
-    eliteBrickDropRate = GameManager::getFloor().eliteBrickDropRate;
-    isEliteDropped = false;
 }
 
 /**
  * 게임 시작
  */
 void GameView::onGameStart() {
-    
-    showStageLabel(1);
     
     addBall(GAME_CONFIG->getFirstBallCount());
 }
@@ -192,6 +187,18 @@ void GameView::onBoostEnd() {
 }
 
 /**
+ * 스테이지 변경
+ */
+void GameView::onStageChanged(const StageData &stage) {
+    
+    eliteBrickDropRate = GameManager::getFloor().eliteBrickDropRate;
+    isEliteDropped = false;
+    
+    showStageLabel(stage.stage);
+    updateBallCountUI();
+}
+
+/**
  * 스테이지 클리어
  */
 void GameView::onStageClear() {
@@ -203,11 +210,6 @@ void GameView::onStageClear() {
 void GameView::onNextStage(const StageData &stage) {
     
     CCLOG("onNextStage: %d", stage.stage);
-    
-    eliteBrickDropRate = GameManager::getFloor().eliteBrickDropRate;
-    
-    showStageLabel(stage.stage);
-    updateBallCountUI();
 }
 
 /**
@@ -1404,6 +1406,7 @@ void GameView::initGameListener() {
     listener->onGameResult           = CC_CALLBACK_0(GameView::onGameResult, this);
     listener->onBoostStart           = CC_CALLBACK_0(GameView::onBoostStart, this);
     listener->onBoostEnd             = CC_CALLBACK_0(GameView::onBoostEnd, this);
+    listener->onStageChanged         = CC_CALLBACK_1(GameView::onStageChanged, this);
     listener->onStageClear           = CC_CALLBACK_0(GameView::onStageClear, this);
     listener->onNextStage            = CC_CALLBACK_1(GameView::onNextStage, this);
     listener->onFloorChanged         = CC_CALLBACK_1(GameView::onFloorChanged, this);
