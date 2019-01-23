@@ -165,6 +165,8 @@ private:
     cocos2d::Node *tileLayer;
     std::vector<Game::Tile*> tiles;
     
+    std::mt19937 brickPositionRandomEngine;
+    
     // Friends
     std::vector<Friend*> friends;
     int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수

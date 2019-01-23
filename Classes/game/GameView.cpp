@@ -191,6 +191,9 @@ void GameView::onBoostEnd() {
  */
 void GameView::onStageChanged(const StageData &stage) {
     
+    std::random_device rd;
+    brickPositionRandomEngine = std::mt19937(rd());
+    
     eliteBrickDropRate = GameManager::getFloor().eliteBrickDropRate;
     isEliteDropped = false;
     
@@ -917,9 +920,11 @@ void GameView::addBrick() {
         return;
     }
     
-    // 엘리트 벽돌
-    positions = getEmptyRandomPositions(TILE_POSITION_Y);
+    // 랜덤 좌표 리스트 생성
+    positions = getEmptyPositions(TILE_POSITION_Y);
+    std::shuffle(positions.begin(), positions.end(), brickPositionRandomEngine);
     
+    // 엘리트 벽돌
     int  dropCount = floor.getRandomDropCount();
     isEliteDropped = (random<int>(1,100) <= eliteBrickDropRate);
     
