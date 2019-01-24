@@ -182,9 +182,15 @@ void TopMenu::onStageClear() {
 }
 
 /**
- * 다음 스테이지
+ * 다음 스테이지로 이동
  */
-void TopMenu::onNextStage(const StageData &stage) {
+void TopMenu::onMoveNextStage(const StageData &stage) {
+}
+
+/**
+ * 다음 스테이지로 이동 완료
+ */
+void TopMenu::onMoveNextStageFinished(const StageData &stage) {
 }
 
 /**
@@ -224,6 +230,7 @@ void TopMenu::initBg() {
     auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
     topBg->setAnchorPoint(ANCHOR_M);
     topBg->setPosition(Vec2MC(topBg->getContentSize(), 0, 0));
+    topBg->setOpacity(255*0.4f);
     addChild(topBg);
     
     Size bgSize(topBg->getContentSize());
@@ -340,22 +347,23 @@ void TopMenu::initMenu() {
 void TopMenu::initGameListener() {
     
     auto listener = GameEventListener::create(this);
-    listener->onGameEnter            = CC_CALLBACK_0(TopMenu::onGameEnter, this);
-    listener->onGameExit             = CC_CALLBACK_0(TopMenu::onGameExit, this);
-    listener->onGameReset            = CC_CALLBACK_0(TopMenu::onGameReset, this);
-    listener->onGameStart            = CC_CALLBACK_0(TopMenu::onGameStart, this);
-    listener->onGameRestart          = CC_CALLBACK_0(TopMenu::onGameRestart, this);
-    listener->onGameOver             = CC_CALLBACK_0(TopMenu::onGameOver, this);
-    listener->onGameContinue         = CC_CALLBACK_0(TopMenu::onGameContinue, this);
-    listener->onGameResult           = CC_CALLBACK_0(TopMenu::onGameResult, this);
-    listener->onBoostStart           = CC_CALLBACK_0(TopMenu::onBoostStart, this);
-    listener->onBoostEnd             = CC_CALLBACK_0(TopMenu::onBoostEnd, this);
-    listener->onStageChanged         = CC_CALLBACK_1(TopMenu::onStageChanged, this);
-    listener->onStageClear           = CC_CALLBACK_0(TopMenu::onStageClear, this);
-    listener->onNextStage            = CC_CALLBACK_1(TopMenu::onNextStage, this);
-    listener->onFloorChanged         = CC_CALLBACK_1(TopMenu::onFloorChanged, this);
-    listener->onNextFloor            = CC_CALLBACK_1(TopMenu::onNextFloor, this);
-    listener->onScoreChanged         = CC_CALLBACK_1(TopMenu::onScoreChanged, this);
+    listener->onGameEnter               = CC_CALLBACK_0(TopMenu::onGameEnter, this);
+    listener->onGameExit                = CC_CALLBACK_0(TopMenu::onGameExit, this);
+    listener->onGameReset               = CC_CALLBACK_0(TopMenu::onGameReset, this);
+    listener->onGameStart               = CC_CALLBACK_0(TopMenu::onGameStart, this);
+    listener->onGameRestart             = CC_CALLBACK_0(TopMenu::onGameRestart, this);
+    listener->onGameOver                = CC_CALLBACK_0(TopMenu::onGameOver, this);
+    listener->onGameContinue            = CC_CALLBACK_0(TopMenu::onGameContinue, this);
+    listener->onGameResult              = CC_CALLBACK_0(TopMenu::onGameResult, this);
+    listener->onBoostStart              = CC_CALLBACK_0(TopMenu::onBoostStart, this);
+    listener->onBoostEnd                = CC_CALLBACK_0(TopMenu::onBoostEnd, this);
+    listener->onStageChanged            = CC_CALLBACK_1(TopMenu::onStageChanged, this);
+    listener->onStageClear              = CC_CALLBACK_0(TopMenu::onStageClear, this);
+    listener->onMoveNextStage           = CC_CALLBACK_1(TopMenu::onMoveNextStage, this);
+    listener->onMoveNextStageFinished   = CC_CALLBACK_1(TopMenu::onMoveNextStageFinished, this);
+    listener->onFloorChanged            = CC_CALLBACK_1(TopMenu::onFloorChanged, this);
+    listener->onNextFloor               = CC_CALLBACK_1(TopMenu::onNextFloor, this);
+    listener->onScoreChanged            = CC_CALLBACK_1(TopMenu::onScoreChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }
 

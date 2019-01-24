@@ -14,6 +14,8 @@
 #include "superbomb.h"
 #include "Box2D/Box2D.h"
 
+#include "../db/StageData.h"
+
 class GameMap : public cocos2d::Node, public SBPhysicsObject {
 public:
     CREATE_FUNC(GameMap);
@@ -23,6 +25,29 @@ private:
     GameMap();
     
     bool init() override;
+    void initGameListener();
+    
+    class Background : public cocos2d::Node {
+    public:
+        CREATE_FUNC(Background);
+        Background() {}
+        ~Background() {}
+        
+        cocos2d::Node *top;
+        cocos2d::Node *center;
+        cocos2d::Node *bottom;
+    };
+    
+    Background* createBackground(const StageData &stage);
+    
+private:
+    void onStageChanged(const StageData &stage);
+
+    void onMoveNextStage(const StageData &stage);
+    void onMoveNextStageFinished(const StageData &stage);
+    
+private:
+    Background *bg;
 };
 
 #endif /* GameMap_hpp */

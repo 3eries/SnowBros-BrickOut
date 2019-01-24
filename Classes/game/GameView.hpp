@@ -85,7 +85,9 @@ public:
     
     void onStageChanged(const StageData &stage);
     void onStageClear();
-    void onNextStage(const StageData &stage);
+    
+    void onMoveNextStage(const StageData &stage);
+    void onMoveNextStageFinished(const StageData &stage);
     
     void onFloorChanged(const FloorData &floor);
     void onNextFloor(const FloorData &floor);

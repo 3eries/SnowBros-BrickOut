@@ -436,9 +436,9 @@ void GameManager::onStageClear() {
 }
 
 /**
- * 다음 스테이지
+ * 다음 스테이지로 이동
  */
-void GameManager::onNextStage() {
+void GameManager::onMoveNextStage() {
  
     // 현재 스테이지가 정의된 마지막 스테이지면 임시 스테이지 추가
     if( DBManager::isLastStage(getStage().stage) ) {
@@ -448,7 +448,15 @@ void GameManager::onNextStage() {
     getInstance()->stage++;
     getInstance()->floor++;
     
-    getEventDispatcher()->dispatchOnNextStage(getStage());
+    getEventDispatcher()->dispatchOnMoveNextStage(getStage());
+}
+
+/**
+ * 다음 스테이지로 이동 완료
+ */
+void GameManager::onMoveNextStageFinished() {
+    
+    getEventDispatcher()->dispatchOnMoveNextStageFinished(getStage());
     onStageChanged();
 }
 

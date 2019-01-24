@@ -30,7 +30,8 @@ onGameStart(nullptr), onGameRestart(nullptr),
 onGamePause(nullptr), onGameResume(nullptr),
 onGameOver(nullptr), onGameContinue(nullptr), onGameResult(nullptr),
 onBoostStart(nullptr), onBoostEnd(nullptr),
-onStageChanged(nullptr), onStageClear(nullptr), onNextStage(nullptr),
+onStageChanged(nullptr), onStageClear(nullptr),
+onMoveNextStage(nullptr), onMoveNextStageFinished(nullptr),
 onFloorChanged(nullptr), onNextFloor(nullptr),
 onScoreChanged(nullptr){
 }

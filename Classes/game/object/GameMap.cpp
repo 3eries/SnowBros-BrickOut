@@ -14,7 +14,8 @@
 USING_NS_CC;
 using namespace std;
 
-GameMap::GameMap() : SBPhysicsObject(this) {
+GameMap::GameMap() : SBPhysicsObject(this),
+bg(nullptr) {
     
 }
 
@@ -33,25 +34,8 @@ bool GameMap::init() {
     setContentSize(SB_WIN_SIZE);
     setSyncLocked(true);
     
-    // image
-    // game_bg_01.png Vec2BC(0, 640) , Size(720, 1280)
-    auto bg = Sprite::create(DIR_IMG_GAME + "game_bg_01.png");
-    bg->setAnchorPoint(ANCHOR_M);
-    bg->setPosition(Vec2MC(0,0));
-    addChild(bg);
-    
-    auto bottomBg = Sprite::create(DIR_IMG_GAME + "game_bg_bottom.png");
-    bottomBg->setAnchorPoint(ANCHOR_MB);
-    bottomBg->setPosition(Vec2BC(0,0));
-    addChild(bottomBg);
-    
-    // game_dead_line.png Vec2BC(0, 216) , Size(715, 3)
-    /*
-    auto deadLine = Sprite::create(DIR_IMG_GAME + "game_dead_line.png");
-    deadLine->setAnchorPoint(ANCHOR_M);
-    deadLine->setPosition(Vec2BC(0, 216));
-    addChild(deadLine);
-    */
+    // 게임 리스너 초기화
+    initGameListener();
     
     // 영역 확인용
     /*
@@ -113,4 +97,88 @@ bool GameMap::init() {
     }
     
     return true;
+}
+
+/**
+ * 스테이지 변경
+ */
+void GameMap::onStageChanged(const StageData &stage) {
+    
+    if( bg ) {
+        bg->removeFromParent();
+    }
+    
+    bg = createBackground(stage);
+    addChild(bg);
+}
+
+/**
+ * 다음 스테이지로 이동
+ */
+void GameMap::onMoveNextStage(const StageData &stage) {
+    
+    auto nextStageBg = createBackground(stage);
+    nextStageBg->setAnchorPoint(ANCHOR_MB);
+    nextStageBg->setPosition(Vec2TC(0, bg->top->getContentSize().height));
+    addChild(nextStageBg);
+    
+    auto move = MoveBy::create(MOVE_NEXT_STAGE_DURATION,
+                               Vec2(0, -SB_WIN_SIZE.height-bg->top->getContentSize().height));
+    auto callFunc = CallFunc::create([=]() {
+        
+        GameManager::onMoveNextStageFinished();
+    });
+    bg->runAction(Sequence::create(move, callFunc, nullptr));
+    
+    auto remove = RemoveSelf::create();
+    nextStageBg->runAction(Sequence::create(move->clone(), remove, nullptr));
+}
+
+/**
+ * 다음 스테이지로 이동 완료
+ */
+void GameMap::onMoveNextStageFinished(const StageData &stage) {
+}
+
+GameMap::Background* GameMap::createBackground(const StageData &stage) {
+    
+    Background *bg = Background::create();
+    bg->setAnchorPoint(ANCHOR_M);
+    bg->setPosition(Vec2MC(0,0));
+    bg->setContentSize(SB_WIN_SIZE);
+    
+    auto top = Sprite::create(DIR_IMG_GAME + "game_bg_bottom.png");
+    top->setAnchorPoint(ANCHOR_MB);
+    top->setPosition(Vec2TC(0,0));
+    top->setFlippedY(true);
+    bg->addChild(top);
+    
+    // TODO: 스테이지 배경 파일
+    auto center = Sprite::create(DIR_IMG_GAME + "game_bg_01.png");
+    center->setAnchorPoint(ANCHOR_M);
+    center->setPosition(Vec2MC(0,0));
+    bg->addChild(center);
+    
+    auto bottom = Sprite::create(DIR_IMG_GAME + "game_bg_bottom.png");
+    bottom->setAnchorPoint(ANCHOR_MB);
+    bottom->setPosition(Vec2BC(0,0));
+    bg->addChild(bottom);
+    
+    bg->top = top;
+    bg->center = center;
+    bg->bottom = bottom;
+    
+    return bg;
+}
+
+/**
+ * 게임 리스너 초기화
+ */
+void GameMap::initGameListener() {
+    
+    auto listener = GameEventListener::create(this);
+    listener->onStageChanged            = CC_CALLBACK_1(GameMap::onStageChanged, this);
+    listener->onMoveNextStage           = CC_CALLBACK_1(GameMap::onMoveNextStage, this);
+    listener->onMoveNextStageFinished   = CC_CALLBACK_1(GameMap::onMoveNextStageFinished, this);
+    GameManager::getEventDispatcher()->addListener(listener);
 }

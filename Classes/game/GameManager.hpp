@@ -105,7 +105,9 @@ public:
 
     static void onStageChanged();
     static void onStageClear();
-    static void onNextStage();
+    
+    static void onMoveNextStage();
+    static void onMoveNextStageFinished();
     
     static void onFloorChanged();
     static void onNextFloor();

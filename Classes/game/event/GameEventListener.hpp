@@ -40,7 +40,9 @@ public:
     
     std::function<void(const StageData&)>   onStageChanged;             // 스테이지 변경
     std::function<void()>                   onStageClear;               // 스테이지 클리어
-    std::function<void(const StageData&)>   onNextStage;                // 다음 스테이지
+    
+    std::function<void(const StageData&)>   onMoveNextStage;            // 다음 스테이지로 이동
+    std::function<void(const StageData&)>   onMoveNextStageFinished;    // 다음 스테이지로 이동 완료
     
     std::function<void(const FloorData&)>   onFloorChanged;             // 층 변경
     std::function<void(const FloorData&)>   onNextFloor;                // 다음 층

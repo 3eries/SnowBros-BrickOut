@@ -69,7 +69,6 @@ public:
     void onBoostEnd();
     
     void onStageClear();
-    void onNextStage(const StageData &stage);
     void onNextFloor(const FloorData &floor);
     
 public:

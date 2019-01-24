@@ -25,7 +25,8 @@ enum GameState {
     RESULT          = (1 << 9),     // 결과 화면
 };
 
-static const float                            STAGE_CLEAR_DELAY                = 0.8f;
+static const float                            MOVE_NEXT_STAGE_DURATION         = 1.4f;
+static const float                            STAGE_CLEAR_DELAY                = 1.0f;
 static const float                            GAME_RESULT_DELAY                = 0.4f;    // 게임 오버 -> 결과 노출까지의 지연 시간
 
 // Map

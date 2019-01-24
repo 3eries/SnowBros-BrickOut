@@ -208,11 +208,38 @@ void GameView::onStageClear() {
 }
 
 /**
- * 다음 스테이지
+ * 다음 스테이지로 이동
  */
-void GameView::onNextStage(const StageData &stage) {
+void GameView::onMoveNextStage(const StageData &stage) {
     
-    CCLOG("onNextStage: %d", stage.stage);
+    Log::i("onMoveNextStage: %d", stage.stage);
+    
+    // hide balls
+    for( auto ball : balls ) {
+        ball->setVisible(false);
+    }
+    
+    ballCountLabel->setVisible(false);
+    
+    // hide friends
+    for( auto friendNode : friends ) {
+        friendNode->setVisible(false);
+    }
+}
+
+/**
+ * 다음 스테이지로 이동 완료
+ */
+void GameView::onMoveNextStageFinished(const StageData &stage) {
+    
+    // show ball
+    balls[0]->setVisible(true);
+    ballCountLabel->setVisible(true);
+    
+    // show friends
+    for( auto friendNode : friends ) {
+        friendNode->setVisible(true);
+    }
 }
 
 /**
@@ -1399,24 +1426,25 @@ void GameView::initTouchListener() {
 void GameView::initGameListener() {
     
     auto listener = GameEventListener::create(this);
-    listener->onGameEnter            = CC_CALLBACK_0(GameView::onGameEnter, this);
-    listener->onGameExit             = CC_CALLBACK_0(GameView::onGameExit, this);
-    listener->onGameReset            = CC_CALLBACK_0(GameView::onGameReset, this);
-    listener->onGameStart            = CC_CALLBACK_0(GameView::onGameStart, this);
-    listener->onGameRestart          = CC_CALLBACK_0(GameView::onGameRestart, this);
-    listener->onGamePause            = CC_CALLBACK_0(GameView::onGamePause, this);
-    listener->onGameResume           = CC_CALLBACK_0(GameView::onGameResume, this);
-    listener->onGameOver             = CC_CALLBACK_0(GameView::onGameOver, this);
-    listener->onGameContinue         = CC_CALLBACK_0(GameView::onGameContinue, this);
-    listener->onGameResult           = CC_CALLBACK_0(GameView::onGameResult, this);
-    listener->onBoostStart           = CC_CALLBACK_0(GameView::onBoostStart, this);
-    listener->onBoostEnd             = CC_CALLBACK_0(GameView::onBoostEnd, this);
-    listener->onStageChanged         = CC_CALLBACK_1(GameView::onStageChanged, this);
-    listener->onStageClear           = CC_CALLBACK_0(GameView::onStageClear, this);
-    listener->onNextStage            = CC_CALLBACK_1(GameView::onNextStage, this);
-    listener->onFloorChanged         = CC_CALLBACK_1(GameView::onFloorChanged, this);
-    listener->onNextFloor            = CC_CALLBACK_1(GameView::onNextFloor, this);
-    listener->onScoreChanged         = CC_CALLBACK_1(GameView::onScoreChanged, this);
+    listener->onGameEnter               = CC_CALLBACK_0(GameView::onGameEnter, this);
+    listener->onGameExit                = CC_CALLBACK_0(GameView::onGameExit, this);
+    listener->onGameReset               = CC_CALLBACK_0(GameView::onGameReset, this);
+    listener->onGameStart               = CC_CALLBACK_0(GameView::onGameStart, this);
+    listener->onGameRestart             = CC_CALLBACK_0(GameView::onGameRestart, this);
+    listener->onGamePause               = CC_CALLBACK_0(GameView::onGamePause, this);
+    listener->onGameResume              = CC_CALLBACK_0(GameView::onGameResume, this);
+    listener->onGameOver                = CC_CALLBACK_0(GameView::onGameOver, this);
+    listener->onGameContinue            = CC_CALLBACK_0(GameView::onGameContinue, this);
+    listener->onGameResult              = CC_CALLBACK_0(GameView::onGameResult, this);
+    listener->onBoostStart              = CC_CALLBACK_0(GameView::onBoostStart, this);
+    listener->onBoostEnd                = CC_CALLBACK_0(GameView::onBoostEnd, this);
+    listener->onStageChanged            = CC_CALLBACK_1(GameView::onStageChanged, this);
+    listener->onStageClear              = CC_CALLBACK_0(GameView::onStageClear, this);
+    listener->onMoveNextStage           = CC_CALLBACK_1(GameView::onMoveNextStage, this);
+    listener->onMoveNextStageFinished   = CC_CALLBACK_1(GameView::onMoveNextStageFinished, this);
+    listener->onFloorChanged            = CC_CALLBACK_1(GameView::onFloorChanged, this);
+    listener->onNextFloor               = CC_CALLBACK_1(GameView::onNextFloor, this);
+    listener->onScoreChanged            = CC_CALLBACK_1(GameView::onScoreChanged, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }
 

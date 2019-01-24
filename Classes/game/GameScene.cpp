@@ -250,13 +250,6 @@ void GameScene::onStageClear() {
 }
 
 /**
- * 다음 스테이지
- */
-void GameScene::onNextStage(const StageData &stage) {
-    
-}
-
-/**
  * 다음 층
  */
 void GameScene::onNextFloor(const FloorData &floor) {
@@ -340,7 +333,7 @@ void GameScene::showStageClearPopup(const StageData &stage) {
     
     popup->setOnNextListener([=]() {
         popup->dismissWithAction();
-        GameManager::onNextStage();
+        GameManager::onMoveNextStage();
     });
 }
 
@@ -654,7 +647,6 @@ void GameScene::initGameListener() {
     listener->onBoostStart           = CC_CALLBACK_0(GameScene::onBoostStart, this);
     listener->onBoostEnd             = CC_CALLBACK_0(GameScene::onBoostEnd, this);
     listener->onStageClear           = CC_CALLBACK_0(GameScene::onStageClear, this);
-    listener->onNextStage            = CC_CALLBACK_1(GameScene::onNextStage, this);
     listener->onNextFloor            = CC_CALLBACK_1(GameScene::onNextFloor, this);
     GameManager::getEventDispatcher()->addListener(listener);
 }

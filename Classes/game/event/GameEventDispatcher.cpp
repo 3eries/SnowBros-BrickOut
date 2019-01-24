@@ -229,13 +229,25 @@ void GameEventDispatcher::dispatchOnStageClear() {
 }
 
 /**
- * onNextStage 이벤트 전달
+ * onMoveNextStage 이벤트 전달
  */
-void GameEventDispatcher::dispatchOnNextStage(const StageData &stage) {
+void GameEventDispatcher::dispatchOnMoveNextStage(const StageData &stage) {
     
     for( auto listener : listeners ) {
-        if( listener->onNextStage ) {
-            listener->onNextStage(stage);
+        if( listener->onMoveNextStage ) {
+            listener->onMoveNextStage(stage);
+        }
+    }
+}
+
+/**
+ * onMoveNextStageFinished 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnMoveNextStageFinished(const StageData &stage) {
+    
+    for( auto listener : listeners ) {
+        if( listener->onMoveNextStageFinished ) {
+            listener->onMoveNextStageFinished(stage);
         }
     }
 }
