@@ -58,6 +58,7 @@
 		1D59F3D820FA69F100649A99 /* PopupListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D59F3D620FA69F100649A99 /* PopupListener.cpp */; };
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1D622140214F500400567075 /* SBJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D62213E214F500400567075 /* SBJSON.cpp */; };
+		1D6505542201A6DB00B4BB0D /* FriendsLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D6505522201A6DB00B4BB0D /* FriendsLayer.cpp */; };
 		1D69EBE721BC31A600DC5FF9 /* AimController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D69EBE521BC31A600DC5FF9 /* AimController.cpp */; };
 		1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709321C9786400CF907F /* TopMenu.cpp */; };
 		1D7E709B21CA355A00CF907F /* StageClearPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709921CA355A00CF907F /* StageClearPopup.cpp */; };
@@ -280,6 +281,8 @@
 		1D6058910D05DD3D006BFB54 /* Snow Bros : Brick Out.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Snow Bros : Brick Out.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1D62213E214F500400567075 /* SBJSON.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SBJSON.cpp; sourceTree = "<group>"; };
 		1D62213F214F500400567075 /* SBJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJSON.h; sourceTree = "<group>"; };
+		1D6505522201A6DB00B4BB0D /* FriendsLayer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FriendsLayer.cpp; sourceTree = "<group>"; };
+		1D6505532201A6DB00B4BB0D /* FriendsLayer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FriendsLayer.hpp; sourceTree = "<group>"; };
 		1D69EBE521BC31A600DC5FF9 /* AimController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AimController.cpp; sourceTree = "<group>"; };
 		1D69EBE621BC31A600DC5FF9 /* AimController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AimController.hpp; sourceTree = "<group>"; };
 		1D78512121E4F5EC0005E531 /* BossPatternData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BossPatternData.h; sourceTree = "<group>"; };
@@ -949,6 +952,8 @@
 				1DE5254C21BB0B94006CAE9F /* Ball.cpp */,
 				1DE5254D21BB0B94006CAE9F /* Ball.hpp */,
 				1D13227B21C24D1B005F4370 /* friend */,
+				1D6505522201A6DB00B4BB0D /* FriendsLayer.cpp */,
+				1D6505532201A6DB00B4BB0D /* FriendsLayer.hpp */,
 				1DD6979A21B84EAC005FDC62 /* GameMap.cpp */,
 				1DD6979B21B84EAC005FDC62 /* GameMap.hpp */,
 				1DD697A021B85467005FDC62 /* tile */,
@@ -1378,6 +1383,7 @@
 				1D3DD000215B46EB00DE7409 /* ConsentForm-ios.mm in Sources */,
 				1DFDEB1620C11B53001BC81D /* TestHelper.cpp in Sources */,
 				1DD697A321B8546F005FDC62 /* Tile.cpp in Sources */,
+				1D6505542201A6DB00B4BB0D /* FriendsLayer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

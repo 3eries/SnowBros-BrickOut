@@ -23,6 +23,9 @@ private:
     
     bool init() override;
     
+public:
+    void setImageFlippedX(bool flippedX);
+    
 private:
     SBAnimationSprite *image;
 };

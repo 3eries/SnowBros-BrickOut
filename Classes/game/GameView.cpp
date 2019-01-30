@@ -16,9 +16,10 @@
 #include "RankingManager.hpp"
 
 #include "object/GameMap.hpp"
+#include "object/FriendsLayer.hpp"
 #include "object/Ball.hpp"
-#include "object/friend/Friend.hpp"
 #include "object/AimController.hpp"
+
 #include "object/tile/Brick.hpp"
 #include "object/tile/Item.hpp"
 
@@ -120,7 +121,6 @@ void GameView::onGameExit() {
 void GameView::onGameReset() {
     
     addBallQueue.clear();
-    toAddFriendsBalls = 0;
 }
 
 /**
@@ -220,11 +220,6 @@ void GameView::onMoveNextStage(const StageData &stage) {
     }
     
     ballCountLabel->setVisible(false);
-    
-    // hide friends
-    for( auto friendNode : friends ) {
-        friendNode->setVisible(false);
-    }
 }
 
 /**
@@ -235,11 +230,6 @@ void GameView::onMoveNextStageFinished(const StageData &stage) {
     // show ball
     balls[0]->setVisible(true);
     ballCountLabel->setVisible(true);
-    
-    // show friends
-    for( auto friendNode : friends ) {
-        friendNode->setVisible(true);
-    }
 }
 
 /**
@@ -323,10 +313,6 @@ void GameView::onNextFloor(const FloorData &floor) {
     
     // 획득한 아이템 반영
     addBallFromQueue();
-    
-    if( toAddFriendsBalls > 0 ) {
-        toAddFriendsBalls = 0;
-    }
 }
 
 /**
@@ -429,6 +415,7 @@ void GameView::onFallFinished() {
     
     // update ui
     updateBallCountUI();
+    friendsLayer->updatePosition(aimController->getStartPosition(), false);
     
     // 다음 층으로 전환
     GameManager::onNextFloor();
@@ -781,7 +768,7 @@ void GameView::eatItem(Item *item, bool isFallAction) {
             
         // 프렌즈 볼 개수 증가
         case ItemType::FRIENDS_POWER_UP: {
-            ++toAddFriendsBalls;
+            friendsLayer->eatFriendsItem(item);
         } break;
             
         default:
@@ -1386,12 +1373,9 @@ void GameView::initTile() {
  */
 void GameView::initFriends() {
     
-    // game_friends_02_idle1.png Vec2BL(46, 85) , Size(63, 75)
-    auto friendNode = Friend::create();
-    friendNode->setPosition(Vec2BL(46, 85));
-    addChild(friendNode);
-    
-    friends.push_back(friendNode);
+    friendsLayer = FriendsLayer::create();
+    friendsLayer->updatePosition(FIRST_SHOOTING_POSITION, false);
+    addChild(friendsLayer);
 }
 
 /**

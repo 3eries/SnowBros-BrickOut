@@ -40,6 +40,7 @@ bool Friend::init() {
     }
     
     setAnchorPoint(ANCHOR_M);
+    setCascadeOpacityEnabled(true);
     
     // game_friends_02_idle1.png Vec2BL(46, 85) , Size(63, 75)
     // X5 size:26 stroke:3 Vec2BL(50, 29) , Size(45, 28)
@@ -57,4 +58,9 @@ bool Friend::init() {
     setContentSize(image->getContentSize());
     
     return true;
+}
+
+void Friend::setImageFlippedX(bool flippedX) {
+    
+    image->setFlippedX(flippedX);
 }

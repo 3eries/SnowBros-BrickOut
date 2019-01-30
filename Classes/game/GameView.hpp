@@ -22,7 +22,7 @@
 class Ball;
 class Brick;
 class Item;
-class Friend;
+class FriendsLayer;
 class AimController;
 
 class GameView : public cocos2d::Node {
@@ -169,10 +169,7 @@ private:
     
     std::mt19937 brickPositionRandomEngine;
     
-    // Friends
-    std::vector<Friend*> friends;
-    int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수
-    
+    FriendsLayer *friendsLayer;
     AimController *aimController;
     
     bool isWithdrawEnabled;              // 볼 회수 기능 활성화 여부
