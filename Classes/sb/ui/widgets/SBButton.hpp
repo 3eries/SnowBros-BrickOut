@@ -28,7 +28,6 @@ public:
         std::string title;
         std::string font;
         float fontSize;
-        float subFontSize;
         
         _Config() {
             file = "";
@@ -36,7 +35,6 @@ public:
             title = "";
             font = "";
             fontSize = 0;
-            subFontSize = 0;
         }
         
         _Config(const std::string &_file, const cocos2d::Size &_size,
@@ -47,7 +45,6 @@ public:
             title = _title;
             font = _font;
             fontSize = _fontSize;
-            subFontSize = 0;
         }
     } Config;
     
@@ -79,12 +76,10 @@ public:
     virtual void setRenderingType(cocos2d::ui::Scale9Sprite::RenderingType type);
     
     virtual cocos2d::Label* setTitle(const std::string &title, int fontSize = 0);
-    virtual cocos2d::Label* setSubTitle(const std::string &title, int fontSize = 0);
     
 // getter
 public:
     inline std::string getTitleText()       { return titleLabel->getString(); }
-    inline std::string getSubTitleText()    { return subTitleLabel->getString(); }
     
 protected:
     Config config;
@@ -96,7 +91,6 @@ protected:
     CC_SYNTHESIZE_READONLY(cocos2d::ui::Layout*, contentsLayer, ContentsLayer);
     CC_SYNTHESIZE_READONLY(cocos2d::ui::ImageView*, image, Image);
     CC_SYNTHESIZE_READONLY(cocos2d::Label*, titleLabel, Title);
-    CC_SYNTHESIZE_READONLY(cocos2d::Label*, subTitleLabel, SubTitle);
 };
 
 #endif /* SBButton_hpp */

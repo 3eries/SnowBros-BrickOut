@@ -42,8 +42,7 @@ zoomScale(ZOOM_SCALE),
 scale9Enabled(false),
 contentsLayer(nullptr),
 image(nullptr),
-titleLabel(nullptr),
-subTitleLabel(nullptr) {
+titleLabel(nullptr) {
 }
 
 SBButton::~SBButton() {
@@ -116,24 +115,17 @@ void SBButton::initContents() {
     }
     
     // label
-    auto createLabel = [this](int fontSize) -> Label* {
+    if( config.title != "" ) {
+        if( config.font == "" ) {
+            titleLabel = Label::createWithSystemFont(config.title, "", config.fontSize);
+        } else {
+            titleLabel = Label::createWithTTF(config.title, config.font, config.fontSize);
+        }
         
-        auto label = Label::createWithTTF("", this->config.font, fontSize,
-                                          Size::ZERO,
-                                          TextHAlignment::CENTER,
-                                          TextVAlignment::CENTER);
-        label->setAnchorPoint(ANCHOR_M);
-        label->setColor(Color3B::WHITE);
-        return label;
-    };
-    
-    if( config.font != "" ) {
-        titleLabel = createLabel(config.fontSize);
-        titleLabel->setString(config.title);
+        titleLabel->setAlignment(TextHAlignment::CENTER, TextVAlignment::CENTER);
+        titleLabel->setAnchorPoint(ANCHOR_M);
+        titleLabel->setColor(Color3B::WHITE);
         contentsLayer->addChild(titleLabel);
-        
-        subTitleLabel = createLabel(config.subFontSize);
-        contentsLayer->addChild(subTitleLabel);
     }
 }
 
@@ -188,14 +180,7 @@ void SBButton::updateTitlePosition() {
     }
     
     Size size = getContentSize();
-    
-    if( subTitleLabel->getString() == "" ) {
-        titleLabel->setPosition(Vec2MC(size, 0, 0));
-    } else {
-        // TODO:
-        //        titleLabel->setPosition(Vec2MC(size, 0, -26));
-        //        subTitleLabel->setPosition(Vec2MC(size, 0, 36));
-    }
+    titleLabel->setPosition(Vec2MC(size, 0, 0));
 }
 
 /**
@@ -292,9 +277,13 @@ void SBButton::setRenderingType(Scale9Sprite::RenderingType type) {
 Label* SBButton::setTitle(const string &title, int fontSize) {
     
     if( fontSize != 0 ) {
-        auto config = titleLabel->getTTFConfig();
-        config.fontSize = fontSize;
-        titleLabel->setTTFConfig(config);
+        if( this->config.font == "" ) {
+            titleLabel->setSystemFontSize(fontSize);
+        } else {
+            auto ttfConfig = titleLabel->getTTFConfig();
+            ttfConfig.fontSize = fontSize;
+            titleLabel->setTTFConfig(ttfConfig);
+        }
     }
     
     titleLabel->setString(title);
@@ -302,20 +291,3 @@ Label* SBButton::setTitle(const string &title, int fontSize) {
     return titleLabel;
 }
 
-/**
- * 서브 타이틀 설정
- */
-Label* SBButton::setSubTitle(const string &title, int fontSize) {
-    
-    if( fontSize != 0 ) {
-        auto config = subTitleLabel->getTTFConfig();
-        config.fontSize = fontSize;
-        subTitleLabel->setTTFConfig(config);
-    }
-    
-    subTitleLabel->setString(title);
-    
-    updateTitlePosition();
-    
-    return subTitleLabel;
-}
