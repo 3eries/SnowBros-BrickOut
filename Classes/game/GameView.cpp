@@ -188,15 +188,29 @@ void GameView::onBoostEnd() {
  */
 void GameView::onStageChanged(const StageData &stage) {
     
+    // 볼 회수 비활성화
     isWithdrawEnabled = false;
     isWithdraw = false;
     
+    // 볼 좌표 업데이트
+    aimController->setStartPosition(FIRST_SHOOTING_POSITION);
+    
+    for( auto ball : balls ) {
+        ball->setPosition(aimController->getStartPosition());
+        ball->syncNodeToBody();
+    }
+    
+    friendsLayer->updatePosition(aimController->getStartPosition(), false);
+    
+    // 브릭 랜덤 좌표 생성 엔진 초기화
     std::random_device rd;
     brickPositionRandomEngine = std::mt19937(rd());
     
+    // 엘리트 드랍률 초기화
     eliteBrickDropRate = GameManager::getFloor().eliteBrickDropRate;
     isEliteDropped = false;
     
+    // update ui
     showStageLabel(stage.stage);
     updateBallCountUI();
 }
