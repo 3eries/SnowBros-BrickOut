@@ -68,16 +68,22 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
         auto slot = sortedSlots[i];
         
         if( withAction ) {
-            auto fadeOut = FadeOut::create(0.3f);
-            auto callFunc = CallFunc::create([=]() {
-                sortedSlots[i].put(friendNode);
-            });
-            auto fadeIn = FadeIn::create(0.2f);
+            int diff = abs(slot.index - getNearSlot(friendNode->getPosition()).index);
+            if( diff == 0 ) {
+                slot.put(friendNode);
+                continue;
+            }
             
-            friendNode->runAction(Sequence::create(fadeOut, callFunc, fadeIn, nullptr));
+            friendNode->setImageFlippedX(slot.pos.x < friendNode->getPositionX());
+            
+            auto move = MoveTo::create(diff * 0.2f, slot.pos);
+            auto callFunc = CallFunc::create([=]() {
+                slot.put(friendNode);
+            });
+            friendNode->runAction(Sequence::create(move, callFunc, nullptr));
             
         } else {
-            sortedSlots[i].put(friendNode);
+            slot.put(friendNode);
         }
     }
 }
@@ -110,7 +116,7 @@ FriendsLayer::Slot FriendsLayer::getNearSlot(const Vec2 &pos) {
     for( auto slot : slots ) {
         float dist = slot.pos.getDistance(pos);
         
-        CCLOG("slotIndex: %d dist: %f", slot.index, dist);
+        // CCLOG("slotIndex: %d dist: %f", slot.index, dist);
         
         if( dist < savedDist ) {
             nearSlot = slot;
@@ -279,7 +285,7 @@ void FriendsLayer::initFriends() {
         Color3B(0,0,0),
     };
     
-    for( int i = 0; i < 4; ++i ) {
+    for( int i = 0; i < 1/*보유 프렌즈 수*/; ++i ) {
         auto friendNode = Friend::create();
         friendNode->setCascadeColorEnabled(true);
         friendNode->setColor(colors[i]);

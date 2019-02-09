@@ -408,14 +408,14 @@ void GameView::onFallFinished() {
     
     Log::i("onFallFinished");
     
+    updateBallCountUI();
+    
     // 스테이지 클리어
     if( checkStageClear() ) {
         return;
     }
     
-    // update ui
-    updateBallCountUI();
-    friendsLayer->updatePosition(aimController->getStartPosition(), false);
+    friendsLayer->updatePosition(aimController->getStartPosition(), true);
     
     // 다음 층으로 전환
     GameManager::onNextFloor();
