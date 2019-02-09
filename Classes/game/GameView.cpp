@@ -192,7 +192,7 @@ void GameView::onStageChanged(const StageData &stage) {
     isWithdrawEnabled = false;
     isWithdraw = false;
     
-    // 볼 좌표 업데이트
+    // 슈팅 포지션 초기화 
     aimController->setStartPosition(FIRST_SHOOTING_POSITION);
     
     for( auto ball : balls ) {
