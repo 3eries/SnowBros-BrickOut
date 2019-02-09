@@ -12,7 +12,10 @@
 
 #include "cocos2d.h"
 #include "../base/SBTypes.hpp"
+
 #include "json/document-wrapper.h"
+#include "json/stringbuffer.h"
+#include "json/prettywriter.h"
 
 class SBJSON {
 public:

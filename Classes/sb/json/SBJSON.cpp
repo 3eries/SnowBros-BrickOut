@@ -7,9 +7,6 @@
 
 #include "SBJSON.h"
 
-#include "json/stringbuffer.h"
-#include "json/prettywriter.h"
-
 #include "../utils/SBStringUtils.h"
 
 USING_NS_CC;
