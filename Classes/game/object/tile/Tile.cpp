@@ -19,9 +19,10 @@ namespace Game {
 const float Tile::ENTER_DURATION         = 0.15f;
 const float Tile::MOVE_DURATION          = 0.18f;
 
-Tile::Tile(int rows, int columns) : SBPhysicsObject(this),
+Tile::Tile(int rows, int columns, const FloorData &floorData) : SBPhysicsObject(this),
 rows(rows),
-columns(columns) {
+columns(columns),
+floorData(floorData) {
 }
 
 Tile::~Tile() {

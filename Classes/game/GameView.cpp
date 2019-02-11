@@ -20,9 +20,7 @@
 #include "object/Ball.hpp"
 #include "object/AimController.hpp"
 
-#include "object/tile/Brick.hpp"
 #include "object/tile/Brick_10012.hpp"
-
 #include "object/tile/Item.hpp"
 
 #include "ui/TopMenu.hpp"
@@ -949,7 +947,12 @@ void GameView::addBrick() {
     
     auto createBrick = [=](const BrickData &data, int hp, TilePosition tilePos) -> Brick* {
         
-        auto brick = this->createBrick(data, hp);
+        BrickDef def;
+        def.data = data;
+        def.hp = hp;
+        def.floorData = floor;
+        
+        auto brick = this->createBrick(def);
         brick->setTilePosition(tilePos, false);
         brick->setOnBreakListener([=](Node*) {
             this->onBrickBreak(brick);
@@ -1015,8 +1018,8 @@ void GameView::addBrick() {
     int  dropCount = floor.getRandomDropCount();
     isEliteDropped = (random<int>(1,100) <= eliteBrickDropRate);
     
-    CCLOG("addBrick(%d-%d) dropCount: %d eliteBrickDropRate: %d isEliteDropped: %d",
-          floor.stage, floor.floor, dropCount, eliteBrickDropRate, isEliteDropped);
+    Log::i("addBrick(%d-%d) dropCount: %d eliteBrickDropRate: %d isEliteDropped: %d",
+           floor.stage, floor.floor, dropCount, eliteBrickDropRate, isEliteDropped);
     
     if( isEliteDropped ) {
         auto brick = createBrick(floor.getRandomEliteBrick(), floor.brickHp*3, positions[0]);
@@ -1036,11 +1039,11 @@ void GameView::addBrick() {
     }
 }
 
-Brick* GameView::createBrick(const BrickData &data, int hp) {
+Brick* GameView::createBrick(const BrickDef &def) {
     
-    if( data.brickId == "brick_10012" )     return Brick_10012::create(data, hp);
+    if( def.data.brickId == "brick_10012" )     return Brick_10012::create(def);
     
-    return Brick::create(data, hp);
+    return Brick::create(def);
 }
 
 /**
@@ -1064,7 +1067,7 @@ void GameView::addItem() {
         ItemData data;
         data.type = ItemType::POWER_UP;
         
-        auto item = Item::create(data);
+        auto item = Item::create(data, floor);
         item->setTilePosition(positions[0], false);
         addTile(item);
         

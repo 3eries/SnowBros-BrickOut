@@ -16,11 +16,11 @@
 
 class Item : public Game::Tile {
 public:
-    static Item* create(const ItemData &data);
+    static Item* create(const ItemData &data, const FloorData &floorData);
     virtual ~Item();
     
 protected:
-    Item(const ItemData &data);
+    Item(const ItemData &data, const FloorData &floorData);
     
     virtual bool init() override;
     virtual void initPhysics() override;

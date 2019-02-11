@@ -28,7 +28,7 @@ public:
     static const float MOVE_DURATION;
     
 public:
-    Tile(int rows, int columns);
+    Tile(int rows, int columns, const FloorData &floorData);
     virtual ~Tile();
     
 protected:
@@ -53,6 +53,7 @@ public:
 protected:
     CC_SYNTHESIZE_READONLY(int, rows, Rows);        // 가로칸
     CC_SYNTHESIZE_READONLY(int, columns, Columns);  // 세로칸
+    CC_SYNTHESIZE_READONLY(FloorData, floorData, FloorData);
     CC_SYNTHESIZE_READONLY(TilePosition, tilePos, TilePosition);
 };
     

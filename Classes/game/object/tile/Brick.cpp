@@ -18,9 +18,9 @@ USING_NS_SB;
 using namespace cocos2d::ui;
 using namespace std;
 
-Brick* Brick::create(const BrickData &data, int hp) {
+Brick* Brick::create(const BrickDef &def) {
     
-    auto brick = new Brick(data, hp);
+    auto brick = new Brick(def);
     
     if( brick && brick->init() ) {
         brick->autorelease();
@@ -31,10 +31,10 @@ Brick* Brick::create(const BrickData &data, int hp) {
     return nullptr;
 }
 
-Brick::Brick(const BrickData &data, int hp) : Game::Tile(data.width, data.height),
-data(data),
-originalHp(hp),
-hp(hp),
+Brick::Brick(const BrickDef &def) : Game::Tile(def.data.width, def.data.height, def.floorData),
+data(def.data),
+originalHp(def.hp),
+hp(def.hp),
 elite(false),
 onBreakListener(nullptr) {
 }

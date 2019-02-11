@@ -14,9 +14,9 @@
 USING_NS_CC;
 using namespace std;
 
-Item* Item::create(const ItemData &data) {
+Item* Item::create(const ItemData &data, const FloorData &floorData) {
     
-    auto item = new Item(data);
+    auto item = new Item(data, floorData);
     
     if( item && item->init() ) {
         item->autorelease();
@@ -27,7 +27,7 @@ Item* Item::create(const ItemData &data) {
     return nullptr;
 }
 
-Item::Item(const ItemData &data) : Game::Tile(1, 1),
+Item::Item(const ItemData &data, const FloorData &floorData) : Game::Tile(1, 1, floorData),
 data(data) {
 }
 

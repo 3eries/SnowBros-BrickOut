@@ -18,9 +18,9 @@
 #include "GameManager.hpp"
 
 #include "object/tile/Tile.hpp"
+#include "object/tile/Brick.hpp"
 
 class Ball;
-class Brick;
 class Item;
 class FriendsLayer;
 class AimController;
@@ -124,7 +124,7 @@ private:
     void removeBall(Ball *ball);
     
     void   addBrick();
-    Brick* createBrick(const BrickData &data, int hp);
+    Brick* createBrick(const BrickDef &def);
     
     void addItem();
     

@@ -15,9 +15,9 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-Brick_10012* Brick_10012::create(const BrickData &data, int hp) {
+Brick_10012* Brick_10012::create(const BrickDef &def) {
     
-    auto brick = new Brick_10012(data, hp);
+    auto brick = new Brick_10012(def);
     
     if( brick && brick->init() ) {
         brick->autorelease();
@@ -28,7 +28,7 @@ Brick_10012* Brick_10012::create(const BrickData &data, int hp) {
     return nullptr;
 }
 
-Brick_10012::Brick_10012(const BrickData &data, int hp) : Brick(data, hp),
+Brick_10012::Brick_10012(const BrickDef &def) : Brick(def),
 floorChangeCount(0) {
 }
 

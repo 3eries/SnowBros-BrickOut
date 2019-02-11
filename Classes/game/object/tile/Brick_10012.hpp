@@ -14,11 +14,11 @@
 
 class Brick_10012 : public Brick {
 public:
-    static Brick_10012* create(const BrickData &data, int hp);
+    static Brick_10012* create(const BrickDef &def);
      ~Brick_10012();
     
 private:
-    Brick_10012(const BrickData &data, int hp);
+    Brick_10012(const BrickDef &def);
     
     bool init() override;
     void onEnter() override;

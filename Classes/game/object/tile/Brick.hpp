@@ -16,9 +16,15 @@
 
 class Ball;
 
+struct BrickDef {
+    BrickData data;
+    int hp;
+    FloorData floorData;
+};
+
 class Brick : public Game::Tile {
 public:
-    static Brick* create(const BrickData &data, int hp);
+    static Brick* create(const BrickDef &def);
     virtual ~Brick();
 
 protected:
@@ -28,7 +34,7 @@ protected:
     };
     
 protected:
-    Brick(const BrickData &data, int hp);
+    Brick(const BrickDef &def);
     
     virtual bool init() override;
     virtual void onEnter() override;
