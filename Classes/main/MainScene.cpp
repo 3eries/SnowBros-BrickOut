@@ -12,8 +12,9 @@
 #include "PopupManager.hpp"
 #include "GiftManager.hpp"
 #include "UIHelper.hpp"
+#include "TestList.hpp"
 
-#include "../test/TestHelper.hpp"
+#include "../game/GameManager.hpp"
 
 #include "CommonLoadingBar.hpp"
 #include "ExitAlertPopup.hpp"
@@ -136,6 +137,9 @@ void MainScene::onClick(Node *sender) {
             
         // 게임 시작
         case Tag::BTN_START: {
+#if ENABLE_TEST_MENU
+            GameManager::getInstance()->setStartStage(TEST_HELPER->getStartStage());
+#endif
             replaceScene(SceneType::GAME);
         } break;
             
@@ -165,6 +169,7 @@ void MainScene::onClick(Node *sender) {
             
         // test
         case Tag::BTN_TEST: {
+            Director::getInstance()->pushScene(TestList::create());
         } break;
             
         default:
@@ -281,7 +286,7 @@ void MainScene::initMenu() {
         SBUIInfo(Tag::BTN_SETTING,      ANCHOR_MR,   Vec2TR(-66 + (100*0.5f), -62),     DIR_IMG_COMMON + "RSP_btn_option.png"),
         // SBUIInfo(Tag::BTN_REMOVE_ADS,   ANCHOR_M,    Vec2MC(0, 25),     DIR_IMG_COMMON + "RSP_btn_remove_ads.png"),
 #if ENABLE_TEST_MENU
-        SBUIInfo(Tag::BTN_TEST,         ANCHOR_TL,   Vec2TL(10, -10),   DIR_IMG_COMMON + "RSP_btn_test.png"),
+        SBUIInfo(Tag::BTN_TEST,         ANCHOR_TL,   Vec2TL(10, -20),   DIR_IMG_COMMON + "RSP_btn_test.png"),
 #endif
     };
     

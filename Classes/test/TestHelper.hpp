@@ -12,7 +12,8 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#define ENABLE_TEST_MENU        0
+#define ENABLE_TEST_MENU        1
+#define TEST_HELPER             TestHelper::getInstance()
 
 class TestHelper : public cocos2d::Ref {
 public:
@@ -26,6 +27,8 @@ private:
     
 private:
     SB_SYNTHESIZE_BOOL(cheatMode, CheatMode);               // 치트 모드 on/off
+    CC_SYNTHESIZE(int, startStage, StartStage);             // 시작 스테이지
+    CC_SYNTHESIZE(int, firstBallCount, FirstBallCount);     // 최초 볼 갯수
 };
 
 #endif /* TestHelper_hpp */

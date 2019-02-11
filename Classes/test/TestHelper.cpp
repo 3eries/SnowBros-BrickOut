@@ -6,6 +6,8 @@
 
 #include "TestHelper.hpp"
 
+#include "GameConfiguration.hpp"
+
 USING_NS_CC;
 using namespace std;
 
@@ -25,7 +27,9 @@ void TestHelper::destroyInstance() {
 }
 
 TestHelper::TestHelper() :
-cheatMode(false) {
+cheatMode(false),
+startStage(1),
+firstBallCount(GAME_CONFIG->getFirstBallCount()) {
 }
 
 TestHelper::~TestHelper() {

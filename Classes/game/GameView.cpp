@@ -128,7 +128,11 @@ void GameView::onGameReset() {
  */
 void GameView::onGameStart() {
     
+#if ENABLE_TEST_MENU
+    addBall(TEST_HELPER->getFirstBallCount());
+#else
     addBall(GAME_CONFIG->getFirstBallCount());
+#endif
 }
 
 /**
