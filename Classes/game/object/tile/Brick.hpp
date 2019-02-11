@@ -14,8 +14,6 @@
 #include "superbomb.h"
 #include "Tile.hpp"
 
-#include "../../db/BrickData.h"
-
 class Ball;
 
 class Brick : public Game::Tile {
@@ -33,7 +31,11 @@ protected:
     Brick(const BrickData &data, int hp);
     
     virtual bool init() override;
+    virtual void onEnter() override;
+    
     virtual void initPhysics() override;
+    virtual void initHpGage();
+    
     virtual void setImage(ImageType type, bool isRunAnimation);
     
     virtual void onContactBrick(Ball *ball, Game::Tile *brick);
@@ -46,30 +48,37 @@ public:
     
     virtual void sufferDamage(int damage);
     virtual void setHp(int hp, bool updateUI = true);
+    
     virtual void updateHpUI();
     
-    bool    isBroken();
+    virtual void setBgVisible(bool isVisible);
+    virtual void setHpVisible(bool isVisible);
     
+    bool    isBoss();
+    bool    isInfinityHp();
+    
+    bool    isBroken();
     float   getHpRatio();
     
 protected:
     CC_SYNTHESIZE_READONLY(BrickData, data, Data);
     CC_SYNTHESIZE_READONLY(int, originalHp, OriginalHp);
     CC_SYNTHESIZE_READONLY(int, hp, Hp);
+    SB_SYNTHESIZE_BOOL(elite, Elite);
     
     CC_SYNTHESIZE(SBCallbackNode, onBreakListener, OnBreakListener)
     
     cocos2d::Sprite *bg;
-    SBAnimationSprite *image;
+    CC_SYNTHESIZE_READONLY(SBAnimationSprite*, image, Image);
     
-    struct HpNode {
+    struct HpGage {
         cocos2d::Node *bg;
         cocos2d::Sprite *gage;
         cocos2d::Sprite *gageEffect;
         cocos2d::Label *label;
     };
     
-    HpNode hpNode;
+    HpGage hpGage;
 };
 
 #endif /* Brick_hpp */

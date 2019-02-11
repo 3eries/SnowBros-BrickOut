@@ -103,6 +103,12 @@ b2Body* Ball::createBody(SBPhysicsObject *userData) {
 }
 
 bool Ball::beforeStep() {
+    
+//    if( isShoot ) {
+//        isShoot = false;
+//        getBody()->SetLinearVelocity(shootVelocity);
+//    }
+    
     return true;
 }
 
@@ -168,13 +174,13 @@ void Ball::sleepWithAction() {
 
 void Ball::startRotate() {
     
-    image->runAction(RepeatForever::create(RotateBy::create(0.5f, 360)));
+    // image->runAction(RepeatForever::create(RotateBy::create(0.5f, 360)));
 }
 
 void Ball::stopRotate() {
 
-    image->stopAllActions();
-    image->setRotation(0);
+    // image->stopAllActions();
+    // image->setRotation(0);
 }
 
 /**

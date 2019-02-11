@@ -38,22 +38,22 @@ static const float                            GAME_RESULT_DELAY                =
 #define                                       MAP_POSITION                       Vec2MC(0, -14)
 #define                                       MAP_BOUNDING_BOX                   cocos2d::Rect(MAP_ORIGIN, MAP_CONTENT_SIZE)
 
-#define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE))  // 대각선
+#define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE)) // 대각선
 
 // Ball
-static const float                            SHOOT_INTERVAL                   = 0.08f;     // 발사 시간 간격
+#define                                       SHOOT_INTERVAL                     (PHYSICS_FPS * 3) // 발사 시간 간격
 
 #define                                       BALL_IMAGE                         std::string(DIR_IMG_GAME + "game_ball.png")
 
 static const float                            BALL_RADIUS                      = 20;
 static const cocos2d::Size                    BALL_SIZE                        = cocos2d::Size(BALL_RADIUS*2, BALL_RADIUS*2);
-static const float                            BALL_MAX_VELOCITY                = 32;
+static const float                            BALL_MAX_VELOCITY                = 28;
 
 #define                                       SHOOTING_POSITION_Y                64
 #define                                       FIRST_SHOOTING_POSITION            Vec2BC(0, SHOOTING_POSITION_Y)
 
 // Wall
-static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f;   // 벽 두께
+static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f; // 벽 두께
 
 // Tile
 typedef cocos2d::Vec2 TilePosition;

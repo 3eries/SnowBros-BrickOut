@@ -54,7 +54,7 @@ private:
 
 // 매뉴얼상의 권장값 (VELOCITY_ITERATIONS=8, POSITION_ITERATIONS=3)
 static const int VELOCITY_ITERATIONS            = 8;
-static const int POSITION_ITERATIONS            = 3;
+static const int POSITION_ITERATIONS            = 6;
 
 /** @class PhysicsManager
  * @brief 이 클래스는 물리 세계의 오브젝트 동기화, 충돌 검사를 담당합니다.

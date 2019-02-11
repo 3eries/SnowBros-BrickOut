@@ -12,6 +12,8 @@
 
 #include "cocos2d.h"
 #include "superbomb.h"
+
+#include "ContentManager.hpp"
 #include "../../GameDefine.h"
 
 namespace Game {
@@ -41,7 +43,8 @@ public:
     virtual void down();
     
 public:
-    virtual void setTilePosition(const TilePosition &tilePos, bool action = true);
+    virtual void setTilePosition(const TilePosition &tilePos, bool action = true,
+                                 SBCallback onActionFinished = nullptr);
     virtual bool isContainsPosition(const TilePosition &p);
     
     static cocos2d::Vec2 convertToTilePosition(int x, int y, int w = 1, int h = 1);

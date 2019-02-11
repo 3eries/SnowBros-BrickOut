@@ -123,7 +123,9 @@ private:
     void addBallFromQueue();
     void removeBall(Ball *ball);
     
-    void addBrick();
+    void   addBrick();
+    Brick* createBrick(const BrickData &data, int hp);
+    
     void addItem();
     
     void addTile(Game::Tile *tile);
@@ -144,6 +146,7 @@ private:
     std::vector<Game::Tile*> getTiles(int y);
     std::vector<Game::Tile*> getBricks(int y);
     std::vector<Game::Tile*> getBricks();
+    std::vector<Brick*>      getBricks(const std::string &brickId);
     std::vector<Game::Tile*> getItems();
     
     Game::Tile*              getTile(const TilePosition &pos);
@@ -172,8 +175,8 @@ private:
     FriendsLayer *friendsLayer;
     AimController *aimController;
     
-    bool isWithdrawEnabled;              // 볼 회수 기능 활성화 여부
-    bool isWithdraw;                     // 볼 회수 여부
+    bool isWithdrawEnabled; // 볼 회수 기능 활성화 여부
+    bool isWithdraw;        // 볼 회수 여부
     
     // 엘리트 벽돌 드랍률
     // 엘리트 벽돌이 생성되지 않은 경우, 다음 층에서 확률 2배 증가

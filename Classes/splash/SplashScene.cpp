@@ -15,6 +15,7 @@
 #include "SceneManager.h"
 #include "UIHelper.hpp"
 #include "FunnyHelper.hpp"
+#include "ContentManager.hpp"
 
 #include "LogoView.hpp"
 
@@ -48,6 +49,7 @@ bool SplashScene::init() {
     }
     
     ResourceHelper::preload();
+    ContentResourceHelper::preload();
     
     initLaunchImage();
     login();

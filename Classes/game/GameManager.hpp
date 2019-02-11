@@ -15,12 +15,11 @@
 #include "Define.h"
 #include "GiftDefine.h"
 #include "GameConfiguration.hpp"
+#include "ContentManager.hpp"
 #include "GameDefine.h"
 
 #include "event/GameEventDispatcher.hpp"
 #include "GamePhysics.hpp"
-
-#include "db/DBManager.hpp"
 
 class GameScene;
 class GameView;
@@ -49,6 +48,9 @@ public:
     bool            hasState(GameState state);
     static bool     isPlaying();
     static bool     isPaused();
+    
+    // Stage
+    void            setStartStage(int stage);
     
     // Item
     void            setGiftItems(std::vector<GiftRewardItem> items);
@@ -82,9 +84,9 @@ private:
     
     GiftRewardItems giftItems;
     
-    int score;                                                    // 스코어
     int stage;                                                    // 스테이지
     int floor;                                                    // 층
+    int score;                                                    // 스코어
     CC_SYNTHESIZE_READONLY(int, continueCount, ContinueCount);    // 이어하기한 횟수
     
 // Game Event

@@ -15,8 +15,7 @@
 #include "superbomb.h"
 
 #include "BasePopup.hpp"
-
-#include "../db/StageData.h"
+#include "ContentManager.hpp"
 
 class StageClearPopup : public BasePopup {
 public:

@@ -230,7 +230,7 @@ void TopMenu::initBg() {
     auto topBg = Sprite::create(DIR_IMG_GAME + "game_bg_top.png");
     topBg->setAnchorPoint(ANCHOR_M);
     topBg->setPosition(Vec2MC(topBg->getContentSize(), 0, 0));
-    topBg->setOpacity(255*0.4f);
+    // topBg->setOpacity(255*0.4f);
     addChild(topBg);
     
     Size bgSize(topBg->getContentSize());

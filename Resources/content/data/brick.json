@@ -1,0 +1,497 @@
+[{
+    "id": "brick_00001",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,41,115",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00002",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,231,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00003",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "0,255,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00004",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "0,168,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00005",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,255,165",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00006",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,41,115",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00007",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "0,168,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00008",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "0,255,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00009",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,83,0",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00010",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,48,71",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00011",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "140,103,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00012",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,255,222",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00013",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,48,71",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00014",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "186,92,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00015",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "71,103,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00016",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,195,39",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00017",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "165,255,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00018",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "156,255,0",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00019",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "71,154,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00020",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,231,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00021",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "0,168,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_00022",
+    "type": 1,
+    "width": 1,
+    "height": 1,
+    "color": "255,124,0",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_01001",
+    "type": 10,
+    "width": 1,
+    "height": 1,
+    "color": "255,175,136",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_01002",
+    "type": 10,
+    "width": 1,
+    "height": 1,
+    "color": "0,255,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_01003",
+    "type": 10,
+    "width": 1,
+    "height": 1,
+    "color": "85,175,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_01004",
+    "type": 10,
+    "width": 1,
+    "height": 1,
+    "color": "0,168,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05001",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "0,157,92",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05002",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "0,0,0",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05003",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,96,110",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05004",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,49,0",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05005",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "232,165,126",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05006",
+    "type": 50,
+    "width": 6,
+    "height": 1,
+    "color": "211,148,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05007",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,156,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05008",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,156,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05009",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,85,74",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05010",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "0,173,148",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05011",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,156,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05012",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,246,55",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05013",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,156,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05014",
+    "type": 50,
+    "width": 1,
+    "height": 2,
+    "color": "255,159,0",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_05015",
+    "type": 50,
+    "width": 1,
+    "height": 1,
+    "color": "255,156,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10001",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "0,157,92",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10002",
+    "type": 100,
+    "width": 4,
+    "height": 2,
+    "color": "255,41,115",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10003",
+    "type": 100,
+    "width": 1,
+    "height": 2,
+    "color": "255,231,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10004",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "0,168,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10005",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "211,148,66",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10006",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "193,71,193",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10007",
+    "type": 100,
+    "width": 3,
+    "height": 2,
+    "color": "255,163,136",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10008",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "193,92,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10009",
+    "type": 100,
+    "width": 3,
+    "height": 1,
+    "color": "0,173,148",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10010",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "219,222,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10011",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "255,165,115",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10012",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "255,159,0",
+    "image": "",
+    "parts": ["brick_05014"],
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10013",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "0,154,204",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}, {
+    "id": "brick_10014",
+    "type": 100,
+    "width": 2,
+    "height": 2,
+    "color": "82,163,255",
+    "image": "",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1
+}]

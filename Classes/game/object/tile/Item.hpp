@@ -14,8 +14,6 @@
 #include "superbomb.h"
 #include "Tile.hpp"
 
-#include "../../db/ItemData.h"
-
 class Item : public Game::Tile {
 public:
     static Item* create(const ItemData &data);

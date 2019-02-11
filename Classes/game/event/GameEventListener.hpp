@@ -13,7 +13,7 @@
 #include "superbomb.h"
 
 #include "../GameDefine.h"
-#include "../db/StageData.h"
+#include "ContentManager.hpp"
 
 class GameEventListener : public cocos2d::Ref {
 public:

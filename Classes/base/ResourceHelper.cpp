@@ -6,7 +6,6 @@
 
 #include "ResourceHelper.hpp"
 
-#include "superbomb.h"
 #include "Define.h"
 
 USING_NS_CC;

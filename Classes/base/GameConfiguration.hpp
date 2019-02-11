@@ -38,7 +38,7 @@ private:
     CC_SYNTHESIZE_READONLY(int, tileColumns, TileColumns);
 
     CC_SYNTHESIZE_READONLY(int, firstBallCount, FirstBallCount);        // 최초 볼 갯수
-    CC_SYNTHESIZE_READONLY(int, maxBallCount, MaxBallCount);            // 최초 볼 갯수
+    CC_SYNTHESIZE_READONLY(int, maxBallCount, MaxBallCount);            // 최대 볼 갯수
     CC_SYNTHESIZE_READONLY(int, maxScore, MaxScore);                    // 최대 스코어
 };
 

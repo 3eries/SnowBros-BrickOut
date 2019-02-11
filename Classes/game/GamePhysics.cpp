@@ -52,7 +52,8 @@ void PhysicsManager::removeBodies() {
  * 스케줄러 시작
  */
 void PhysicsManager::startScheduler() {
-    SBScheduleHelper::schedule(CC_CALLBACK_1(PhysicsManager::update, this), this, PHYSICS_FPS, SCHEDULER_UPDATE);
+    // SBScheduleHelper::schedule(CC_CALLBACK_1(PhysicsManager::update, this), this, PHYSICS_FPS, SCHEDULER_UPDATE);
+    SBScheduleHelper::schedule(CC_CALLBACK_1(PhysicsManager::update, this), this, SCHEDULER_UPDATE);
 }
 
 /**

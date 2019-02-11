@@ -90,7 +90,7 @@ void Tile::down() {
 /**
  * 타일 좌표 설정
  */
-void Tile::setTilePosition(const TilePosition &tilePos, bool action) {
+void Tile::setTilePosition(const TilePosition &tilePos, bool action, SBCallback onActionFinished) {
     
     this->tilePos = tilePos;
     
@@ -100,6 +100,10 @@ void Tile::setTilePosition(const TilePosition &tilePos, bool action) {
         auto move = MoveTo::create(MOVE_DURATION, p);
         auto callFunc = CallFunc::create([=]() {
             this->syncNodeToBody();
+            
+            if( onActionFinished ) {
+                onActionFinished();
+            }
         });
         runAction(Sequence::create(move, callFunc, nullptr));
         

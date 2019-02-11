@@ -8,6 +8,7 @@
 
 #include "UserDefaultKey.h"
 #include "RankingManager.hpp"
+#include "TestHelper.hpp"
 
 #include "GameView.hpp"
 
@@ -98,6 +99,15 @@ bool GameManager::isPaused() {
 }
 
 /**
+ * 시작 스테이지를 설정합니다
+ */
+void GameManager::setStartStage(int stage) {
+    
+    this->stage = stage;
+    this->floor = getStage().getFirstFloor().floor;
+}
+
+/**
  * 선물 아이템을 설정합니다
  */
 void GameManager::setGiftItems(vector<GiftRewardItem> items) {
@@ -165,15 +175,15 @@ int GameManager::getScore() {
 }
 
 StageData GameManager::getStage() {
-    return DBManager::getStage(getInstance()->stage);
+    return Database::getStage(getInstance()->stage);
 }
 
 FloorData GameManager::getFloor() {
-    return DBManager::getFloor(getInstance()->floor);
+    return Database::getFloor(getInstance()->floor);
 }
 
 bool GameManager::isStageLastFloor() {
-    return DBManager::isStageLastFloor(getFloor());
+    return Database::isStageLastFloor(getFloor());
 }
 
 bool GameManager::isContinuable() {
@@ -423,7 +433,11 @@ void GameManager::onBoostEnd() {
  */
 void GameManager::onStageChanged() {
     
-    getEventDispatcher()->dispatchOnStageChanged(getStage());
+    auto stage = getStage();
+    
+    Log::i("GameManager::onStageChanged stage: %d floor: %d", stage.stage, getFloor().floor);
+    
+    getEventDispatcher()->dispatchOnStageChanged(stage);
     onFloorChanged();
 }
 
@@ -441,8 +455,8 @@ void GameManager::onStageClear() {
 void GameManager::onMoveNextStage() {
  
     // 현재 스테이지가 정의된 마지막 스테이지면 임시 스테이지 추가
-    if( DBManager::isLastStage(getStage().stage) ) {
-        DBManager::addTempStage();
+    if( Database::isLastStage(getStage().stage) ) {
+        Database::addTempStage();
     }
     
     getInstance()->stage++;
@@ -475,7 +489,7 @@ void GameManager::onNextFloor() {
     
     FloorData floor;
     
-    if( !DBManager::isStageLastFloor(getFloor()) ) {
+    if( !Database::isStageLastFloor(getFloor()) ) {
         getInstance()->floor++;
         floor = getFloor();
     }

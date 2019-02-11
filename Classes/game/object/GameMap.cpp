@@ -153,10 +153,10 @@ GameMap::Background* GameMap::createBackground(const StageData &stage) {
     top->setFlippedY(true);
     bg->addChild(top);
     
-    // TODO: 스테이지 배경 파일
-    auto center = Sprite::create(DIR_IMG_GAME + "game_bg_01.png");
+    auto center = Sprite::create(ContentResourceHelper::getStageBackgroundFile(stage.originStage));
     center->setAnchorPoint(ANCHOR_M);
     center->setPosition(Vec2MC(0,0));
+    center->setScale(4);
     bg->addChild(center);
     
     auto bottom = Sprite::create(DIR_IMG_GAME + "game_bg_bottom.png");

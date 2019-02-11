@@ -21,6 +21,8 @@
 #include "object/AimController.hpp"
 
 #include "object/tile/Brick.hpp"
+#include "object/tile/Brick_10012.hpp"
+
 #include "object/tile/Item.hpp"
 
 #include "ui/TopMenu.hpp"
@@ -447,6 +449,8 @@ void GameView::onBrickBreak(Brick *brick) {
     // 스코어 업데이트
     // GameManager::addScore(brick->getOriginalHp());
     
+    const bool isBoss = brick->isBoss();
+    
     // remove brick
     removeTile(brick);
     
@@ -457,9 +461,11 @@ void GameView::onBrickBreak(Brick *brick) {
         }, STAGE_CLEAR_DELAY, true);
         
         // 볼 회수
+        /*
         SBDirector::postDelayed(this, [=]() {
             this->withdrawBalls();
         }, STAGE_CLEAR_DELAY*0.5f);
+        */
         
         // 남아있는 아이템 획득
         auto items = getItems();
@@ -469,6 +475,40 @@ void GameView::onBrickBreak(Brick *brick) {
         }
         
         addBallFromQueue();
+    }
+    
+    auto bricks = getBricks();
+    
+    // 남은 브릭 없음
+    if( bricks.size() == 0 ) {
+        // 볼 회수
+        SBDirector::postDelayed(this, [=]() {
+            this->withdrawBalls();
+        }, 0.5f);
+    }
+    // 남은 브릭 있음
+    else {
+        // 모든 보스 브릭이 깨진 경우 귀속된 브릭도 제거
+        if( isBoss ) {
+            vector<Brick*> bossBricks;
+            vector<Brick*> infinityBricks;
+            
+            for( auto tile : bricks ) {
+                auto brick = (Brick*)tile;
+                
+                if( brick->isBoss() ) {
+                    bossBricks.push_back(brick);
+                } else if( brick->isInfinityHp() ) {
+                    infinityBricks.push_back(brick);
+                }
+            }
+            
+            if( bossBricks.size() == 0 ) {
+                for( auto brick : infinityBricks ) {
+                    brick->onBreak();
+                }
+            }
+        }
     }
 }
 
@@ -778,6 +818,8 @@ void GameView::eatItem(Item *item, bool isFallAction) {
                 Vec2 pos = Vec2(ballItem->getPositionX(), SHOOTING_POSITION_Y);
                 float dist = pos.getDistance(ballItem->getPosition());
                 
+                CCLOG("item fall duration: %f", dist * 0.001f);
+                
                 // ballItem->runAction(MoveTo::create(0.8f, pos));
                 ballItem->runAction(MoveTo::create(dist * 0.001f, pos));
             }
@@ -905,6 +947,23 @@ void GameView::addBrick() {
     Log::i("GameView::addBrick empty position count: %d", (int)positions.size());
     // CCASSERT(positions.size() == TILE_ROWS, "GameView::addBrick error.");
     
+    auto createBrick = [=](const BrickData &data, int hp, TilePosition tilePos) -> Brick* {
+        
+        auto brick = this->createBrick(data, hp);
+        brick->setTilePosition(tilePos, false);
+        brick->setOnBreakListener([=](Node*) {
+            this->onBrickBreak(brick);
+        });
+        
+        return brick;
+    };
+    
+    auto addBrick = [=](Brick *brick) {
+        
+        this->addTile(brick);
+    };
+    
+    /*
     auto addBrick = [=](const BrickData &data, int hp, TilePosition tilePos) -> Brick* {
         auto brick = Brick::create(data, hp);
         brick->setTilePosition(tilePos, false);
@@ -916,37 +975,33 @@ void GameView::addBrick() {
         
         return brick;
     };
+    */
     
-    // 보스 벽돌
+    // 보스
     if( floor.isExistBoss() ) {
-        auto boss = addBrick(floor.bossBrick, floor.brickHp*10, TilePosition(2, TILE_POSITION_Y));
-        
-        // 부하 벽돌
         auto pattern = floor.bossPattern;
         
-        auto addFriendBrick = [=](TilePosition pos, int offsetX) -> Brick* {
+        for( auto patternBrick : pattern.bricks ) {
+            auto brick = createBrick(patternBrick.brick, patternBrick.hp,
+                                     TilePosition(0,TILE_POSITION_Y) + patternBrick.pos);
+            addBrick(brick);
             
-            if( pattern.isEmptyPosition(pos) ) {
-                return nullptr;
-            }
-            
-            pos   += boss->getTilePosition();
-            pos.x += offsetX;
-            return addBrick(pattern.friendBrick, floor.brickHp, pos);
-        };
-        
-        // 왼쪽
-        for( int x = 1; x <= 2; ++x ) {
-            for( int y = 0; y <= 1; ++y ) {
-                addFriendBrick(TilePosition(-x,y), 0);
-            }
+            auto brickImage = brick->getImage();
+            brickImage->setFlippedX(patternBrick.isFlippedX);
+            brickImage->setFlippedY(patternBrick.isFlippedY);
         }
-        
-        // 오른쪽
-        for( int x = 1; x <= 2; ++x ) {
-            for( int y = 0; y <= 1; ++y ) {
-                addFriendBrick(TilePosition(x,y), boss->getRows()-1);
+
+        // 파츠 설정
+        if( pattern.bossBrickId == "brick_10012" ) {
+            auto bossBrick = (Brick_10012*)getBricks(pattern.bossBrickId)[0];
+            auto parts = bossBrick->getData().parts;
+            vector<Brick*> partBricks;
+            
+            for( auto part : parts ) {
+                SBCollection::addAll(partBricks, getBricks(part));
             }
+            
+            bossBrick->setParts(partBricks);
         }
         
         return;
@@ -964,7 +1019,9 @@ void GameView::addBrick() {
           floor.stage, floor.floor, dropCount, eliteBrickDropRate, isEliteDropped);
     
     if( isEliteDropped ) {
-        addBrick(floor.getRandomEliteBrick(), floor.brickHp*3, positions[0]);
+        auto brick = createBrick(floor.getRandomEliteBrick(), floor.brickHp*3, positions[0]);
+        brick->setElite(true);
+        addBrick(brick);
         
         --dropCount;
         positions.erase(positions.begin());
@@ -972,10 +1029,18 @@ void GameView::addBrick() {
     
     // 일반 벽돌
     for( int i = 0; i < dropCount && positions.size() > 0; ++i ) {
-        addBrick(floor.getRandomBrick(), floor.brickHp, positions[0]);
+        auto brick = createBrick(floor.getRandomBrick(), floor.brickHp, positions[0]);
+        addBrick(brick);
         
         positions.erase(positions.begin());
     }
+}
+
+Brick* GameView::createBrick(const BrickData &data, int hp) {
+    
+    if( data.brickId == "brick_10012" )     return Brick_10012::create(data, hp);
+    
+    return Brick::create(data, hp);
 }
 
 /**
@@ -1012,7 +1077,9 @@ void GameView::addItem() {
  */
 void GameView::addTile(Game::Tile *tile) {
     
-    CCASSERT(!getTile(tile->getTilePosition()), "GameView::addTile error: already exists.");
+    if( getTile(tile->getTilePosition()) ) {
+        Log::e("GameView::addTile error: already exists.");
+    }
     
     tile->enterWithAction();
     
@@ -1155,6 +1222,22 @@ vector<Game::Tile*> GameView::getBricks() {
     return SBCollection::find(tiles, [](Game::Tile *tile) -> bool {
         return dynamic_cast<Brick*>(tile);
     });
+}
+
+vector<Brick*> GameView::getBricks(const string &brickId) {
+    
+    auto bricks = getBricks();
+    vector<Brick*> result;
+    
+    for( auto tile : bricks ) {
+        auto brick = (Brick*)tile;
+        
+        if( brick->getData().brickId == brickId ) {
+            result.push_back(brick);
+        }
+    }
+    
+    return result;
 }
 
 vector<Game::Tile*> GameView::getItems() {

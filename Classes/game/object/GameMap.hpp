@@ -14,7 +14,7 @@
 #include "superbomb.h"
 #include "Box2D/Box2D.h"
 
-#include "../db/StageData.h"
+#include "ContentManager.hpp"
 
 class GameMap : public cocos2d::Node, public SBPhysicsObject {
 public:

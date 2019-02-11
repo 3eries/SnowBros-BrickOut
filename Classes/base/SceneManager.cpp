@@ -155,7 +155,7 @@ void SceneManager::replaceGameScene(const GiftRewardItems &items) {
 void SceneManager::replaceGameScene(const GiftRewardItem &item) {
     
     if( item.type != GiftType::NONE ) {
-        replaceGameScene(GiftRewardItem({item}));
+        replaceGameScene(GiftRewardItems({item}));
     } else {
         replaceGameScene();
     }
