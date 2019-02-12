@@ -980,9 +980,9 @@ void GameView::addBrick() {
     };
     */
     
-    // 보스
-    if( floor.isExistBoss() ) {
-        auto pattern = floor.bossPattern;
+    // 패턴
+    if( !floor.pattern.isNull() ) {
+        auto pattern = floor.pattern;
         
         for( auto patternBrick : pattern.bricks ) {
             auto brick = createBrick(patternBrick.brick, patternBrick.hp,
@@ -995,8 +995,8 @@ void GameView::addBrick() {
         }
 
         // 파츠 설정
-        if( pattern.bossBrickId == "brick_10012" ) {
-            auto bossBrick = (Brick_10012*)getBricks(pattern.bossBrickId)[0];
+        if( pattern.isExistBrick("brick_10012") ) {
+            auto bossBrick = (Brick_10012*)getBricks("brick_10012")[0];
             auto parts = bossBrick->getData().parts;
             vector<Brick*> partBricks;
             

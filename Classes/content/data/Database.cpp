@@ -69,63 +69,6 @@ void Database::init() {
         }
     }
     CCLOG("========== PARSE END (brick.json)  ==========");
-
-    // boss_pattern.json
-    CCLOG("========== PARSE START (boss_pattern.json)  ==========");
-    {
-        string json = SBStringUtils::readTextFile(BOSS_PATTERN_FILE);
-        
-        rapidjson::Document doc;
-        doc.Parse(json.c_str());
-        
-        auto list = doc.GetArray();
-        
-        for( int i = 0; i < list.Size(); ++i ) {
-            const rapidjson::Value &v = list[i];
-            
-            BossPatternData bossPattern;
-            bossPattern.bossBrickId = v["id"].GetString();
-            
-            auto brickList = v["brick_list"].GetArray();
-            
-            for( int j = 0; j < brickList.Size(); ++j ) {
-                const rapidjson::Value &brickValue = brickList[j];
-                
-                BossPatternBrickData brickData;
-                brickData.brick = getBrick(brickValue["brick_id"].GetString());
-                brickData.hp = brickValue["hp"].GetInt();
-                
-                auto pos = brickValue["pos"].GetArray();
-                brickData.pos = Vec2(pos[0].GetInt(), pos[1].GetInt());
-                
-                if( brickValue.HasMember("flipped_x") ) brickData.isFlippedX = brickValue["flipped_x"].GetBool();
-                if( brickValue.HasMember("flipped_y") ) brickData.isFlippedY = brickValue["flipped_y"].GetBool();
-                
-                bossPattern.bricks.push_back(brickData);
-            }
-            
-            bossPatterns[bossPattern.bossBrickId] = bossPattern;
-            
-            CCLOG("%s", bossPattern.toString().c_str());
-        }
-        
-//        for( auto it = doc.MemberBegin(); it != doc.MemberEnd(); ++it ) {
-//            const auto v = it->value.GetObject();
-//
-//            BossPatternData bossPattern;
-//            bossPattern.bossBrickId = it->name.GetString();
-//            bossPattern.friendBrick = getBrick(v["friend"].GetString());
-//
-//            if( v.HasMember("empty_positions") ) {
-//                bossPattern.parseEmptyPositions(v["empty_positions"]);
-//            }
-//
-//            bossPatterns[bossPattern.bossBrick.brickId] = bossPattern;
-//
-//            CCLOG("%s", bossPattern.toString().c_str());
-//        }
-    }
-    CCLOG("========== PARSE END (boss_pattern.json)  ==========");
     
     // stage.json
     int stageIdx = 0;
@@ -153,6 +96,41 @@ void Database::init() {
         stage.stage = doc["stage"].GetInt();
         stage.originStage = stage.stage;
         
+        // patterns
+        auto patternValueList = doc["patterns"].GetArray();
+        
+        for( int i = 0; i < patternValueList.Size(); ++i ) {
+            const rapidjson::Value &patternValue = patternValueList[i];
+            
+            PatternData pattern;
+            pattern.patternId = patternValue["id"].GetString();
+            
+            auto brickList = patternValue["brick_list"].GetArray();
+            
+            for( int j = 0; j < brickList.Size(); ++j ) {
+                const rapidjson::Value &brickValue = brickList[j];
+                
+                PatternBrickData brickData;
+                brickData.brick = getBrick(brickValue["brick_id"].GetString());
+                brickData.hp = brickValue["hp"].GetInt();
+                
+                auto pos = brickValue["pos"].GetArray();
+                brickData.pos = Vec2(pos[0].GetInt(), pos[1].GetInt());
+                
+                if( brickValue.HasMember("flipped_x") ) brickData.isFlippedX = brickValue["flipped_x"].GetBool();
+                if( brickValue.HasMember("flipped_y") ) brickData.isFlippedY = brickValue["flipped_y"].GetBool();
+                
+                pattern.bricks.push_back(brickData);
+            }
+    
+            if( stage.patterns.find(pattern.patternId) != stage.patterns.end() ) {
+                CCASSERT(false, "PatternData parse error: duplicate pattern id.");
+            }
+            
+            stage.patterns[pattern.patternId] = pattern;
+        }
+        
+        // floors
         auto floorValueList = doc["floors"].GetArray();
         FloorData prevFloor;
         
@@ -182,10 +160,15 @@ void Database::init() {
             if( floorValue.HasMember("brick_list") )          floor.brickList = getBrickList("brick_list");
             if( floorValue.HasMember("elite_brick_list") )    floor.eliteBrickList = getBrickList("elite_brick_list");
             
-            // boss_brick_id
-            if( floorValue.HasMember("boss_brick_id") ) {
-                floor.bossBrick = getBrick(floorValue["boss_brick_id"].GetString());
-                floor.bossPattern = getBossPattern(floor.bossBrick.brickId);
+            // pattern
+            if( floorValue.HasMember("pattern") ) {
+                string patternId = floorValue["pattern"].GetString();
+                
+                if( stage.patterns.find(patternId) == stage.patterns.end() ) {
+                    CCASSERT(false, "FloorData parse error: invalid pattern id.");
+                }
+                
+                floor.pattern = stage.patterns[patternId];
             }
             
             stage.floors.push_back(floor);
@@ -318,21 +301,6 @@ bool Database::isStageLastFloor(int stage, int floor) {
 
 bool Database::isStageLastFloor(const FloorData &data) {
     return isStageLastFloor(data.stage, data.floor);
-}
-
-/**
- * 보스 패턴 데이터를 반환합니다
- */
-BossPatternData Database::getBossPattern(const string &bossBrickId) {
-    
-    auto patterns = getInstance()->bossPatterns;
-    auto it = patterns.find(bossBrickId);
-    
-    if( it == patterns.end() ) {
-        CCASSERT(false, "Database::getBossPattern error.");
-    }
-    
-    return it->second;
 }
 
 /**

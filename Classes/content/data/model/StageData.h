@@ -12,11 +12,14 @@
 #include "superbomb.h"
 
 #include "FloorData.h"
+#include "PatternData.h"
 
 struct StageData {
     int            stage;               // 스테이지 번호
-    FloorList      floors;
     int            originStage;
+    
+    FloorList      floors;
+    PatternDataMap patterns;
     
     StageData() : stage(0) {}
     
@@ -39,8 +42,16 @@ struct StageData {
         str += STR_FORMAT("\tlastFloor: %d\n", getLastFloor().floor);
         str += STR_FORMAT("\tfloorLen: %d\n", (int)floors.size());
         
+        str += "\tfloors:\n";
+        
         for( auto floor : floors ) {
             str += floor.toString() + "\n";
+        }
+        
+        str += "\tpatterns:\n";
+        
+        for( auto e : patterns ) {
+            str += e.second.toString() + "\n";
         }
         
         str += "}";

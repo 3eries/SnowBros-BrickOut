@@ -1,0 +1,51 @@
+{
+    "stage": 3,
+    "floors": [{
+        "floor": 31,
+        "brick_hp": "floor+9",
+        "brick_drop_count": "1~3",
+        "brick_list": ["brick_00001"],
+        "elite_brick_drop_rate": 0,
+        "power_up_drop_rate": 100,
+        "friend_power_up_drop_rate": 0,
+        "money_drop_rate": 0
+    }, {
+        "floor": 32
+    }, {
+        "floor": 33
+    }, {
+        "floor": 34
+    }, {
+        "floor": 35,
+        "brick_drop_count": "2~3",
+        "brick_list": ["brick_00001", "brick_00002"],
+        "elite_brick_drop_rate": 5,
+        "elite_brick_list": ["brick_00004"]
+    }, {
+        "floor": 36
+    }, {
+        "floor": 37
+    }, {
+        "floor": 38
+    }, {
+        "floor": 39
+    }, {
+        "floor": 40,
+        "brick_drop_count": "1~3",
+        "brick_list": ["brick_00001", "brick_00002", "brick_00003"]
+    }, {
+        "floor": 41
+    }, {
+        "floor": 42,
+        "brick_drop_count": "4"
+    }, {
+        "floor": 43,
+        "brick_hp": "prev_brick_hp+2"
+    }, {
+        "floor": 44,
+        "brick_drop_count": "1~2"
+    }, {
+        "floor": 45,
+        "boss_brick_id": "brick_10003"
+    }]
+}

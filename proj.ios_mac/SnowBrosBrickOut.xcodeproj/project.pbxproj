@@ -216,7 +216,6 @@
 		1D25EE12220B398400DD126A /* ItemData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemData.h; sourceTree = "<group>"; };
 		1D25EE13220B398400DD126A /* StageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StageData.h; sourceTree = "<group>"; };
 		1D25EE14220B398400DD126A /* FloorData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FloorData.h; sourceTree = "<group>"; };
-		1D25EE15220B398400DD126A /* BossPatternData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BossPatternData.h; sourceTree = "<group>"; };
 		1D25EE16220B398400DD126A /* BrickData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrickData.h; sourceTree = "<group>"; };
 		1D25EE18220B54E300DD126A /* ContentManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ContentManager.cpp; sourceTree = "<group>"; };
 		1D25EE19220B54E300DD126A /* ContentManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ContentManager.hpp; sourceTree = "<group>"; };
@@ -349,6 +348,7 @@
 		1DA0409A21034F29001980BA /* SBPlatformMacros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBPlatformMacros.h; sourceTree = "<group>"; };
 		1DA0409C21037F6B001980BA /* SBJniHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBJniHelper.cpp; sourceTree = "<group>"; };
 		1DA0409D21037F6B001980BA /* SBJniHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBJniHelper.hpp; sourceTree = "<group>"; };
+		1DA204A42212BE4700656689 /* PatternData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PatternData.h; sourceTree = "<group>"; };
 		1DA723E82109FEAE002B7ADE /* CommonLoadingBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CommonLoadingBar.cpp; sourceTree = "<group>"; };
 		1DA723EB2109FEAE002B7ADE /* CommonLoadingBar.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CommonLoadingBar.hpp; sourceTree = "<group>"; };
 		1DA98BC620B46F61006BC169 /* GameManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameManager.cpp; sourceTree = "<group>"; };
@@ -564,10 +564,10 @@
 		1D25EE11220B398400DD126A /* model */ = {
 			isa = PBXGroup;
 			children = (
-				1D25EE15220B398400DD126A /* BossPatternData.h */,
 				1D25EE16220B398400DD126A /* BrickData.h */,
 				1D25EE14220B398400DD126A /* FloorData.h */,
 				1D25EE12220B398400DD126A /* ItemData.h */,
+				1DA204A42212BE4700656689 /* PatternData.h */,
 				1D25EE13220B398400DD126A /* StageData.h */,
 			);
 			path = model;

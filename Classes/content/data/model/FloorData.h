@@ -12,7 +12,7 @@
 #include "superbomb.h"
 
 #include "BrickData.h"
-#include "BossPatternData.h"
+#include "PatternData.h"
 
 struct FloorData {
     int                      stage;                         // 스테이지
@@ -29,8 +29,7 @@ struct FloorData {
     
     BrickList                brickList;                     // 일반 벽돌 리스트
     BrickList                eliteBrickList;                // 엘리트 벽돌 리스트
-    BrickData                bossBrick;                     // 보스 벽돌
-    BossPatternData          bossPattern;                   // 보스 패턴
+    PatternData              pattern;                       // 패턴
     
     FloorData() : stage(0), floor(0), usePrevData(true),
     brickHpOrigin(""), brickHp(0), brickDropMin(0), brickDropMax(0),
@@ -43,7 +42,7 @@ struct FloorData {
     brickHpOrigin(data.brickHpOrigin), brickHp(data.brickHp), brickDropMin(data.brickDropMin), brickDropMax(data.brickDropMax),
     eliteBrickDropRate(data.eliteBrickDropRate),
     powerUpDropRate(data.powerUpDropRate), friendPowerUpDropRate(data.friendPowerUpDropRate), moneyDropRate(data.moneyDropRate),
-    brickList(data.brickList), eliteBrickList(data.eliteBrickList), bossBrick(data.bossBrick), bossPattern(data.bossPattern) {
+    brickList(data.brickList), eliteBrickList(data.eliteBrickList), pattern(data.pattern) {
     }
     
     void parse(const rapidjson::Value &v, rapidjson::Document::AllocatorType &allocator,
@@ -150,7 +149,7 @@ struct FloorData {
     }
     
     bool isExistBoss() const {
-        return bossBrick.brickId != "";
+        return pattern.isExistBoss();
     }
     
     int getRandomDropCount() {
@@ -192,7 +191,7 @@ struct FloorData {
         }
         
         str += "\n";
-        str += STR_FORMAT("\t\tbossBrickId: %s", bossBrick.brickId.c_str());
+        str += STR_FORMAT("\t\tpattern:\n%s", pattern.toString().c_str());
         str += "\n\t}";
         
         return str;

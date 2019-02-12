@@ -14,7 +14,7 @@
 #include "superbomb.h"
 
 #include "model/BrickData.h"
-#include "model/BossPatternData.h"
+#include "model/PatternData.h"
 #include "model/StageData.h"
 #include "model/ItemData.h"
 
@@ -48,15 +48,12 @@ public:
     static bool            isStageLastFloor(int stage, int floor);
     static bool            isStageLastFloor(const FloorData &data);
     
-    static BossPatternData getBossPattern(const std::string &bossBrickId);
-    
     static BrickMap        getBricks();
     static BrickData       getBrick(const std::string &brickId);
     
 private:
     StageList stages;
     FloorList floors;
-    BossPatternMap bossPatterns;
     BrickMap bricks;
 };
 
