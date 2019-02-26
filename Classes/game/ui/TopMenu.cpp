@@ -266,10 +266,10 @@ void TopMenu::initStage() {
     floorProgressBar.layer = layer;
     
     // Gage
-    // game_gage_stage_bg.png Vec2TL(218, -38) , Size(164, 52)
+    // game_gage_stage_bg.png Vec2TC(8, -38) , Size(432, 52)
     auto gageBg = Sprite::create(DIR_IMG_GAME + "game_gage_stage_bg.png");
     gageBg->setAnchorPoint(ANCHOR_M);
-    gageBg->setPosition(Vec2TL(bgSize, 218, -38));
+    gageBg->setPosition(Vec2TC(bgSize, 8, -38));
     layer->addChild(gageBg);
     
     auto gageBgSize = gageBg->getContentSize();
@@ -282,12 +282,18 @@ void TopMenu::initStage() {
     
     floorProgressBar.gage = gage;
     
+    // game_icon_boss.png Vec2TC(246, -38) , Size(84, 64)
+    auto gageBossIcon = Sprite::create(DIR_IMG_GAME + "game_icon_boss.png");
+    gageBossIcon->setAnchorPoint(ANCHOR_M);
+    gageBossIcon->setPosition(Vec2TC(bgSize, 246, -38));
+    layer->addChild(gageBossIcon);
+    
     // Label
-    // 12/34 size:28 stroke:3 Vec2TL(220, -16) , Size(110, 29)
-    floorProgressBar.label = Label::createWithTTF("", FONT_COMMODORE, 28, Size::ZERO,
+    // 12/34 size:30 stroke:3 Vec2TC(7, -14) , Size(119, 31)
+    floorProgressBar.label = Label::createWithTTF("", FONT_COMMODORE, 30, Size::ZERO,
                                                   TextHAlignment::CENTER, TextVAlignment::CENTER);
     floorProgressBar.label->setAnchorPoint(ANCHOR_M);
-    floorProgressBar.label->setPosition(Vec2TL(bgSize, 220, -16));
+    floorProgressBar.label->setPosition(Vec2TC(bgSize, 7, -14));
     floorProgressBar.label->setTextColor(Color4B::WHITE);
     floorProgressBar.label->enableOutline(Color4B::BLACK, 3);
     layer->addChild(floorProgressBar.label);
