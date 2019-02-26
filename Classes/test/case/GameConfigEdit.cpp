@@ -7,6 +7,7 @@
 #include "GameConfigEdit.hpp"
 
 #include "Define.h"
+#include "ContentManager.hpp"
 
 USING_NS_CC;
 using namespace cocos2d::ui;
@@ -29,7 +30,7 @@ bool GameConfigEdit::init() {
     // 메뉴 초기화
     posY = -110;
     
-    auto editBoxSize = Size(SB_WIN_SIZE.width*0.5f, 50);
+    auto editBoxSize = Size(SB_WIN_SIZE.width*0.4f, 50);
     auto fontSize = 45;
     
     auto addEditBox = [=](string title) -> EditBox* {
@@ -58,7 +59,7 @@ bool GameConfigEdit::init() {
     
     // 1. start stage
     {
-        auto editBox = addEditBox("start stage: ");
+        auto editBox = addEditBox(STR_FORMAT("start stage(last:%d)", Database::getLastStage().stage));
         editBox->setTag(Tag::EDIT_BOX_STAGE);
         editBox->setText(TO_STRING(TEST_HELPER->getStartStage()).c_str());
         editBox->setInputMode(ui::EditBox::InputMode::NUMERIC);
@@ -66,7 +67,7 @@ bool GameConfigEdit::init() {
     
     // 2. first ball count
     {
-        auto editBox = addEditBox("first ball count: ");
+        auto editBox = addEditBox("first ball count");
         editBox->setTag(Tag::EDIT_BOX_BALL_COUNT);
         editBox->setText(TO_STRING(TEST_HELPER->getFirstBallCount()).c_str());
         editBox->setInputMode(ui::EditBox::InputMode::NUMERIC);
@@ -85,7 +86,11 @@ void GameConfigEdit::editBoxReturn(EditBox *editBox) {
             if( text == "" ) {
                 editBox->setText(TO_STRING(TEST_HELPER->getStartStage()).c_str());
             } else {
-                TEST_HELPER->setStartStage(TO_INTEGER(text));
+                int stage = TO_INTEGER(text);
+                stage = MIN(Database::getLastStage().stage, stage);
+                
+                TEST_HELPER->setStartStage(stage);
+                editBox->setText(TO_STRING(stage).c_str());
             }
         } break;
             
