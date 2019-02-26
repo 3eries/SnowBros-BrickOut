@@ -104,7 +104,7 @@ private:
     void onBrickBreak(Brick *brick);
     
     void onPhysicsUpdate();
-    void onContactBrick(Ball *ball, Game::Tile *brickTile);
+    void onContactBrick(Ball *ball, Game::Tile *brickTile, cocos2d::Vec2 contactPoint);
     void onContactItem(Ball *ball, Game::Tile *itemTile);
     void onContactWall(Ball *ball);
     void onContactFloor(Ball *ball);

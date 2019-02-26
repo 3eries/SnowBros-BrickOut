@@ -44,7 +44,7 @@ protected:
     
     virtual void setImage(ImageType type, bool isRunAnimation);
     
-    virtual void onContactBrick(Ball *ball, Game::Tile *brick);
+    virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     
 public:
     virtual void enterWithAction() override;
@@ -65,6 +65,8 @@ public:
     
     bool    isBroken();
     float   getHpRatio();
+    
+    cocos2d::Node* createWhiteBrickEffect();
     
 protected:
     CC_SYNTHESIZE_READONLY(BrickData, data, Data);

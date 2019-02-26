@@ -558,7 +558,7 @@ void GameView::onPhysicsUpdate() {
 /**
  * 볼 & 벽돌 충돌
  */
-void GameView::onContactBrick(Ball *ball, Game::Tile *brickTile) {
+void GameView::onContactBrick(Ball *ball, Game::Tile *brickTile, cocos2d::Vec2 contactPoint) {
 }
 
 /**
@@ -1544,7 +1544,7 @@ void GameView::initPhysicsListener() {
     auto listener = GamePhysicsListener::create();
     listener->setTarget(this);
     listener->onUpdate              = CC_CALLBACK_0(GameView::onPhysicsUpdate, this);
-    listener->onContactBrick        = CC_CALLBACK_2(GameView::onContactBrick, this);
+    listener->onContactBrick        = CC_CALLBACK_3(GameView::onContactBrick, this);
     listener->onContactItem         = CC_CALLBACK_2(GameView::onContactItem, this);
     listener->onContactWall         = CC_CALLBACK_1(GameView::onContactWall, this);
     listener->onContactFloor        = CC_CALLBACK_1(GameView::onContactFloor, this);

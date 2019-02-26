@@ -28,15 +28,23 @@ public:
     ~GamePhysicsListener() {}
     
 public:
-    std::function<void()>                   onUpdate;               // 물리 세계 업데이트
-    std::function<void(Ball*,Game::Tile*)>  onContactBrick;
-    std::function<void(Ball*,Game::Tile*)>  onContactItem;
-    std::function<void(Ball*)>              onContactWall;
-    std::function<void(Ball*)>              onContactFloor;
+    // 물리 세계 업데이트
+    std::function<void()>                                    onUpdate;
+    
+    std::function<void(b2Contact*)>                          onBeginContact;
+    std::function<void(b2Contact*)>                          onEndContact;
+    std::function<void(b2Contact*, const b2Manifold*)>       onPreSolve;
+    std::function<void(b2Contact*, const b2ContactImpulse*)> onPostSolve;
+    
+    std::function<void(Ball*,Game::Tile*,cocos2d::Vec2)>     onContactBrick;
+    std::function<void(Ball*,Game::Tile*)>                   onContactItem;
+    std::function<void(Ball*)>                               onContactWall;
+    std::function<void(Ball*)>                               onContactFloor;
     
 private:
     GamePhysicsListener() : target(nullptr), contactTarget(nullptr),
     onUpdate(nullptr),
+    onBeginContact(nullptr), onEndContact(nullptr), onPreSolve(nullptr), onPostSolve(nullptr),
     onContactBrick(nullptr), onContactItem(nullptr),
     onContactWall(nullptr), onContactFloor(nullptr) {}
     
@@ -45,7 +53,7 @@ private:
     // 충돌 타겟
     // 타겟이 속한 충돌일 경우만 충돌 리스너 실행
     // null인 경우, 검사 없이 리스너 실행
-    CC_SYNTHESIZE(cocos2d::Ref*, contactTarget, ContactTarget);
+    CC_SYNTHESIZE(SBPhysicsObject*, contactTarget, ContactTarget);
 };
 
 // velocityIterations : 바디들을 정상적으로 이동시키기 위해서 필요한 충돌들을 반복적으로 계산
@@ -108,7 +116,11 @@ public:
 
 private:
     void dispatchOnUpdate();
-    void dispatchOnContactBrick(Ball *ball, Game::Tile *brick);
+    void dispatchOnBeginContact(b2Contact *contact);
+    void dispatchOnEndContact(b2Contact *contact);
+    void dispatchOnPreSolve(b2Contact *contact, const b2Manifold *oldManifold);
+    void dispatchOnPostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
+    void dispatchOnContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     void dispatchOnContactItem(Ball *ball, Game::Tile *item);
     void dispatchOnContactWall(Ball *ball);
     void dispatchOnContactFloor(Ball *ball);

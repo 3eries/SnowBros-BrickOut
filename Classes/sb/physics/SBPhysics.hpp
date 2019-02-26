@@ -29,6 +29,7 @@ class SBPhysics {
 public:
     static void syncNodeToBody(cocos2d::Node *node, b2Body *body);
     static void syncBodyToNode(b2Body *body, cocos2d::Node *node);
+    static cocos2d::Vec2 getContactPoint(b2Contact *contact);
 };
 
 #pragma mark- SBPhysicsObject

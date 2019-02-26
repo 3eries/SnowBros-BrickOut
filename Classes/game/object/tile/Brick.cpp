@@ -109,7 +109,7 @@ void Brick::initPhysics() {
     auto listener = GamePhysicsListener::create();
     listener->setTarget(this);
     listener->setContactTarget(this);
-    listener->onContactBrick = CC_CALLBACK_2(Brick::onContactBrick, this);
+    listener->onContactBrick = CC_CALLBACK_3(Brick::onContactBrick, this);
     GameManager::getPhysicsManager()->addListener(listener);
 }
 
@@ -286,7 +286,7 @@ void Brick::setImage(ImageType type, bool isRunAnimation) {
 /**
  * 볼 & 벽돌 충돌
  */
-void Brick::onContactBrick(Ball *ball, Game::Tile *brick) {
+void Brick::onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint) {
     
     if( isBroken() ) {
         Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
@@ -353,12 +353,20 @@ void Brick::sufferDamage(int damage) {
     
     setHp(hp - damage);
     
-    // 벽돌 데미지 연출
+    // 브릭 애니메이션 변경
     setImage(ImageType::DAMAGE, false);
     
     image->runAnimation([=](Node*) {
         this->setImage(ImageType::IDLE, true);
     });
+    
+    // 흰색 브릭 반짝 연출
+    auto whiteEffect = createWhiteBrickEffect();
+    addChild(whiteEffect);
+    
+    SBDirector::postDelayed(this, [=]() {
+        whiteEffect->removeFromParent();
+    }, 0.03f);
     
     // 게이지 반짝 연출
     if( hpGage.gageEffect->getNumberOfRunningActions() == 0 ) {
@@ -445,4 +453,25 @@ bool Brick::isBroken() {
 float Brick::getHpRatio() {
     
     return (float)hp / originalHp;
+}
+
+Node* Brick::createWhiteBrickEffect() {
+    
+    auto size = getContentSize();
+    
+    auto stencil = Sprite::createWithSpriteFrame(image->getSpriteFrame());
+    stencil->setAnchorPoint(ANCHOR_M);
+    stencil->setPosition(Vec2MC(size, 0,0));
+    
+    auto clippingNode = ClippingNode::create(stencil);
+    clippingNode->setAnchorPoint(ANCHOR_M);
+    clippingNode->setPosition(Vec2MC(size, 0,0));
+    clippingNode->setContentSize(size);
+    clippingNode->setAlphaThreshold(0);
+
+    auto drawNode = DrawNode::create();
+    drawNode->drawSolidRect(Vec2::ZERO, stencil->getContentSize(), Color4F::WHITE);
+    clippingNode->addChild(drawNode);
+    
+    return clippingNode;
 }

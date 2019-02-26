@@ -10,11 +10,15 @@
 #include "Define.h"
 #include "../GameDefine.h"
 #include "../GameManager.hpp"
+#include "../GameView.hpp"
 
 #include "tile/Tile.hpp"
 
 USING_NS_CC;
+USING_NS_SB;
 using namespace std;
+
+#define ANIM_HIT_INTERVAL           0.03f
 
 Ball::Ball() : SBPhysicsObject(this),
 damage(1),
@@ -66,7 +70,11 @@ void Ball::initPhysicsListener() {
     auto listener = GamePhysicsListener::create();
     listener->setTarget(this);
     listener->setContactTarget(this);
-    listener->onContactBrick        = CC_CALLBACK_2(Ball::onContactBrick, this);
+    listener->onBeginContact        = CC_CALLBACK_1(Ball::onBeginContact, this);
+    listener->onEndContact          = CC_CALLBACK_1(Ball::onEndContact, this);
+    listener->onPreSolve            = CC_CALLBACK_2(Ball::onPreSolve, this);
+    listener->onPostSolve           = CC_CALLBACK_2(Ball::onPostSolve, this);
+    listener->onContactBrick        = CC_CALLBACK_3(Ball::onContactBrick, this);
     listener->onContactItem         = CC_CALLBACK_2(Ball::onContactItem, this);
     listener->onContactWall         = CC_CALLBACK_1(Ball::onContactWall, this);
     listener->onContactFloor        = CC_CALLBACK_1(Ball::onContactFloor, this);
@@ -183,10 +191,70 @@ void Ball::stopRotate() {
     // image->setRotation(0);
 }
 
+void Ball::onBeginContact(b2Contact *contact) {
+    
+    CCLOG("Ball::onBeginContact");
+}
+
+void Ball::onEndContact(b2Contact *contact) {
+}
+
+void Ball::onPreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
+}
+
+void Ball::onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
+    
+    /*
+    // 바닥 충돌 무시
+    if( contact->GetFixtureA()->GetFilterData().categoryBits == PhysicsCategory::FLOOR ||
+        contact->GetFixtureB()->GetFilterData().categoryBits == PhysicsCategory::FLOOR ) {
+        return;
+    }
+
+    // 벽 충돌 무시
+    if( contact->GetFixtureA()->GetFilterData().categoryBits == PhysicsCategory::WALL ||
+        contact->GetFixtureB()->GetFilterData().categoryBits == PhysicsCategory::WALL ) {
+        return;
+    }
+    
+    // 히트 연출
+    StringList anims;
+    
+    for( int i = 1; i <= 4; ++i ) {
+        anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
+    }
+    
+    auto effect = SBAnimationSprite::create(anims, ANIM_HIT_INTERVAL, 1);
+    effect->setAnchorPoint(ANCHOR_M);
+    effect->setPosition(SBPhysics::getContactPoint(contact));
+    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::TOP);
+    
+    effect->runAnimation([=](Node*) {
+        effect->removeFromParent();
+    });
+    */
+}
+
 /**
  * 볼 & 벽돌 충돌
  */
-void Ball::onContactBrick(Ball *ball, Game::Tile *brick) {
+void Ball::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+    
+    // 히트 연출
+    StringList anims;
+    
+    for( int i = 1; i <= 4; ++i ) {
+        anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
+    }
+    
+    auto effect = SBAnimationSprite::create(anims, ANIM_HIT_INTERVAL, 1);
+    effect->setAnchorPoint(ANCHOR_M);
+    effect->setPosition(contactPoint);
+    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::TOP);
+    
+    effect->runAnimation([=](Node*) {
+        effect->removeFromParent();
+    });
 }
 
 /**
@@ -205,6 +273,8 @@ void Ball::onContactWall(Ball *ball) {
  * 볼 & 바닥 충돌
  */
 void Ball::onContactFloor(Ball *ball) {
+    
+    CCLOG("Ball::onContactFloor");
     
     // 비활성화
     setFall(true);

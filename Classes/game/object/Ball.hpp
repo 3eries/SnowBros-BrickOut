@@ -43,7 +43,11 @@ public:
     void stopRotate();
     
 private:
-    void onContactBrick(Ball *ball, Game::Tile *brick);
+    void onBeginContact(b2Contact *contact);
+    void onEndContact(b2Contact *contact);
+    void onPreSolve(b2Contact *contact, const b2Manifold *oldManifold);
+    void onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
+    void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     void onContactItem(Ball *ball, Game::Tile *item);
     void onContactWall(Ball *ball);
     void onContactFloor(Ball *ball);

@@ -22,6 +22,16 @@ void SBPhysics::syncBodyToNode(b2Body *body, cocos2d::Node *node) {
     node->setRotation(CC_RADIANS_TO_DEGREES(body->GetAngle()));
 }
 
+Vec2 SBPhysics::getContactPoint(b2Contact *contact) {
+ 
+    CCASSERT(contact != nullptr, "SBPhysics::getContactPoint error.");
+    
+    b2WorldManifold worldManifold;
+    contact->GetWorldManifold(&worldManifold);
+    
+    return MTP(worldManifold.points[0]);
+}
+
 #pragma mark- SBPhysicsObject
 
 SBPhysicsObject::SBPhysicsObject(Node *node) :

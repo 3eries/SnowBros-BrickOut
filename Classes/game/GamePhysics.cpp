@@ -14,6 +14,7 @@
 #include "object/tile/Brick.hpp"
 
 USING_NS_CC;
+USING_NS_SB;
 using namespace std;
 
 static const string SCHEDULER_UPDATE                  = "SCHEDULER_UPDATE";
@@ -187,12 +188,18 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
 
 /**
  * 충돌 시작
+ * 물리 시뮬레이션의 스텝에서 두 형태가 처음으로 접촉을 시작했을 때 호출됩니다.
+ * 해당 b2Contact 객체를 비활성화 하면 뒤이어 발생하는 이벤트를 무시할 수 있습니다.
+ * 그렇게 하면, preSolve, postSolve 콜백 함수는 호출되지 않으며 발생한 힘(충돌)을 계산하지 않게 됩니다.
+ * 그렇지만 end 콜백 함수는 여전히 호출됩니다.
  */
 void PhysicsManager::BeginContact(b2Contact *contact) {
     
 #if DEBUG_LOG_ENABLED
     CCLOG("PhysicsManager::BeginContact");
 #endif
+    
+    dispatchOnBeginContact(contact);
     
     auto fixtureA = contact->GetFixtureA();
     auto fixtureB = contact->GetFixtureB();
@@ -255,18 +262,30 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
     }
 }
 
+/**
+ * 충돌 종료
+ * 충돌 상황이 이번 스텝에서 해제됐을 때, 즉 두 바디의 접촉이 떨어졌을 때 호출됩니다.
+ */
 void PhysicsManager::EndContact(b2Contact *contact) {
     
 #if DEBUG_LOG_ENABLED
     CCLOG("PhysicsManager::EndContact");
 #endif
+    
+    dispatchOnEndContact(contact);
 }
 
+/**
+ * 두 형태가 접촉을 계속하는 동안 호출됩니다.
+ * 충돌 후 물리 계산이 되기 전입니다.
+ */
 void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
     
 #if DEBUG_LOG_ENABLED
     CCLOG("PhysicsManager::PreSolve contact enabled: %d", contact->IsEnabled());
 #endif
+    
+    dispatchOnPreSolve(contact, oldManifold);
     
     // 벽돌 체크
     {
@@ -318,11 +337,17 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
     }
 }
 
+/**
+ * 두 형태가 접촉 후, 충돌을 통한 물리 계산을 이미 처리했을 때 호출됩니다.
+ * 이 콜백 함수로 충돌력을 계산할 수 있는데 Impulse에 충돌의 충격량이 전달되어 옵니다.
+ */
 void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
     
 #if DEBUG_LOG_ENABLED
     CCLOG("PhysicsManager::PostSolve");
 #endif
+    
+    dispatchOnPostSolve(contact, impulse);
     
     // 벽돌 체크
     {
@@ -332,7 +357,7 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
             auto ball = (Ball*)objs.obj1;
             auto brick = (Game::Tile*)objs.obj2;
             
-            dispatchOnContactBrick(ball, brick);
+            dispatchOnContactBrick(ball, brick, SBPhysics::getContactPoint(contact));
             
 #if DEBUG_LOG_ENABLED
             CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());
@@ -456,7 +481,99 @@ void PhysicsManager::dispatchOnUpdate() {
     }
 }
 
-void PhysicsManager::dispatchOnContactBrick(Ball *ball, Game::Tile *brick) {
+void PhysicsManager::dispatchOnBeginContact(b2Contact *contact) {
+    
+    auto objA = (SBPhysicsObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+    auto objB = (SBPhysicsObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+    
+    if( objA && objA->isCollisionLocked() ) return;
+    if( objB && objB->isCollisionLocked() ) return;
+    
+    for( auto listener : listeners ) {
+        if( listener->onBeginContact ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == objA || contactTarget == objB ) {
+                    listener->onBeginContact(contact);
+                }
+            } else {
+                listener->onBeginContact(contact);
+            }
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnEndContact(b2Contact *contact) {
+    
+    auto objA = (SBPhysicsObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+    auto objB = (SBPhysicsObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+    
+    if( objA && objA->isCollisionLocked() ) return;
+    if( objB && objB->isCollisionLocked() ) return;
+    
+    for( auto listener : listeners ) {
+        if( listener->onEndContact ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == objA || contactTarget == objB ) {
+                    listener->onEndContact(contact);
+                }
+            } else {
+                listener->onEndContact(contact);
+            }
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnPreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
+    
+    auto objA = (SBPhysicsObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+    auto objB = (SBPhysicsObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+    
+    if( objA && objA->isCollisionLocked() ) return;
+    if( objB && objB->isCollisionLocked() ) return;
+    
+    for( auto listener : listeners ) {
+        if( listener->onPreSolve ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == objA || contactTarget == objB ) {
+                    listener->onPreSolve(contact, oldManifold);
+                }
+            } else {
+                listener->onPreSolve(contact, oldManifold);
+            }
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnPostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
+    
+    auto objA = (SBPhysicsObject*)contact->GetFixtureA()->GetBody()->GetUserData();
+    auto objB = (SBPhysicsObject*)contact->GetFixtureB()->GetBody()->GetUserData();
+    
+    if( objA && objA->isCollisionLocked() ) return;
+    if( objB && objB->isCollisionLocked() ) return;
+    
+    for( auto listener : listeners ) {
+        if( listener->onPostSolve ) {
+            auto contactTarget = listener->getContactTarget();
+            
+            if( contactTarget ) {
+                if( contactTarget == objA || contactTarget == objB ) {
+                    listener->onPostSolve(contact, impulse);
+                }
+            } else {
+                listener->onPostSolve(contact, impulse);
+            }
+        }
+    }
+}
+
+void PhysicsManager::dispatchOnContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint) {
 
     for( auto listener : listeners ) {
         if( listener->onContactBrick ) {
@@ -464,10 +581,10 @@ void PhysicsManager::dispatchOnContactBrick(Ball *ball, Game::Tile *brick) {
             
             if( contactTarget ) {
                 if( contactTarget == ball || contactTarget == brick ) {
-                    listener->onContactBrick(ball, brick);
+                    listener->onContactBrick(ball, brick, contactPoint);
                 }
             } else {
-                listener->onContactBrick(ball, brick);
+                listener->onContactBrick(ball, brick, contactPoint);
             }
         }
     }
