@@ -480,9 +480,7 @@ void GameView::onBrickBreak(Brick *brick) {
     // 남은 브릭 없음
     if( bricks.size() == 0 ) {
         // 볼 회수
-        SBDirector::postDelayed(this, [=]() {
-            this->withdrawBalls();
-        }, 0.5f);
+        withdrawBalls(0.5f);
     }
     // 남은 브릭 있음
     else {
@@ -717,9 +715,17 @@ void GameView::shootStop() {
 /**
  * 모든 볼을 회수합니다
  */
-void GameView::withdrawBalls() {
+void GameView::withdrawBalls(float delay) {
     
     if( isWithdraw ) {
+        return;
+    }
+    
+    if( delay > 0 ) {
+        SBDirector::postDelayed(this, [=]() {
+            this->withdrawBalls();
+        }, delay);
+        
         return;
     }
     

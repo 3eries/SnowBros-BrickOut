@@ -112,7 +112,7 @@ private:
 private:
     void shoot(const cocos2d::Vec2 &endPosition);
     void shootStop();
-    void withdrawBalls();
+    void withdrawBalls(float delay = 0);
     
     void downTile();
     void onClickDownButton();
