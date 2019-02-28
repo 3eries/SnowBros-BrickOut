@@ -21,6 +21,9 @@ void removeListeners(Ref *target) {
     AdsHelper::getInstance()->getEventDispatcher()->removeListener(target);
     GiftManager::getInstance()->removeListener(target);
     PopupManager::getInstance()->removeListener(target);
-    GameManager::getPhysicsManager()->removeListener(target);
-    GameManager::getEventDispatcher()->removeListener(target);
+    
+    if( !GameManager::isNullInstance() ) {
+        GameManager::getPhysicsManager()->removeListener(target);
+        GameManager::getEventDispatcher()->removeListener(target);
+    }
 }

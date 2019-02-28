@@ -31,6 +31,10 @@ void GameManager::destroyInstance() {
     CC_SAFE_DELETE(instance);
 }
 
+bool GameManager::isNullInstance() {
+    return instance == nullptr;
+}
+
 GameManager::GameManager() :
 eventDispatcher(new GameEventDispatcher()),
 physicsManager(new PhysicsManager()),

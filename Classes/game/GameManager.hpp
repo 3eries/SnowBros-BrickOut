@@ -33,6 +33,7 @@ class GameManager {
 public:
     static GameManager* getInstance();
     static void destroyInstance();
+    static bool isNullInstance();
     ~GameManager();
     
 private:
