@@ -80,6 +80,7 @@
 		1D8F54A420D2A8C4009E2201 /* LogoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D8F54A220D2A8C4009E2201 /* LogoView.cpp */; };
 		1D8F54B120D2D114009E2201 /* SBSpineHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D8F54AF20D2D114009E2201 /* SBSpineHelper.cpp */; };
 		1D97ED9020C7348D0027C319 /* PatchManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D97ED8E20C7348D0027C319 /* PatchManager.cpp */; };
+		1D9C034A2226B95500745356 /* TileFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C03482226B95500745356 /* TileFactory.cpp */; };
 		1D9ED20220C421D8006DE988 /* GameConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */; };
 		1DA0408721034661001980BA /* PluginManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407921034660001980BA /* PluginManager.cpp */; };
 		1DA0408821034661001980BA /* FirebaseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407E21034660001980BA /* FirebaseManager.cpp */; };
@@ -330,6 +331,8 @@
 		1D97ED8E20C7348D0027C319 /* PatchManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PatchManager.cpp; sourceTree = "<group>"; };
 		1D97ED8F20C7348D0027C319 /* PatchManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PatchManager.hpp; sourceTree = "<group>"; };
 		1D98CB89218A230D00757DD7 /* PopupDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopupDefine.h; sourceTree = "<group>"; };
+		1D9C03482226B95500745356 /* TileFactory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TileFactory.cpp; sourceTree = "<group>"; };
+		1D9C03492226B95500745356 /* TileFactory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TileFactory.hpp; sourceTree = "<group>"; };
 		1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameConfiguration.cpp; sourceTree = "<group>"; };
 		1D9ED20120C421D8006DE988 /* GameConfiguration.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameConfiguration.hpp; sourceTree = "<group>"; };
 		1DA0407921034660001980BA /* PluginManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PluginManager.cpp; sourceTree = "<group>"; };
@@ -1021,6 +1024,8 @@
 				1D13227821C1E522005F4370 /* Item.hpp */,
 				1DD697A121B8546F005FDC62 /* Tile.cpp */,
 				1DD697A221B8546F005FDC62 /* Tile.hpp */,
+				1D9C03482226B95500745356 /* TileFactory.cpp */,
+				1D9C03492226B95500745356 /* TileFactory.hpp */,
 			);
 			path = tile;
 			sourceTree = "<group>";
@@ -1349,6 +1354,7 @@
 				1DECFE8C2105C01C00F47252 /* SBPlatformHelper-ios.mm in Sources */,
 				1D7F2CE821B706CF00516469 /* DebugDrawView.cpp in Sources */,
 				1DE4B34B210DEE3800653FA8 /* IAPHelper-ios.mm in Sources */,
+				1D9C034A2226B95500745356 /* TileFactory.cpp in Sources */,
 				1DEA58132109A5B400CF6F98 /* AdsEventDispatcher.cpp in Sources */,
 				1D45C49720A8A7D2007E63AD /* MainScene.cpp in Sources */,
 				1DEA58152109A5B400CF6F98 /* AdsHelper-ios.mm in Sources */,

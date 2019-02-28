@@ -20,6 +20,8 @@ struct BrickDef {
     BrickData data;
     int hp;
     FloorData floorData;
+    
+    BrickDef(BrickData _data) : data(_data) {}
 };
 
 class Brick : public Game::Tile {

@@ -345,7 +345,7 @@ void PopupManager::removeListener(PopupListener *listener) {
         listeners.eraseObject(listener);
     }
     
-    CCLOG("PopupManager::removeListener count: %d", (int)listeners.size());
+    // Log::i("PopupManager::removeListener count: %d", (int)listeners.size());
 }
 
 void PopupManager::removeListener(Ref *target) {
@@ -360,7 +360,7 @@ void PopupManager::removeListener(Ref *target) {
         listeners.eraseObject(listener);
     }
     
-    CCLOG("PopupManager::removeListener count: %d", (int)listeners.size());
+    // Log::i("PopupManager::removeListener count: %d", (int)listeners.size());
 }
 
 /**

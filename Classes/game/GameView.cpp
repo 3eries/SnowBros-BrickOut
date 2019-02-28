@@ -20,6 +20,7 @@
 #include "object/Ball.hpp"
 #include "object/AimController.hpp"
 
+#include "object/tile/TileFactory.hpp"
 #include "object/tile/Brick_10012.hpp"
 #include "object/tile/Item.hpp"
 
@@ -316,8 +317,6 @@ void GameView::onFloorChanged(const FloorData &floor) {
  * 다음 층
  */
 void GameView::onNextFloor(const FloorData &floor) {
-    
-    Log::i("onNextFloor(%d-%d)", floor.stage, floor.floor);
     
     // 마지막 칸에 있는 아이템 획득
     auto tiles = getTiles(1);
@@ -953,12 +952,11 @@ void GameView::addBrick() {
     
     auto createBrick = [=](const BrickData &data, int hp, TilePosition tilePos) -> Brick* {
         
-        BrickDef def;
-        def.data = data;
+        BrickDef def(data);
         def.hp = hp;
         def.floorData = floor;
         
-        auto brick = this->createBrick(def);
+        auto brick = TileFactory::createBrick(def);
         brick->setTilePosition(tilePos, false);
         brick->setOnBreakListener([=](Node*) {
             this->onBrickBreak(brick);
@@ -1045,13 +1043,6 @@ void GameView::addBrick() {
     }
 }
 
-Brick* GameView::createBrick(const BrickDef &def) {
-    
-    if( def.data.brickId == "brick_10012" )     return Brick_10012::create(def);
-    
-    return Brick::create(def);
-}
-
 /**
  * 아이템 추가
  */
@@ -1070,10 +1061,12 @@ void GameView::addItem() {
     bool isDrop = (random<int>(1,100) <= floor.powerUpDropRate);
     
     if( isDrop ) {
-        ItemData data;
-        data.type = ItemType::POWER_UP;
+        ItemData data(ItemType::POWER_UP);
         
-        auto item = Item::create(data, floor);
+        ItemDef def(data);
+        def.floorData = floor;
+        
+        auto item = TileFactory::createItem(def);
         item->setTilePosition(positions[0], false);
         addTile(item);
         

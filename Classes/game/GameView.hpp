@@ -123,9 +123,7 @@ private:
     void addBallFromQueue();
     void removeBall(Ball *ball);
     
-    void   addBrick();
-    Brick* createBrick(const BrickDef &def);
-    
+    void addBrick();
     void addItem();
     
     void addTile(Game::Tile *tile);

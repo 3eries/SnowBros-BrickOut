@@ -14,13 +14,20 @@
 #include "superbomb.h"
 #include "Tile.hpp"
 
+struct ItemDef {
+    ItemData data;
+    FloorData floorData;
+    
+    explicit ItemDef(ItemData _data) : data(_data) {}
+};
+
 class Item : public Game::Tile {
 public:
-    static Item* create(const ItemData &data, const FloorData &floorData);
+    static Item* create(const ItemDef &def);
     virtual ~Item();
     
 protected:
-    Item(const ItemData &data, const FloorData &floorData);
+    Item(const ItemDef &def);
     
     virtual bool init() override;
     virtual void initPhysics() override;

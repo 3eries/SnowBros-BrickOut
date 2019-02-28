@@ -19,7 +19,8 @@ enum class ItemType {
 struct ItemData {
     ItemType type;
     
-    ItemData() : type(ItemType::NONE) {}
+    explicit ItemData(ItemType _type) : type(_type) {}
+    explicit ItemData() : type(ItemType::NONE) {}
 };
 
 #endif /* ItemData_h */
