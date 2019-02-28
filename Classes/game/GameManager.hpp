@@ -71,6 +71,7 @@ public:
     
     static StageData            getStage();
     static FloorData            getFloor();
+    static int                  getFloorInStage();
     static bool                 isStageLastFloor();
     
     static bool                 isContinuable();
@@ -86,7 +87,8 @@ private:
     GiftRewardItems giftItems;
     
     int stage;                                                    // 스테이지
-    int floor;                                                    // 층
+    int floor;                                                    // 층, 전체 기준
+    int floorInStage;                                             // 층, 현재 스테이지 기준
     int score;                                                    // 스코어
     CC_SYNTHESIZE_READONLY(int, continueCount, ContinueCount);    // 이어하기한 횟수
     

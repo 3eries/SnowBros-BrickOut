@@ -60,6 +60,7 @@ void GameManager::reset() {
     score = 0;
     stage = 1;
     floor = 1;
+    floorInStage = 1;
 }
 
 /**
@@ -167,7 +168,7 @@ GameEventDispatcher* GameManager::getEventDispatcher() {
 }
 
 PhysicsManager* GameManager::getPhysicsManager() {
-    return getInstance()->physicsManager;
+    return instance->physicsManager;
 }
 
 int GameManager::getPlayCount() {
@@ -175,7 +176,7 @@ int GameManager::getPlayCount() {
 }
 
 int GameManager::getScore() {
-    return getInstance()->score;
+    return instance->score;
 }
 
 StageData GameManager::getStage() {
@@ -186,12 +187,16 @@ FloorData GameManager::getFloor() {
     return Database::getFloor(getInstance()->floor);
 }
 
+int GameManager::getFloorInStage() {
+    return instance->floorInStage;
+}
+
 bool GameManager::isStageLastFloor() {
     return Database::isStageLastFloor(getFloor());
 }
 
 bool GameManager::isContinuable() {
-    return getInstance()->getContinueCount() == 0;
+    return instance->getContinueCount() == 0;
 }
 
 #pragma mark- Game Event
@@ -438,8 +443,7 @@ void GameManager::onBoostEnd() {
 void GameManager::onStageChanged() {
     
     auto stage = getStage();
-    
-    Log::i("GameManager::onStageChanged stage: %d floor: %d", stage.stage, getFloor().floor);
+    Log::i("GameManager::onStageChanged: %d-%d(%d)", stage.stage, getFloorInStage(), getFloor().floor);
     
     getEventDispatcher()->dispatchOnStageChanged(stage);
     onFloorChanged();
@@ -463,8 +467,9 @@ void GameManager::onMoveNextStage() {
         Database::addTempStage();
     }
     
-    getInstance()->stage++;
-    getInstance()->floor++;
+    instance->stage++;
+    instance->floor++;
+    instance->floorInStage = 1;
     
     getEventDispatcher()->dispatchOnMoveNextStage(getStage());
 }
@@ -483,7 +488,10 @@ void GameManager::onMoveNextStageFinished() {
  */
 void GameManager::onFloorChanged() {
     
-    getEventDispatcher()->dispatchOnFloorChanged(getFloor());
+    auto floor = getFloor();
+    Log::i("GameManager::onFloorChanged: %d-%d(%d)", floor.stage, getFloorInStage(), floor.floor);
+    
+    getEventDispatcher()->dispatchOnFloorChanged(floor);
 }
 
 /**
@@ -494,9 +502,13 @@ void GameManager::onNextFloor() {
     FloorData floor;
     
     if( !Database::isStageLastFloor(getFloor()) ) {
-        getInstance()->floor++;
+        instance->floor++;
         floor = getFloor();
     }
+    
+    instance->floorInStage++;
+    
+    Log::i("GameManager::onNextFloor: %d-%d(%d)", getStage().stage, getFloorInStage(), floor.floor);
     
     getEventDispatcher()->dispatchOnNextFloor(floor);
     getEventDispatcher()->dispatchOnFloorChanged(floor);
