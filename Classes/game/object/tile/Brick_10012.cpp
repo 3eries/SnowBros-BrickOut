@@ -28,8 +28,7 @@ Brick_10012* Brick_10012::create(const BrickDef &def) {
     return nullptr;
 }
 
-Brick_10012::Brick_10012(const BrickDef &def) : Brick(def),
-floorChangeCount(0) {
+Brick_10012::Brick_10012(const BrickDef &def) : Brick(def) {
 }
 
 Brick_10012::~Brick_10012() {
@@ -42,12 +41,6 @@ bool Brick_10012::init() {
         return false;
     }
     
-    // 게임 리스너 등록
-    auto listener = GameEventListener::create(this);
-    listener->onFloorChanged            = CC_CALLBACK_1(Brick_10012::onFloorChanged, this);
-    listener->onNextFloor               = CC_CALLBACK_1(Brick_10012::onNextFloor, this);
-    GameManager::getEventDispatcher()->addListener(listener);
-    
     return true;
 }
 
@@ -56,19 +49,12 @@ void Brick_10012::onEnter() {
     Brick::onEnter();
 }
 
-void Brick_10012::cleanup() {
-    
-    removeListeners(this);
-    
-    Brick::cleanup();
-}
-
 /**
  * 층 변경
  */
 void Brick_10012::onFloorChanged(const FloorData &floor) {
     
-    ++floorChangeCount;
+    Brick::onFloorChanged(floor);
 }
 
 /**
@@ -76,6 +62,7 @@ void Brick_10012::onFloorChanged(const FloorData &floor) {
  */
 void Brick_10012::onNextFloor(const FloorData &floor) {
 
+    Brick::onNextFloor(floor);
 }
 
 void Brick_10012::setTilePosition(const TilePosition &tilePos, bool action,
@@ -88,7 +75,7 @@ void Brick_10012::setTilePosition(const TilePosition &tilePos, bool action,
     auto facePart = parts[0];
     
     // 합체
-    if( floorChangeCount % 2 == 0 ) {
+    if( getFloorChangedCount() % 2 == 0 ) {
         facePart->setBgVisible(false);
         facePart->setHpVisible(false);
         facePart->setTilePosition(tilePos, action);

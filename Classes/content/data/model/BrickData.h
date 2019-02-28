@@ -15,6 +15,8 @@ enum class BrickType {
     NONE            = 0,
     NORMAL          = 1,
     SPECIAL         = 10,
+    SPECIAL_SHIELD  = 11,
+    SPECIAL_GHOST   = 12,
     BOSS_FRIENDS    = 50,
     BOSS            = 100,
 };

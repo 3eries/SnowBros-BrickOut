@@ -22,10 +22,9 @@ private:
     
     bool init() override;
     void onEnter() override;
-    void cleanup() override;
     
-    void onFloorChanged(const FloorData &floor);
-    void onNextFloor(const FloorData &floor);
+    void onFloorChanged(const FloorData &floor) override;
+    void onNextFloor(const FloorData &floor) override;
     
 public:
     void setTilePosition(const TilePosition &tilePos, bool action = true,
@@ -33,7 +32,6 @@ public:
     
 private:
     CC_SYNTHESIZE(std::vector<Brick*>, parts, Parts);
-    int floorChangeCount;
 };
 
 #endif /* Brick_10012_hpp */

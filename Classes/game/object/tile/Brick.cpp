@@ -286,7 +286,7 @@ void Brick::setImage(ImageType type, bool isRunAnimation) {
 /**
  * 볼 & 벽돌 충돌
  */
-void Brick::onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint) {
+void Brick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
     
     if( isBroken() ) {
         Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();

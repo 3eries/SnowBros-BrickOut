@@ -517,8 +517,11 @@ void GameView::onPhysicsUpdate() {
         auto bricks = getBricks();
         
         for( auto brick : bricks ) {
+            if( brick->isCollisionLocked() ) {
+                continue;
+            }
+            
             auto brickBox = SBNodeUtils::getBoundingBoxInWorld(brick);
-        
             vector<Ball*> needRemoveBalls;
             
             for( auto ball : balls ) {
@@ -555,7 +558,7 @@ void GameView::onPhysicsUpdate() {
 /**
  * 볼 & 벽돌 충돌
  */
-void GameView::onContactBrick(Ball *ball, Game::Tile *brickTile, cocos2d::Vec2 contactPoint) {
+void GameView::onContactBrick(Ball *ball, Game::Tile *brickTile, Vec2 contactPoint) {
 }
 
 /**

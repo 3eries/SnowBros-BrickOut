@@ -319,7 +319,13 @@ void AimController::setEnabled(bool isEnabled, vector<Game::Tile*> bricks) {
     
     if( isEnabled ) {
         // 충돌 체크용 벽돌 바디 생성
-        for( auto brick : bricks ) {
+        for( auto tile : bricks ) {
+            auto brick = (Brick*)tile;
+            
+            if( !brick->isActive() ) {
+                continue;
+            }
+            
             Size size(brick->getContentSize());
             size.width += BALL_SIZE.width;
             size.height += BALL_SIZE.height;

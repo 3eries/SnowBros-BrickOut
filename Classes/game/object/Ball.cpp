@@ -192,8 +192,6 @@ void Ball::stopRotate() {
 }
 
 void Ball::onBeginContact(b2Contact *contact) {
-    
-    CCLOG("Ball::onBeginContact");
 }
 
 void Ball::onEndContact(b2Contact *contact) {
@@ -250,7 +248,7 @@ void Ball::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
     auto effect = SBAnimationSprite::create(anims, ANIM_HIT_INTERVAL, 1);
     effect->setAnchorPoint(ANCHOR_M);
     effect->setPosition(contactPoint);
-    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::TOP);
+    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::MIDDLE);
     
     effect->runAnimation([=](Node*) {
         effect->removeFromParent();
@@ -273,8 +271,6 @@ void Ball::onContactWall(Ball *ball) {
  * 볼 & 바닥 충돌
  */
 void Ball::onContactFloor(Ball *ball) {
-    
-    CCLOG("Ball::onContactFloor");
     
     // 비활성화
     setFall(true);

@@ -19,7 +19,8 @@ namespace Game {
 Tile::Tile(int rows, int columns, const FloorData &floorData) : SBPhysicsObject(this),
 rows(rows),
 columns(columns),
-floorData(floorData) {
+floorData(floorData),
+floorChangedCount(0) {
 }
 
 Tile::~Tile() {
@@ -38,6 +39,18 @@ bool Tile::init() {
     return true;
 }
 
+void Tile::onEnter() {
+    
+    // 게임 리스너 등록
+    auto listener = GameEventListener::create(this);
+    listener->onStageClear   = CC_CALLBACK_0(Tile::onStageClear, this);
+    listener->onFloorChanged = CC_CALLBACK_1(Tile::onFloorChanged, this);
+    listener->onNextFloor    = CC_CALLBACK_1(Tile::onNextFloor, this);
+    GameManager::getEventDispatcher()->addListener(listener);
+    
+    Node::onEnter();
+}
+    
 void Tile::cleanup() {
     
     removeListeners(this);
@@ -52,6 +65,17 @@ void Tile::initPhysics() {
     
 }
 
+void Tile::onStageClear() {
+}
+
+void Tile::onFloorChanged(const FloorData &floor) {
+    
+    floorChangedCount++;
+}
+
+void Tile::onNextFloor(const FloorData &floor) {
+}
+    
 /**
  * 등장
  */

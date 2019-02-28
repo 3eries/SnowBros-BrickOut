@@ -198,7 +198,7 @@
     "damage_anim_interval": 0.1
 }, {
     "id": "brick_01001",
-    "type": 10,
+    "type": 11,
     "width": 1,
     "height": 1,
     "color": "255,175,136",
@@ -207,7 +207,7 @@
     "damage_anim_interval": 0.1
 }, {
     "id": "brick_01002",
-    "type": 10,
+    "type": 12,
     "width": 1,
     "height": 1,
     "color": "0,255,255",
@@ -216,7 +216,7 @@
     "damage_anim_interval": 0.1
 }, {
     "id": "brick_01003",
-    "type": 10,
+    "type": 11,
     "width": 1,
     "height": 1,
     "color": "85,175,255",
@@ -225,7 +225,7 @@
     "damage_anim_interval": 0.1
 }, {
     "id": "brick_01004",
-    "type": 10,
+    "type": 12,
     "width": 1,
     "height": 1,
     "color": "0,168,255",

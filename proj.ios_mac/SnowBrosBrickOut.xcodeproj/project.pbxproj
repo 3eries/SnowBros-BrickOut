@@ -81,6 +81,8 @@
 		1D8F54B120D2D114009E2201 /* SBSpineHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D8F54AF20D2D114009E2201 /* SBSpineHelper.cpp */; };
 		1D97ED9020C7348D0027C319 /* PatchManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D97ED8E20C7348D0027C319 /* PatchManager.cpp */; };
 		1D9C034A2226B95500745356 /* TileFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C03482226B95500745356 /* TileFactory.cpp */; };
+		1D9C035122277FE500745356 /* ShieldBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C034F22277FE500745356 /* ShieldBrick.cpp */; };
+		1D9C035422277FFB00745356 /* GhostBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C035222277FFB00745356 /* GhostBrick.cpp */; };
 		1D9ED20220C421D8006DE988 /* GameConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */; };
 		1DA0408721034661001980BA /* PluginManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407921034660001980BA /* PluginManager.cpp */; };
 		1DA0408821034661001980BA /* FirebaseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407E21034660001980BA /* FirebaseManager.cpp */; };
@@ -333,6 +335,10 @@
 		1D98CB89218A230D00757DD7 /* PopupDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopupDefine.h; sourceTree = "<group>"; };
 		1D9C03482226B95500745356 /* TileFactory.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TileFactory.cpp; sourceTree = "<group>"; };
 		1D9C03492226B95500745356 /* TileFactory.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TileFactory.hpp; sourceTree = "<group>"; };
+		1D9C034F22277FE500745356 /* ShieldBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShieldBrick.cpp; sourceTree = "<group>"; };
+		1D9C035022277FE500745356 /* ShieldBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ShieldBrick.hpp; sourceTree = "<group>"; };
+		1D9C035222277FFB00745356 /* GhostBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GhostBrick.cpp; sourceTree = "<group>"; };
+		1D9C035322277FFB00745356 /* GhostBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GhostBrick.hpp; sourceTree = "<group>"; };
 		1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameConfiguration.cpp; sourceTree = "<group>"; };
 		1D9ED20120C421D8006DE988 /* GameConfiguration.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameConfiguration.hpp; sourceTree = "<group>"; };
 		1DA0407921034660001980BA /* PluginManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PluginManager.cpp; sourceTree = "<group>"; };
@@ -1020,8 +1026,12 @@
 				1D25EE31220E6BC200DD126A /* Brick_10012.hpp */,
 				1DD7A07321B9099F00C53730 /* Brick.cpp */,
 				1DD7A07421B9099F00C53730 /* Brick.hpp */,
+				1D9C035222277FFB00745356 /* GhostBrick.cpp */,
+				1D9C035322277FFB00745356 /* GhostBrick.hpp */,
 				1D13227721C1E522005F4370 /* Item.cpp */,
 				1D13227821C1E522005F4370 /* Item.hpp */,
+				1D9C034F22277FE500745356 /* ShieldBrick.cpp */,
+				1D9C035022277FE500745356 /* ShieldBrick.hpp */,
 				1DD697A121B8546F005FDC62 /* Tile.cpp */,
 				1DD697A221B8546F005FDC62 /* Tile.hpp */,
 				1D9C03482226B95500745356 /* TileFactory.cpp */,
@@ -1349,6 +1359,7 @@
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				1D49A27C21AFAFA1005C26CB /* ContinuePopup.cpp in Sources */,
 				1DD38B5720FC93D200811604 /* SBActionHelper.cpp in Sources */,
+				1D9C035122277FE500745356 /* ShieldBrick.cpp in Sources */,
 				1D45C48B20A8A7B8007E63AD /* SBNodeUtils.cpp in Sources */,
 				1D4C659D21008BB8005A43D8 /* BaseScene.cpp in Sources */,
 				1DECFE8C2105C01C00F47252 /* SBPlatformHelper-ios.mm in Sources */,
@@ -1357,6 +1368,7 @@
 				1D9C034A2226B95500745356 /* TileFactory.cpp in Sources */,
 				1DEA58132109A5B400CF6F98 /* AdsEventDispatcher.cpp in Sources */,
 				1D45C49720A8A7D2007E63AD /* MainScene.cpp in Sources */,
+				1D9C035422277FFB00745356 /* GhostBrick.cpp in Sources */,
 				1DEA58152109A5B400CF6F98 /* AdsHelper-ios.mm in Sources */,
 				1D8643942152395B001841C9 /* md5.cpp in Sources */,
 				1D97ED9020C7348D0027C319 /* PatchManager.cpp in Sources */,

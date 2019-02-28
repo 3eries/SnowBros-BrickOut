@@ -29,8 +29,13 @@ public:
     
 protected:
     virtual bool init() override;
+    virtual void onEnter() override;
     virtual void cleanup() override;
     virtual void initPhysics() override;
+    
+    virtual void onStageClear();
+    virtual void onFloorChanged(const FloorData &floor);
+    virtual void onNextFloor(const FloorData &floor);
     
 public:
     virtual void enterWithAction();
@@ -51,6 +56,7 @@ protected:
     CC_SYNTHESIZE_READONLY(int, columns, Columns);  // 세로칸
     CC_SYNTHESIZE_READONLY(FloorData, floorData, FloorData);
     CC_SYNTHESIZE_READONLY(TilePosition, tilePos, TilePosition);
+    CC_SYNTHESIZE_READONLY(int, floorChangedCount, FloorChangedCount);
 };
     
 } // namespace Game
