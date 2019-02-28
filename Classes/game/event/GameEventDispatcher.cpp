@@ -209,7 +209,9 @@ void GameEventDispatcher::dispatchOnBoostEnd() {
  */
 void GameEventDispatcher::dispatchOnStageChanged(const StageData &stage) {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onStageChanged ) {
             listener->onStageChanged(stage);
         }
@@ -221,7 +223,9 @@ void GameEventDispatcher::dispatchOnStageChanged(const StageData &stage) {
  */
 void GameEventDispatcher::dispatchOnStageClear() {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onStageClear ) {
             listener->onStageClear();
         }
@@ -233,7 +237,9 @@ void GameEventDispatcher::dispatchOnStageClear() {
  */
 void GameEventDispatcher::dispatchOnMoveNextStage(const StageData &stage) {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onMoveNextStage ) {
             listener->onMoveNextStage(stage);
         }
@@ -245,7 +251,9 @@ void GameEventDispatcher::dispatchOnMoveNextStage(const StageData &stage) {
  */
 void GameEventDispatcher::dispatchOnMoveNextStageFinished(const StageData &stage) {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onMoveNextStageFinished ) {
             listener->onMoveNextStageFinished(stage);
         }
@@ -257,7 +265,9 @@ void GameEventDispatcher::dispatchOnMoveNextStageFinished(const StageData &stage
  */
 void GameEventDispatcher::dispatchOnFloorChanged(const FloorData &floor) {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onFloorChanged ) {
             listener->onFloorChanged(floor);
         }
@@ -269,7 +279,9 @@ void GameEventDispatcher::dispatchOnFloorChanged(const FloorData &floor) {
  */
 void GameEventDispatcher::dispatchOnNextFloor(const FloorData &floor) {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onNextFloor ) {
             listener->onNextFloor(floor);
         }
