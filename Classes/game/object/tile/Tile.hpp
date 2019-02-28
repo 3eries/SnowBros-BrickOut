@@ -24,10 +24,6 @@ namespace Game {
  */
 class Tile : public cocos2d::Node, public SBPhysicsObject {
 public:
-    static const float ENTER_DURATION;
-    static const float MOVE_DURATION;
-    
-public:
     Tile(int rows, int columns, const FloorData &floorData);
     virtual ~Tile();
     

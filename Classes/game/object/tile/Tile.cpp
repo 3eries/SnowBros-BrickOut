@@ -16,9 +16,6 @@ using namespace std;
 
 namespace Game {
 
-const float Tile::ENTER_DURATION         = 0.15f;
-const float Tile::MOVE_DURATION          = 0.18f;
-
 Tile::Tile(int rows, int columns, const FloorData &floorData) : SBPhysicsObject(this),
 rows(rows),
 columns(columns),
@@ -98,7 +95,7 @@ void Tile::setTilePosition(const TilePosition &tilePos, bool action, SBCallback 
     Vec2 p = convertToTilePosition(tilePos, rows, columns);
     
     if( action ) {
-        auto move = MoveTo::create(MOVE_DURATION, p);
+        auto move = MoveTo::create(TILE_MOVE_DURATION, p);
         auto callFunc = CallFunc::create([=]() {
             this->syncNodeToBody();
             

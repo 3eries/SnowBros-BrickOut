@@ -25,8 +25,11 @@ enum GameState {
     RESULT          = (1 << 9),     // 결과 화면
 };
 
-static const float                            MOVE_NEXT_STAGE_DURATION         = 1.4f;
-static const float                            STAGE_CLEAR_DELAY                = 1.0f;
+#define                                       TILE_ENTER_DURATION                0.15f    // 타일 등장 시간
+#define                                       TILE_MOVE_DURATION                 0.18f    // 타일 이동 시간
+
+static const float                            MOVE_NEXT_STAGE_DURATION         = 1.4f;    // 다음 스테이지 이동 시간
+static const float                            STAGE_CLEAR_DELAY                = 1.0f;    // 스테이지 클리어 지연 시간
 static const float                            GAME_RESULT_DELAY                = 0.4f;    // 게임 오버 -> 결과 노출까지의 지연 시간
 
 // Map
