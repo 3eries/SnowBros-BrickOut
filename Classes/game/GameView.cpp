@@ -343,6 +343,11 @@ void GameView::onFloorChanged(const FloorData &floor) {
  */
 void GameView::onNextFloor(const FloorData &floor) {
     
+    // 게임 오버 예정
+    if( isExistBrick(1) ) {
+        return;
+    }
+    
     // 마지막 칸에 있는 아이템 획득
     auto tiles = getTiles(1);
     
