@@ -61,13 +61,13 @@ void GhostBrick::onFloorChanged(const FloorData &floor) {
     // 투명화
     if( getFloorChangedCount() % 2 == 1 ) {
         setCollisionLocked(true);
-        setActive(false);
-        runAction(FadeOut::create(TILE_ENTER_DURATION));
+        setActive(false, false);
+        runAction(FadeTo::create(TILE_ENTER_DURATION, 255*0.3f));
     }
     // 반투명화
     else {
         setCollisionLocked(false);
-        setActive(true);
+        setActive(true, false);
         runAction(FadeIn::create(TILE_ENTER_DURATION));
     }
 }
