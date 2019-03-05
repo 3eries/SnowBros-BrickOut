@@ -18,7 +18,7 @@ using namespace std;
 
 const float SceneManager::REPLACE_DURATION_SPLASH_TO_MAIN = 1.5f;
 const float SceneManager::REPLACE_DURATION_MAIN = 0.3f;
-const float SceneManager::REPLACE_DURATION_GAME = 0.3f;
+const float SceneManager::REPLACE_DURATION_GAME = 0.4f;
 
 static SceneManager *instance = nullptr;
 SceneManager* SceneManager::getInstance() {
@@ -120,7 +120,7 @@ void SceneManager::replace(SceneType type, function<Scene*()> createSceneFunc) {
             }
         } break;
         case SceneType::GAME: {
-            trans = TransitionFade::create(REPLACE_DURATION_GAME, scene);
+            trans = superbomb::TransitionFadeOut::create(REPLACE_DURATION_GAME, 0.3f, scene);
         } break;
             
         default: break;

@@ -57,6 +57,14 @@ bool TopMenu::init() {
     return true;
 }
 
+void TopMenu::onEnter() {
+    
+    updateStageUI(GameManager::getStage());
+    updateFloorProgressUI(GameManager::getFloor());
+    
+    Node::onEnter();
+}
+
 void TopMenu::cleanup() {
     
     removeListeners(this);

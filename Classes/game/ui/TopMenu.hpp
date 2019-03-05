@@ -33,6 +33,7 @@ private:
     TopMenu();
     
     bool init() override;
+    void onEnter() override;
     void cleanup() override;
     
     void initBg();

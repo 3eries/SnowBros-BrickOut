@@ -71,12 +71,13 @@ void GameScene::onEnter() {
     BaseScene::onEnter();
     
     GameManager::onGameEnter();
-    GameManager::onGameStart();
 }
 
 void GameScene::onEnterTransitionDidFinish() {
     
     BaseScene::onEnterTransitionDidFinish();
+    
+    GameManager::onGameStart();
     
     // bgm
     SBAudioEngine::playBGM(DIR_SOUND + "bgm_stage_01.mp3");
@@ -571,7 +572,6 @@ void GameScene::onClick(Node *sender) {
  * 배경 초기화
  */
 void GameScene::initBg() {
-    
 }
 
 /**
