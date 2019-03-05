@@ -30,6 +30,7 @@
 #include "effect/SBAction.hpp"
 #include "effect/SBActionHelper.hpp"
 #include "effect/SBEffect.h"
+#include "effect/SBTransition.hpp"
 
 // json
 #include "json/SBJSON.h"
