@@ -70,6 +70,7 @@ static const std::string DIR_CONTENT                = "content/";
 static const std::string DIR_DATA                   = DIR_ADD(DIR_CONTENT, "data");
 static const std::string DIR_BALL                   = DIR_ADD(DIR_CONTENT, "ball");
 static const std::string DIR_BRICK                  = DIR_ADD(DIR_CONTENT, "brick");
+static const std::string DIR_FRIEND                 = DIR_ADD(DIR_CONTENT, "friend");
 static const std::string DIR_STAGE                  = DIR_ADD(DIR_CONTENT, "stage");
 
 // 스파인 애니메이션

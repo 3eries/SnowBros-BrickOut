@@ -15,6 +15,16 @@
 
 class Friend : public cocos2d::Node {
 public:
+    enum class ImageType {
+        NONE,
+        IDLE,
+        MOVE,
+        DIE,
+        STAGE_START,
+        STAGE_CLEAR,
+    };
+    
+public:
     static Friend* create();
     ~Friend();
     
@@ -24,10 +34,11 @@ private:
     bool init() override;
     
 public:
+    void setImage(ImageType type, SBCallback onAnimationFinished = nullptr);
     void setImageFlippedX(bool flippedX);
     
 private:
-    SBAnimationSprite *image;
+    spine::SkeletonAnimation *image;
 };
 
 #endif /* Friend_hpp */

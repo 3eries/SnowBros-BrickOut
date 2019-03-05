@@ -13,8 +13,8 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-static const int        SLOTS_COUNT         = 5;
-static const float      FRIENDS_POS_Y       = 81;
+#define        SLOT_COUNT          5
+#define        FRIENDS_POS_Y       (SB_WIN_SIZE.height*0.5f)
 
 FriendsLayer::FriendsLayer() {
     
@@ -51,7 +51,7 @@ void FriendsLayer::cleanup() {
  * 볼을 기준으로 좌표 업데이트
  */
 void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
-
+    
     // 모든 슬롯 클리어
     for( auto slot : slots ) {
         slot.clear();
@@ -74,10 +74,12 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
                 continue;
             }
             
+            friendNode->setImage(Friend::ImageType::MOVE);
             friendNode->setImageFlippedX(slot.pos.x < friendNode->getPositionX());
             
-            auto move = MoveTo::create(diff * 0.2f, slot.pos);
+            auto move = MoveTo::create(diff * 0.25f, slot.pos);
             auto callFunc = CallFunc::create([=]() {
+                friendNode->setImage(Friend::ImageType::IDLE);
                 slot.put(friendNode);
             });
             friendNode->runAction(Sequence::create(move, callFunc, nullptr));
@@ -194,6 +196,10 @@ void FriendsLayer::onGameResume() {
  * 게임 오버
  */
 void FriendsLayer::onGameOver() {
+    
+    for( auto friendNode : friends ) {
+        friendNode->setImage(Friend::ImageType::DIE);
+    }
 }
 
 /**
@@ -224,6 +230,12 @@ void FriendsLayer::onBoostEnd() {
  * 스테이지 변경
  */
 void FriendsLayer::onStageChanged(const StageData &stage) {
+    
+    for( auto friendNode : friends ) {
+        friendNode->setImage(Friend::ImageType::STAGE_START, [=]() {
+            friendNode->setImage(Friend::ImageType::IDLE);
+        });
+    }
 }
 
 /**
@@ -237,9 +249,8 @@ void FriendsLayer::onStageClear() {
  */
 void FriendsLayer::onMoveNextStage(const StageData &stage) {
     
-    // hide friends
     for( auto friendNode : friends ) {
-        friendNode->setVisible(false);
+        friendNode->setImage(Friend::ImageType::STAGE_CLEAR);
     }
 }
 
@@ -247,11 +258,6 @@ void FriendsLayer::onMoveNextStage(const StageData &stage) {
  * 다음 스테이지로 이동 완료
  */
 void FriendsLayer::onMoveNextStageFinished(const StageData &stage) {
-    
-    // show friends
-    for( auto friendNode : friends ) {
-        friendNode->setVisible(true);
-    }
 }
 
 /**
@@ -295,9 +301,9 @@ void FriendsLayer::initFriends() {
     }
     
     // 슬롯 리스트 생성
-    int w = SB_WIN_SIZE.width / SLOTS_COUNT;
+    int w = SB_WIN_SIZE.width / SLOT_COUNT;
     
-    for( int i = 0; i < SLOTS_COUNT; ++i ) {
+    for( int i = 0; i < SLOT_COUNT; ++i ) {
         Slot slot;
         slot.index = i;
         slot.pos = Vec2BL((w*i) + (w*0.5f), FRIENDS_POS_Y);

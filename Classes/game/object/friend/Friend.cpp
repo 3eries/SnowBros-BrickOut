@@ -12,6 +12,14 @@
 USING_NS_CC;
 using namespace std;
 
+#define FRIEND_SIZE                     Size(63, 75)
+
+#define ANIM_NAME_IDLE                  "idle"
+#define ANIM_NAME_STAGE_START           "stage_start"
+#define ANIM_NAME_STAGE_CLEAR           "stage_clear"
+#define ANIM_NAME_MOVE                  "move"
+#define ANIM_NAME_DIE                   "die"
+
 Friend* Friend::create() {
     
     auto friendNode = new Friend();
@@ -40,27 +48,49 @@ bool Friend::init() {
     }
     
     setAnchorPoint(ANCHOR_M);
+    setPosition(Vec2MC(0,0));
+    setContentSize(SB_WIN_SIZE);
     setCascadeOpacityEnabled(true);
     
-    // game_friends_02_idle1.png Vec2BL(46, 85) , Size(63, 75)
-    // X5 size:26 stroke:3 Vec2BL(50, 29) , Size(45, 28)
-    // game_ball_friends_02.png Vec2BL(55, 75) , Size(28, 28)
-    StringList anims;
-    anims.push_back(DIR_IMG_GAME + "game_friends_02_idle1.png");
-    
-    image = SBAnimationSprite::create(anims, 0.2f);
-    image->setAnchorPoint(ANCHOR_M);
-    image->setPosition(Vec2MC(image->getContentSize(), 0,0));
+    image = spine::SkeletonAnimation::createWithJsonFile(DIR_FRIEND + "friends_0001.json");
+    image->setAnchorPoint(Vec2::ZERO);
+    image->setPosition(Vec2MC(0, 0));
     addChild(image);
     
-    image->runAnimation();
-    
-    setContentSize(image->getContentSize());
+    SBSpineHelper::clearAnimation(image, ANIM_NAME_CLEAR);
     
     return true;
 }
 
+void Friend::setImage(ImageType type, SBCallback onAnimationFinished) {
+    
+    // SBSpineHelper::clearAnimation(image, ANIM_NAME_CLEAR);
+//    image->clearTracks();
+//    image->update(0);
+
+    auto setAnimation = [=]() ->spTrackEntry* {
+        switch( type ) {
+            case ImageType::IDLE:           return image->setAnimation(0, ANIM_NAME_IDLE, true);
+            case ImageType::MOVE:           return image->setAnimation(0, ANIM_NAME_MOVE, true);
+            case ImageType::DIE:            return image->setAnimation(0, ANIM_NAME_DIE, false);
+            case ImageType::STAGE_START:    return image->setAnimation(0, ANIM_NAME_STAGE_START, false);
+            case ImageType::STAGE_CLEAR:    return image->setAnimation(0, ANIM_NAME_STAGE_CLEAR, false);
+            default:
+                CCASSERT(false, "Friend::setImage error: invalid image type.");
+                break;
+        }
+    };
+    
+    auto track = setAnimation();
+    
+    if( track && onAnimationFinished ) {
+        image->setTrackCompleteListener(track, [=](spTrackEntry *entry) {
+            onAnimationFinished();
+        });
+    }
+}
+
 void Friend::setImageFlippedX(bool flippedX) {
     
-    image->setFlippedX(flippedX);
+    image->setScaleX(flippedX ? -1 : 1);
 }
