@@ -844,7 +844,6 @@ void GameView::eatItem(Item *item, bool isFallAction) {
             auto ballItem = Sprite::create(BALL_IMAGE);
             ballItem->setAnchorPoint(ANCHOR_M);
             ballItem->setPosition(item->getPosition());
-            ballItem->setColor(Color3B(255, 20, 20));
             addChild(ballItem, (int)ZOrder::BALL);
             
             addBallQueue.push_back(ballItem);
@@ -854,10 +853,28 @@ void GameView::eatItem(Item *item, bool isFallAction) {
                 Vec2 pos = Vec2(ballItem->getPositionX(), SHOOTING_POSITION_Y);
                 float dist = pos.getDistance(ballItem->getPosition());
                 
-                CCLOG("item fall duration: %f", dist * 0.001f);
-                
+                // CCLOG("item fall duration: %f", dist * 0.001f);
                 // ballItem->runAction(MoveTo::create(0.8f, pos));
-                ballItem->runAction(MoveTo::create(dist * 0.001f, pos));
+                
+                auto move = MoveTo::create(dist * 0.001f, pos);
+                auto callFunc = CallFunc::create([=]() {
+                
+                    // 추락 좌표에 이미 아이템이 있으면 hide
+                    auto list = SBCollection::find(addBallQueue, [=](Sprite *other) -> bool {
+                        return other != ballItem && other->getPosition().equals(ballItem->getPosition());
+                    });
+                    
+                    if( list.size() > 0 ) {
+                        ballItem->setVisible(false);
+                        return;
+                    }
+                    
+                    // blink
+                    auto fade = Sequence::create(FadeOut::create(0.5f), FadeIn::create(0.5f), nullptr);
+                    // auto blink = Blink::create(1.0f, 2);
+                    ballItem->runAction(RepeatForever::create(fade));
+                });
+                ballItem->runAction(Sequence::create(move, callFunc, nullptr));
             }
             
         } break;
@@ -918,6 +935,10 @@ void GameView::addBallFromQueue() {
     });
     
     for( auto ball : addBallQueue ) {
+        ball->stopAllActions();
+        ball->setOpacity(255);
+        ball->setVisible(true);
+        
         auto action = Sequence::create(move->clone(), moveCallback->clone(), RemoveSelf::create(), nullptr);
         ball->runAction(action);
     }
