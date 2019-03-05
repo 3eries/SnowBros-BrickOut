@@ -99,6 +99,7 @@
 		1DACEF9C21CB8CAA003FF4AC /* SBDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DACEF9A21CB8CAA003FF4AC /* SBDebug.cpp */; };
 		1DBC68E820E49B9300CA85F0 /* CreditPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */; };
 		1DBCE73421AEB9F4002D8DC3 /* SBEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBCE73221AEB9F4002D8DC3 /* SBEvent.cpp */; };
+		1DC2B7E4222EE30800C8EF98 /* SBTransition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC2B7E2222EE30800C8EF98 /* SBTransition.cpp */; };
 		1DC8553721902C9F007E180C /* GiftManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8553521902C9F007E180C /* GiftManager.cpp */; };
 		1DC8554121902FB2007E180C /* GiftListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8553F21902FB2007E180C /* GiftListener.cpp */; };
 		1DD38B5720FC93D200811604 /* SBActionHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD38B5520FC93D200811604 /* SBActionHelper.cpp */; };
@@ -371,6 +372,8 @@
 		1DBCE71C21AE8A3E002D8DC3 /* SBPluginConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBPluginConfig.h; sourceTree = "<group>"; };
 		1DBCE73221AEB9F4002D8DC3 /* SBEvent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBEvent.cpp; sourceTree = "<group>"; };
 		1DBCE73321AEB9F4002D8DC3 /* SBEvent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBEvent.hpp; sourceTree = "<group>"; };
+		1DC2B7E2222EE30800C8EF98 /* SBTransition.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBTransition.cpp; sourceTree = "<group>"; };
+		1DC2B7E3222EE30800C8EF98 /* SBTransition.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBTransition.hpp; sourceTree = "<group>"; };
 		1DC8553521902C9F007E180C /* GiftManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GiftManager.cpp; sourceTree = "<group>"; };
 		1DC8553621902C9F007E180C /* GiftManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GiftManager.hpp; sourceTree = "<group>"; };
 		1DC8553821902CA9007E180C /* GiftDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GiftDefine.h; sourceTree = "<group>"; };
@@ -801,6 +804,8 @@
 				1DD38B5620FC93D200811604 /* SBActionHelper.hpp */,
 				1DE1DC2520F759C800BB3238 /* SBEffect.cpp */,
 				1DE1DC2420F759C800BB3238 /* SBEffect.h */,
+				1DC2B7E2222EE30800C8EF98 /* SBTransition.cpp */,
+				1DC2B7E3222EE30800C8EF98 /* SBTransition.hpp */,
 			);
 			path = effect;
 			sourceTree = "<group>";
@@ -1412,6 +1417,7 @@
 				1DA0408921034661001980BA /* Analytics-android.cpp in Sources */,
 				1D24F6EB21218A56002461A7 /* ReviewHelper.cpp in Sources */,
 				1D25EE17220B398500DD126A /* Database.cpp in Sources */,
+				1DC2B7E4222EE30800C8EF98 /* SBTransition.cpp in Sources */,
 				1D25EE32220E6BC200DD126A /* Brick_10012.cpp in Sources */,
 				1D1F3C8D20ACD36F0035A36C /* ResourceHelper.cpp in Sources */,
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
