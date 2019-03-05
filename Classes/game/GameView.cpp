@@ -60,8 +60,8 @@ bool GameView::init() {
         return false;
     }
     
-    setAnchorPoint(Vec2::ZERO);
-    setPosition(Vec2::ZERO);
+    setAnchorPoint(ANCHOR_M);
+    setPosition(Vec2MC(0,0));
     setContentSize(SB_WIN_SIZE);
     
     initPhysics();
@@ -162,6 +162,31 @@ void GameView::onGameResume() {
  * 게임 오버
  */
 void GameView::onGameOver() {
+    
+    // 볼 비활성화
+    for( auto ball : balls ) {
+        ball->setSyncLocked(true);
+        ball->stopAllActions();
+        ball->setCollisionLocked(true);
+        ball->sleepWithAction();
+        
+        /*
+        if( ball->isFall() ) {
+            ball->setVisible(false);
+        } else {
+            ball->sleepWithAction();
+        }
+        */
+    }
+    
+    // 연출
+    /*
+    const float DURATION = 1.0f;
+    
+    auto scale = ScaleTo::create(DURATION, 1.3f);
+    auto moveBy = MoveBy::create(DURATION, Vec2(0, 200));
+    runAction(Spawn::create(scale, moveBy, nullptr));
+     */
 }
 
 /**
