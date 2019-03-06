@@ -488,11 +488,7 @@ void GameView::onBrickBreak(Brick *brick) {
         }, STAGE_CLEAR_DELAY, true);
         
         // 볼 회수
-        /*
-        SBDirector::postDelayed(this, [=]() {
-            this->withdrawBalls();
-        }, STAGE_CLEAR_DELAY*0.5f);
-        */
+        withdrawBalls(0.5f);
         
         // 남아있는 아이템 획득
         auto items = getItems();
@@ -502,14 +498,18 @@ void GameView::onBrickBreak(Brick *brick) {
         }
         
         addBallFromQueue();
+        
+        return;
     }
     
     auto bricks = getBricks();
     
     // 남은 브릭 없음
     if( bricks.size() == 0 ) {
-        // 볼 회수
-        withdrawBalls(0.5f);
+        // 남은 아이템 없으면 볼 회수
+        if( getItems().size() == 0 ) {
+            withdrawBalls(0.5f);
+        }
     }
     // 남은 브릭 있음
     else {
