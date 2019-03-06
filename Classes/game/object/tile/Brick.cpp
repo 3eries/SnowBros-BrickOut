@@ -36,7 +36,9 @@ data(def.data),
 originalHp(def.hp),
 hp(def.hp),
 elite(false),
-onBreakListener(nullptr) {
+onBreakListener(nullptr),
+bg(nullptr),
+image(nullptr),
 }
 
 Brick::~Brick() {
@@ -50,22 +52,8 @@ bool Brick::init() {
     }
     
     initPhysics();
-    
-    // 배경 초기화
-    bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(getRows(), getColumns(), 1));
-    bg->setAnchorPoint(ANCHOR_M);
-    bg->setPosition(Vec2MC(getContentSize(), 0, 0));
-    // bg->setColor(Color3B(0,0,0));
-    // bg->setOpacity(255*0.3f);
-    addChild(bg);
-    
-    // 이미지 초기화
-    image = SBAnimationSprite::create();
-    image->setAnchorPoint(ANCHOR_M);
-    image->setPosition(Vec2MC(getContentSize(), 0, 0));
-    addChild(image);
-    
-    setImage(ImageType::IDLE, true);
+    initBg();
+    initImage();
     
     return true;
 }
@@ -114,57 +102,95 @@ void Brick::initPhysics() {
 }
 
 /**
+ * 배경 초기화
+ */
+void Brick::initBg() {
+    
+    bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(getRows(), getColumns(), 1));
+    bg->setAnchorPoint(ANCHOR_M);
+    bg->setPosition(Vec2MC(getContentSize(), 0, 0));
+    // bg->setColor(Color3B(0,0,0));
+    // bg->setOpacity(255*0.3f);
+    addChild(bg);
+}
+
+/**
+ * 이미지 초기화
+ */
+void Brick::initImage() {
+    
+    image = SBAnimationSprite::create();
+    image->setAnchorPoint(ANCHOR_M);
+    image->setPosition(Vec2MC(getContentSize(), 0, 0));
+    addChild(image);
+    
+    setImage(ImageType::IDLE, true);
+}
+
+/**
  * HP 게이지 초기화
  */
 void Brick::initHpGage() {
-
-    // 1x1
-    // 2x2
-    // 6x1
-    // 4x2
-    // 1x2
-    // 3x2
-    // 3x1
-    int idx = (getRows() == 1 && getColumns() == 1) ? 1 : 2;
     
-    auto addGage = [=]() -> Sprite* {
-
-        string file = STR_FORMAT("brick_gage_normal_%02d.png", idx);
+    auto is1x1 = [=]() {
         
-        if( data.isBoss() )               file = STR_FORMAT("brick_gage_boss_%02d.png", idx);
-        else if( elite )                  file = STR_FORMAT("brick_gage_elite_%02d.png", idx);
-        else if( this->isInfinityHp() )   file = STR_FORMAT("brick_gage_infinity_%02d.png", idx);
-        
-        auto hpBgSize = hpGage.bg->getContentSize();
-
-        hpGage.gage = Sprite::create(DIR_BRICK + file);
-        hpGage.gage->setAnchorPoint(ANCHOR_ML);
-        hpGage.gage->setPosition(Vec2ML(hpBgSize, (hpBgSize.width-hpGage.gage->getContentSize().width)*0.5f, 0));
-        hpGage.gage->setScaleX(1);
-        hpGage.bg->addChild(hpGage.gage);
-
-        return hpGage.gage;
+        return getRows() == 1 && getColumns() == 1;
     };
-
+    
     auto addLabel = [=](int fontSize) -> Label* {
-
+        
         hpGage.label = Label::createWithTTF(TO_STRING(hp), FONT_COMMODORE, fontSize,
                                             Size::ZERO, TextHAlignment::CENTER, TextVAlignment::TOP);
         hpGage.label->setAnchorPoint(ANCHOR_MT);
         hpGage.label->setTextColor(Color4B::WHITE);
         hpGage.label->enableOutline(Color4B::BLACK, 3);
-        this->addChild(hpGage.label, 1);
-
+        this->addChild(hpGage.label, 2);
+        
         return hpGage.label;
     };
-
-    // 1
-    if( idx == 1 ) {
-        addLabel(21);
-    }
-    // 2
-    else {
-        addLabel(28);
+    
+    auto getGageBgFile = [=]() {
+      
+        return DIR_BRICK + string(is1x1() ? "game_gage_brick_bg.png" : "game_gage_brick_big_bg.png");
+    };
+    
+    auto getGageFile = [=]() {
+        
+        string file = "game_gage_brick_green.png";
+        
+        if( elite )                       file = "game_gage_brick_yellow.png";
+        else if( data.isBoss() )          file = "game_gage_brick_big_red.png";
+        else if( this->isInfinityHp() )   file = "game_gage_brick_big_blue.png";
+        
+        return DIR_BRICK + file;
+    };
+    
+    auto addGage = [=]() -> Sprite* {
+        
+        auto bgSize = hpGage.bg->getContentSize();
+        
+        string gageFile = getGageFile();
+        auto gageTexture = Director::getInstance()->getTextureCache()->addImage(gageFile);
+        auto gageSize = gageTexture->getContentSize();
+        
+        hpGage.gage = Scale9Sprite::create(Rect(gageSize.width*0.5f - 10, gageSize.height*0.5f- 2, 20, 4),
+                                           gageFile);
+        hpGage.gage->setContentSize(hpGage.bg->getContentSize() + Size(-8, -8));
+        hpGage.gage->setAnchorPoint(ANCHOR_ML);
+        hpGage.gage->setPosition(Vec2ML(bgSize, (bgSize.width-hpGage.gage->getContentSize().width)*0.5f, 0));
+        hpGage.gage->setScaleX(1);
+        hpGage.bg->addChild(hpGage.gage);
+        
+        return hpGage.gage;
+    };
+    
+    // HP Label
+    if( is1x1() ) {
+        addLabel(20);
+        hpGage.label->setPosition(Vec2TC(getContentSize(), 0, 5));
+    } else {
+        addLabel(25);
+        hpGage.label->setPosition(Vec2TC(getContentSize(), 0, 6));
     }
     
     if( isInfinityHp() ) {
@@ -172,80 +198,20 @@ void Brick::initHpGage() {
         hpGage.label->setString("MAX");
     }
     
-    // 1. HP Label 좌표 설정
-    hpGage.label->setPosition(Vec2TC(getContentSize(), 0, 4));
+    // HP Gage
+    string bgFile = getGageBgFile();
+    auto bgTexture = Director::getInstance()->getTextureCache()->addImage(bgFile);
+    auto bgSize = bgTexture->getContentSize();
     
-    // 2. HP Label 상대 좌표로 게이지 설정
-    hpGage.bg = Sprite::create(DIR_BRICK + STR_FORMAT("brick_gage_bg_%02d.png", idx));
+    hpGage.bg = Scale9Sprite::create(Rect(bgSize.width*0.5f - 10, bgSize.height*0.5f- 2, 20, 4),
+                                     bgFile);
+    hpGage.bg->setContentSize(Size(getContentSize().width*0.9f, bgSize.height));
     hpGage.bg->setAnchorPoint(ANCHOR_MT);
-    hpGage.bg->setPosition(Vec2(getContentSize().width*0.5f,
-                                hpGage.label->getPositionY() - (hpGage.label->getContentSize().height*0.5f) + 3));
-    addChild(hpGage.bg);
+    hpGage.bg->setPosition(Vec2TC(getContentSize(), 0, is1x1() ? -9 : -8));
+    addChild(hpGage.bg, 1);
     
     addGage();
-    
-//    auto addGage = [=](string file) -> Sprite* {
-//
-//        auto hpBgSize = hpGage.bg->getContentSize();
-//
-//        hpGage.gage = Sprite::create(DIR_IMG_GAME + file);
-//        hpGage.gage->setAnchorPoint(ANCHOR_ML);
-//        hpGage.gage->setPosition(Vec2ML(hpBgSize, (hpBgSize.width-hpGage.gage->getContentSize().width)*0.5f, 0));
-//        hpGage.gage->setScaleX(1);
-//        hpGage.bg->addChild(hpGage.gage);
-//
-//        return hpGage.gage;
-//    };
-//
-//    auto addLabel = [=](int fontSize) -> Label* {
-//
-//        hpGage.label = Label::createWithTTF("", FONT_COMMODORE, fontSize,
-//                                            Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
-//        hpGage.label->setAnchorPoint(ANCHOR_M);
-//        hpGage.label->setTextColor(!this->isInfinityHp() ? Color4B::WHITE : Color4B(254,239,12,255));
-//        hpGage.label->enableOutline(Color4B::BLACK, 3);
-//        this->addChild(hpGage.label);
-//
-//        return hpGage.label;
-//    };
-//
-//    // Normal
-//    if( !data.isBoss() ) {
-//        hpGage.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_normal_bg.png");
-//        hpGage.bg->setAnchorPoint(ANCHOR_M);
-//        hpGage.bg->setPosition(Vec2MC(getContentSize(), 0, 36));
-//        addChild(hpGage.bg);
-//
-//        // HP gage
-//        string gageFile = "";
-//
-//        if( isInfinityHp() ) {
-//            gageFile = "game_gage_brick_boss_blue.png";
-//        } else {
-//            gageFile = !elite ? "game_gage_brick_normal.png" : "game_gage_brick_elite.png";
-//        }
-//
-//        addGage(gageFile);
-//
-//        // HP Label
-//        auto label = addLabel(21);
-//        label->setPosition(Vec2MC(getContentSize(), 0, 46));
-//    }
-//    // Boss
-//    else {
-//        hpGage.bg = Sprite::create(DIR_IMG_GAME + "game_gage_brick_boss_bg.png");
-//        hpGage.bg->setAnchorPoint(ANCHOR_M);
-//        hpGage.bg->setPosition(Vec2MC(getContentSize(), 0, 92));
-//        addChild(hpGage.bg);
-//
-//        // HP gage
-//        addGage("game_gage_brick_boss.png");
-//
-//        // HP Label
-//        auto label = addLabel(28);
-//        label->setPosition(Vec2MC(getContentSize(), 0, 101));
-//    }
-//
+
     // gage effect
     hpGage.gageEffect = Sprite::create(DIR_IMG_GAME + "RSP_gage_fever_white.png");
     hpGage.gageEffect->setVisible(false);

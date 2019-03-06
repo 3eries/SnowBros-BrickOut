@@ -31,6 +31,7 @@ public:
 
 protected:
     enum class ImageType {
+        NONE,
         IDLE,
         DAMAGE,
     };
@@ -42,6 +43,8 @@ protected:
     virtual void onEnter() override;
     
     virtual void initPhysics() override;
+    virtual void initBg();
+    virtual void initImage();
     virtual void initHpGage();
     
     virtual void setImage(ImageType type, bool isRunAnimation);
