@@ -462,6 +462,8 @@ Node* Brick::createWhiteBrickEffect() {
     auto stencil = Sprite::createWithSpriteFrame(image->getSpriteFrame());
     stencil->setAnchorPoint(ANCHOR_M);
     stencil->setPosition(Vec2MC(size, 0,0));
+    stencil->setFlippedX(image->isFlippedX());
+    stencil->setFlippedY(image->isFlippedY());
     
     auto clippingNode = ClippingNode::create(stencil);
     clippingNode->setAnchorPoint(ANCHOR_M);
