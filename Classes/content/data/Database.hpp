@@ -37,6 +37,7 @@ public:
     
     static StageList       getStages();
     static StageData       getStage(int stage);
+    static StageData       getFirstStage();
     static StageData       getLastStage();
     static bool            isLastStage(int stage);
     

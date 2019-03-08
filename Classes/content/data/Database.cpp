@@ -249,6 +249,17 @@ StageData Database::getStage(int stage) {
     return StageData();
 }
 
+StageData Database::getFirstStage() {
+    
+    auto stages = getStages();
+    
+    if( stages.size() == 0 ) {
+        return StageData();
+    }
+    
+    return stages[0];
+}
+
 StageData Database::getLastStage() {
     
     auto stages = getStages();

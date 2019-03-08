@@ -86,6 +86,10 @@ struct BrickData {
         if( v.HasMember("damage_anim_interval") )  damageAnimInterval = v["damage_anim_interval"].GetFloat();
     }
     
+    bool is1x1() const {
+        return width == 1 && height == 1;
+    }
+    
     bool isSpecial() const {
         return type == BrickType::SPECIAL;
     }
