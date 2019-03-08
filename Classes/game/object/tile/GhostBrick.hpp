@@ -25,6 +25,8 @@ private:
     
     void onFloorChanged(const FloorData &floor) override;
     void onNextFloor(const FloorData &floor) override;
+    
+    void updateOpacity();
 };
 
 #endif /* GhostBrick_hpp */

@@ -49,6 +49,8 @@ void GhostBrick::onEnter() {
     
     setCascadeOpacityEnabled(true);
     hpGage.bg->setCascadeOpacityEnabled(true);
+    
+    updateOpacity();
 }
 
 /**
@@ -57,9 +59,22 @@ void GhostBrick::onEnter() {
 void GhostBrick::onFloorChanged(const FloorData &floor) {
     
     Brick::onFloorChanged(floor);
+
+    updateOpacity();
+}
+
+/**
+ * 다음 층
+ */
+void GhostBrick::onNextFloor(const FloorData &floor) {
+    
+    Brick::onNextFloor(floor);
+}
+
+void GhostBrick::updateOpacity() {
     
     // 투명화
-    if( getFloorChangedCount() % 2 == 1 ) {
+    if( getFloorChangedCount() % 2 == 0 ) {
         setCollisionLocked(true);
         setActive(false, false);
         runAction(FadeTo::create(TILE_ENTER_DURATION, 255*0.3f));
@@ -70,12 +85,4 @@ void GhostBrick::onFloorChanged(const FloorData &floor) {
         setActive(true, false);
         runAction(FadeIn::create(TILE_ENTER_DURATION));
     }
-}
-
-/**
- * 다음 층
- */
-void GhostBrick::onNextFloor(const FloorData &floor) {
-    
-    Brick::onNextFloor(floor);
 }
