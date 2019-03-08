@@ -45,8 +45,11 @@ b2World* PhysicsManager::initWorld() {
  */
 void PhysicsManager::removeBodies() {
     
-    loopObjects([](SBPhysicsObject *obj) { obj->removeBody(); });
-    loopBodies([=](b2Body *body)         { world->DestroyBody(body); });
+    SBPhysics::loopObjects(world, [=](SBPhysicsObject *obj) {
+        obj->removeBody();
+    });
+    
+    SBPhysics::removeBodies(world);
 }
 
 /**
@@ -83,46 +86,11 @@ void PhysicsManager::resumeScheduler() {
  */
 void PhysicsManager::update(float dt) {
     
-    loopObjects([](SBPhysicsObject *obj) { obj->beforeStep(); });
+    SBPhysics::loopObjects(world, [](SBPhysicsObject *obj) { obj->beforeStep(); });
     world->Step(PHYSICS_FPS, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-    loopObjects([](SBPhysicsObject *obj) { obj->afterStep(); });
+    SBPhysics::loopObjects(world, [](SBPhysicsObject *obj) { obj->afterStep(); });
     
     dispatchOnUpdate();
-}
-
-/**
- * 물리 오브젝트 루프
- */
-void PhysicsManager::loopBodies(function<void(b2Body*)> callback) {
-    
-    if( !world ) {
-        return;
-    }
-    
-    // GetBodyList()를 이용한 루프 진행 중 바디가 제거되어,
-    // dangling pointer가 발생할 수 있으므로 별도의 리스트 생성
-    vector<b2Body*> bodies;
-    
-    for( auto b = world->GetBodyList(); b; b = b->GetNext() ) {
-        bodies.push_back(b);
-    }
-    
-    for( auto b : bodies ) {
-        callback(b);
-    }
-}
-
-void PhysicsManager::loopObjects(function<void(SBPhysicsObject*)> callback) {
-    
-    loopBodies([=](b2Body *b) {
-        
-        auto userData = b->GetUserData();
-        
-        if( userData ) {
-            auto obj = (SBPhysicsObject*)userData;
-            callback(obj);
-        }
-    });
 }
  
 /**
@@ -150,7 +118,7 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
     
     // 벽돌 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, fixtureA, fixtureB);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
             auto ball = (Ball*)objs.obj1;
@@ -166,7 +134,7 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
     // 아이템 체크
     /*
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, fixtureA, fixtureB);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
         }
@@ -176,7 +144,7 @@ bool PhysicsManager::ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) {
     // 바닥 체크
     /*
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, fixtureA, fixtureB);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
         }
@@ -206,7 +174,7 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
     
     // 벽돌 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, fixtureA, fixtureB);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
             auto ball = (Ball*)objs.obj1;
@@ -222,7 +190,7 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
     
     // 아이템 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, fixtureA, fixtureB);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
 #if DEBUG_LOG_ENABLED
@@ -234,7 +202,7 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
     
     // 벽 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::WALL, fixtureA, fixtureB);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::WALL, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
             dispatchOnContactWall((Ball*)objs.obj1);
@@ -248,7 +216,7 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
     
     // 바닥 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, fixtureA, fixtureB);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, fixtureA, fixtureB);
         
         if( objs.obj1 && objs.obj2 ) {
             contact->SetEnabled(false);
@@ -289,7 +257,7 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
     
     // 벽돌 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, contact);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, contact);
         
         if( objs.obj1 && objs.obj2 ) {
             auto ball = (Ball*)objs.obj1;
@@ -310,7 +278,7 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
     
     // 아이템 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
         
         if( objs.obj1 && objs.obj2 ) {
 #if DEBUG_LOG_ENABLED
@@ -326,7 +294,7 @@ void PhysicsManager::PreSolve(b2Contact *contact, const b2Manifold *oldManifold)
     
     // 바닥 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
         
         if( objs.obj1 && objs.obj2 ) {
 #if DEBUG_LOG_ENABLED
@@ -351,7 +319,7 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
     
     // 벽돌 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, contact);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::BRICK, contact);
         
         if( objs.obj1 && objs.obj2 ) {
             auto ball = (Ball*)objs.obj1;
@@ -369,7 +337,7 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
     
     // 아이템 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::ITEM, contact);
         
         if( objs.obj1 && objs.obj2 ) {
 #if DEBUG_LOG_ENABLED
@@ -381,7 +349,7 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
     
     // 바닥 체크
     {
-        auto objs = findObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::FLOOR, contact);
         
         if( objs.obj1 && objs.obj2 ) {
 #if DEBUG_LOG_ENABLED
@@ -390,50 +358,6 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
             return;
         }
     }
-}
-
-PhysicsManager::CollisionObjects PhysicsManager::findObjects(uint16 categoryBits1, uint16 categoryBits2,
-                                                             b2Fixture *fixtureA, b2Fixture *fixtureB) {
-    
-    if( !fixtureA->GetBody()->GetUserData() ||
-        !fixtureB->GetBody()->GetUserData() ) {
-        return CollisionObjects();
-    }
-    
-    /*
-    if( !fixtureA->GetBody()->IsAwake() ||
-        !fixtureB->GetBody()->IsAwake() ) {
-        return;
-    }
-     */
-    
-    auto objA = (SBPhysicsObject*)fixtureA->GetBody()->GetUserData();
-    auto objB = (SBPhysicsObject*)fixtureB->GetBody()->GetUserData();
-    
-    if( objA->isCollisionLocked() || objB->isCollisionLocked() ) {
-        return CollisionObjects();
-    }
-    
-    CollisionObjects objs;
-    
-    if( fixtureA->GetFilterData().categoryBits == categoryBits1 &&
-        fixtureB->GetFilterData().categoryBits == categoryBits2 ) {
-        objs.obj1 = objA;
-        objs.obj2 = objB;
-    }
-    else if( fixtureB->GetFilterData().categoryBits == categoryBits1 &&
-             fixtureA->GetFilterData().categoryBits == categoryBits2 ) {
-        objs.obj1 = objB;
-        objs.obj2 = objA;
-    }
-    
-    return objs;
-}
-
-PhysicsManager::CollisionObjects PhysicsManager::findObjects(uint16 categoryBits1, uint16 categoryBits2,
-                                                             b2Contact *contact) {
-    
-    return findObjects(categoryBits1, categoryBits2, contact->GetFixtureA(), contact->GetFixtureB());
 }
 
 /**

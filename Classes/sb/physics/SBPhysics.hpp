@@ -25,11 +25,34 @@ static inline cocos2d::Vec2 MTP(const b2Vec2 &p)  { return MTP(p.x, p.y); }
 
 #pragma mark- SBPhysics
 
+class SBPhysicsObject;
+
 class SBPhysics {
 public:
+    static void loopBodies(b2World *world, std::function<void(b2Body*)> callback);
+    static void loopUserDatas(b2World *world, std::function<void(void*)> callback);
+    static void loopObjects(b2World *world, std::function<void(SBPhysicsObject*)> callback);
+    
+    static void removeBodies(b2World *world);
+    
     static void syncNodeToBody(cocos2d::Node *node, b2Body *body);
     static void syncBodyToNode(b2Body *body, cocos2d::Node *node);
+    
     static cocos2d::Vec2 getContactPoint(b2Contact *contact);
+    
+// findCollisionObjects
+public:
+    struct CollisionObjects {
+        SBPhysicsObject *obj1;
+        SBPhysicsObject *obj2;
+        
+        CollisionObjects() : obj1(nullptr), obj2(nullptr) {}
+    };
+    
+    static CollisionObjects findCollisionObjects(uint16 categoryBits1, uint16 categoryBits2,
+                                                 b2Fixture *fixtureA, b2Fixture *fixtureB);
+    static CollisionObjects findCollisionObjects(uint16 categoryBits1, uint16 categoryBits2,
+                                                 b2Contact *contact);
 };
 
 #pragma mark- SBPhysicsObject

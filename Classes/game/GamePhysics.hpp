@@ -84,9 +84,6 @@ public:
     
     void update(float dt);
     
-    void loopBodies(std::function<void(b2Body*)> callback);
-    void loopObjects(std::function<void(SBPhysicsObject*)> callback);
-    
 private:
     // b2ContactFilter
     bool ShouldCollide(b2Fixture *fixtureA, b2Fixture *fixtureB) override;
@@ -96,18 +93,6 @@ private:
     void EndContact(b2Contact *contact) override;
     void PreSolve(b2Contact *contact, const b2Manifold *oldManifold) override;
     void PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) override;
-    
-    struct CollisionObjects {
-        SBPhysicsObject *obj1;
-        SBPhysicsObject *obj2;
-        
-        CollisionObjects() : obj1(nullptr), obj2(nullptr) {}
-    };
-
-    CollisionObjects findObjects(uint16 categoryBits1, uint16 categoryBits2,
-                                 b2Fixture *fixtureA, b2Fixture *fixtureB);
-    CollisionObjects findObjects(uint16 categoryBits1, uint16 categoryBits2,
-                                 b2Contact *contact);
     
 public:
     void addListener(GamePhysicsListener *listener);
