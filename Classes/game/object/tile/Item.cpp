@@ -110,9 +110,6 @@ Size Item::getPhysicsSize() {
 void Item::enterWithAction() {
     
     Game::Tile::enterWithAction();
-    
-    setScale(0);
-    runAction(ScaleTo::create(TILE_ENTER_DURATION, 1));
 }
 
 /**

@@ -268,9 +268,6 @@ void Brick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
 void Brick::enterWithAction() {
     
     Game::Tile::enterWithAction();
-    
-    setScale(0);
-    runAction(ScaleTo::create(TILE_ENTER_DURATION, 1));
 }
 
 /**

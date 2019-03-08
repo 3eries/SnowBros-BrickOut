@@ -378,7 +378,7 @@ void GameView::onTileAddFinished() {
     // 타일 등장 연출 완료 후 이동
     SBDirector::postDelayed(this, [=]() {
         this->downTile();
-    }, TILE_ENTER_DURATION + 0.1f);
+    }, /*TILE_ENTER_DURATION + 0.1f*/0.4f);
 }
 
 /**
