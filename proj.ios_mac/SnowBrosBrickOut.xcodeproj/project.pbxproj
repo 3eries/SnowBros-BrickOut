@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		1AC6FB30180E99EB004C840B /* libcocos2d iOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FB07180E9839004C840B /* libcocos2d iOS.a */; };
+		1D107B212232E14800B3AEB4 /* DemoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B202232E14800B3AEB4 /* DemoView.cpp */; };
+		1D107B242232E15400B3AEB4 /* DemoMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B222232E15400B3AEB4 /* DemoMap.cpp */; };
+		1D107B272232E15C00B3AEB4 /* DemoBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B252232E15C00B3AEB4 /* DemoBrick.cpp */; };
+		1D107B2A2232E16800B3AEB4 /* DemoBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B282232E16800B3AEB4 /* DemoBall.cpp */; };
+		1D107B2D2232F4FB00B3AEB4 /* DemoData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B2B2232F4FB00B3AEB4 /* DemoData.cpp */; };
 		1D13227921C1E522005F4370 /* Item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13227721C1E522005F4370 /* Item.cpp */; };
 		1D13228021C24D39005F4370 /* Friend.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13227E21C24D39005F4370 /* Friend.cpp */; };
 		1D18E425215CA19D0069A888 /* ConsentForm-android.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D18E422215CA19C0069A888 /* ConsentForm-android.cpp */; };
@@ -188,6 +193,16 @@
 /* Begin PBXFileReference section */
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
+		1D107B1F2232E14800B3AEB4 /* DemoView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DemoView.hpp; sourceTree = "<group>"; };
+		1D107B202232E14800B3AEB4 /* DemoView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DemoView.cpp; sourceTree = "<group>"; };
+		1D107B222232E15400B3AEB4 /* DemoMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DemoMap.cpp; sourceTree = "<group>"; };
+		1D107B232232E15400B3AEB4 /* DemoMap.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoMap.hpp; sourceTree = "<group>"; };
+		1D107B252232E15C00B3AEB4 /* DemoBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DemoBrick.cpp; sourceTree = "<group>"; };
+		1D107B262232E15C00B3AEB4 /* DemoBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoBrick.hpp; sourceTree = "<group>"; };
+		1D107B282232E16800B3AEB4 /* DemoBall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DemoBall.cpp; sourceTree = "<group>"; };
+		1D107B292232E16800B3AEB4 /* DemoBall.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoBall.hpp; sourceTree = "<group>"; };
+		1D107B2B2232F4FB00B3AEB4 /* DemoData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DemoData.cpp; sourceTree = "<group>"; };
+		1D107B2C2232F4FB00B3AEB4 /* DemoData.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoData.hpp; sourceTree = "<group>"; };
 		1D13227721C1E522005F4370 /* Item.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Item.cpp; sourceTree = "<group>"; };
 		1D13227821C1E522005F4370 /* Item.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Item.hpp; sourceTree = "<group>"; };
 		1D13227E21C24D39005F4370 /* Friend.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Friend.cpp; sourceTree = "<group>"; };
@@ -533,6 +548,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1D107B1E2232E14800B3AEB4 /* demo */ = {
+			isa = PBXGroup;
+			children = (
+				1D107B282232E16800B3AEB4 /* DemoBall.cpp */,
+				1D107B292232E16800B3AEB4 /* DemoBall.hpp */,
+				1D107B252232E15C00B3AEB4 /* DemoBrick.cpp */,
+				1D107B262232E15C00B3AEB4 /* DemoBrick.hpp */,
+				1D107B2B2232F4FB00B3AEB4 /* DemoData.cpp */,
+				1D107B2C2232F4FB00B3AEB4 /* DemoData.hpp */,
+				1D107B222232E15400B3AEB4 /* DemoMap.cpp */,
+				1D107B232232E15400B3AEB4 /* DemoMap.hpp */,
+				1D107B202232E14800B3AEB4 /* DemoView.cpp */,
+				1D107B1F2232E14800B3AEB4 /* DemoView.hpp */,
+			);
+			path = demo;
+			sourceTree = "<group>";
+		};
 		1D13227B21C24D1B005F4370 /* friend */ = {
 			isa = PBXGroup;
 			children = (
@@ -675,6 +707,7 @@
 			children = (
 				1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */,
 				1DBC68E720E49B9300CA85F0 /* CreditPopup.hpp */,
+				1D107B1E2232E14800B3AEB4 /* demo */,
 				1D45C49520A8A7D2007E63AD /* MainScene.cpp */,
 				1D45C49620A8A7D2007E63AD /* MainScene.hpp */,
 			);
@@ -1362,9 +1395,11 @@
 				1D1F3C9420AD4A3D0035A36C /* GameView.cpp in Sources */,
 				1DEEE24F21B57FCC00DD4776 /* ResultPopup.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
+				1D107B2D2232F4FB00B3AEB4 /* DemoData.cpp in Sources */,
 				1D49A27C21AFAFA1005C26CB /* ContinuePopup.cpp in Sources */,
 				1DD38B5720FC93D200811604 /* SBActionHelper.cpp in Sources */,
 				1D9C035122277FE500745356 /* ShieldBrick.cpp in Sources */,
+				1D107B212232E14800B3AEB4 /* DemoView.cpp in Sources */,
 				1D45C48B20A8A7B8007E63AD /* SBNodeUtils.cpp in Sources */,
 				1D4C659D21008BB8005A43D8 /* BaseScene.cpp in Sources */,
 				1DECFE8C2105C01C00F47252 /* SBPlatformHelper-ios.mm in Sources */,
@@ -1394,7 +1429,9 @@
 				1D45C47E20A8A7B8007E63AD /* SBButton.cpp in Sources */,
 				1DEA58182109A5B400CF6F98 /* AdsHelper.cpp in Sources */,
 				1D45C47D20A8A7B8007E63AD /* SBAnimationSprite.cpp in Sources */,
+				1D107B242232E15400B3AEB4 /* DemoMap.cpp in Sources */,
 				1D86438F21523898001841C9 /* SBSecurity-android.cpp in Sources */,
+				1D107B272232E15C00B3AEB4 /* DemoBrick.cpp in Sources */,
 				1DA0408D210346B4001980BA /* Analytics-ios.mm in Sources */,
 				1DA0408821034661001980BA /* FirebaseManager.cpp in Sources */,
 				1DD7A07521B9099F00C53730 /* Brick.cpp in Sources */,
@@ -1462,6 +1499,7 @@
 				1D3DD000215B46EB00DE7409 /* ConsentForm-ios.mm in Sources */,
 				1DFDEB1620C11B53001BC81D /* TestHelper.cpp in Sources */,
 				1DD697A321B8546F005FDC62 /* Tile.cpp in Sources */,
+				1D107B2A2232E16800B3AEB4 /* DemoBall.cpp in Sources */,
 				1D25EE2F220E1F1F00DD126A /* TestList.cpp in Sources */,
 				1D6505542201A6DB00B4BB0D /* FriendsLayer.cpp in Sources */,
 			);

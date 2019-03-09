@@ -9,6 +9,7 @@
 #include "RankingManager.hpp"
 #include "GiftManager.hpp"
 #include "ContentManager.hpp"
+#include "main/demo/DemoData.hpp"
 
 #include "game/GameManager.hpp"
 
@@ -24,6 +25,7 @@ AppDelegate::AppDelegate()
 
 AppDelegate::~AppDelegate() 
 {
+    DemoData::destroyInstance();
     ContentManager::destroyInstance();
     GiftManager::destroyInstance();
     RankingManager::destroyInstance();
@@ -98,6 +100,7 @@ bool AppDelegate::applicationDidFinishLaunching() {
 //    GameConfiguration::getInstance()->init();
     GiftManager::getInstance()->init();
     ContentManager::getInstance()->init();
+    DemoData::getInstance()->init();
     
     // run
     SceneManager::getInstance()->replace(SceneType::SPLASH);

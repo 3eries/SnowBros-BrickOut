@@ -19,6 +19,8 @@
 class MainScene : public BaseScene {
 private:
     enum Tag {
+        TAP_TO_START        = 10,
+        
         BTN_TITLE           = 100,
         BTN_START,
         BTN_SETTING,

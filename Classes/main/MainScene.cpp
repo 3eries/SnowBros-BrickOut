@@ -11,11 +11,13 @@
 #include "SceneManager.h"
 #include "PopupManager.hpp"
 #include "GiftManager.hpp"
+#include "ContentManager.hpp"
 #include "UIHelper.hpp"
 #include "TestList.hpp"
 
 #include "../game/GameManager.hpp"
 
+#include "demo/DemoView.hpp"
 #include "CommonLoadingBar.hpp"
 #include "ExitAlertPopup.hpp"
 #include "SettingPopup.hpp"
@@ -137,6 +139,8 @@ void MainScene::onClick(Node *sender) {
             
         // 게임 시작
         case Tag::BTN_START: {
+            removeChildByTag(Tag::TAP_TO_START);
+            
 #if ENABLE_TEST_MENU
             GameManager::getInstance()->setStartStage(TEST_HELPER->getStartStage());
 #endif
@@ -239,25 +243,22 @@ void MainScene::initBg() {
     
     addChild(LayerColor::create(Color4B::BLACK));
     
-    auto bg = Sprite::create(DIR_IMG_MAIN + "main_bg.png");
-    bg->setAnchorPoint(ANCHOR_M);
-    bg->setPosition(Vec2MC(0,0));
-    addChild(bg);
+    auto demoView = DemoView::create();
+    addChild(demoView);
     
     // title
-    /*
     auto title = SBButton::create(DIR_IMG_MAIN + "main_title.png");
     title->setZoomScale(0);
     title->setTag(Tag::BTN_TITLE);
     title->setAnchorPoint(ANCHOR_M);
-    title->setPosition(Vec2MC(0, 240));
+    title->setPosition(Vec2MC(0, 270));
     addChild(title);
     
-    title->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
-    */
+    // title->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
      
     // tap to start
     auto tapToStart = Sprite::create(DIR_IMG_MAIN + "main_tap_to_start.png");
+    tapToStart->setTag(Tag::TAP_TO_START);
     tapToStart->setAnchorPoint(ANCHOR_M);
     tapToStart->setPosition(Vec2BC(0, 318));
     addChild(tapToStart);
