@@ -177,6 +177,24 @@ void Database::init() {
             prevFloor = floor;
         }
         
+        // 스테이지에 등장한 브릭 리스트
+        auto addBrickList = [](BrickList &target, BrickList src) {
+            for( auto brick : src ) {
+                auto list = SBCollection::find(target, [=](BrickData targetData) -> bool {
+                    return brick.brickId == targetData.brickId;
+                });
+                
+                if( list.size() == 0 ) {
+                    target.push_back(brick);
+                }
+            }
+        };
+        
+        for( auto floor : stage.floors ) {
+            addBrickList(stage.normalBrickList, floor.brickList);
+            addBrickList(stage.bossBrickList, floor.getBossBrickList());
+        }
+        
         // order by floor asc
         sort(stage.floors.begin(), stage.floors.end(), [](const FloorData &f1, const FloorData &f2) {
             return f1.floor < f2.floor;

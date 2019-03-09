@@ -148,6 +148,10 @@ struct FloorData {
         return floor == 0;
     }
     
+    BrickList getBossBrickList() const {
+        return pattern.getBossBrickList();
+    }
+    
     bool isExistBoss() const {
         return pattern.isExistBoss();
     }

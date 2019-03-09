@@ -60,14 +60,20 @@ struct PatternData {
         return false;
     }
     
-    bool isExistBoss() const {
+    BrickList getBossBrickList() const {
+        BrickList brickList;
+        
         for( auto brick : bricks ) {
             if( brick.brick.isBoss() ) {
-                return true;
+                brickList.push_back(brick.brick);
             }
         }
         
-        return false;
+        return brickList;
+    }
+    
+    bool isExistBoss() const {
+        return getBossBrickList().size() > 0;
     }
     
     std::string toString() {

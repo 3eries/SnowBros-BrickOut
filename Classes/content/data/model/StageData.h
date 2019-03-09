@@ -15,11 +15,15 @@
 #include "PatternData.h"
 
 struct StageData {
-    int            stage;               // 스테이지 번호
+    int            stage;                   // 스테이지 번호
     int            originStage;
     
     FloorList      floors;
     PatternDataMap patterns;
+    
+    // 스테이지에 등장한 브릭 리스트
+    BrickList normalBrickList;
+    BrickList bossBrickList;
     
     StageData() : stage(0) {}
     
