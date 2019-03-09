@@ -18,8 +18,6 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-#define ANIM_HIT_INTERVAL           0.03f
-
 Ball::Ball() : SBPhysicsObject(this),
 damage(1),
 fall(false) {
@@ -245,7 +243,7 @@ void Ball::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
         anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
     }
     
-    auto effect = SBAnimationSprite::create(anims, ANIM_HIT_INTERVAL, 1);
+    auto effect = SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);
     effect->setAnchorPoint(ANCHOR_M);
     effect->setPosition(contactPoint);
     GameManager::getInstance()->getView()->addChild(effect, SBZOrder::MIDDLE);

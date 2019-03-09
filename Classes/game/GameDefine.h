@@ -44,6 +44,7 @@ static const float                            GAME_RESULT_DELAY                =
 #define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE)) // 대각선
 
 // Ball
+#define                                       SHOOTING_MAX_ANGLE                 75                // 발사 최대 각도
 #define                                       SHOOT_INTERVAL                     (PHYSICS_FPS * 3) // 발사 시간 간격
 
 #define                                       BALL_IMAGE                         std::string(DIR_IMG_GAME + "game_ball.png")
@@ -51,9 +52,13 @@ static const float                            GAME_RESULT_DELAY                =
 static const float                            BALL_RADIUS                      = 20;
 static const cocos2d::Size                    BALL_SIZE                        = cocos2d::Size(BALL_RADIUS*2, BALL_RADIUS*2);
 static const float                            BALL_MAX_VELOCITY                = 28;
+#define                                       BALL_ANIM_HIT_INTERVAL             0.03f
 
 #define                                       SHOOTING_POSITION_Y                64
 #define                                       FIRST_SHOOTING_POSITION            Vec2BC(0, SHOOTING_POSITION_Y)
+
+#define                                       BALL_JOIN_MOVE_DURATION            0.2f
+#define                                       BALL_WITHDRAW_MOVE_DURATION        0.25f
 
 // Wall
 static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f; // 벽 두께

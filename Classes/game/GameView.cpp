@@ -33,10 +33,6 @@ using namespace spine;
 using namespace std;
 
 static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
-
-static const float  BALL_MOVE_DURATION              = 0.2f;
-static const float  BALL_WITHDRAW_MOVE_DURATION     = 0.25f;
-
 static const float  DRAG_MIN_DIST                   = 200;           // 드래그 판단 거리
 
 #define DEBUG_DRAW_PHYSICS      1
@@ -636,7 +632,7 @@ void GameView::onContactFloor(Ball *ball) {
     auto pos = aimController->getStartPosition();
     ball->setPosition(Vec2(ball->getPositionX(), pos.y));
     
-    auto move = MoveTo::MoveTo::create(BALL_MOVE_DURATION, pos);
+    auto move = MoveTo::create(BALL_JOIN_MOVE_DURATION, pos);
     auto callFunc = CallFunc::create([=]() {
         
         // 두번째 볼부터 hide
@@ -648,7 +644,7 @@ void GameView::onContactFloor(Ball *ball) {
     
     // 모든 볼 추락
     if( fallenBallCount == balls.size() ) {
-        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), BALL_MOVE_DURATION*0.5f);
+        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), BALL_JOIN_MOVE_DURATION*0.5f);
     }
 }
 
@@ -927,7 +923,7 @@ void GameView::addBallFromQueue() {
     
     // Step 1. 볼 합체 연출
     auto pos = aimController->getStartPosition();
-    auto move = MoveTo::create(BALL_MOVE_DURATION, pos);
+    auto move = MoveTo::create(BALL_JOIN_MOVE_DURATION, pos);
     auto moveCallback = CallFunc::create([=]() {
         
         // Step 2. 연출 후 실제로 추가
@@ -963,7 +959,7 @@ void GameView::addBallFromQueue() {
         auto remove = RemoveSelf::create();
         label->runAction(Sequence::create(move, remove, nullptr));
         
-    }, BALL_MOVE_DURATION+0.05f);
+    }, BALL_JOIN_MOVE_DURATION+0.05f);
 }
 
 /**

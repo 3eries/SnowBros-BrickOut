@@ -21,7 +21,6 @@ using namespace cocos2d::ui;
 using namespace std;
 
 static const float LINE_PADDING         = 25;   // 조준선 간격
-static const float MAX_ANGLE            = 75;   // 최대 각도
 static const Color4B DEBUG_AIM_LINE_COLOR               = Color4B(0,0,255,255*0.2f);
 
 AimController::AimController() :
@@ -249,8 +248,8 @@ void AimController::onTouchMoved(Touch *touch, Event *event) {
         
         // Raycasting
         float shootingAngle = angle;
-        shootingAngle = MIN(MAX_ANGLE, shootingAngle);
-        shootingAngle = MAX(-MAX_ANGLE, shootingAngle);
+        shootingAngle = MIN(SHOOTING_MAX_ANGLE, shootingAngle);
+        shootingAngle = MAX(-SHOOTING_MAX_ANGLE, shootingAngle);
         
         Vec2 virtualEndPosition = startPosition;
         virtualEndPosition += (Vec2::forAngle(-CC_DEGREES_TO_RADIANS(shootingAngle-90)) * MAP_DIAGONAL/*dist*/);
