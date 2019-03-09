@@ -374,7 +374,7 @@ void GameView::onTileAddFinished() {
     // 타일 등장 연출 완료 후 이동
     SBDirector::postDelayed(this, [=]() {
         this->downTile();
-    }, /*TILE_ENTER_DURATION + 0.1f*/0.4f);
+    }, /*TILE_ENTER_DURATION + 0.1f*/0.3f);
 }
 
 /**
@@ -665,14 +665,14 @@ void GameView::shoot(const Vec2 &endPosition) {
     }
     
     // 속도 설정
-    // b2Vec2 velocity(random(-30, 30), 30);
     Vec2 diff = endPosition - aimController->getStartPosition();
+    
     b2Vec2 velocity = PTM(diff);
     velocity.Normalize();
     velocity.x *= BALL_MAX_VELOCITY;
     velocity.y *= BALL_MAX_VELOCITY;
     
-    // CCLOG("onShoot diff: %f,%f (%f,%f)", diff.x, diff.y, velocity.x, velocity.y);
+    // Log::i("shoot velocity: %f,%f", velocity.x, velocity.y);
     
     // 볼 업데이트
     for( auto ball : balls ) {
@@ -689,23 +689,12 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     // 하나씩 발사
     schedule([=](float dt) {
-
-        // 모두 발사됨
-        if( shootIndex == balls.size() ) {
-            this->shootStop();
-            this->onShootFinished();
-            return;
-        }
         
         // 볼 회수됨
         if( isWithdraw ) {
             this->shootStop();
             return;
         }
-        
-        // Log::i("shoot! ball index: %d", shootIndex);
-        
-        // SBAudioEngine::playEffect(DIR_SOUND + "shoot.wav");
         
         auto ball = balls[shootIndex];
         
@@ -715,15 +704,19 @@ void GameView::shoot(const Vec2 &endPosition) {
 
         ++shootIndex;
         
-        // 다음볼 show
+        // 슈팅 진행중
         if( shootIndex < balls.size() ) {
+            ballCountLabel->setString("X" + TO_STRING(balls.size() - shootIndex));
+            // 다음볼 show
             balls[shootIndex]->setVisible(true);
         }
-
-        // 볼 개수 UI 업데이트
-        ballCountLabel->setVisible(shootIndex < balls.size());
-        ballCountLabel->setString("X" + TO_STRING(balls.size() - shootIndex));
-        
+        // 슈팅 완료
+        else {
+            ballCountLabel->setVisible(false);
+            
+            this->shootStop();
+            this->onShootFinished();
+        }
     }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
     
     // 볼 회수 기능 활성화

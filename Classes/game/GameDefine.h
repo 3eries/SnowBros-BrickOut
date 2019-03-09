@@ -30,7 +30,7 @@ enum GameState {
 
 static const float                            MOVE_NEXT_STAGE_DURATION         = 1.4f;    // 다음 스테이지 이동 시간
 static const float                            STAGE_CLEAR_DELAY                = 1.0f;    // 스테이지 클리어 지연 시간
-static const float                            GAME_RESULT_DELAY                = 0.4f;    // 게임 오버 -> 결과 노출까지의 지연 시간
+static const float                            GAME_RESULT_DELAY                = 1.5f;    // 게임 오버 -> 결과 노출까지의 지연 시간
 
 // Map
 #define                                       MAP_CONTENT_WIDTH                  720
