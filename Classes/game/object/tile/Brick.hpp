@@ -83,15 +83,20 @@ protected:
     
     cocos2d::Sprite *bg;
     CC_SYNTHESIZE_READONLY(SBAnimationSprite*, image, Image);
+    ImageType imageType;
     
     struct HpGage {
         cocos2d::Node *bg;
         cocos2d::Sprite *gage;
         cocos2d::Sprite *gageEffect;
         cocos2d::Label *label;
+        
+        HpGage() : bg(nullptr), gage(nullptr), gageEffect(nullptr), label(nullptr) {}
     };
     
     HpGage hpGage;
+    
+    bool isRunningDamageWhiteEffect;
 };
 
 #endif /* Brick_hpp */

@@ -39,6 +39,8 @@ elite(false),
 onBreakListener(nullptr),
 bg(nullptr),
 image(nullptr),
+imageType(ImageType::NONE),
+isRunningDamageWhiteEffect(false) {
 }
 
 Brick::~Brick() {
@@ -226,6 +228,8 @@ void Brick::initHpGage() {
  */
 void Brick::setImage(ImageType type, bool isRunAnimation) {
     
+    this->imageType = type;
+    
     switch( type ) {
         case ImageType::IDLE: {
             auto anim = SBNodeUtils::createAnimation(data.idleAnims, data.idleAnimInterval);
@@ -317,21 +321,39 @@ void Brick::sufferDamage(int damage) {
     setHp(hp - damage);
     
     // 브릭 애니메이션 변경
-    setImage(ImageType::DAMAGE, false);
+    if( imageType != ImageType::DAMAGE ) {
+        setImage(ImageType::DAMAGE, false);
+        
+        image->runAnimation([=](Node*) {
+            this->setImage(ImageType::IDLE, true);
+        });
     
-    image->runAnimation([=](Node*) {
-        this->setImage(ImageType::IDLE, true);
-    });
+        // 흰색 브릭 반짝 연출
+        auto whiteEffect = createWhiteBrickEffect();
+        addChild(whiteEffect);
+        
+        SBDirector::postDelayed(this, [=]() {
+            whiteEffect->removeFromParent();
+        }, 0.03f);
+    }
     
     // 흰색 브릭 반짝 연출
-    auto whiteEffect = createWhiteBrickEffect();
-    addChild(whiteEffect);
-    
-    SBDirector::postDelayed(this, [=]() {
-        whiteEffect->removeFromParent();
-    }, 0.03f);
-    
+    /*
+    if( !isRunningDamageWhiteEffect ) {
+        isRunningDamageWhiteEffect = true;
+        
+        auto whiteEffect = createWhiteBrickEffect();
+        addChild(whiteEffect);
+        
+        SBDirector::postDelayed(this, [=]() {
+            isRunningDamageWhiteEffect = false;
+            whiteEffect->removeFromParent();
+        }, 0.03f);
+    }
+    */
+     
     // 게이지 반짝 연출
+    /*
     if( hpGage.gageEffect->getNumberOfRunningActions() == 0 ) {
         float scaleX = hpGage.gage->getContentSize().width / hpGage.gageEffect->getContentSize().width;
         scaleX *= getHpRatio();
@@ -343,6 +365,7 @@ void Brick::sufferDamage(int damage) {
         auto hide = Hide::create();
         hpGage.gageEffect->runAction(Sequence::create(delay, hide, nullptr));
     }
+     */
 }
 
 /**
