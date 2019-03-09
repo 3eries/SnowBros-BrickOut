@@ -91,7 +91,7 @@ struct BrickData {
     }
     
     bool isSpecial() const {
-        return type == BrickType::SPECIAL;
+        return type >= BrickType::SPECIAL && type < BrickType::BOSS_FRIENDS;
     }
     
     bool isBoss() const {
