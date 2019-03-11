@@ -28,12 +28,20 @@ public:
     void shoot(b2Vec2 velocity);
     
     void onContactBrick(cocos2d::Vec2 contactPoint);
+    void onContactWall();
     void onContactFloor();
     
 private:
     cocos2d::Sprite *image;
     
     SB_SYNTHESIZE_BOOL(fall, Fall); // 추락 여부
+    
+    // 충돌 횟수
+    // 발사 후 충돌을 카운팅합니다
+    // 모든 충돌 횟수는 추락 시 리셋됩니다
+    size_t contactCount;
+    size_t brickContactCount; // 연속된 브릭 충돌 횟수
+    size_t wallContactCount;  // 연속된 벽 충돌 횟수
 };
 
 #endif /* DemoBall_hpp */

@@ -97,10 +97,26 @@ bool DemoBall::afterStep() {
         image->setRotation(getBodyVelocityAngle());
     }
     
+    // check movement
+    float angle = getBodyVelocityAngle();
+    
+    const int RANGE = 5;
+    angle = fabsf(angle);
+    
+    if( angle >= 90-RANGE && angle <= 90+RANGE ) {
+        if( brickContactCount >= 5 || wallContactCount >= 2 ) {
+            getBody()->ApplyForceToCenter(b2Vec2(0, angle < 90 ? 0.5f : -0.5f), false);
+        }
+    }
+    
     return true;
 }
 
 void DemoBall::shoot(b2Vec2 velocity) {
+    
+    contactCount = 0;
+    brickContactCount = 0;
+    wallContactCount = 0;
     
     // 활성화
     setFall(false);
@@ -117,6 +133,10 @@ void DemoBall::shoot(b2Vec2 velocity) {
  * 볼 & 벽돌 충돌
  */
 void DemoBall::onContactBrick(Vec2 contactPoint) {
+    
+    contactCount++;
+    brickContactCount++;
+    wallContactCount = 0;
     
     // 히트 연출
     StringList anims;
@@ -136,9 +156,23 @@ void DemoBall::onContactBrick(Vec2 contactPoint) {
 }
 
 /**
+ * 볼 & 벽 충돌
+ */
+void DemoBall::onContactWall() {
+    
+    contactCount++;
+    brickContactCount = 0;
+    wallContactCount++;
+}
+
+/**
  * 볼 & 바닥 충돌
  */
 void DemoBall::onContactFloor() {
+    
+    contactCount = 0;
+    brickContactCount = 0;
+    wallContactCount = 0;
     
     // 비활성화
     setFall(true);

@@ -238,6 +238,18 @@ void DemoView::BeginContact(b2Contact *contact) {
             auto ball = (DemoBall*)objs.obj1;
             ball->onContactFloor();
             onContactFloor(ball);
+            
+            return;
+        }
+    }
+    
+    // 벽 체크
+    {
+        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::WALL, contact);
+        
+        if( objs.obj1 && objs.obj2 ) {
+            auto ball = (DemoBall*)objs.obj1;
+            ball->onContactWall();
         }
     }
 }
