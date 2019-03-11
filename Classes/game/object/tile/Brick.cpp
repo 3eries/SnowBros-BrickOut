@@ -287,6 +287,63 @@ void Brick::removeWithAction() {
     setNeedRemove(true);
     
     // 연출
+    const int ROWS = 6;
+    const float W = getContentSize().width / ROWS;
+    const int COLUMNS = getContentSize().height / W;
+    const float H = getContentSize().height / COLUMNS;
+    
+    const Vec2 ORIGIN = getPosition() - getAnchorPointInPoints();
+    
+    for( int row = 0; row < ROWS; ++row ) {
+        for( int column = 0; column < COLUMNS; ++column ) {
+            auto particle = LayerColor::create(Color4B(data.color));
+            particle->setIgnoreAnchorPointForPosition(false);
+            particle->setAnchorPoint(ANCHOR_BL);
+            particle->setPosition(ORIGIN + Vec2(row*W, column*H));
+            particle->setContentSize(Size(W,H));
+            getParent()->addChild(particle, SBZOrder::BOTTOM);
+            
+            const float DURATION = 0.7f;
+            
+            // move out
+            {
+                int ran = ((arc4random() % 3)+3) * 5;
+                float x;
+                
+                if( row < 2 )         x = -ran;
+                else if( row > 3 )    x = ran;
+                else                  x = ((arc4random() % 3) * 2) * (arc4random() % 2 == 0 ? 1 : -1);
+                
+                auto moveX = MoveBy::create(DURATION*0.9f, Vec2(x, 0));
+                particle->runAction(moveX);
+                
+                auto moveY1 = MoveBy::create(DURATION*0.2f, Vec2(0, ((arc4random() % 4)+3) * 3));
+                auto moveY2 = MoveBy::create(DURATION*0.8f, Vec2(0, -320));
+                auto remove = RemoveSelf::create();
+                particle->runAction(Sequence::create(moveY1, moveY2, remove, nullptr));
+            }
+            
+            // fade out
+            {
+                auto delay = DelayTime::create(DURATION*0.6f);
+                auto fadeOut = FadeOut::create(DURATION*0.4f);
+                particle->runAction(Sequence::create(delay, fadeOut, nullptr));
+            }
+            
+            // rotate
+            {
+                int ran = ((arc4random() % 3)+2) * 3;
+                float a;
+                
+                if( row < 2 )         a = -ran;
+                else if( row > 3 )    a = ran;
+                else                  a = ran * (arc4random() % 2 == 0 ? 1 : -1);
+                particle->runAction(RotateBy::create(DURATION*0.5f, a));
+            }
+        }
+    }
+    
+    /*
     auto particle = ParticleSystemQuad::create(DIR_IMG_GAME + "particle_brick.plist");
     particle->setAnchorPoint(ANCHOR_M);
     particle->setPosition(getPosition());
@@ -299,6 +356,7 @@ void Brick::removeWithAction() {
     if( data.isBoss() ) {
         particle->setScale(particle->getScale() * 1.5f);
     }
+    */
 }
 
 /**
