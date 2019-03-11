@@ -173,7 +173,8 @@ void MainScene::onClick(Node *sender) {
             
         // test
         case Tag::BTN_TEST: {
-            Director::getInstance()->pushScene(TestList::create());
+            // Director::getInstance()->pushScene(TestList::create());
+            replaceScene(SceneType::TEST);
         } break;
             
         default:

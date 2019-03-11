@@ -8,6 +8,7 @@
 
 #include "Define.h"
 #include "GiftManager.hpp"
+#include "TestList.hpp"
 
 #include "../splash/SplashScene.hpp"
 #include "../main/MainScene.hpp"
@@ -52,6 +53,7 @@ SceneManager::~SceneManager() {
 Scene* SceneManager::createScene(SceneType type) {
     
     switch( type ) {
+        case SceneType::TEST:            return TestList::create();
         case SceneType::SPLASH:          return SplashScene::create();
         case SceneType::MAIN:            return MainScene::create();
         case SceneType::GAME:            return GameScene::create();

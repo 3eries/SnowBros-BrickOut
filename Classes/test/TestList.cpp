@@ -101,7 +101,7 @@ bool TestList::init() {
     
     backBtn->setOnClickListener([=](Node*) {
         backBtn->setTouchEnabled(false);
-        Director::getInstance()->popScene();
+        replaceScene(SceneType::MAIN);
     });
     
     // 정렬
@@ -128,7 +128,7 @@ bool TestList::onBackKeyReleased() {
         return false;
     }
     
-    Director::getInstance()->popScene();
+    replaceScene(SceneType::MAIN);
     
     return true;
 }
