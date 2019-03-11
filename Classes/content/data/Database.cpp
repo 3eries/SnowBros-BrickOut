@@ -15,7 +15,6 @@ USING_NS_SB;
 using namespace std;
 
 #define BRICK_FILE              (DIR_DATA + "brick.json")
-#define BOSS_PATTERN_FILE       (DIR_DATA + "boss_pattern.json")
 
 static Database *instance = nullptr;
 Database* Database::getInstance() {
@@ -45,32 +44,36 @@ void Database::init() {
     // makeBrickJSON();
     // makeStageJSON();
     
-    // parse db json file
-    // brick.json
+    parseBrickJson();
+    parseStageJson();
+}
+
+void Database::parseBrickJson() {
+    
     CCLOG("========== PARSE START (brick.json)  ==========");
-    {
-        string json = SBStringUtils::readTextFile(BRICK_FILE);
+    string json = SBStringUtils::readTextFile(BRICK_FILE);
+    
+    rapidjson::Document doc;
+    doc.Parse(json.c_str());
+    
+    auto list = doc.GetArray();
+    
+    for( int i = 0; i < list.Size(); ++i ) {
+        const rapidjson::Value &v = list[i];
         
-        rapidjson::Document doc;
-        doc.Parse(json.c_str());
+        BrickData brick(v);
+        brick.idleAnims = ContentResourceHelper::getBrickIdleAnimationFiles(brick.image);
+        brick.damageAnims = ContentResourceHelper::getBrickDamageAnimationFiles(brick.image);
         
-        auto list = doc.GetArray();
+        bricks[brick.brickId] = brick;
         
-        for( int i = 0; i < list.Size(); ++i ) {
-            const rapidjson::Value &v = list[i];
-            
-            BrickData brick(v);
-            brick.idleAnims = ContentResourceHelper::getBrickIdleAnimationFiles(brick.image);
-            brick.damageAnims = ContentResourceHelper::getBrickDamageAnimationFiles(brick.image);
-            
-            bricks[brick.brickId] = brick;
-            
-            CCLOG("%s", brick.toString().c_str());
-        }
+        CCLOG("%s", brick.toString().c_str());
     }
     CCLOG("========== PARSE END (brick.json)  ==========");
+}
+
+void Database::parseStageJson() {
     
-    // stage.json
     int stageIdx = 0;
     
     while( true ) {
@@ -122,7 +125,7 @@ void Database::init() {
                 
                 pattern.bricks.push_back(brickData);
             }
-    
+            
             if( stage.patterns.find(pattern.patternId) != stage.patterns.end() ) {
                 CCASSERT(false, "PatternData parse error: duplicate pattern id.");
             }

@@ -32,6 +32,9 @@ public:
 private:
     Database();
     
+    void parseBrickJson();
+    void parseStageJson();
+    
 public:
     static void            addTempStage();
     
