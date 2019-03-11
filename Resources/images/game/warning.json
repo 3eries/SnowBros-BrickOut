@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "zdX2iiLDa7mUGeyfRE1ZsLSIMdc", "spine": "3.7.85", "width": 1440, "height": 288, "images": "./warning/", "audio": "" },
+"skeleton": { "hash": "HYVN4oSXmLH8ZKOca392tH0ZwW4", "spine": "3.7.85", "width": 1440, "height": 330, "images": "./warning/", "audio": "" },
 "bones": [
 	{ "name": "root" },
 	{ "name": "warning_folder", "parent": "root", "y": 125 },
@@ -30,7 +30,7 @@
 "skins": {
 	"default": {
 		"BG_Black": {
-			"BG_Black": { "width": 720, "height": 188 }
+			"BG_Black": { "width": 720, "height": 304 }
 		},
 		"BG_Deco_line": {
 			"BG_Deco_line": { "width": 720, "height": 16 }

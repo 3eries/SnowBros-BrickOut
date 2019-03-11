@@ -1,26 +1,26 @@
 
 warning.png
-size: 2048,256
+size: 1024,512
 format: RGBA8888
 filter: Linear,Linear
 repeat: none
 BG_Black
   rotate: false
-  xy: 2, 60
-  size: 720, 188
-  orig: 720, 188
+  xy: 2, 141
+  size: 720, 304
+  orig: 720, 304
   offset: 0, 0
   index: -1
 BG_Deco_line
   rotate: false
-  xy: 2, 42
+  xy: 2, 123
   size: 720, 16
   orig: 720, 16
   offset: 0, 0
   index: -1
 icon_monster
   rotate: false
-  xy: 724, 47
+  xy: 724, 325
   size: 136, 120
   orig: 136, 120
   offset: 0, 0
@@ -34,7 +34,7 @@ text_BossIsComing
   index: -1
 text_warning
   rotate: false
-  xy: 724, 169
+  xy: 2, 42
   size: 497, 79
   orig: 497, 79
   offset: 0, 0
