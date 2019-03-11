@@ -33,7 +33,9 @@ using namespace spine;
 using namespace std;
 
 static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
-static const float  DRAG_MIN_DIST                   = 200;           // 드래그 판단 거리
+static const string SCHEDULER_CHECK_WITHDRAW_GUIDE  = "SCHEDULER_CHECK_WITHDRAW_GUIDE";
+
+static const float  DRAG_MIN_DIST                   = 200; // 드래그 판단 거리
 
 #define DEBUG_DRAW_PHYSICS      1
 #define DEBUG_DRAW_TILE         1
@@ -84,6 +86,16 @@ void GameView::onEnter() {
 void GameView::onEnterTransitionDidFinish() {
     
     Node::onEnterTransitionDidFinish();
+    
+    // 볼 회수 가이드라인 노출 기준선
+    /*
+    auto line = LayerColor::create(Color4B(255,0,0,255*0.8f));
+    line->setIgnoreAnchorPointForPosition(false);
+    line->setAnchorPoint(ANCHOR_ML);
+    line->setPosition(Vec2(0, (MAP_BOUNDING_BOX.getMidY() + 200)));
+    line->setContentSize(Size(SB_WIN_SIZE.width, 10));
+    addChild(line, INT_MAX);
+    */
 }
 
 void GameView::onExit() {
@@ -644,6 +656,8 @@ void GameView::onContactFloor(Ball *ball) {
     
     // 모든 볼 추락
     if( fallenBallCount == balls.size() ) {
+        stopWithdrawGuide();
+        
         SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), BALL_JOIN_MOVE_DURATION*0.5f);
     }
 }
@@ -722,6 +736,7 @@ void GameView::shoot(const Vec2 &endPosition) {
     // 볼 회수 기능 활성화
     isWithdrawEnabled = false;
     isWithdraw = false;
+    schedule(CC_CALLBACK_1(GameView::checkWithdrawGuide, this), 1, SCHEDULER_CHECK_WITHDRAW_GUIDE);
     
     SBDirector::postDelayed(this, [=]() {
         isWithdrawEnabled = true;
@@ -752,10 +767,13 @@ void GameView::withdrawBalls(float delay) {
     
     CCLOG("withdrawBalls shootIndex: %d", shootIndex);
     
+    shootStop();
+    
     isWithdrawEnabled = false;
     isWithdraw = true;
+    fallenBallCount = (int)balls.size();
     
-    shootStop();
+    stopWithdrawGuide();
     
     // for( auto ball : balls ) {
     for( int i = 0; i < shootIndex; ++i ) {
@@ -765,10 +783,7 @@ void GameView::withdrawBalls(float delay) {
             continue;
         }
         
-        ball->sleep(false);
-        ball->setCollisionLocked(true);
-        ball->setSyncLocked(true);
-        ball->stopRotate();
+        ball->fallToFloor();
          
         // 시작 위치로 이동
         Vec2 spreadPos(ball->getPosition() + Vec2(random<int>(-80, 80), random<int>(50, 80)));
@@ -794,6 +809,74 @@ void GameView::withdrawBalls(float delay) {
     SBDirector::postDelayed(this, [=]() {
         this->onFallFinished();
     }, BALL_WITHDRAW_MOVE_DURATION+0.5f);
+}
+
+/**
+ * 볼 회수 가이드
+ */
+void GameView::checkWithdrawGuide(float dt) {
+    
+    auto diff = balls.size() - fallenBallCount;
+    
+    // 모든 볼 추락됨
+    if( diff == 0 ) {
+        stopWithdrawGuide();
+        return;
+    }
+    
+    // 전체 볼의 10% 이하만 활동중인지 체크
+    if( diff > balls.size()*0.1f ) {
+        return;
+    }
+    
+    // 맵 상단에서 활동중인 볼이 있는지 체크
+    const float POS_Y = MAP_BOUNDING_BOX.getMidY() + 200;
+    bool found = false;
+    
+    for( auto ball : balls ) {
+        if( ball->isFall() ) {
+            continue;
+        }
+        
+        if( SB_BOUNDING_BOX_IN_WORLD(ball).getMinY() > POS_Y ) {
+            found = true;
+            break;
+        }
+    }
+    
+    if( !found ) {
+        return;
+    }
+    
+    auto guide = spine::SkeletonAnimation::createWithJsonFile(ANIM_WITHDRAW_GUIDE);
+    guide->setTag(Tag::WITHDRAW_GUIDE);
+    guide->setAnchorPoint(Vec2::ZERO);
+    guide->setPosition(Vec2(SB_WIN_SIZE*0.5f));
+    addChild(guide, (int)ZOrder::MENU);
+    
+    SBSpineHelper::clearAnimation(guide, ANIM_NAME_CLEAR);
+    
+    guide->setAnimation(0, "drag", false);
+    guide->setCompleteListener([=](spTrackEntry *entry) {
+        
+//        string animName = entry->animation->name;
+//
+//        if( animName == "drag" ) {
+//            SBDirector::postDelayed(guide, [=]() {
+//                guide->setAnimation(0, "drag", false);
+//            }, 2.0f);
+//        }
+        guide->removeFromParent();
+        schedule(CC_CALLBACK_1(GameView::checkWithdrawGuide, this), 2, SCHEDULER_CHECK_WITHDRAW_GUIDE);
+    });
+    
+    unschedule(SCHEDULER_CHECK_WITHDRAW_GUIDE);
+}
+
+void GameView::stopWithdrawGuide() {
+    
+    unschedule(SCHEDULER_CHECK_WITHDRAW_GUIDE);
+    removeChildByTag(Tag::WITHDRAW_GUIDE);
 }
 
 /**

@@ -18,6 +18,8 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
+static const string SCHEDULER_CHECK_MOVEMENT = "SCHEDULER_CHECK_MOVEMENT";
+
 Ball::Ball() : SBPhysicsObject(this),
 damage(1),
 fall(false) {
@@ -44,6 +46,20 @@ bool Ball::init() {
     image->setPosition(Vec2MC(BALL_SIZE, 0, 0));
     SBNodeUtils::scale(image, BALL_SIZE);
     addChild(image);
+    
+    //
+//    {
+//        auto lbl = Label::createWithTTF("7", FONT_RETRO, 20, Size::ZERO,
+//                                        TextHAlignment::CENTER, TextVAlignment::CENTER);
+//        lbl->setTag(123);
+//        lbl->setAnchorPoint(ANCHOR_M);
+//        lbl->setPosition(Vec2MC(getContentSize(), 0,0));
+//        lbl->setTextColor(Color4B::WHITE);
+//        lbl->enableOutline(Color4B::BLACK, 3);
+//        lbl->setScale((getContentSize().height*0.8f) / lbl->getContentSize().height);
+//        addChild(lbl);
+//    }
+    //
     
     // 물리 객체 초기화
     setBody(createBody((SBPhysicsObject*)this));
@@ -131,6 +147,9 @@ bool Ball::afterStep() {
     // 바디 값 동기화
     syncBodyToNode();
     
+//    const float angle = SBMath::getDegree(Vec2::ZERO, MTP(getBody()->GetLinearVelocity()));
+//    getChildByTag(123)->setRotation(angle);
+    
     // Velocity 보정
     auto v = body->GetLinearVelocity();
     
@@ -155,15 +174,83 @@ bool Ball::afterStep() {
  */
 void Ball::shoot(b2Vec2 velocity) {
     
+    contactCount = 0;
+    brickContactCount = 0;
+    wallContactCount = 0;
+    
     // 활성화
     setFall(false);
     awake(false);
     setCollisionLocked(false);
-    startRotate();
     setOpacity(255);
     
     // 발사
     getBody()->SetLinearVelocity(velocity);
+    
+    // 움직임 체크
+    schedule(CC_CALLBACK_1(Ball::checkMovement, this), PHYSICS_FPS*2, SCHEDULER_CHECK_MOVEMENT);
+}
+
+/**
+ * 추락
+ */
+void Ball::fallToFloor() {
+    
+    contactCount = 0;
+    brickContactCount = 0;
+    wallContactCount = 0;
+    unschedule(SCHEDULER_CHECK_MOVEMENT);
+    
+    setFall(true);
+    sleep(false);
+    setCollisionLocked(true);
+    setSyncLocked(true);
+}
+
+void Ball::checkMovement(float dt) {
+ 
+    auto velocity = getBody()->GetLinearVelocity();
+    float angle = getBodyVelocityAngle();
+    
+    /*
+    auto tuningVelocity = velocity;
+    tuningVelocity.Normalize();
+    tuningVelocity.x *= BALL_MAX_VELOCITY;
+    tuningVelocity.y *= BALL_MAX_VELOCITY;
+    
+    CCLOG("before(%f,%f, angle:%d) -> after(%f,%f, angle:%d)",
+          velocity.x, velocity.y, (int)SBPhysics::getVelocityAngle(velocity),
+          tuningVelocity.x, tuningVelocity.y, (int)SBPhysics::getVelocityAngle(tuningVelocity));
+    
+    if( fabsf(tuningVelocity.x - velocity.x) > 0.5f ||
+        fabsf(tuningVelocity.y - velocity.y) > 0.5f ) {
+        CCLOG("---------> 차이 발생함!!!!!!!");
+    }
+    */
+    
+    // 수평으로 무한 반복되지 않게 조정
+    // 진행 각도에 따라 강제로 힘을 가한다
+    // Test Code
+    /*
+    if( fabsf(angle) > 85 && wallContactCount >= 2 ) {
+        Log::i("force!!");
+        getBody()->ApplyForceToCenter(b2Vec2(0,1), false);
+    }
+     */
+    
+    const int RANGE = 5;
+    angle = fabsf(angle);
+    
+    if( angle >= 90-RANGE && angle <= 90+RANGE ) {
+        if( brickContactCount >= 5 || wallContactCount >= 2 ) {
+            Log::i("velocity: %f,%f, angle: %f, contactCount: %d, brickContactCount: %d, wallContactCount: %d",
+                   velocity.x, velocity.y, angle,
+                   contactCount, brickContactCount, wallContactCount);
+            Log::i("force!!");
+            
+            getBody()->ApplyForceToCenter(b2Vec2(0, angle < 90 ? 0.5f : -0.5f), false);
+        }
+    }
 }
 
 /**
@@ -176,17 +263,6 @@ void Ball::sleepWithAction() {
     auto fadeOut = FadeOut::create(0.1f);
     auto hide = Hide::create();
     runAction(Sequence::create(fadeOut, hide, nullptr));
-}
-
-void Ball::startRotate() {
-    
-    // image->runAction(RepeatForever::create(RotateBy::create(0.5f, 360)));
-}
-
-void Ball::stopRotate() {
-
-    // image->stopAllActions();
-    // image->setRotation(0);
 }
 
 void Ball::onBeginContact(b2Contact *contact) {
@@ -236,6 +312,10 @@ void Ball::onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
  */
 void Ball::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
     
+    contactCount++;
+    brickContactCount++;
+    wallContactCount = 0;
+    
     // 히트 연출
     StringList anims;
     
@@ -263,6 +343,10 @@ void Ball::onContactItem(Ball *ball, Game::Tile *item) {
  * 볼 & 벽 충돌
  */
 void Ball::onContactWall(Ball *ball) {
+    
+    contactCount++;
+    brickContactCount = 0;
+    wallContactCount++;
 }
 
 /**
@@ -270,9 +354,5 @@ void Ball::onContactWall(Ball *ball) {
  */
 void Ball::onContactFloor(Ball *ball) {
     
-    // 비활성화
-    setFall(true);
-    sleep(false);
-    setCollisionLocked(true);
-    stopRotate();
+    fallToFloor();
 }

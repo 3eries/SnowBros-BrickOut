@@ -32,7 +32,6 @@ void ResourceHelper::preload() {
     // add image
     {
         string files[] = {
-            ANIM_BOSS_WARNING,
         };
         
         for( string file : files ) {
@@ -43,6 +42,8 @@ void ResourceHelper::preload() {
     // add image async
     {
         string files[] = {
+            ANIM_WITHDRAW_GUIDE,
+            ANIM_BOSS_WARNING,
             ANIM_CONTINUE,
         };
         

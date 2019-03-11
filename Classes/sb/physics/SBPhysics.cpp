@@ -6,6 +6,8 @@
 
 #include "SBPhysics.hpp"
 
+#include "../utils/SBMath.hpp"
+
 USING_NS_CC;
 using namespace std;
 
@@ -83,6 +85,11 @@ Vec2 SBPhysics::getContactPoint(b2Contact *contact) {
     contact->GetWorldManifold(&worldManifold);
     
     return MTP(worldManifold.points[0]);
+}
+
+float SBPhysics::getVelocityAngle(const b2Vec2 &velocity) {
+    
+    return SBMath::getDegree(Vec2::ZERO, MTP(velocity));
 }
 
 SBPhysics::CollisionObjects SBPhysics::findCollisionObjects(uint16 categoryBits1, uint16 categoryBits2,
@@ -231,6 +238,15 @@ void SBPhysicsObject::setBodyPosition(const Vec2 &p) {
     if( body ) {
         body->SetTransform(PTM(p), body->GetAngle());
     }
+}
+
+float SBPhysicsObject::getBodyVelocityAngle() {
+    
+    if( body ) {
+        return SBPhysics::getVelocityAngle(body->GetLinearVelocity());
+    }
+    
+    return 0;
 }
 
 void SBPhysicsObject::syncNodeToBody() {

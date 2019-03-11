@@ -77,6 +77,7 @@ static const std::string DIR_STAGE                  = DIR_ADD(DIR_CONTENT, "stag
 static const std::string ANIM_EXT                   = ".json";
 static const std::string ANIM_LOGO                  = DIR_IMG_SPLASH + "3eries_logo.json";
 static const std::string ANIM_BOSS_WARNING          = DIR_IMG_GAME + "warning.json";
+static const std::string ANIM_WITHDRAW_GUIDE        = DIR_IMG_GAME + "drag.json";
 static const std::string ANIM_CONTINUE              = DIR_IMG_GAME + "continue.json";
 
 static const std::string ANIM_NAME_RUN              = "run";

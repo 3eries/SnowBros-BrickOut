@@ -34,6 +34,7 @@ private:
     enum Tag {
         MAP = 10,
         BTN_BRICK_DOWN,
+        WITHDRAW_GUIDE,
         
         DEBUG_DRAW_VIEW = 1000,
     };
@@ -112,7 +113,11 @@ private:
 private:
     void shoot(const cocos2d::Vec2 &endPosition);
     void shootStop();
+    
     void withdrawBalls(float delay = 0);
+    
+    void checkWithdrawGuide(float dt);
+    void stopWithdrawGuide();
     
     void downTile();
     void onClickDownButton();

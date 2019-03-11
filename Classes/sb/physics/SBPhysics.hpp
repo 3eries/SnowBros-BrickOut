@@ -39,6 +39,7 @@ public:
     static void syncBodyToNode(b2Body *body, cocos2d::Node *node);
     
     static cocos2d::Vec2 getContactPoint(b2Contact *contact);
+    static float getVelocityAngle(const b2Vec2 &velocity);
     
 // findCollisionObjects
 public:
@@ -86,6 +87,7 @@ public:
     bool isAwake();
 
     virtual void setBodyPosition(const cocos2d::Vec2 &p);
+    float        getBodyVelocityAngle();
     
     virtual void syncNodeToBody();
     virtual void syncBodyToNode();
