@@ -45,7 +45,7 @@ bool DemoBall::init(b2World *world) {
     setCascadeOpacityEnabled(true);
     
     // 이미지 초기화
-    auto image = Sprite::create(BALL_IMAGE);
+    image = Sprite::create(BALL_IMAGE);
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(BALL_SIZE, 0, 0));
     SBNodeUtils::scale(image, BALL_SIZE);
@@ -93,6 +93,10 @@ bool DemoBall::afterStep() {
     // 바디 값 동기화
     syncBodyToNode();
     
+    if( !isSyncLocked() ) {
+        image->setRotation(getBodyVelocityAngle());
+    }
+    
     return true;
 }
 
@@ -103,6 +107,7 @@ void DemoBall::shoot(b2Vec2 velocity) {
     awake(false);
     setCollisionLocked(false);
     setOpacity(255);
+    image->setRotation(0);
     
     // 발사
     getBody()->SetLinearVelocity(velocity);
@@ -139,4 +144,5 @@ void DemoBall::onContactFloor() {
     setFall(true);
     sleep(false);
     setCollisionLocked(true);
+    image->runAction(RotateTo::create(0.05f, 0));
 }

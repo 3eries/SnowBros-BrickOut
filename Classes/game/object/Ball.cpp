@@ -147,24 +147,12 @@ bool Ball::afterStep() {
     // 바디 값 동기화
     syncBodyToNode();
     
+    if( !isSyncLocked() ) {
+        image->setRotation(getBodyVelocityAngle());
+    }
+    
 //    const float angle = SBMath::getDegree(Vec2::ZERO, MTP(getBody()->GetLinearVelocity()));
 //    getChildByTag(123)->setRotation(angle);
-    
-    // Velocity 보정
-    auto v = body->GetLinearVelocity();
-    
-    if( abs(v.x) > 0 && abs(v.y) > 0 ) {
-        v.Normalize();
-//        CCLOG("velocity1: %f,%f (%f,%f)",
-//              body->GetLinearVelocity().x, body->GetLinearVelocity().y,
-//              v.x, v.y);
-
-//        float max = MAX(abs(v.x), abs(v.y));
-//        float offset = 30 / max;
-//        body->SetLinearVelocity(b2Vec2(v.x * offset, v.y * offset));
-//
-//        CCLOG("velocity2: %f,%f", body->GetLinearVelocity().x, body->GetLinearVelocity().y);
-    }
     
     return true;
 }
@@ -183,6 +171,7 @@ void Ball::shoot(b2Vec2 velocity) {
     awake(false);
     setCollisionLocked(false);
     setOpacity(255);
+    image->setRotation(0);
     
     // 발사
     getBody()->SetLinearVelocity(velocity);
@@ -205,6 +194,8 @@ void Ball::fallToFloor() {
     sleep(false);
     setCollisionLocked(true);
     setSyncLocked(true);
+    
+    image->runAction(RotateTo::create(0.05f, 0));
 }
 
 void Ball::checkMovement(float dt) {

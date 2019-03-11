@@ -31,6 +31,8 @@ public:
     void onContactFloor();
     
 private:
+    cocos2d::Sprite *image;
+    
     SB_SYNTHESIZE_BOOL(fall, Fall); // 추락 여부
 };
 
