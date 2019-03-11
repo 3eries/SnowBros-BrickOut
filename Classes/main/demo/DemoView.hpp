@@ -13,7 +13,7 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#include "DemoData.hpp"
+#include "../../content/data/model/DemoData.h"
 
 class DemoBall;
 

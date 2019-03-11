@@ -12,7 +12,6 @@
 		1D107B242232E15400B3AEB4 /* DemoMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B222232E15400B3AEB4 /* DemoMap.cpp */; };
 		1D107B272232E15C00B3AEB4 /* DemoBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B252232E15C00B3AEB4 /* DemoBrick.cpp */; };
 		1D107B2A2232E16800B3AEB4 /* DemoBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B282232E16800B3AEB4 /* DemoBall.cpp */; };
-		1D107B2D2232F4FB00B3AEB4 /* DemoData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D107B2B2232F4FB00B3AEB4 /* DemoData.cpp */; };
 		1D13227921C1E522005F4370 /* Item.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13227721C1E522005F4370 /* Item.cpp */; };
 		1D13228021C24D39005F4370 /* Friend.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D13227E21C24D39005F4370 /* Friend.cpp */; };
 		1D18E425215CA19D0069A888 /* ConsentForm-android.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D18E422215CA19C0069A888 /* ConsentForm-android.cpp */; };
@@ -201,8 +200,6 @@
 		1D107B262232E15C00B3AEB4 /* DemoBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoBrick.hpp; sourceTree = "<group>"; };
 		1D107B282232E16800B3AEB4 /* DemoBall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DemoBall.cpp; sourceTree = "<group>"; };
 		1D107B292232E16800B3AEB4 /* DemoBall.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoBall.hpp; sourceTree = "<group>"; };
-		1D107B2B2232F4FB00B3AEB4 /* DemoData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DemoData.cpp; sourceTree = "<group>"; };
-		1D107B2C2232F4FB00B3AEB4 /* DemoData.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoData.hpp; sourceTree = "<group>"; };
 		1D13227721C1E522005F4370 /* Item.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Item.cpp; sourceTree = "<group>"; };
 		1D13227821C1E522005F4370 /* Item.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Item.hpp; sourceTree = "<group>"; };
 		1D13227E21C24D39005F4370 /* Friend.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Friend.cpp; sourceTree = "<group>"; };
@@ -330,6 +327,7 @@
 		1D7F2CE221B706CF00516469 /* GLES-Render.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GLES-Render.h"; sourceTree = "<group>"; };
 		1D7F2CE321B706CF00516469 /* DebugDrawView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugDrawView.cpp; sourceTree = "<group>"; };
 		1D7F2CE421B706CF00516469 /* SBPhysics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SBPhysics.cpp; sourceTree = "<group>"; };
+		1D8538932236DBB90087DF1A /* DemoData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoData.h; sourceTree = "<group>"; };
 		1D86438B2152385D001841C9 /* SBSecurity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBSecurity.cpp; sourceTree = "<group>"; };
 		1D86438C2152385D001841C9 /* SBSecurity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBSecurity.hpp; sourceTree = "<group>"; };
 		1D86438E21523898001841C9 /* SBSecurity-android.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "SBSecurity-android.cpp"; sourceTree = "<group>"; };
@@ -555,8 +553,6 @@
 				1D107B292232E16800B3AEB4 /* DemoBall.hpp */,
 				1D107B252232E15C00B3AEB4 /* DemoBrick.cpp */,
 				1D107B262232E15C00B3AEB4 /* DemoBrick.hpp */,
-				1D107B2B2232F4FB00B3AEB4 /* DemoData.cpp */,
-				1D107B2C2232F4FB00B3AEB4 /* DemoData.hpp */,
 				1D107B222232E15400B3AEB4 /* DemoMap.cpp */,
 				1D107B232232E15400B3AEB4 /* DemoMap.hpp */,
 				1D107B202232E14800B3AEB4 /* DemoView.cpp */,
@@ -613,6 +609,7 @@
 				1D25EE12220B398400DD126A /* ItemData.h */,
 				1DA204A42212BE4700656689 /* PatternData.h */,
 				1D25EE13220B398400DD126A /* StageData.h */,
+				1D8538932236DBB90087DF1A /* DemoData.h */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1395,7 +1392,6 @@
 				1D1F3C9420AD4A3D0035A36C /* GameView.cpp in Sources */,
 				1DEEE24F21B57FCC00DD4776 /* ResultPopup.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
-				1D107B2D2232F4FB00B3AEB4 /* DemoData.cpp in Sources */,
 				1D49A27C21AFAFA1005C26CB /* ContinuePopup.cpp in Sources */,
 				1DD38B5720FC93D200811604 /* SBActionHelper.cpp in Sources */,
 				1D9C035122277FE500745356 /* ShieldBrick.cpp in Sources */,

@@ -10,6 +10,7 @@
 #include "Define.h"
 #include "ContentManager.hpp"
 #include "GameConfiguration.hpp"
+#include "../../game/GameDefine.h"
 
 #include "DemoMap.hpp"
 #include "DemoBrick.hpp"
@@ -43,7 +44,7 @@ bool DemoView::init() {
     setContentSize(SB_WIN_SIZE);
     
     // 스테이지 랜덤 추출
-    auto stages = DemoData::getInstance()->getStages();
+    auto stages = Database::getDemoStages();
     stage = stages[arc4random() % stages.size()];
     
     initPhysics();

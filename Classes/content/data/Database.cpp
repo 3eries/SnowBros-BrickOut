@@ -15,6 +15,7 @@ USING_NS_SB;
 using namespace std;
 
 #define BRICK_FILE              (DIR_DATA + "brick.json")
+#define DEMO_FILE               (DIR_DATA + "demo.json")
 
 static Database *instance = nullptr;
 Database* Database::getInstance() {
@@ -41,11 +42,9 @@ Database::~Database() {
 
 void Database::init() {
     
-    // makeBrickJSON();
-    // makeStageJSON();
-    
     parseBrickJson();
     parseStageJson();
+    parseDemoJson();
 }
 
 void Database::parseBrickJson() {
@@ -220,6 +219,53 @@ void Database::parseStageJson() {
     });
 }
 
+void Database::parseDemoJson() {
+    
+    CCLOG("========== PARSE START (demo.json)  ==========");
+    string json = SBStringUtils::readTextFile(DEMO_FILE);
+    
+    rapidjson::Document doc;
+    doc.Parse(json.c_str());
+    
+    auto list = doc.GetArray();
+    
+    for( int i = 0; i < list.Size(); ++i ) {
+        const rapidjson::Value &v = list[i];
+        
+        DemoStageData stage;
+        stage.stage = Database::getStage(v["stage"].GetInt());
+        
+        // bricks
+        auto bricks = v["bricks"].GetArray();
+        
+        for( int j = 0; j < bricks.Size(); ++j ) {
+            const rapidjson::Value &brickValue = bricks[j];
+            
+            DemoBrickData brick;
+            brick.brick = Database::getBrick(brickValue["brick_id"].GetString());
+            
+            auto pos = brickValue["pos"].GetArray();
+            brick.pos = Vec2(pos[0].GetInt(), pos[1].GetInt());
+            
+            if( brickValue.HasMember("flipped_x") ) brick.isFlippedX = brickValue["flipped_x"].GetBool();
+            if( brickValue.HasMember("flipped_y") ) brick.isFlippedY = brickValue["flipped_y"].GetBool();
+            
+            stage.bricks.push_back(brick);
+        }
+        
+        // shooting_angles
+        auto shootingAngles = v["shooting_angles"].GetArray();
+        
+        for( int j = 0; j < shootingAngles.Size(); ++j ) {
+            stage.shootingAngles.push_back(shootingAngles[j].GetInt());
+        }
+        
+        demoStages.push_back(stage);
+    }
+    
+    CCLOG("========== PARSE END (demo.json)  ==========");
+}
+
 /**
  * 임시 스테이지 추가
  */
@@ -354,284 +400,22 @@ BrickData Database::getBrick(const string &brickId) {
     return it->second;
 }
 
-// brick.json
-void makeBrickJSON() {
-    
-    rapidjson::Document doc;
-    doc.SetArray();
-    
-    auto addBricks = [](rapidjson::Document &doc,
-                        int begin, int end, int type, int w, int h, vector<Color3B> colors) {
-        
-        rapidjson::Document::AllocatorType &allocator = doc.GetAllocator();
-        int idx = 0;
-        
-        for( int i = begin; i <= end; ++i, ++idx ) {
-            string brickId = STR_FORMAT("brick_%05d", i);
-            auto color = colors[idx];
-            
-            rapidjson::Value brickValue(rapidjson::kObjectType);
-            brickValue.AddMember("id", SBJSON::value(brickId, allocator), allocator);
-            brickValue.AddMember("type", type, allocator);
-            brickValue.AddMember("width", w, allocator);
-            brickValue.AddMember("height", h, allocator);
-            brickValue.AddMember("color", SBJSON::value(STR_FORMAT("%d,%d,%d", color.r, color.g, color.b),
-                                                        allocator), allocator);
-            brickValue.AddMember("image", "", allocator);
-            brickValue.AddMember("idle_anim_interval", 0.6f, allocator);
-            brickValue.AddMember("damage_anim_interval", 0.1f, allocator);
-            
-            doc.PushBack(brickValue, allocator);
-        }
-    };
-    
-    // 일반
-    {
-        vector<Color3B> colors({
-            Color3B(255,41,115),
-            Color3B(255,231,66),
-            Color3B(0,255,66),
-            Color3B(0,168,255),
-            Color3B(255,255,165),
-            Color3B(255,41,115),
-            Color3B(0,168,255),
-            Color3B(0,255,66),
-            Color3B(255,83,0),
-            Color3B(255,48,71),
-            Color3B(140,103,255),
-            Color3B(255,255,222),
-            Color3B(255,48,71),
-            Color3B(186,92,255),
-            Color3B(71,103,255),
-            Color3B(255,195,39),
-            Color3B(165,255,255),
-            Color3B(156,255,0),
-            Color3B(71,154,255),
-            Color3B(255,231,66),
-            Color3B(0,168,255),
-            Color3B(255,124,0),
-        });
-        
-        addBricks(doc, 1, 22, 1, 1, 1, colors);
-    }
-    
-    // 특수
-    {
-        vector<Color3B> colors({
-            Color3B(255,175,136),
-            Color3B(0,255,255),
-            Color3B(85,175,255),
-            Color3B(0,168,255),
-        });
-        
-        addBricks(doc, 1001, 1004, 10, 1, 1, colors);
-    }
-    
-    // 보스 부하
-    {
-        vector<Color3B> colors({
-            Color3B(0,157,92),
-            Color3B(0,0,0),
-            Color3B(255,96,110),
-            Color3B(255,49,0),
-            Color3B(232,165,126),
-            Color3B(211,148,66),
-            Color3B(255,156,66),
-            Color3B(255,156,66),
-            Color3B(255,85,74),
-            Color3B(0,173,148),
-            Color3B(255,156,66),
-            Color3B(255,246,55),
-            Color3B(255,156,66),
-            Color3B(255,159,0),
-            Color3B(255,156,66),
-        });
-        
-        addBricks(doc, 5001, 5015, 50, 1, 1, colors);
-    }
-    
-    // 보스
-    {
-        vector<Color3B> colors({
-            Color3B(0,157,92),
-            Color3B(255,41,115),
-            Color3B(255,231,66),
-            Color3B(0,168,255),
-            Color3B(211,148,66),
-            Color3B(193,71,193),
-            Color3B(255,163,136),
-            Color3B(193,92,255),
-            Color3B(0,173,148),
-            Color3B(219,222,255),
-            Color3B(255,165,115),
-            Color3B(255,159,0),
-            Color3B(0,154,204),
-            Color3B(82,163,255),
-        });
-        
-        addBricks(doc, 10001, 10014, 100, 2, 2, colors);
-    }
-    
-    // make json
-    rapidjson::StringBuffer strbuf;
-    strbuf.Clear();
-    
-    rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-    doc.Accept(writer);
-    
-    string json = strbuf.GetString();
-    CCLOG("make brick.json\n%s", json.c_str());
+/**
+ * 데모 데이터를 반환합니다
+ */
+DemoStageDataList Database::getDemoStages() {
+    return instance->demoStages;
 }
 
-// stage_xxxx.json
-void makeStageJSON() {
+DemoStageData Database::getDemoStage(int stage) {
     
-    const int FLOOR_LEN = 15;
+    auto stages = instance->demoStages;
     
-    vector<StringList> BRICK_LIST({
-        StringList({ "brick_00001","brick_00002","brick_00003",}),
-        StringList({ "brick_00001","brick_00002","brick_00003","brick_00004"}),
-        StringList({ "brick_00001","brick_00002","brick_00003","brick_00004"}),
-        StringList({ "brick_00001","brick_00002","brick_00003","brick_00004","brick_00005"}),
-        StringList({ "brick_00004","brick_00006","brick_00007",}),
-        
-        StringList({ "brick_00008","brick_00009","brick_00010",}),
-        StringList({ "brick_00009","brick_00011","brick_00012","brick_00013","brick_00014","brick_00015"}),
-        StringList({ "brick_00016","brick_00017","brick_00018",}),
-        StringList({ "brick_00010","brick_00015","brick_00019",}),
-        StringList({ "brick_00010","brick_00015","brick_00019","brick_00020",}),
-        StringList({ "brick_00016","brick_00017","brick_00018","brick_00021","brick_00022"}),
-    });
-    
-    StringList BOSS_LIST({
-        "brick_10001",
-        "brick_10002",
-        "brick_10003",
-        "brick_10004",
-        "brick_10005",
-        
-        "brick_10006",
-        "brick_10007",
-        "brick_10008",
-        "brick_10009",
-        "brick_10010",
-        "brick_10012",
-    });
-    
-    for( int stage = 1; stage <= 11; ++stage ) {
-        CCLOG("========== MAKE START (stage_%04d.json)  ==========", stage);
-        rapidjson::Document doc;
-        doc.SetObject();
-        
-        rapidjson::Document::AllocatorType &allocator = doc.GetAllocator();
-        
-        // stage
-        doc.AddMember("stage", stage, allocator);
-        
-        // floors
-        // 1st: list[0]
-        // 2nd: list[0,1]
-        // 3rd
-        // list.size() <= 4, list[0] ~ list[list.size()-2]
-        // list.size() > 4,  list[2] ~ list[list.size()-2]
-        // elite : list[list.size()-1]
-        rapidjson::Value floors(rapidjson::kArrayType);
-        int floor = ((stage-1) * FLOOR_LEN) + 1;
-        auto stageBricks = BRICK_LIST[stage-1];
-        
-        for( int i = 1; i <= FLOOR_LEN; ++i, ++floor ) {
-            rapidjson::Value floorValue(rapidjson::kObjectType);
-            floorValue.AddMember("floor", floor, allocator);
-            
-            // floor1
-            if( i == 1 ) {
-                floorValue.AddMember("brick_hp", "floor+9", allocator);
-                floorValue.AddMember("brick_drop_count", "1~3", allocator);
-            
-                rapidjson::Value brickList(rapidjson::kArrayType);
-                brickList.PushBack(SBJSON::value(stageBricks[0], allocator), allocator);
-                floorValue.AddMember("brick_list", brickList, allocator);
-                
-                floorValue.AddMember("elite_brick_drop_rate", 0, allocator);
-                floorValue.AddMember("power_up_drop_rate", 100, allocator);
-                floorValue.AddMember("friend_power_up_drop_rate", 0, allocator);
-                floorValue.AddMember("money_drop_rate", 0, allocator);
-            }
-            // floor2~4
-            else if( i >= 2 && i <= 4 ) {
-            }
-            // floor5
-            else if( i == 5 ) {
-                floorValue.AddMember("brick_drop_count", "2~3", allocator);
-                
-                rapidjson::Value brickList(rapidjson::kArrayType);
-                brickList.PushBack(SBJSON::value(stageBricks[0], allocator), allocator);
-                brickList.PushBack(SBJSON::value(stageBricks[1], allocator), allocator);
-                floorValue.AddMember("brick_list", brickList, allocator);
-                
-                floorValue.AddMember("elite_brick_drop_rate", 5, allocator);
-                
-                rapidjson::Value eliteBrickList(rapidjson::kArrayType);
-                eliteBrickList.PushBack(SBJSON::value(stageBricks[stageBricks.size()-1], allocator), allocator);
-                floorValue.AddMember("elite_brick_list", eliteBrickList, allocator);
-            }
-            // floor6~9
-            else if( i >= 6 && i <= 9 ) {
-            }
-            // floor10
-            else if( i == 10 ) {
-                floorValue.AddMember("brick_drop_count", "1~3", allocator);
-                
-                // list.size() <= 4, list[0] ~ list[list.size()-2]
-                // list.size() > 4,  list[2] ~ list[list.size()-2]
-                rapidjson::Value brickList(rapidjson::kArrayType);
-                
-                if( stageBricks.size() <= 4 ) {
-                    for( int j = 0; j <= stageBricks.size()-2; ++j ) {
-                        brickList.PushBack(SBJSON::value(stageBricks[j], allocator), allocator);
-                    }
-                } else {
-                    for( int j = 2; j <= stageBricks.size()-2; ++j ) {
-                        brickList.PushBack(SBJSON::value(stageBricks[j], allocator), allocator);
-                    }
-                }
-                
-                floorValue.AddMember("brick_list", brickList, allocator);
-            }
-            // floor11
-            else if( i == 11 ) {
-            }
-            // floor12
-            else if( i == 12 ) {
-                floorValue.AddMember("brick_drop_count", "4", allocator);
-            }
-            // floor13
-            else if( i == 13 ) {
-                floorValue.AddMember("brick_hp", "prev_brick_hp+2", allocator);
-            }
-            // floor14
-            else if( i == 14 ) {
-                floorValue.AddMember("brick_drop_count", "1~2", allocator);
-            }
-            // floor15
-            else if( i == 15 ) {
-                floorValue.AddMember("boss_brick_id", SBJSON::value(BOSS_LIST[stage-1], allocator), allocator);
-            }
-            
-            floors.PushBack(floorValue, allocator);
+    for( auto stageData : stages ) {
+        if( stageData.stage.stage == stage ) {
+            return stageData;
         }
-        
-        doc.AddMember("floors", floors, allocator);
-        
-        // make json
-        rapidjson::StringBuffer strbuf;
-        strbuf.Clear();
-        
-        rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
-        doc.Accept(writer);
-        
-        string json = strbuf.GetString();
-        CCLOG("%s", json.c_str());
-        CCLOG("========== MAKE END (stage_%04d.json)  ==========", stage);
     }
+    
+    return DemoStageData();
 }
