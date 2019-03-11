@@ -61,8 +61,8 @@ void Database::parseBrickJson() {
         const rapidjson::Value &v = list[i];
         
         BrickData brick(v);
-        brick.idleAnims = ContentResourceHelper::getBrickIdleAnimationFiles(brick.image);
-        brick.damageAnims = ContentResourceHelper::getBrickDamageAnimationFiles(brick.image);
+        brick.idleAnims = BRICK_IDLE_ANIM_FILES(brick.image);
+        brick.damageAnims = BRICK_DAMAGE_ANIM_FILES(brick.image);
         
         bricks[brick.brickId] = brick;
         

@@ -15,11 +15,6 @@
 class ResourceHelper {
 public:
     static void preload();
-    
-    static StringList getBrickAnimationFiles(const std::string &image,
-                                             const std::string &animKey);
-    static StringList getBrickIdleAnimationFiles(const std::string &image);
-    static StringList getBrickDamageAnimationFiles(const std::string &image);
 };
 
 #endif /* ResourceHelper_hpp */

@@ -21,6 +21,12 @@ enum class BrickType {
     BOSS            = 100,
 };
 
+enum class BrickImageType {
+    NONE,
+    IDLE,
+    DAMAGE,
+};
+
 static const int BRICK_INFINITY_HP = -1;
 
 struct BrickData {
