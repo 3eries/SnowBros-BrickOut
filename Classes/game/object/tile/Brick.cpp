@@ -39,7 +39,7 @@ elite(false),
 onBreakListener(nullptr),
 bg(nullptr),
 image(nullptr),
-imageType(ImageType::NONE),
+imageType(BrickImageType::NONE),
 isRunningDamageWhiteEffect(false) {
 }
 
@@ -126,7 +126,7 @@ void Brick::initImage() {
     image->setPosition(Vec2MC(getContentSize(), 0, 0));
     addChild(image);
     
-    setImage(ImageType::IDLE, true);
+    setImage(BrickImageType::IDLE, true);
 }
 
 /**
@@ -226,21 +226,15 @@ void Brick::initHpGage() {
 /**
  * 벽돌 이미지 설정
  */
-void Brick::setImage(ImageType type, bool isRunAnimation) {
+void Brick::setImage(BrickImageType type, bool isRunAnimation) {
     
     this->imageType = type;
     
+    auto anim = BRICK_ANIMATION(data, type);
+    
     switch( type ) {
-        case ImageType::IDLE: {
-            auto anim = SBNodeUtils::createAnimation(data.idleAnims, data.idleAnimInterval);
-            image->setAnimation(anim);
-        } break;
-            
-        case ImageType::DAMAGE: {
-            auto anim = SBNodeUtils::createAnimation(data.damageAnims, data.damageAnimInterval);
-            image->setAnimation(anim, 1);
-        } break;
-            
+        case BrickImageType::IDLE:        image->setAnimation(anim);       break;
+        case BrickImageType::DAMAGE:      image->setAnimation(anim, 1);    break;
         default:
             CCASSERT(false, "Brick::setImage error.");
             break;
@@ -379,11 +373,11 @@ void Brick::sufferDamage(int damage) {
     setHp(hp - damage);
     
     // 브릭 애니메이션 변경
-    if( imageType != ImageType::DAMAGE ) {
-        setImage(ImageType::DAMAGE, false);
+    if( imageType != BrickImageType::DAMAGE ) {
+        setImage(BrickImageType::DAMAGE, false);
         
         image->runAnimation([=](Node*) {
-            this->setImage(ImageType::IDLE, true);
+            this->setImage(BrickImageType::IDLE, true);
         });
     
         // 흰색 브릭 반짝 연출

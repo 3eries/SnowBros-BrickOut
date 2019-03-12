@@ -28,13 +28,6 @@ class Brick : public Game::Tile {
 public:
     static Brick* create(const BrickDef &def);
     virtual ~Brick();
-
-protected:
-    enum class ImageType {
-        NONE,
-        IDLE,
-        DAMAGE,
-    };
     
 protected:
     Brick(const BrickDef &def);
@@ -47,7 +40,7 @@ protected:
     virtual void initImage();
     virtual void initHpGage();
     
-    virtual void setImage(ImageType type, bool isRunAnimation);
+    virtual void setImage(BrickImageType type, bool isRunAnimation);
     
     virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     
@@ -83,7 +76,7 @@ protected:
     
     cocos2d::Sprite *bg;
     CC_SYNTHESIZE_READONLY(SBAnimationSprite*, image, Image);
-    ImageType imageType;
+    BrickImageType imageType;
     
     struct HpGage {
         cocos2d::Node *bg;

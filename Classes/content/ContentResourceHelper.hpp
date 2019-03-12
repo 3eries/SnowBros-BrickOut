@@ -24,6 +24,9 @@ ContentResourceHelper::getBrickAnimationFiles(__image__, "damage")
 #define BRICK_WHITE_IMAGE(__image__) \
 std::string("white_" + __image__)
 
+#define BRICK_ANIMATION(__data__, __type__) \
+ContentResourceHelper::createBrickAnimation(__data__, __type__)
+
 class ContentResourceHelper {
 public:
     static void preload();
