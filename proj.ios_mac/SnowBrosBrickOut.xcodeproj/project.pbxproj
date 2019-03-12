@@ -605,11 +605,11 @@
 			isa = PBXGroup;
 			children = (
 				1D25EE16220B398400DD126A /* BrickData.h */,
+				1D8538932236DBB90087DF1A /* DemoData.h */,
 				1D25EE14220B398400DD126A /* FloorData.h */,
 				1D25EE12220B398400DD126A /* ItemData.h */,
 				1DA204A42212BE4700656689 /* PatternData.h */,
 				1D25EE13220B398400DD126A /* StageData.h */,
-				1D8538932236DBB90087DF1A /* DemoData.h */,
 			);
 			path = model;
 			sourceTree = "<group>";
