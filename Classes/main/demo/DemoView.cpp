@@ -279,6 +279,9 @@ void DemoView::PostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
         if( objs.obj1 && objs.obj2 ) {
             auto ball = (DemoBall*)objs.obj1;
             ball->onContactBrick(SBPhysics::getContactPoint(contact));
+            
+            auto brick = (DemoBrick*)objs.obj2;
+            brick->onContactBrick();
         }
     }
 }

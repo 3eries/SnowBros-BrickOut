@@ -24,6 +24,17 @@ private:
     DemoBrick();
     
     bool init(const DemoBrickData &demoBrickData, b2World *world);
+    
+    void setImage(BrickImageType type, bool isRunAnimation);
+    
+public:
+    void onContactBrick();
+    
+private:
+    DemoBrickData data;
+    
+    SBAnimationSprite *image;
+    BrickImageType imageType;
 };
 
 #endif /* DemoBrick_hpp */

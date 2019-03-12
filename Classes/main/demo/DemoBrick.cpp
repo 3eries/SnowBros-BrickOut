@@ -34,18 +34,20 @@ DemoBrick::DemoBrick() : SBPhysicsObject(this) {
 DemoBrick::~DemoBrick() {
 }
 
-bool DemoBrick::init(const DemoBrickData &demoBrickData, b2World *world) {
+bool DemoBrick::init(const DemoBrickData &data, b2World *world) {
     
     if( !Node::init() ) {
         return false;
     }
     
-    auto brickData = demoBrickData.brick;
+    this->data = data;
+    
+    auto brickData = data.brick;
     auto size = MEASURE_TILE_SIZE(brickData.width, brickData.height);
     
     setAnchorPoint(ANCHOR_M);
     setContentSize(size);
-    setPosition(Game::Tile::convertToTilePosition(demoBrickData.pos, brickData.width, brickData.height));
+    setPosition(Game::Tile::convertToTilePosition(data.pos, brickData.width, brickData.height));
     
     // bg
     auto bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(brickData.width,
@@ -55,16 +57,14 @@ bool DemoBrick::init(const DemoBrickData &demoBrickData, b2World *world) {
     addChild(bg);
     
     // image
-    auto anim = SBNodeUtils::createAnimation(brickData.idleAnims, brickData.idleAnimInterval);
-    
-    auto image = SBAnimationSprite::create(anim);
+    image = SBAnimationSprite::create();
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(size, 0, brickData.is1x1() ? 5 : 0));
-    image->setFlippedX(demoBrickData.isFlippedX);
-    image->setFlippedY(demoBrickData.isFlippedY);
+    image->setFlippedX(data.isFlippedX);
+    image->setFlippedY(data.isFlippedY);
     addChild(image);
     
-    image->runAnimation();
+    setImage(BrickImageType::IDLE, true);
     
     // physics
     b2BodyDef bodyDef;
@@ -91,4 +91,38 @@ bool DemoBrick::init(const DemoBrickData &demoBrickData, b2World *world) {
     syncNodeToBody();
     
     return true;
+}
+
+/**
+ * 브릭 이미지 설정
+ */
+void DemoBrick::setImage(BrickImageType type, bool isRunAnimation) {
+    
+    this->imageType = type;
+    
+    auto anim = BRICK_ANIMATION(data.brick, type);
+    
+    switch( type ) {
+        case BrickImageType::IDLE:        image->setAnimation(anim);       break;
+        case BrickImageType::DAMAGE:      image->setAnimation(anim, 1);    break;
+        default:
+            CCASSERT(false, "DemoBrick::setImage error.");
+            break;
+    }
+    
+    if( isRunAnimation ) {
+        image->runAnimation();
+    }
+}
+
+void DemoBrick::onContactBrick() {
+    
+    // 브릭 애니메이션 변경
+    if( imageType != BrickImageType::DAMAGE ) {
+        setImage(BrickImageType::DAMAGE, false);
+        
+        image->runAnimation([=](Node*) {
+            this->setImage(BrickImageType::IDLE, true);
+        });
+    }
 }
