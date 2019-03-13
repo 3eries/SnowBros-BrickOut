@@ -108,12 +108,12 @@ void Brick::initPhysics() {
  */
 void Brick::initBg() {
     
-    bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(getRows(), getColumns(), 1));
+    bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(data, elite, 1));
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2MC(getContentSize(), 0, 0));
     // bg->setColor(Color3B(0,0,0));
     // bg->setOpacity(255*0.3f);
-    addChild(bg);
+    addChild(bg, -1);
 }
 
 /**

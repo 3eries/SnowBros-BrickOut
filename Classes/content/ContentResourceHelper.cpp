@@ -21,9 +21,15 @@ string ContentResourceHelper::getStageBackgroundFile(int stage) {
     return DIR_STAGE + STR_FORMAT("stage_%04d_bg.png", stage);
 }
 
-string ContentResourceHelper::getBrickBackgroundFile(int w, int h, int step) {
+string ContentResourceHelper::getBrickBackgroundFile(const BrickData &data, bool elite, int step) {
     
-    string file = DIR_BRICK + STR_FORMAT("brick_bg_%dx%d_%02d.png", w, h, step);
+    string type = "";
+    
+    if( elite )                   type = "_elite";
+    else if( data.isSpecial() )   type = "_special";
+    
+    string file = DIR_BRICK + STR_FORMAT("brick_bg_%dx%d%s_%02d.png",
+                                         data.width, data.height, type.c_str(), step);
     
     if( !FileUtils::getInstance()->isFileExist(file) ) {
         superbomb::Log::e("ContentResourceHelper::getBrickBackgroundFile invalid file: %s", file.c_str());

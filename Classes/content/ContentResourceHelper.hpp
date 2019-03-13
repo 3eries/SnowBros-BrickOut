@@ -33,7 +33,7 @@ public:
     
     static std::string getStageBackgroundFile(int stage);
     
-    static std::string getBrickBackgroundFile(int w, int h, int step);
+    static std::string getBrickBackgroundFile(const BrickData &data, bool elite, int step);
     static StringList  getBrickAnimationFiles(const std::string &image,
                                              const std::string &animKey);
     
