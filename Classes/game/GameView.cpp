@@ -990,17 +990,20 @@ bool GameView::checkStageClear() {
  */
 void GameView::showStageLabel(int stage) {
     
-    auto label = Label::createWithTTF(STR_FORMAT("STAGE %d", stage), FONT_COMMODORE, 40, Size::ZERO,
-                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
+    auto label = Label::createWithBMFont(FONT_GAME_STAGE_LARGE, STR_FORMAT("STAGE %d", stage),
+                                         TextHAlignment::CENTER);
     label->setAnchorPoint(ANCHOR_M);
-    label->setPosition(Vec2MC(0, 0));
-    label->setTextColor(Color4B(244,0,137,255));
-    label->enableOutline(Color4B::BLACK, 3);
     addChild(label);
     
-    auto delay = DelayTime::create(1.5f);
-    auto remove = RemoveSelf::create();
-    label->runAction(Sequence::create(delay, remove, nullptr));
+    auto seq = Sequence::create(MoveTo::create(0,        Vec2MC(-700, 0)),
+                                MoveTo::create(0.15f,    Vec2MC(20, 0)),
+                                MoveTo::create(0.05f,    Vec2MC(0, 0)),
+                                DelayTime::create(0.8f),
+                                MoveTo::create(0.06f,    Vec2MC(-20, 0)),
+                                MoveTo::create(0.06f,    Vec2MC(0, 0)),
+                                MoveTo::create(0.18f,    Vec2MC(700, 0)),
+                                RemoveSelf::create(), nullptr);
+    label->runAction(seq);
 }
 
 /**
