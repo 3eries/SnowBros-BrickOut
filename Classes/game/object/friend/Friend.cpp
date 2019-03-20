@@ -8,6 +8,7 @@
 #include "Friend.hpp"
 
 #include "Define.h"
+#include "ContentResourceHelper.hpp"
 
 USING_NS_CC;
 using namespace std;
@@ -20,9 +21,9 @@ using namespace std;
 #define ANIM_NAME_MOVE                  "move"
 #define ANIM_NAME_DIE                   "die"
 
-Friend* Friend::create() {
+Friend* Friend::create(const FriendData &data) {
     
-    auto friendNode = new Friend();
+    auto friendNode = new Friend(data);
     
     if( friendNode && friendNode->init() ) {
         friendNode->autorelease();
@@ -33,8 +34,8 @@ Friend* Friend::create() {
     return nullptr;
 }
 
-Friend::Friend() {
-    
+Friend::Friend(const FriendData &data) :
+data(data) {
 }
 
 Friend::~Friend() {
@@ -52,7 +53,9 @@ bool Friend::init() {
     setContentSize(SB_WIN_SIZE);
     setCascadeOpacityEnabled(true);
     
-    image = spine::SkeletonAnimation::createWithJsonFile(DIR_FRIEND + "friends_0001.json");
+    string file = ContentResourceHelper::getFriendAnimationFile(data.friendId);
+    
+    image = spine::SkeletonAnimation::createWithJsonFile(file);
     image->setAnchorPoint(Vec2::ZERO);
     image->setPosition(Vec2MC(0, 0));
     addChild(image);

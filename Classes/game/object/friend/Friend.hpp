@@ -13,6 +13,8 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
+#include "../../../content/data/model/FriendData.h"
+
 class Friend : public cocos2d::Node {
 public:
     enum class ImageType {
@@ -25,11 +27,11 @@ public:
     };
     
 public:
-    static Friend* create();
+    static Friend* create(const FriendData &data);
     ~Friend();
     
 private:
-    Friend();
+    Friend(const FriendData &data);
     
     bool init() override;
     
@@ -38,6 +40,7 @@ public:
     void setImageFlippedX(bool flippedX);
     
 private:
+    CC_SYNTHESIZE_READONLY(FriendData, data, Data);
     spine::SkeletonAnimation *image;
 };
 

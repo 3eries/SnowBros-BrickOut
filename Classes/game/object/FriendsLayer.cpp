@@ -284,17 +284,9 @@ void FriendsLayer::onNextFloor(const FloorData &floor) {
 void FriendsLayer::initFriends() {
  
     // game_friends_02_idle1.png Vec2BL(46, 81) , Size(63, 75)
-    Color3B colors[] = {
-        Color3B(255,255,255),
-        Color3B(0,255,0),
-        Color3B(0,0,255),
-        Color3B(0,0,0),
-    };
-    
-    for( int i = 0; i < 1/*보유 프렌즈 수*/; ++i ) {
-        auto friendNode = Friend::create();
+    for( int i = 0; i < 3/*보유 프렌즈 수*/; ++i ) {
+        auto friendNode = Friend::create(Database::getFriends()[i]);
         friendNode->setCascadeColorEnabled(true);
-        friendNode->setColor(colors[i]);
         addChild(friendNode);
         
         friends.push_back(friendNode);

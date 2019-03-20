@@ -209,6 +209,7 @@
 		1D18E422215CA19C0069A888 /* ConsentForm-android.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "ConsentForm-android.cpp"; sourceTree = "<group>"; };
 		1D18E426215CBE430069A888 /* ConsentManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConsentManager.cpp; sourceTree = "<group>"; };
 		1D18E427215CBE430069A888 /* ConsentManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConsentManager.hpp; sourceTree = "<group>"; };
+		1D1AAC0F2242BD1300B08799 /* FriendData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendData.h; sourceTree = "<group>"; };
 		1D1DA433210EF80C00467E6E /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.4.sdk/System/Library/Frameworks/StoreKit.framework; sourceTree = DEVELOPER_DIR; };
 		1D1F3C8120AC9F5E0035A36C /* SBAudioEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SBAudioEngine.cpp; sourceTree = "<group>"; };
 		1D1F3C8220AC9F5E0035A36C /* SBAudioEngine.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = SBAudioEngine.hpp; sourceTree = "<group>"; };
@@ -614,6 +615,7 @@
 				1D25EE16220B398400DD126A /* BrickData.h */,
 				1D8538932236DBB90087DF1A /* DemoData.h */,
 				1D25EE14220B398400DD126A /* FloorData.h */,
+				1D1AAC0F2242BD1300B08799 /* FriendData.h */,
 				1D25EE12220B398400DD126A /* ItemData.h */,
 				1DA204A42212BE4700656689 /* PatternData.h */,
 				1D25EE13220B398400DD126A /* StageData.h */,

@@ -17,6 +17,7 @@
 #include "model/PatternData.h"
 #include "model/StageData.h"
 #include "model/ItemData.h"
+#include "model/FriendData.h"
 #include "model/DemoData.h"
 
 /** @class Database
@@ -35,6 +36,7 @@ private:
     
     void parseBrickJson();
     void parseStageJson();
+    void parseFriendsJson();
     void parseDemoJson();
     
 public:
@@ -57,13 +59,18 @@ public:
     static BrickDataMap      getBricks();
     static BrickData         getBrick(const std::string &brickId);
     
+    static FriendDataList    getFriends();
+    static FriendData        getFriend(const std::string &friendId);
+    
     static DemoStageDataList getDemoStages();
     static DemoStageData     getDemoStage(int stage);
     
 private:
+    BallSkinDataList ballSkins;
     StageDataList stages;
     FloorDataList floors;
     BrickDataMap bricks;
+    FriendDataList friends;
     DemoStageDataList demoStages;
 };
 

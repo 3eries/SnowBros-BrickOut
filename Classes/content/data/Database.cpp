@@ -15,6 +15,7 @@ USING_NS_SB;
 using namespace std;
 
 #define BRICK_FILE              (DIR_DATA + "brick.json")
+#define FRIENDS_FILE            (DIR_DATA + "friends.json")
 #define DEMO_FILE               (DIR_DATA + "demo.json")
 
 static Database *instance = nullptr;
@@ -44,6 +45,7 @@ void Database::init() {
     
     parseBrickJson();
     parseStageJson();
+    parseFriendsJson();
     parseDemoJson();
 }
 
@@ -238,6 +240,33 @@ void Database::parseStageJson() {
 }
 
 /**
+ * friends.json
+ */
+void Database::parseFriendsJson() {
+    
+    CCLOG("========== PARSE START (friends.json)  ==========");
+    string json = SBStringUtils::readTextFile(FRIENDS_FILE);
+    
+    rapidjson::Document doc;
+    doc.Parse(json.c_str());
+    
+    auto list = doc.GetArray();
+    
+    for( int i = 0; i < list.Size(); ++i ) {
+        const rapidjson::Value &v = list[i];
+        
+        FriendData friendData;
+        friendData.friendId = v["friend_id"].GetString();
+        
+        friends.push_back(friendData);
+        
+        CCLOG("%s", friendData.toString().c_str());
+    }
+    
+    CCLOG("========== PARSE END (friends.json)  ==========");
+}
+
+/**
  * demo.json
  */
 void Database::parseDemoJson() {
@@ -403,10 +432,10 @@ bool Database::isStageLastFloor(const FloorData &data) {
 }
 
 /**
- * 벽돌 데이터를 반환합니다
+ * 브릭 데이터를 반환합니다
  */
 BrickDataMap Database::getBricks() {
-    return getInstance()->bricks;
+    return instance->bricks;
 }
 
 BrickData Database::getBrick(const string &brickId) {
@@ -419,6 +448,26 @@ BrickData Database::getBrick(const string &brickId) {
     }
     
     return it->second;
+}
+
+/**
+ * 프렌즈 데이터를 반환합니다
+ */
+FriendDataList Database::getFriends() {
+    return instance->friends;
+}
+
+FriendData Database::getFriend(const string &friendId) {
+    
+    auto friends = getFriends();
+    
+    for( auto friendData : friends ) {
+        if( friendData.friendId == friendId ) {
+            return friendData;
+        }
+    }
+    
+    return FriendData();
 }
 
 /**
