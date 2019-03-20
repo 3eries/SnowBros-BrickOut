@@ -1,0 +1,62 @@
+
+game_over.png
+size: 2048,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+bg
+  rotate: true
+  xy: 1014, 2
+  size: 240, 320
+  orig: 240, 320
+  offset: 0, 0
+  index: -1
+monster_idle1
+  rotate: false
+  xy: 2, 130
+  size: 484, 112
+  orig: 484, 112
+  offset: 0, 0
+  index: -1
+monster_idle2
+  rotate: false
+  xy: 2, 16
+  size: 484, 112
+  orig: 484, 112
+  offset: 0, 0
+  index: -1
+particle_01
+  rotate: true
+  xy: 488, 40
+  size: 128, 160
+  orig: 128, 160
+  offset: 0, 0
+  index: -1
+particle_02
+  rotate: false
+  xy: 1336, 82
+  size: 128, 160
+  orig: 128, 160
+  offset: 0, 0
+  index: -1
+particle_03
+  rotate: true
+  xy: 650, 40
+  size: 128, 160
+  orig: 128, 160
+  offset: 0, 0
+  index: -1
+particle_04
+  rotate: false
+  xy: 1466, 82
+  size: 128, 160
+  orig: 128, 160
+  offset: 0, 0
+  index: -1
+text_game_over
+  rotate: false
+  xy: 488, 170
+  size: 524, 72
+  orig: 524, 72
+  offset: 0, 0
+  index: -1

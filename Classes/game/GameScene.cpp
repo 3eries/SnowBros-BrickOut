@@ -448,50 +448,19 @@ void GameScene::showContinuePopup() {
  */
 void GameScene::showResultPopup() {
 
-    // 연출용 레이어 생성
     auto layer = SBNodeUtils::createTouchNode();
     addChild(layer, SBZOrder::TOP);
     
-    layer->addChild(LayerColor::create(Color4B::BLACK));
-    
-    // 1st animation
-    const int LEN = 13;
-    vector<string> animFiles1;
-    
-    for( int i = 0; i < LEN; ++i ) {
-        animFiles1.push_back(DIR_IMG_GAME + STR_FORMAT("ui_gameover01_%02d.png", i+1));
-    }
-    
-    auto anim1 = SBAnimationSprite::create(animFiles1, 0.1f, 1);
-    anim1->setAnchorPoint(ANCHOR_MB);
-    anim1->setPosition(Vec2MC(0, 20));
-    layer->addChild(anim1);
-    
-    // 2nd animation
-    vector<string> animFiles2({
-        DIR_IMG_GAME + "ui_gameover02_01.png",
-        DIR_IMG_GAME + "ui_gameover02_02.png",
-    });
-    
-    auto anim2 = SBAnimationSprite::create(animFiles2, 0.1f, 5);
-    anim2->setAnchorPoint(ANCHOR_MT);
-    anim2->setPosition(Vec2MC(0, -20));
-    anim2->setVisible(false);
-    layer->addChild(anim2);
-    
-    // run
-    anim1->runAnimation([=](Node *sender) {
+    auto anim = SBSpineHelper::runAnimation([=]() {
         
-        anim2->setVisible(true);
-        anim2->runAnimation([=](Node *sender) {
-            
-            anim1->setVisible(false);
-            anim2->setVisible(false);
-            
-            this->replaceScene(SceneType::MAIN);
-            // onCompletedListener();
-        });
-    });
+        this->replaceScene(SceneType::MAIN);
+        
+    }, DIR_IMG_GAME + "game_over.json", ANIM_NAME_RUN);
+    layer->addChild(anim);
+    
+    SBDirector::postDelayed(layer, [=]() {
+        layer->addChild(LayerColor::create(Color4B::BLACK), -1);
+    }, anim->getAnimationDuration(ANIM_NAME_RUN)*0.4f);
     
 //    // 선물 활성화
 //    // GiftManager::setEnabled(GiftType::BOOST, true);
