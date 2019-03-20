@@ -19,7 +19,7 @@ public:
     
 public:
     static SpineAnimation* runAnimation(SBCallback completeListener,
-                                        const std::string &jsonFile, const std::string &animName = "",
+                                        const std::string &jsonFile, const std::string &animName,
                                         bool autoRemove = false);
     
     static void runAnimation(SBCallback completeListener,
