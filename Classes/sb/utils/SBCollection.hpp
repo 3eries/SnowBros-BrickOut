@@ -147,7 +147,7 @@ public:
         std::vector<C> convertDatas;
         
         for( auto data : datas ) {
-            convertDatas.push_back(data);
+            convertDatas.push_back(static_cast<C>(data));
         }
         
         return convertDatas;
