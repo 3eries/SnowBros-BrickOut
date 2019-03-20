@@ -17,18 +17,68 @@
 struct StageData {
     int            stage;                   // 스테이지 번호
     int            originStage;
-    
-    FloorList      floors;
+    int            finalBallCount;
+    int            finalFriendsBallCount;
+    int            coinDropMin;             // 코인 최소 드랍 수
+    int            coinDropMax;             // 코인 최대 드랍 수
+    FloorDataList  floors;
     PatternDataMap patterns;
     
     // 스테이지에 등장한 브릭 리스트
-    BrickList normalBrickList;
-    BrickList bossBrickList;
+    BrickDataList  normalBrickList;
+    BrickDataList  bossBrickList;
     
     StageData() : stage(0) {}
     
+    void parse(const rapidjson::Value &v, rapidjson::Document::AllocatorType &allocator) {
+        
+        // int values
+        {
+            StringList keys({
+                "stage",
+                "final_ball_count",
+                "final_friends_ball_count",
+            });
+            
+            std::vector<int*> ptrs({
+                &stage,
+                &finalBallCount,
+                &finalFriendsBallCount,
+            });
+            
+            SBJSON::parse(v, allocator, keys, ptrs);
+        }
+        
+        originStage = stage;
+        
+        // coin_drop_count
+        std::string dropCount = v["coin_drop_count"].GetString();
+        dropCount = SBStringUtils::replaceAll(dropCount, " ", "");
+        
+        // 절대값
+        if( SBStringUtils::isInteger(dropCount) ) {
+            coinDropMin = TO_INTEGER(dropCount);
+            coinDropMax = coinDropMin;
+        }
+        // 범위
+        else if( dropCount.find("~") != std::string::npos ) {
+            auto arr = SBStringUtils::split(dropCount, '~');
+            CCASSERT(arr.size() == 2, "StageData parse error: invalid coin_drop_count.");
+            
+            coinDropMin = TO_INTEGER(arr[0]);
+            coinDropMax = TO_INTEGER(arr[1]);
+        }
+    }
+    
     bool isNull() const {
         return stage == 0;
+    }
+
+    int getRandomCoinDropCount() {
+        if( coinDropMin == coinDropMax ) return coinDropMin;
+        
+        int len = (coinDropMax - coinDropMin) + 1;
+        return (arc4random() % len) + coinDropMin;
     }
     
     FloorData getFirstFloor() const {
@@ -38,10 +88,12 @@ struct StageData {
     FloorData getLastFloor() const {
         return floors[floors.size()-1];
     }
-    
+
     std::string toString() {
         std::string str = "StageData {\n";
         str += STR_FORMAT("\tstage: %d, originStage: %d\n", stage, originStage);
+        str += STR_FORMAT("\tfinalBallCount: %d, finalFriendsBallCount: %d\n", finalBallCount, finalFriendsBallCount);
+        str += STR_FORMAT("\tcoinDropMin: %d, coinDropMax: %d\n", coinDropMin, coinDropMax);
         str += STR_FORMAT("\tfirstFloor: %d\n", getFirstFloor().floor);
         str += STR_FORMAT("\tlastFloor: %d\n", getLastFloor().floor);
         str += STR_FORMAT("\tfloorLen: %d\n", (int)floors.size());
@@ -64,6 +116,6 @@ struct StageData {
     }
 };
 
-typedef std::vector<StageData>           StageList;
+typedef std::vector<StageData>           StageDataList;
 
 #endif /* StageData_h */

@@ -11,7 +11,9 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
+#include "GameConfiguration.hpp"
 #include "BrickData.h"
+#include "TileData.h"
 
 /**
  * PatternBrickData
@@ -19,29 +21,30 @@
  */
 struct PatternBrickData {
     BrickData brick;
-    cocos2d::Vec2 pos;
     int hp;
-    bool isFlippedX;
-    bool isFlippedY;
+    TileData tile;
     
-    PatternBrickData() : isFlippedX(false), isFlippedY(false) {}
+    PatternBrickData() : hp(0) {}
     
     std::string toString() {
         std::string str = "\t\t\tPatternBrickData {\n";
-        str += STR_FORMAT("\t\t\t\tbrick: %s, pos: (%d,%d), hp: %d, isFlippedX: %d, isFlippedY: %d",
-                          brick.brickId.c_str(), (int)pos.x, (int)pos.y, hp, isFlippedX, isFlippedY);
+        str += STR_FORMAT("\t\t\t\tbrick: %s, hp: %d\n",
+                          brick.brickId.c_str(), hp);
+        str += STR_FORMAT("\t\t\t\t%s", tile.toString().c_str());
         str += "\n\t\t\t}";
         
         return str;
     }
 };
 
+typedef std::vector<PatternBrickData> PatternBrickDataList;
+
 /**
  * PatternData
  */
 struct PatternData {
     std::string patternId;
-    std::vector<PatternBrickData> bricks;
+    PatternBrickDataList bricks;
     
     PatternData() {
     }
@@ -60,8 +63,18 @@ struct PatternData {
         return false;
     }
     
-    BrickList getBossBrickList() const {
-        BrickList brickList;
+    PatternBrickData getBrick(int x) {
+        for( auto brick : bricks ) {
+            if( brick.tile.pos.x == x ) {
+                return brick;
+            }
+        }
+        
+        return PatternBrickData();
+    }
+    
+    BrickDataList getBossBrickList() const {
+        BrickDataList brickList;
         
         for( auto brick : bricks ) {
             if( brick.brick.isBoss() ) {
@@ -75,6 +88,27 @@ struct PatternData {
     bool isExistBoss() const {
         return getBossBrickList().size() > 0;
     }
+    
+    /**
+     * ex) [01101][00000][01102][00000][00000][00000]
+     */
+    std::string getBrickListString() {
+        
+        std::string str = "";
+        
+        for( int x = 0; x < GAME_CONFIG->getTileRows(); ++x ) {
+            auto brick = getBrick(x).brick;
+            
+            if( brick.isNull() ) {
+                str += "[00000]";
+            } else {
+                str += STR_FORMAT("[%s]", brick.brickId.c_str());
+            }
+        }
+        
+        str = SBStringUtils::replaceAll(str, "brick_", "");
+        return str;
+    };
     
     std::string toString() {
         std::string str = "\t\tPatternData {\n";
@@ -91,5 +125,6 @@ struct PatternData {
 };
 
 typedef std::map<std::string, PatternData> PatternDataMap;
+typedef std::vector<PatternData> PatternDataList;
 
 #endif /* PatternData_h */

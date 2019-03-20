@@ -13,7 +13,7 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#include "tile/Tile.hpp"
+#include "tile/Brick.hpp"
 
 class AimController : public cocos2d::Node {
 public:
@@ -42,8 +42,7 @@ private:
     void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event*);
     
 public:
-    void setEnabled(bool isEnabled,
-                    std::vector<Game::Tile*> bricks = std::vector<Game::Tile*>());
+    void setEnabled(bool isEnabled, BrickList bricks = BrickList());
     void setStartPosition(const cocos2d::Vec2 &startPosition);
     
 private:

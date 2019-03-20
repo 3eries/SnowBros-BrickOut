@@ -34,6 +34,7 @@
 		1D25EE2F220E1F1F00DD126A /* TestList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D25EE2D220E1F1F00DD126A /* TestList.cpp */; };
 		1D25EE32220E6BC200DD126A /* Brick_10012.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D25EE30220E6BC200DD126A /* Brick_10012.cpp */; };
 		1D3120DC20E9F9EA00D059C6 /* RankingManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D3120D920E9F9E900D059C6 /* RankingManager.cpp */; };
+		1D322ED622389CB30007DDFB /* NeutralBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D322ED422389CB30007DDFB /* NeutralBrick.cpp */; };
 		1D3DCFFC215B33EC00DE7409 /* ConsentForm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D3DCFFA215B33EC00DE7409 /* ConsentForm.cpp */; };
 		1D3DD000215B46EB00DE7409 /* ConsentForm-ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3DCFFF215B46EB00DE7409 /* ConsentForm-ios.mm */; };
 		1D3DF50321045BEC0055B66E /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3DF50221045BEC0055B66E /* GameKit.framework */; };
@@ -69,6 +70,7 @@
 		1D622140214F500400567075 /* SBJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D62213E214F500400567075 /* SBJSON.cpp */; };
 		1D6505542201A6DB00B4BB0D /* FriendsLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D6505522201A6DB00B4BB0D /* FriendsLayer.cpp */; };
 		1D69EBE721BC31A600DC5FF9 /* AimController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D69EBE521BC31A600DC5FF9 /* AimController.cpp */; };
+		1D7CC52A223AB27500671D5B /* TileLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7CC528223AB27500671D5B /* TileLayer.cpp */; };
 		1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709321C9786400CF907F /* TopMenu.cpp */; };
 		1D7E709B21CA355A00CF907F /* StageClearPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709921CA355A00CF907F /* StageClearPopup.cpp */; };
 		1D7F2CE721B706CF00516469 /* GLES-Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7F2CE021B706CF00516469 /* GLES-Render.cpp */; };
@@ -248,6 +250,8 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3120D820E9F9E900D059C6 /* RankingManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RankingManager.hpp; sourceTree = "<group>"; };
 		1D3120D920E9F9E900D059C6 /* RankingManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RankingManager.cpp; sourceTree = "<group>"; };
+		1D322ED422389CB30007DDFB /* NeutralBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NeutralBrick.cpp; sourceTree = "<group>"; };
+		1D322ED522389CB30007DDFB /* NeutralBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NeutralBrick.hpp; sourceTree = "<group>"; };
 		1D3DCFFA215B33EC00DE7409 /* ConsentForm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConsentForm.cpp; sourceTree = "<group>"; };
 		1D3DCFFB215B33EC00DE7409 /* ConsentForm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConsentForm.hpp; sourceTree = "<group>"; };
 		1D3DCFFF215B46EB00DE7409 /* ConsentForm-ios.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "ConsentForm-ios.mm"; sourceTree = "<group>"; };
@@ -317,6 +321,8 @@
 		1D6505532201A6DB00B4BB0D /* FriendsLayer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FriendsLayer.hpp; sourceTree = "<group>"; };
 		1D69EBE521BC31A600DC5FF9 /* AimController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AimController.cpp; sourceTree = "<group>"; };
 		1D69EBE621BC31A600DC5FF9 /* AimController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AimController.hpp; sourceTree = "<group>"; };
+		1D7CC528223AB27500671D5B /* TileLayer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TileLayer.cpp; sourceTree = "<group>"; };
+		1D7CC529223AB27500671D5B /* TileLayer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TileLayer.hpp; sourceTree = "<group>"; };
 		1D7E709321C9786400CF907F /* TopMenu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TopMenu.cpp; sourceTree = "<group>"; };
 		1D7E709421C9786400CF907F /* TopMenu.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TopMenu.hpp; sourceTree = "<group>"; };
 		1D7E709921CA355A00CF907F /* StageClearPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = StageClearPopup.cpp; sourceTree = "<group>"; };
@@ -328,6 +334,7 @@
 		1D7F2CE321B706CF00516469 /* DebugDrawView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DebugDrawView.cpp; sourceTree = "<group>"; };
 		1D7F2CE421B706CF00516469 /* SBPhysics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SBPhysics.cpp; sourceTree = "<group>"; };
 		1D8538932236DBB90087DF1A /* DemoData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DemoData.h; sourceTree = "<group>"; };
+		1D85389D22373B740087DF1A /* TileData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TileData.h; sourceTree = "<group>"; };
 		1D86438B2152385D001841C9 /* SBSecurity.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBSecurity.cpp; sourceTree = "<group>"; };
 		1D86438C2152385D001841C9 /* SBSecurity.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBSecurity.hpp; sourceTree = "<group>"; };
 		1D86438E21523898001841C9 /* SBSecurity-android.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "SBSecurity-android.cpp"; sourceTree = "<group>"; };
@@ -610,6 +617,7 @@
 				1D25EE12220B398400DD126A /* ItemData.h */,
 				1DA204A42212BE4700656689 /* PatternData.h */,
 				1D25EE13220B398400DD126A /* StageData.h */,
+				1D85389D22373B740087DF1A /* TileData.h */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -1050,6 +1058,8 @@
 				1DD6979A21B84EAC005FDC62 /* GameMap.cpp */,
 				1DD6979B21B84EAC005FDC62 /* GameMap.hpp */,
 				1DD697A021B85467005FDC62 /* tile */,
+				1D7CC528223AB27500671D5B /* TileLayer.cpp */,
+				1D7CC529223AB27500671D5B /* TileLayer.hpp */,
 			);
 			path = object;
 			sourceTree = "<group>";
@@ -1065,6 +1075,8 @@
 				1D9C035322277FFB00745356 /* GhostBrick.hpp */,
 				1D13227721C1E522005F4370 /* Item.cpp */,
 				1D13227821C1E522005F4370 /* Item.hpp */,
+				1D322ED422389CB30007DDFB /* NeutralBrick.cpp */,
+				1D322ED522389CB30007DDFB /* NeutralBrick.hpp */,
 				1D9C034F22277FE500745356 /* ShieldBrick.cpp */,
 				1D9C035022277FE500745356 /* ShieldBrick.hpp */,
 				1DD697A121B8546F005FDC62 /* Tile.cpp */,
@@ -1382,6 +1394,7 @@
 				1DA723EC2109FEAE002B7ADE /* CommonLoadingBar.cpp in Sources */,
 				1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */,
 				1DE5254E21BB0B94006CAE9F /* Ball.cpp in Sources */,
+				1D322ED622389CB30007DDFB /* NeutralBrick.cpp in Sources */,
 				1D45C47C20A8A7B8007E63AD /* SBUIInfo.cpp in Sources */,
 				1D25EE29220E1E0600DD126A /* GameConfigEdit.cpp in Sources */,
 				1D1F3C9A20AD6D040035A36C /* SBBasePopup.cpp in Sources */,
@@ -1486,6 +1499,7 @@
 				1DA0409E21037F6B001980BA /* SBJniHelper.cpp in Sources */,
 				1D86438D2152385D001841C9 /* SBSecurity.cpp in Sources */,
 				1D3DF50E210466EE0055B66E /* PluginPlay.cpp in Sources */,
+				1D7CC52A223AB27500671D5B /* TileLayer.cpp in Sources */,
 				1D45C47F20A8A7B8007E63AD /* SBToggleButton.cpp in Sources */,
 				1D25EE1A220B54E300DD126A /* ContentManager.cpp in Sources */,
 				1D18E425215CA19D0069A888 /* ConsentForm-android.cpp in Sources */,

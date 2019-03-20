@@ -117,6 +117,8 @@ void Tile::down() {
  */
 void Tile::setTilePosition(const TilePosition &tilePos, bool action, SBCallback onActionFinished) {
     
+    CCASSERT(tilePos != INVALID_TILE_POSITION, "Tile::setTilePosition error.");
+    
     this->tilePos = tilePos;
     
     Vec2 p = convertToTilePosition(tilePos, rows, columns);
@@ -142,9 +144,9 @@ void Tile::setTilePosition(const TilePosition &tilePos, bool action, SBCallback 
  * 좌표가 타일에 포함됐는지 반환합니다
  */
 bool Tile::isContainsPosition(const TilePosition &p) {
-
-    return p.x >= tilePos.x && p.y >= tilePos.y &&
-           p.x <= tilePos.x + (rows-1) && p.y <= tilePos.y + (columns-1);
+    
+    return p.x >= tilePos.x && p.x <= tilePos.x + (rows-1) &&
+           p.y >= tilePos.y && p.y <= tilePos.y + (columns-1);
 }
 
 Vec2 Tile::convertToTilePosition(int x, int y, int w, int h) {

@@ -23,26 +23,23 @@ struct FloorData {
     int                      brickDropMin;                  // 벽돌 최소 드랍 수
     int                      brickDropMax;                  // 벽돌 최대 드랍 수
     int                      eliteBrickDropRate;            // 엘리트 벽돌 드랍률
-    int                      powerUpDropRate;               // 볼 증가 아이템 드랍률
-    int                      friendPowerUpDropRate;         // 프렌즈 볼 증가 아이템 드랍률
-    int                      moneyDropRate;                 // 재화 드랍률
     
-    BrickList                brickList;                     // 일반 벽돌 리스트
-    BrickList                eliteBrickList;                // 엘리트 벽돌 리스트
+    BrickDataList            normalBrickList;               // 일반 브릭 리스트
+    BrickDataList            specialBrickList;              // 특수 브릭 리스트
+    BrickDataList            neutralBrickList;              // 중립 브릭 리스트
     PatternData              pattern;                       // 패턴
     
     FloorData() : stage(0), floor(0), usePrevData(true),
     brickHpOrigin(""), brickHp(0), brickDropMin(0), brickDropMax(0),
-    eliteBrickDropRate(0),
-    powerUpDropRate(0), friendPowerUpDropRate(0), moneyDropRate(0) {
+    eliteBrickDropRate(0) {
     }
     
     FloorData(const FloorData &data) :
     stage(data.stage), floor(data.floor), usePrevData(data.usePrevData),
     brickHpOrigin(data.brickHpOrigin), brickHp(data.brickHp), brickDropMin(data.brickDropMin), brickDropMax(data.brickDropMax),
     eliteBrickDropRate(data.eliteBrickDropRate),
-    powerUpDropRate(data.powerUpDropRate), friendPowerUpDropRate(data.friendPowerUpDropRate), moneyDropRate(data.moneyDropRate),
-    brickList(data.brickList), eliteBrickList(data.eliteBrickList), pattern(data.pattern) {
+    normalBrickList(data.normalBrickList), specialBrickList(data.specialBrickList), neutralBrickList(data.neutralBrickList),
+    pattern(data.pattern) {
     }
     
     void parse(const rapidjson::Value &v, rapidjson::Document::AllocatorType &allocator,
@@ -82,16 +79,10 @@ struct FloorData {
         {
             StringList keys({
                 "elite_brick_drop_rate",
-                "power_up_drop_rate",
-                "friend_power_up_drop_rate",
-                "money_drop_rate",
             });
             
             std::vector<int*> ptrs({
                 &eliteBrickDropRate,
-                &powerUpDropRate,
-                &friendPowerUpDropRate,
-                &moneyDropRate,
             });
             
             SBJSON::parse(v, allocator, keys, ptrs);
@@ -148,7 +139,7 @@ struct FloorData {
         return floor == 0;
     }
     
-    BrickList getBossBrickList() const {
+    BrickDataList getBossBrickList() const {
         return pattern.getBossBrickList();
     }
     
@@ -156,19 +147,13 @@ struct FloorData {
         return pattern.isExistBoss();
     }
     
-    int getRandomDropCount() {
+    int getRandomBrickDropCount() const {
         if( brickDropMin == brickDropMax ) return brickDropMin;
         return cocos2d::random<int>(brickDropMin, brickDropMax);
     }
     
-    BrickData getRandomBrick() {
-        int i = cocos2d::random<int>(0, (int)brickList.size()-1);
-        return brickList[i];
-    }
-    
-    BrickData getRandomEliteBrick() {
-        int i = cocos2d::random<int>(0, (int)eliteBrickList.size()-1);
-        return eliteBrickList[i];
+    BrickData getRandomNormalBrick() const {
+        return normalBrickList[arc4random() % normalBrickList.size()];
     }
     
     std::string toString() {
@@ -177,20 +162,24 @@ struct FloorData {
         str += STR_FORMAT("\t\tusePrevData: %d\n", usePrevData);
         str += STR_FORMAT("\t\tbrickHpOrigin: %s, brickHp: %d, brickDropMin: %d, brickDropMax: %d\n", brickHpOrigin.c_str(), brickHp, brickDropMin, brickDropMax);
         str += STR_FORMAT("\t\teliteBrickDropRate: %d\n", eliteBrickDropRate);
-        str += STR_FORMAT("\t\tpowerUpDropRate: %d, friendPowerUpDropRate: %d, moneyDropRate: %d\n",
-                          powerUpDropRate, friendPowerUpDropRate, moneyDropRate);
         
+        str += "\t\tnormalBrickList: ";
         
-        str += "\t\tbrickList: ";
-        
-        for( auto brick : brickList ) {
+        for( auto brick : normalBrickList ) {
             str += brick.brickId + ", ";
         }
         
         str += "\n";
-        str += "\t\teliteBrickList: ";
+        str += "\t\tspecialBrickList: ";
         
-        for( auto brick : eliteBrickList ) {
+        for( auto brick : specialBrickList ) {
+            str += brick.brickId + ", ";
+        }
+        
+        str += "\n";
+        str += "\t\tneutralBrickList: ";
+        
+        for( auto brick : neutralBrickList ) {
             str += brick.brickId + ", ";
         }
         
@@ -202,6 +191,6 @@ struct FloorData {
     }
 };
 
-typedef std::vector<FloorData>           FloorList;
+typedef std::vector<FloorData>           FloorDataList;
 
 #endif /* FloorData_h */

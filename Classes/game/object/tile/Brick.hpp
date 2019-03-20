@@ -18,10 +18,16 @@ class Ball;
 
 struct BrickDef {
     BrickData data;
+    TileData tile;
     int hp;
+    bool elite;
     FloorData floorData;
     
-    BrickDef(BrickData _data) : data(_data) {}
+    BrickDef(const BrickData &_data) : data(_data), hp(0), elite(false) {}
+    BrickDef(const BrickData &_data, const TileData &_tile,
+             int _hp, bool _elite, const FloorData &_floorData) :
+    data(_data), tile(_tile), hp(_hp), elite(_elite), floorData(_floorData) {}
+
 };
 
 class Brick : public Game::Tile {
@@ -40,14 +46,17 @@ protected:
     virtual void initImage();
     virtual void initHpGage();
     
-    virtual void setImage(BrickImageType type, bool isRunAnimation);
-    
-    virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
-    
 public:
+    virtual void setImage(BrickImageType type, bool isRunAnimation);
+    virtual void setImageFlippedX(bool flippedX);
+    virtual void setImageFlippedY(bool flippedY);
+    
     virtual void enterWithAction() override;
     virtual void removeWithAction() override;
     
+    virtual void runRemoveAction();
+    
+    virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     virtual void onBreak();
     
     virtual void sufferDamage(int damage);
@@ -58,6 +67,7 @@ public:
     virtual void setBgVisible(bool isVisible);
     virtual void setHpVisible(bool isVisible);
     
+    bool    isElite();
     bool    isBoss();
     bool    isInfinityHp();
     
@@ -67,10 +77,10 @@ public:
     cocos2d::Node* createWhiteBrickEffect();
     
 protected:
+    BrickDef def;
     CC_SYNTHESIZE_READONLY(BrickData, data, Data);
     CC_SYNTHESIZE_READONLY(int, originalHp, OriginalHp);
     CC_SYNTHESIZE_READONLY(int, hp, Hp);
-    SB_SYNTHESIZE_BOOL(elite, Elite);
     
     CC_SYNTHESIZE(SBCallbackNode, onBreakListener, OnBreakListener)
     
@@ -91,5 +101,8 @@ protected:
     
     bool isRunningDamageWhiteEffect;
 };
+
+typedef std::function<void(Brick*)> OnBrickListener;
+typedef std::vector<Brick*> BrickList;
 
 #endif /* Brick_hpp */

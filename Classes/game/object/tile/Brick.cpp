@@ -32,10 +32,10 @@ Brick* Brick::create(const BrickDef &def) {
 }
 
 Brick::Brick(const BrickDef &def) : Game::Tile(def.data.width, def.data.height, def.floorData),
+def(def),
 data(def.data),
 originalHp(def.hp),
 hp(def.hp),
-elite(false),
 onBreakListener(nullptr),
 bg(nullptr),
 image(nullptr),
@@ -56,6 +56,13 @@ bool Brick::init() {
     initPhysics();
     initBg();
     initImage();
+
+    if( def.tile.pos != INVALID_TILE_POSITION ) {
+        setTilePosition(def.tile.pos, false);
+    }
+    
+    setImageFlippedX(def.tile.isFlippedX);
+    setImageFlippedY(def.tile.isFlippedY);
     
     return true;
 }
@@ -108,7 +115,7 @@ void Brick::initPhysics() {
  */
 void Brick::initBg() {
     
-    bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(data, elite, 1));
+    bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(data, isElite(), 1));
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2MC(getContentSize(), 0, 0));
     // bg->setColor(Color3B(0,0,0));
@@ -133,6 +140,10 @@ void Brick::initImage() {
  * HP 게이지 초기화
  */
 void Brick::initHpGage() {
+    
+    if( isInfinityHp() ) {
+        return;
+    }
     
     auto is1x1 = [=]() {
         
@@ -160,9 +171,9 @@ void Brick::initHpGage() {
         
         string file = "game_gage_brick_green.png";
         
-        if( elite )                       file = "game_gage_brick_yellow.png";
-        else if( data.isBoss() )          file = "game_gage_brick_big_red.png";
-        else if( this->isInfinityHp() )   file = "game_gage_brick_big_blue.png";
+        if( isElite() || data.isSpecial() )   file = "game_gage_brick_yellow.png";
+        else if( data.isBoss() )              file = "game_gage_brick_big_red.png";
+        else if( this->isInfinityHp() )       file = "game_gage_brick_big_blue.png";
         
         return DIR_BRICK + file;
     };
@@ -247,17 +258,14 @@ void Brick::setImage(BrickImageType type, bool isRunAnimation) {
     }
 }
 
-/**
- * 볼 & 벽돌 충돌
- */
-void Brick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+void Brick::setImageFlippedX(bool flippedX) {
     
-    if( isBroken() ) {
-        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
-        return;
-    }
+    image->setFlippedX(flippedX);
+}
+
+void Brick::setImageFlippedY(bool flippedY) {
     
-    sufferDamage(ball->getDamage());
+    image->setFlippedY(flippedY);
 }
 
 /**
@@ -280,7 +288,14 @@ void Brick::removeWithAction() {
     setVisible(false);
     setNeedRemove(true);
     
-    // 연출
+    runRemoveAction();
+}
+
+/**
+ * 제거 연출
+ */
+void Brick::runRemoveAction() {
+    
     const int ROWS = 6;
     const float W = getContentSize().width / ROWS;
     const int COLUMNS = getContentSize().height / W;
@@ -346,11 +361,24 @@ void Brick::removeWithAction() {
     particle->setAutoRemoveOnFinish(true);
     // particle->setScale(0.2f);
     getParent()->addChild(particle, SBZOrder::BOTTOM);
-    
+
     if( data.isBoss() ) {
         particle->setScale(particle->getScale() * 1.5f);
     }
-    */
+     */
+}
+
+/**
+ * 볼 & 벽돌 충돌
+ */
+void Brick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+    
+    if( isBroken() ) {
+        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
+        return;
+    }
+    
+    sufferDamage(ball->getDamage());
 }
 
 /**
@@ -455,7 +483,7 @@ void Brick::updateHpUI() {
     else if( hpRatio >= 0.25f )  bgStep = 2;
     else                         bgStep = 3;
     
-    bg->setTexture(ContentResourceHelper::getBrickBackgroundFile(getRows(), getColumns(), bgStep));
+    bg->setTexture(ContentResourceHelper::getBrickBackgroundFile(data, isElite(), bgStep));
     
     // 게이지
     hpGage.gage->setScaleX(hpRatio);
@@ -469,27 +497,31 @@ void Brick::setBgVisible(bool isVisible) {
 
 void Brick::setHpVisible(bool isVisible) {
     
+    if( isInfinityHp() ) {
+        return;
+    }
+    
     hpGage.bg->setVisible(isVisible);
     hpGage.label->setVisible(isVisible);
 }
 
+bool Brick::isElite() {
+    return def.elite;
+}
+
 bool Brick::isBoss() {
- 
     return data.isBoss();
 }
 
 bool Brick::isInfinityHp() {
-    
     return hp == BRICK_INFINITY_HP;
 }
 
 bool Brick::isBroken() {
-    
     return hp == 0;
 }
 
 float Brick::getHpRatio() {
-    
     return (float)hp / originalHp;
 }
 

@@ -43,4 +43,7 @@ protected:
     
     SBAnimationSprite *image;
 };
+
+typedef std::vector<Item*> ItemList;
+
 #endif /* Item_hpp */

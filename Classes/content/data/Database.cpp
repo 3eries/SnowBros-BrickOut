@@ -47,6 +47,9 @@ void Database::init() {
     parseDemoJson();
 }
 
+/**
+ * brick.json
+ */
 void Database::parseBrickJson() {
     
     CCLOG("========== PARSE START (brick.json)  ==========");
@@ -71,6 +74,9 @@ void Database::parseBrickJson() {
     CCLOG("========== PARSE END (brick.json)  ==========");
 }
 
+/**
+ * stage_xxxx.json
+ */
 void Database::parseStageJson() {
     
     int stageIdx = 0;
@@ -95,8 +101,7 @@ void Database::parseStageJson() {
         rapidjson::Document::AllocatorType &allocator = doc.GetAllocator();
         
         StageData stage;
-        stage.stage = doc["stage"].GetInt();
-        stage.originStage = stage.stage;
+        stage.parse(doc, allocator);
         
         // patterns
         auto patternValueList = doc["patterns"].GetArray();
@@ -117,10 +122,10 @@ void Database::parseStageJson() {
                 brickData.hp = brickValue["hp"].GetInt();
                 
                 auto pos = brickValue["pos"].GetArray();
-                brickData.pos = Vec2(pos[0].GetInt(), pos[1].GetInt());
+                brickData.tile.pos = Vec2(pos[0].GetInt(), pos[1].GetInt());
                 
-                if( brickValue.HasMember("flipped_x") ) brickData.isFlippedX = brickValue["flipped_x"].GetBool();
-                if( brickValue.HasMember("flipped_y") ) brickData.isFlippedY = brickValue["flipped_y"].GetBool();
+                if( brickValue.HasMember("flipped_x") ) brickData.tile.isFlippedX = brickValue["flipped_x"].GetBool();
+                if( brickValue.HasMember("flipped_y") ) brickData.tile.isFlippedY = brickValue["flipped_y"].GetBool();
                 
                 pattern.bricks.push_back(brickData);
             }
@@ -147,10 +152,10 @@ void Database::parseStageJson() {
             floor.parse(floorValue, allocator, prevFloor);
             
             // brick_list
-            auto getBrickList = [&](string key) -> BrickList {
+            auto getBrickList = [&](string key) -> BrickDataList {
                 
                 auto list = floorValue[SBJSON::value(key, allocator)].GetArray();
-                BrickList bricks;
+                BrickDataList bricks;
                 
                 for( int i = 0; i < list.Size(); ++i ) {
                     bricks.push_back(getBrick(list[i].GetString()));
@@ -159,18 +164,31 @@ void Database::parseStageJson() {
                 return bricks;
             };
             
-            if( floorValue.HasMember("brick_list") )          floor.brickList = getBrickList("brick_list");
-            if( floorValue.HasMember("elite_brick_list") )    floor.eliteBrickList = getBrickList("elite_brick_list");
+            if( floorValue.HasMember("normal_brick_list") )   floor.normalBrickList = getBrickList("normal_brick_list");
+            if( floorValue.HasMember("special_brick_list") )  floor.specialBrickList = getBrickList("special_brick_list");
+            
+            floor.neutralBrickList.clear();
+            
+            for( auto brick : floor.specialBrickList ) {
+                if( brick.type == BrickType::SPECIAL_NEUTRAL ) {
+                    floor.neutralBrickList.push_back(brick);
+                }
+            }
             
             // pattern
             if( floorValue.HasMember("pattern") ) {
                 string patternId = floorValue["pattern"].GetString();
                 
-                if( stage.patterns.find(patternId) == stage.patterns.end() ) {
-                    CCASSERT(false, "FloorData parse error: invalid pattern id.");
+                if( patternId != "" ) {
+                    if( stage.patterns.find(patternId) == stage.patterns.end() ) {
+                        CCASSERT(false, "FloorData parse error: invalid pattern id.");
+                    }
+                    
+                    floor.pattern = stage.patterns[patternId];
+                    
+                } else {
+                    floor.pattern = PatternData();
                 }
-                
-                floor.pattern = stage.patterns[patternId];
             }
             
             stage.floors.push_back(floor);
@@ -180,7 +198,7 @@ void Database::parseStageJson() {
         }
         
         // 스테이지에 등장한 브릭 리스트
-        auto addBrickList = [](BrickList &target, BrickList src) {
+        auto addBrickList = [](BrickDataList &target, BrickDataList src) {
             for( auto brick : src ) {
                 auto list = SBCollection::find(target, [=](BrickData targetData) -> bool {
                     return brick.brickId == targetData.brickId;
@@ -193,7 +211,7 @@ void Database::parseStageJson() {
         };
         
         for( auto floor : stage.floors ) {
-            addBrickList(stage.normalBrickList, floor.brickList);
+            addBrickList(stage.normalBrickList, floor.normalBrickList);
             addBrickList(stage.bossBrickList, floor.getBossBrickList());
         }
         
@@ -219,6 +237,9 @@ void Database::parseStageJson() {
     });
 }
 
+/**
+ * demo.json
+ */
 void Database::parseDemoJson() {
     
     CCLOG("========== PARSE START (demo.json)  ==========");
@@ -298,7 +319,7 @@ void Database::addTempStage() {
 /**
  * 스테이지 데이터를 반환합니다
  */
-StageList Database::getStages() {
+StageDataList Database::getStages() {
     return getInstance()->stages;
 }
 
@@ -345,7 +366,7 @@ bool Database::isLastStage(int stage) {
 /**
  * 층 데이터를 반환합니다
  */
-FloorList Database::getFloors() {
+FloorDataList Database::getFloors() {
     return getInstance()->floors;
 }
 
@@ -369,7 +390,7 @@ bool Database::isLastFloor(int floor) {
     return floors[floors.size()-1].floor == floor;
 }
 
-FloorList Database::getStageFloors(int stage) {
+FloorDataList Database::getStageFloors(int stage) {
     return getStage(stage).floors;
 }
 
@@ -384,7 +405,7 @@ bool Database::isStageLastFloor(const FloorData &data) {
 /**
  * 벽돌 데이터를 반환합니다
  */
-BrickMap Database::getBricks() {
+BrickDataMap Database::getBricks() {
     return getInstance()->bricks;
 }
 

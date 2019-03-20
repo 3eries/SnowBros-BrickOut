@@ -1,0 +1,144 @@
+{
+	"stage": 4,
+	"final_ball_count" : 65,
+	"final_friends_ball_count" : 8,
+	"coin_drop_count" : "10~15",
+	"floors": [{
+		"floor": 61,
+		"brick_hp": "65",
+		"brick_drop_count": "3",
+		"normal_brick_list": ["brick_00004", "brick_00005"],
+		"elite_brick_drop_rate" : 3
+	}, {
+		"floor": 62,
+		"brick_hp": "prev_brick_hp+2",
+		"brick_drop_count": "4",
+		"special_brick_list":["brick_01002","brick_01101","brick_01002","brick_01101"]
+	}, {
+		"floor": 63,
+		"brick_drop_count": "3",
+		"normal_brick_list" : ["brick_00001", "brick_00002", "brick_00003"],
+		"special_brick_list" : []
+	}, {
+		"floor": 64
+	}, {
+		"floor": 65
+	}, {
+		"floor": 66,
+		"brick_drop_count" : "2",
+		"special_brick_list" : ["brick_01002", "brick_01002"]
+	}, {
+		"floor": 67,
+		"brick_drop_count": "3",
+		"normal_brick_list": ["brick_00003", "brick_00004", "brick_00005"],
+		"special_brick_list":[]
+	}, {
+		"floor": 68
+	}, {
+		"floor": 69
+	}, {
+		"floor": 70,
+		"brick_drop_count" : "4",
+		"special_brick_list": ["brick_01002","brick_01101","brick_01002","brick_01101"]
+	}, {
+		"floor": 71,
+		"brick_drop_count" : "3",
+		"normal_brick_list" : ["brick_00001", "brick_00002", "brick_00005"],
+		"special_brick_list": []
+	}, {
+		"floor": 72
+	}, {
+		"floor": 73
+	}, {
+		"floor": 74,
+		"brick_drop_count" : "2",
+		"special_brick_list": ["brick_01002", "brick_01002"]
+	}, {
+		"floor": 75,
+		"brick_drop_count" : "3~4",
+		"normal_brick_list" : ["brick_00001","brick_00002","brick_00005"],
+		"special_brick_list" : []
+	},{
+		"floor": 76
+	},{
+		"floor": 77
+	},{
+		"floor": 78,
+		"brick_drop_count" : "2",
+		"special_brick_list" : ["brick_01002", "brick_01002"]
+	},{
+		"floor": 79,
+		"brick_hp" : "100",
+		"brick_drop_count" : "3",
+		"normal_brick_list" : ["brick_00005"],
+		"special_brick_list" : []
+	},{
+		"floor": 80,
+		"pattern": "pattern_01"
+	}],
+	"patterns": [{
+		"id": "pattern_01",
+		"brick_list": [{
+				"brick_id": "brick_10004",
+				"pos": [
+					0,
+					0
+				],
+				"hp": 800,
+				"flipped_x": true,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_10004",
+				"pos": [
+					4,
+					0
+				],
+				"hp": 800,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05003",
+				"pos": [
+					2,
+					1
+				],
+				"hp": 110,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05003",
+				"pos": [
+					3,
+					0
+				],
+				"hp": 110,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_01101",
+				"pos": [
+					0,
+					2
+				],
+				"hp": -1,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_01101",
+				"pos": [
+					5,
+					2
+				],
+				"hp": -1,
+				"flipped_x": false,
+				"flipped_y": false
+			}]
+
+		
+		}]
+}

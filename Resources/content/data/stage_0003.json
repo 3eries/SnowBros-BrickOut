@@ -1,85 +1,152 @@
 {
 	"stage": 3,
+	"final_ball_count" : 50,
+	"final_friends_ball_count" : 5,
+	"coin_drop_count" : "10~15",
 	"floors": [{
-		"floor": 31,
-		"brick_hp": "floor+9",
-		"brick_drop_count": "1~3",
-		"brick_list": ["brick_00001"],
-		"elite_brick_drop_rate": 0,
-		"power_up_drop_rate": 100,
-		"friend_power_up_drop_rate": 0,
-		"money_drop_rate": 0
-	}, {
-		"floor": 32
-	}, {
-		"floor": 33
-	}, {
-		"floor": 34
-	}, {
-		"floor": 35,
-		"brick_drop_count": "2~3",
-		"brick_list": ["brick_00001", "brick_00002"],
-		"elite_brick_drop_rate": 5,
-		"elite_brick_list": ["brick_00004"]
-	}, {
-		"floor": 36
-	}, {
-		"floor": 37
-	}, {
-		"floor": 38
-	}, {
-		"floor": 39
-	}, {
-		"floor": 40,
-		"brick_drop_count": "1~3",
-		"brick_list": ["brick_00001", "brick_00002", "brick_00003"]
-	}, {
-		"floor": 41
+		"floor": 41,
+		"brick_hp": "50",
+		"brick_drop_count": "3",
+		"normal_brick_list": ["brick_00001", "brick_00004"],
+		"elite_brick_drop_rate" : 5
 	}, {
 		"floor": 42,
-		"brick_drop_count": "4"
+		"brick_hp": "prev_brick_hp+1"
 	}, {
-		"floor": 43,
-		"brick_hp": "prev_brick_hp+2"
+		"floor": 43
 	}, {
-		"floor": 44,
-		"brick_drop_count": "1~2"
+		"floor": 44
 	}, {
 		"floor": 45,
-		"pattern": "pattern_01"
+		"pattern" : "pattern_01"
+	}, {
+		"floor": 46,
+		"brick_hp": "55",
+		"pattern" : ""		
+	}, {
+		"floor": 47,
+		"brick_hp": "prev_brick_hp+1",
+		"normal_brick_list": ["brick_00002", "brick_00003"]
+	}, {
+		"floor": 48
+	}, {
+		"floor": 49
+	}, {
+		"floor": 50,
+		"brick_drop_count" : "3",
+		"special_brick_list": ["brick_01001"]
+	}, {
+		"floor": 51,
+		"special_brick_list": ["brick_01001"]
+	}, {
+		"floor": 52,
+		"special_brick_list": []
+	}, {
+		"floor": 53
+	}, {
+		"floor": 54,
+		"normal_brick_list": ["brick_00002", "brick_00003", "brick_00004"]
+	}, {
+		"floor": 55
+	},{
+		"floor": 56
+	},{
+		"floor": 57,
+		"special_brick_list" : ["brick_01001"],
+		"elite_brick_drop_rate" : 0
+	},{
+		"floor": 58
+	},{
+		"floor": 59
+	},{
+		"floor": 60,
+		"pattern": "pattern_02"
 	}],
 	"patterns": [{
 		"id": "pattern_01",
+		"brick_list": [{
+				"brick_id": "brick_01001",
+				"pos": [
+					0,
+					0
+				],
+				"hp": 50,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_01001",
+				"pos": [
+					1,
+					0
+				],
+				"hp": 50,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_01001",
+				"pos": [
+					2,
+					0
+				],
+				"hp": 50,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_01001",
+				"pos": [
+					3,
+					0
+				],
+				"hp": 60,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_01001",
+				"pos": [
+					4,
+					0
+				],
+				"hp": 60,
+				"flipped_x": false,
+				"flipped_y": false
+			}]
+
+		
+	},
+	{
+		"id" : "pattern_02",
 		"brick_list": [{
 				"brick_id": "brick_10003",
 				"pos": [
 					0,
 					0
 				],
-				"hp": 200,
+				"hp": 550,
 				"flipped_x": false,
 				"flipped_y": false
 			},
-
 			{
 				"brick_id": "brick_10003",
 				"pos": [
 					5,
 					0
 				],
-				"hp": 200,
+				"hp": 550,
 				"flipped_x": false,
 				"flipped_y": false
 			},
-
 			{
 				"brick_id": "brick_05003",
 				"pos": [
 					1,
 					1
 				],
-				"hp": 40,
-				"flipped_x": true,
+				"hp": 70,
+				"flipped_x": false,
 				"flipped_y": false
 			},
 			{
@@ -88,8 +155,8 @@
 					2,
 					0
 				],
-				"hp": 40,
-				"flipped_x": true,
+				"hp": 70,
+				"flipped_x": false,
 				"flipped_y": false
 			},
 			{
@@ -98,7 +165,7 @@
 					3,
 					1
 				],
-				"hp": 40,
+				"hp": 70,
 				"flipped_x": false,
 				"flipped_y": false
 			},
@@ -108,10 +175,9 @@
 					4,
 					0
 				],
-				"hp": 40,
+				"hp": 70,
 				"flipped_x": false,
 				"flipped_y": false
-			}
-		]
-	}]
+			}]
+		}]
 }

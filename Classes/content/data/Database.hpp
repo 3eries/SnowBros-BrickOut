@@ -40,30 +40,30 @@ private:
 public:
     static void              addTempStage();
     
-    static StageList         getStages();
+    static StageDataList     getStages();
     static StageData         getStage(int stage);
     static StageData         getFirstStage();
     static StageData         getLastStage();
     static bool              isLastStage(int stage);
     
-    static FloorList         getFloors();
+    static FloorDataList     getFloors();
     static FloorData         getFloor(int floor);
     static bool              isLastFloor(int floor);
     
-    static FloorList         getStageFloors(int stage);
+    static FloorDataList     getStageFloors(int stage);
     static bool              isStageLastFloor(int stage, int floor);
     static bool              isStageLastFloor(const FloorData &data);
     
-    static BrickMap          getBricks();
+    static BrickDataMap      getBricks();
     static BrickData         getBrick(const std::string &brickId);
     
     static DemoStageDataList getDemoStages();
     static DemoStageData     getDemoStage(int stage);
     
 private:
-    StageList stages;
-    FloorList floors;
-    BrickMap bricks;
+    StageDataList stages;
+    FloorDataList floors;
+    BrickDataMap bricks;
     DemoStageDataList demoStages;
 };
 

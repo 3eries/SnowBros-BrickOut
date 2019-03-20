@@ -12,13 +12,14 @@
 #include "superbomb.h"
 
 enum class BrickType {
-    NONE            = 0,
-    NORMAL          = 1,
-    SPECIAL         = 10,
-    SPECIAL_SHIELD  = 11,
-    SPECIAL_GHOST   = 12,
-    BOSS_FRIENDS    = 50,
-    BOSS            = 100,
+    NONE                = 0,
+    NORMAL              = 1,
+    SPECIAL             = 10,
+    SPECIAL_SHIELD      = 11,
+    SPECIAL_GHOST       = 12,
+    SPECIAL_NEUTRAL     = 20,
+    BOSS_FRIENDS        = 50,
+    BOSS                = 100,
 };
 
 enum class BrickImageType {
@@ -46,6 +47,8 @@ struct BrickData {
     BrickData() {
         brickId = "";
         type = BrickType::NONE;
+        width = 0;
+        height = 0;
         idleAnimInterval = 0.6f;
         damageAnimInterval = 0.1f;
     }
@@ -92,6 +95,10 @@ struct BrickData {
         if( v.HasMember("damage_anim_interval") )  damageAnimInterval = v["damage_anim_interval"].GetFloat();
     }
     
+    bool isNull() const {
+        return brickId == "";
+    }
+    
     bool is1x1() const {
         return width == 1 && height == 1;
     }
@@ -135,9 +142,19 @@ struct BrickData {
         
         return str;
     }
+    
+    static int getRows(std::vector<BrickData> bricks) {
+        int rows = 0;
+        
+        for( auto brick : bricks ) {
+            rows += brick.width;
+        }
+        
+        return rows;
+    }
 };
 
-typedef std::map<std::string, BrickData> BrickMap;
-typedef std::vector<BrickData>           BrickList;
+typedef std::map<std::string, BrickData> BrickDataMap;
+typedef std::vector<BrickData>           BrickDataList;
 
 #endif /* BrickData_h */

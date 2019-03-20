@@ -14,7 +14,6 @@
 #include "../GameManager.hpp"
 
 #include "Ball.hpp"
-#include "tile/Brick.hpp"
 
 USING_NS_CC;
 using namespace cocos2d::ui;
@@ -293,7 +292,7 @@ void AimController::onTouchCancelled(Touch *touch, Event *event) {
 /**
  * 조준 활성화 여부 설정
  */
-void AimController::setEnabled(bool isEnabled, vector<Game::Tile*> bricks) {
+void AimController::setEnabled(bool isEnabled, BrickList bricks) {
     
     setVisible(isEnabled);
     
@@ -317,10 +316,8 @@ void AimController::setEnabled(bool isEnabled, vector<Game::Tile*> bricks) {
     removeBodies();
     
     if( isEnabled ) {
-        // 충돌 체크용 벽돌 바디 생성
-        for( auto tile : bricks ) {
-            auto brick = (Brick*)tile;
-            
+        // 충돌 체크용 브릭 바디 생성
+        for( auto brick : bricks ) {
             if( !brick->isActive() ) {
                 continue;
             }

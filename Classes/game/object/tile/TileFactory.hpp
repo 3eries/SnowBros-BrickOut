@@ -17,8 +17,24 @@
 #include "Item.hpp"
 
 class TileFactory {
+// Brick
 public:
-    static Brick*   createBrick(const BrickDef &def);
+    static Brick*          createBrick(const BrickDef &def);
+    static Brick*          createBrick(const PatternBrickData &patternData,
+                                       const FloorData &floor);
+    static Brick*          createNormalBrick(const BrickData &brickData,
+                                             const TileData &tileData,
+                                             const FloorData &floor);
+    static Brick*          createEliteBrick(const BrickData &brickData,
+                                            const TileData &tileData,
+                                            const FloorData &floor);
+    static Brick*          createSpecialBrick(const BrickData &brickData,
+                                              const TileData &tileData,
+                                              const FloorData &floor);
+    static PatternDataList createNeutralBrickPatterns(BrickDataList neutralBricks);
+    
+// Item
+public:
     static Item*    createItem(const ItemDef &def);
 };
 

@@ -1,110 +1,112 @@
 {
-    "stage": 1,
-    "floors": [{
-        "floor": 1,
-        "brick_hp": "floor+9",
-        "brick_drop_count": "1~3",
-        "brick_list": ["brick_00001"],
-        "elite_brick_drop_rate": 0,
-        "power_up_drop_rate": 100,
-        "friend_power_up_drop_rate": 0,
-        "money_drop_rate": 0
-    }, {
-        "floor": 2,
-        "brick_drop_count": "2",
-        "brick_list": ["brick_01001"]
-    }, {
-        "floor": 3,
-        "brick_drop_count": "1",
-        "brick_list": ["brick_01002"]
-    }, {
-        "floor": 4
-    }, {
-        "floor": 5,
-        "brick_drop_count": "2~3",
-        "brick_list": ["brick_00001", "brick_00002"],
-        "elite_brick_drop_rate": 5,
-        "elite_brick_list": ["brick_00003"]
-    }, {
-        "floor": 6
-    }, {
-        "floor": 7
-    }, {
-        "floor": 8
-    }, {
-        "floor": 9
-    }, {
-        "floor": 10,
-        "brick_drop_count": "1~3",
-        "brick_list": ["brick_00001", "brick_00002"],
-        "elite_brick_drop_rate": 5
-    }, {
-        "floor": 11
-    }, {
-        "floor": 12,
-        "brick_drop_count": "4"
-    }, {
-        "floor": 13,
-        "brick_hp": "prev_brick_hp+2"
-    }, {
-        "floor": 14,
-        "brick_drop_count": "1~2"
-    }, {
-        "floor": 15,
-        "pattern": "pattern_01"
-    }],
-    "patterns": [{
-        "id": "pattern_01",
-        "brick_list": [{
-            "brick_id": "brick_10001",
-            "pos": [
-                2,
-                0
-            ],
-            "hp": 250,
-            "flipped_x": false,
-            "flipped_y": false
-        },
-        {
-            "brick_id": "brick_05001",
-            "pos": [
-                1,
-                0
-            ],
-            "hp": 20,
-            "flipped_x": false,
-            "flipped_y": false
-        },
-        {
-            "brick_id": "brick_05001",
-            "pos": [
-                1,
-                1
-            ],
-            "hp": 20,
-            "flipped_x": false,
-            "flipped_y": false
-        },
-        {
-            "brick_id": "brick_05001",
-            "pos": [
-                4,
-                0
-            ],
-            "hp": 20,
-            "flipped_x": false,
-            "flipped_y": false
-        },
-        {
-            "brick_id": "brick_05001",
-            "pos": [
-                4,
-                1
-            ],
-            "hp": 20,
-            "flipped_x": false,
-            "flipped_y": false
-        }
-        ]
-    }]
+	"stage": 1,
+	"final_ball_count" : 20,
+	"final_friends_ball_count" : 5,
+	"coin_drop_count" : "5~8",
+	"floors": [{
+		"floor": 1,
+		"brick_hp": "floor+9",
+		"brick_drop_count": "1~3",
+		"normal_brick_list": ["brick_00001"]
+	}, {
+		"floor": 2
+	}, {
+		"floor": 3
+	}, {
+		"floor": 4
+	}, {
+		"floor": 5
+	}, {
+		"floor": 6
+	}, {
+		"floor": 7,
+		"brick_drop_count": "2~3",
+		"normal_brick_list": ["brick_00001", "brick_00002"],
+		"elite_brick_drop_rate" : 3
+	}, {
+		"floor": 8
+	}, {
+		"floor": 9
+	}, {
+		"floor": 10
+	}, {
+		"floor": 11
+	}, {
+		"floor": 12
+	}, {
+		"floor": 13
+	}, {
+		"floor": 14,
+		"brick_drop_count": "3",
+		"normal_brick_list": ["brick_00002", "brick_00003"],
+		"elite_brick_drop_rate" : 5
+	}, {
+		"floor": 15
+	},{
+		"floor": 16
+	},{
+		"floor": 17
+	},{
+		"floor": 18
+	},{
+		"floor": 19,
+		"elite_brick_drop_rate" : 0
+	},{
+		"floor": 20,
+		"pattern": "pattern_01"
+	}],
+	"patterns": [{
+		"id": "pattern_01",
+		"brick_list": [{
+				"brick_id": "brick_10001",
+				"pos": [
+					2,
+					0
+				],
+				"hp": 300,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05001",
+				"pos": [
+					1,
+					0
+				],
+				"hp": 40,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05001",
+				"pos": [
+					1,
+					1
+				],
+				"hp": 40,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05001",
+				"pos": [
+					4,
+					0
+				],
+				"hp": 40,
+				"flipped_x": true,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05001",
+				"pos": [
+					4,
+					1
+				],
+				"hp": 40,
+				"flipped_x": true,
+				"flipped_y": false
+			}
+		]
+	}]
 }

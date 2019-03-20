@@ -50,8 +50,7 @@ bool DemoBrick::init(const DemoBrickData &data, b2World *world) {
     setPosition(Game::Tile::convertToTilePosition(data.pos, brickData.width, brickData.height));
     
     // bg
-    auto bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(brickData.width,
-                                                                           brickData.height, 1));
+    auto bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(brickData, false, 1));
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2MC(size, 0, 0));
     addChild(bg);
