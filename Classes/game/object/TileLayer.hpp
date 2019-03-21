@@ -15,7 +15,7 @@
 #include "superbomb.h"
 #include "Box2D/Box2D.h"
 
-#include "GameManager.hpp"
+#include "../GameManager.hpp"
 
 #include "tile/Tile.hpp"
 #include "tile/Brick.hpp"
