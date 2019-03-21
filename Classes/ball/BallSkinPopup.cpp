@@ -507,7 +507,7 @@ bool UnlockButton::init() {
     coinLabel = Label::createWithTTF("0", FONT_COMMODORE, 48, Size::ZERO,
                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
     coinLabel->setAnchorPoint(ANCHOR_M);
-    coinLabel->setPosition(Vec2MC(size, 146, 7));
+    coinLabel->setPosition(Vec2MC(size, 146, 7 + 4));
     coinLabel->setTextColor(Color4B::WHITE);
     coinLabel->enableShadow(Color4B(0,0,0,255), Size(0, -4));
     addChild(coinLabel);
