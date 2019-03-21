@@ -5,6 +5,7 @@
     "ios": {
         "store": "https://itunes.apple.com/app/id1410764042"
     },
+    "first_ball_skin": "ball_00001",
     "tile_rows": 6,
     "tile_columns": 10,
     "first_ball_count": 10,

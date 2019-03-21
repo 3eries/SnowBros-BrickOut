@@ -92,7 +92,10 @@ private:
         void updateLine(const cocos2d::Vec2 &start, const cocos2d::Vec2 &end,
                         float angle, float dist) {
             
-            if( endMark )         endMark->setPosition(end);
+            if( endMark ) {
+                endMark->setPosition(end);
+                endMark->setRotation(angle);
+            }
             line.updateLine(start, end, angle, dist);
         }
     };

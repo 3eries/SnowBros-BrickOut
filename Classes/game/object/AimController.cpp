@@ -10,6 +10,7 @@
 #include "ui/CocosGUI.h"
 
 #include "Define.h"
+#include "ContentResourceHelper.hpp"
 #include "../GameDefine.h"
 #include "../GameManager.hpp"
 
@@ -391,12 +392,19 @@ void AimController::initAimObject() {
         shootingObj.ballBody = Ball::createBody();
         
         // End Mark
-        shootingObj.endMark = Sprite::create(BALL_IMAGE);
+        shootingObj.endMark = Node::create();
         shootingObj.endMark->setAnchorPoint(ANCHOR_M);
+        shootingObj.endMark->setContentSize(BALL_SIZE);
+        shootingObj.endMark->setCascadeOpacityEnabled(true);
         shootingObj.endMark->setOpacity(255*0.75f);
         addChild(shootingObj.endMark);
         
-        SBNodeUtils::scale(shootingObj.endMark, BALL_SIZE);
+        {
+            auto img = Sprite::create(SELECTED_BALL_IMAGE);
+            img->setAnchorPoint(ANCHOR_M);
+            img->setPosition(Vec2MC(BALL_SIZE, 0, 0));
+            shootingObj.endMark->addChild(img);
+        }
     }
     
     // 터치 기준 조준선
@@ -516,13 +524,20 @@ AimController::AimLine AimController::createAimLine() {
     int cnt = 0;
     
     for( int i = 0; i < LINE_COUNT /*posY <= MAX_Y*/; ++i ) {
-        // auto line = Sprite::create(DIR_IMG_COMMON + "circle_white.png");
-        auto line = Sprite::create(BALL_IMAGE);
+        auto line = Node::create();
         line->setAnchorPoint(ANCHOR_MB);
         line->setPosition(Vec2BC(LINE_SIZE, 0, getPosY(i)));
+        line->setContentSize(LINE_SIZE);
+        line->setCascadeOpacityEnabled(true);
         lineLayer->addChild(line);
         
-        SBNodeUtils::scale(line, LINE_SIZE);
+        {
+            auto img = Sprite::create(SELECTED_BALL_IMAGE);
+            img->setAnchorPoint(ANCHOR_M);
+            img->setPosition(Vec2MC(LINE_SIZE, 0, 0));
+            img->setScale(LINE_SIZE.height / BALL_SIZE.height);
+            line->addChild(img);
+        }
         
         // action
         float diff = MAX_Y - line->getPositionY();

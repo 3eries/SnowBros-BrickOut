@@ -41,11 +41,22 @@ bool Ball::init() {
     setCascadeOpacityEnabled(true);
     
     // 이미지 초기화
-    image = Sprite::create(BALL_IMAGE);
+    image = Sprite::create();
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(BALL_SIZE, 0, 0));
-    SBNodeUtils::scale(image, BALL_SIZE);
     addChild(image);
+    
+    auto updateImage = [=]() {
+        image->setTexture(SELECTED_BALL_IMAGE);
+    };
+    
+    updateImage();
+    
+    // 볼 스킨 선택 리스너
+    auto listener = EventListenerCustom::create(DIRECTOR_EVENT_SELECTED_BALL, [=](EventCustom *event) {
+        updateImage();
+    });
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
     //
 //    {

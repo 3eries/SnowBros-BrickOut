@@ -16,6 +16,9 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
+#define USER_DEFAULT_KEY_OWNED_BALL_SKINS               "OWNED_BALL_SKINS"
+#define USER_DEFAULT_KEY_SELECTED_BALL_SKIN             "SELECTED_BALL_SKIN"
+
 static User *instance = nullptr;
 User* User::getInstance() {
     
@@ -42,6 +45,9 @@ User::~User() {
 
 void User::init() {
     
+    // 볼 스킨 초기화
+    initOwnedBallSkins();
+    
     // IAP 리스너 초기화
     auto onRemoveAds = [=]() {
         this->removeAds();
@@ -64,6 +70,103 @@ void User::init() {
     if( isOwnRemoveAdsItem() ) {
         removeAds();
     }
+}
+
+void User::initOwnedBallSkins() {
+ 
+    string json = UserDefault::getInstance()->getStringForKey(USER_DEFAULT_KEY_OWNED_BALL_SKINS, "");
+    
+    // 초기 값 설정
+    if( json == "" ) {
+        ownBallSkin(GAME_CONFIG->getFirstBallSkin());
+        setSelectedBallSkin(GAME_CONFIG->getFirstBallSkin());
+    }
+    // json 파싱
+    else {
+        rapidjson::Document doc;
+        doc.Parse(json.c_str());
+        
+        auto list = doc.GetArray();
+        
+        for( int i = 0; i < list.Size(); ++i ) {
+            ballSkins.push_back(list[i].GetString());
+        }
+    }
+}
+
+/**
+ * 볼을 소유합니다
+ */
+void User::ownBallSkin(const string &ballId) {
+    
+    // 이미 소유했는지 체크
+    if( isOwnedBallSkin(ballId) ) {
+        return;
+    }
+    
+    auto &ballSkins = instance->ballSkins;
+    ballSkins.push_back(ballId);
+    
+    // update user default
+    rapidjson::Document doc;
+    doc.SetArray();
+    
+    rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+    
+    for( auto ballSkin : ballSkins ) {
+        doc.PushBack(SBJSON::value(ballSkin, allocator), allocator);
+    }
+    
+    rapidjson::StringBuffer strbuf;
+    strbuf.Clear();
+    
+    rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+    doc.Accept(writer);
+    
+    string json = strbuf.GetString();
+    
+    UserDefault::getInstance()->setStringForKey(USER_DEFAULT_KEY_OWNED_BALL_SKINS, json);
+    UserDefault::getInstance()->flush();
+}
+
+/**
+ * 소유한 볼을 반환합니다
+ */
+StringList User::getOwnedBallSkins() {
+    return instance->ballSkins;
+}
+
+bool User::isOwnedBallSkin(const string &ballId) {
+
+    auto ballSkins = getOwnedBallSkins();
+    
+    for( auto ballSkin : ballSkins ) {
+        if( ballSkin == ballId ) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+/**
+ * 볼스킨 설정
+ */
+void User::setSelectedBallSkin(const string &ballId) {
+    
+    if( getSelectedBallSkin() == ballId ) {
+        return;
+    }
+    
+    UserDefault::getInstance()->setStringForKey(USER_DEFAULT_KEY_SELECTED_BALL_SKIN, ballId);
+    UserDefault::getInstance()->flush();
+    
+    Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(DIRECTOR_EVENT_SELECTED_BALL);
+}
+
+string User::getSelectedBallSkin() {
+    
+    return UserDefault::getInstance()->getStringForKey(USER_DEFAULT_KEY_SELECTED_BALL_SKIN, "");
 }
 
 /**

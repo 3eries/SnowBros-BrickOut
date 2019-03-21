@@ -92,7 +92,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     superbomb::ReviewHelper::getInstance()->setLockedDay(1);
     
     // 게임 모듈 초기화
-    User::getInstance()->init();
     PatchManager::getInstance()->init();
     RankingManager::getInstance()->init();
 //    GameConfiguration::getInstance()->init();

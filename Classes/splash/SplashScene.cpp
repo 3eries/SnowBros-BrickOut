@@ -9,6 +9,7 @@
 #include <spine/spine-cocos2dx.h>
 
 #include "Define.h"
+#include "User.hpp"
 #include "UserDefaultKey.h"
 #include "PatchManager.hpp"
 #include "ResourceHelper.hpp"
@@ -206,6 +207,8 @@ void SplashScene::login() {
     });
     
     patchMgr->patch();
+    
+    User::getInstance()->init();
     
     loginCompleted();
 }

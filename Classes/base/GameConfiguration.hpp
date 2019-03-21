@@ -30,6 +30,7 @@ public:
     
 private:
     CC_SYNTHESIZE_READONLY(std::string, storeUrl, StoreUrl);
+    CC_SYNTHESIZE_READONLY(std::string, firstBallSkin, FirstBallSkin);  // 최초 볼 스킨 
     
     // 맵의 가로줄에 표시되는 타일 갯수
     CC_SYNTHESIZE_READONLY(int, tileRows, TileRows);

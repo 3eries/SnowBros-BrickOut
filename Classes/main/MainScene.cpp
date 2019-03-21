@@ -17,10 +17,12 @@
 
 #include "../game/GameManager.hpp"
 
-#include "demo/DemoView.hpp"
 #include "CommonLoadingBar.hpp"
 #include "ExitAlertPopup.hpp"
 #include "SettingPopup.hpp"
+
+#include "demo/DemoView.hpp"
+#include "BallSKinPopup.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -171,6 +173,11 @@ void MainScene::onClick(Node *sender) {
             }
         } break;
             
+        // 볼 스킨
+        case Tag::BTN_BALL_SKIN: {
+            showBallSkinPopup();
+        } break;
+            
         // test
         case Tag::BTN_TEST: {
             // Director::getInstance()->pushScene(TestList::create());
@@ -238,6 +245,17 @@ void MainScene::showSettingPopup() {
 }
 
 /**
+ * 볼 스킨 팝업 노출
+ */
+void MainScene::showBallSkinPopup() {
+    
+    auto popup = BallSkinPopup::create();
+    popup->setOnBallSelectedListener([=](BallSkinData data) {
+    });
+    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
+}
+
+/**
  * 배경 초기화
  */
 void MainScene::initBg() {
@@ -261,7 +279,7 @@ void MainScene::initBg() {
     auto tapToStart = Sprite::create(DIR_IMG_MAIN + "main_tap_to_start.png");
     tapToStart->setTag(Tag::TAP_TO_START);
     tapToStart->setAnchorPoint(ANCHOR_M);
-    tapToStart->setPosition(Vec2BC(0, 318));
+    tapToStart->setPosition(Vec2BC(0, 430));
     addChild(tapToStart);
     
     {
@@ -286,7 +304,7 @@ void MainScene::initMenu() {
     // 메인 화면 전용 메뉴
     SBUIInfo infos[] = {
         SBUIInfo(Tag::BTN_SETTING,      ANCHOR_MR,   Vec2TR(-66 + (100*0.5f), -62),     DIR_IMG_COMMON + "RSP_btn_option.png"),
-        // SBUIInfo(Tag::BTN_REMOVE_ADS,   ANCHOR_M,    Vec2MC(0, 25),     DIR_IMG_COMMON + "RSP_btn_remove_ads.png"),
+        SBUIInfo(Tag::BTN_BALL_SKIN,    ANCHOR_M,    Vec2BC(-260, 200),                DIR_IMG_MAIN + "main_btn_ball_skin.png"),
 #if ENABLE_TEST_MENU
         SBUIInfo(Tag::BTN_TEST,         ANCHOR_TL,   Vec2TL(10, -20),   DIR_IMG_COMMON + "RSP_btn_test.png"),
 #endif

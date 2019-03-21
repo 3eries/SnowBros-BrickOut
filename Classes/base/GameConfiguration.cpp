@@ -57,6 +57,7 @@ void GameConfiguration::parse(const string &json) {
     storeUrl = platformObj["store"].GetString();
     
     // game value
+    firstBallSkin        = doc["first_ball_skin"].GetString();
     tileRows             = doc["tile_rows"].GetInt();
     tileColumns          = doc["tile_columns"].GetInt();
     firstBallCount       = doc["first_ball_count"].GetInt();

@@ -25,6 +25,7 @@ private:
         BTN_START,
         BTN_SETTING,
         BTN_REMOVE_ADS,
+        BTN_BALL_SKIN,
         BTN_TEST,
     };
     
@@ -52,6 +53,7 @@ private:
     void onClick(cocos2d::Node *sender) override;
     
     void showSettingPopup();
+    void showBallSkinPopup();
 };
 
 #endif /* MainScene_hpp */

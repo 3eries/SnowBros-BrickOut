@@ -35,6 +35,7 @@
 		1D25EE32220E6BC200DD126A /* Brick_10012.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D25EE30220E6BC200DD126A /* Brick_10012.cpp */; };
 		1D3120DC20E9F9EA00D059C6 /* RankingManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D3120D920E9F9E900D059C6 /* RankingManager.cpp */; };
 		1D322ED622389CB30007DDFB /* NeutralBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D322ED422389CB30007DDFB /* NeutralBrick.cpp */; };
+		1D322EE52239E57B0007DDFB /* BallSkinPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D322EE32239E57B0007DDFB /* BallSkinPopup.cpp */; };
 		1D3DCFFC215B33EC00DE7409 /* ConsentForm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D3DCFFA215B33EC00DE7409 /* ConsentForm.cpp */; };
 		1D3DD000215B46EB00DE7409 /* ConsentForm-ios.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1D3DCFFF215B46EB00DE7409 /* ConsentForm-ios.mm */; };
 		1D3DF50321045BEC0055B66E /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D3DF50221045BEC0055B66E /* GameKit.framework */; };
@@ -253,6 +254,9 @@
 		1D3120D920E9F9E900D059C6 /* RankingManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RankingManager.cpp; sourceTree = "<group>"; };
 		1D322ED422389CB30007DDFB /* NeutralBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = NeutralBrick.cpp; sourceTree = "<group>"; };
 		1D322ED522389CB30007DDFB /* NeutralBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = NeutralBrick.hpp; sourceTree = "<group>"; };
+		1D322EDF2239E18D0007DDFB /* BallSkinData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BallSkinData.h; sourceTree = "<group>"; };
+		1D322EE32239E57B0007DDFB /* BallSkinPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BallSkinPopup.cpp; sourceTree = "<group>"; };
+		1D322EE42239E57B0007DDFB /* BallSkinPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BallSkinPopup.hpp; sourceTree = "<group>"; };
 		1D3DCFFA215B33EC00DE7409 /* ConsentForm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ConsentForm.cpp; sourceTree = "<group>"; };
 		1D3DCFFB215B33EC00DE7409 /* ConsentForm.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ConsentForm.hpp; sourceTree = "<group>"; };
 		1D3DCFFF215B46EB00DE7409 /* ConsentForm-ios.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = "ConsentForm-ios.mm"; sourceTree = "<group>"; };
@@ -612,6 +616,7 @@
 		1D25EE11220B398400DD126A /* model */ = {
 			isa = PBXGroup;
 			children = (
+				1D322EDF2239E18D0007DDFB /* BallSkinData.h */,
 				1D25EE16220B398400DD126A /* BrickData.h */,
 				1D8538932236DBB90087DF1A /* DemoData.h */,
 				1D25EE14220B398400DD126A /* FloorData.h */,
@@ -642,6 +647,15 @@
 				1D3120D820E9F9E900D059C6 /* RankingManager.hpp */,
 			);
 			path = ranking;
+			sourceTree = "<group>";
+		};
+		1D322EE22239E5710007DDFB /* ball */ = {
+			isa = PBXGroup;
+			children = (
+				1D322EE32239E57B0007DDFB /* BallSkinPopup.cpp */,
+				1D322EE42239E57B0007DDFB /* BallSkinPopup.hpp */,
+			);
+			path = ball;
 			sourceTree = "<group>";
 		};
 		1D3DCFF7215B33D900DE7409 /* consent */ = {
@@ -1228,6 +1242,7 @@
 			children = (
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
+				1D322EE22239E5710007DDFB /* ball */,
 				1D45C44420A8A787007E63AD /* base */,
 				1D25EE0D220B398400DD126A /* content */,
 				1D45C44A20A8A7AC007E63AD /* game */,
@@ -1404,6 +1419,7 @@
 				1DEAFE672195C814001CE5B7 /* SBScheduleHelper.cpp in Sources */,
 				1DD6979C21B84EAC005FDC62 /* GameMap.cpp in Sources */,
 				1D45C48820A8A7B8007E63AD /* SBHttp.cpp in Sources */,
+				1D322EE52239E57B0007DDFB /* BallSkinPopup.cpp in Sources */,
 				1D1F3C9420AD4A3D0035A36C /* GameView.cpp in Sources */,
 				1DEEE24F21B57FCC00DD4776 /* ResultPopup.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,

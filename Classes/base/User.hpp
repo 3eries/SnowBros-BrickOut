@@ -24,12 +24,23 @@ private:
     
 public:
     void init();
+    void initOwnedBallSkins();
     
-    static bool isOwnRemoveAdsItem();
-    static void setOwnRemoveAdsItem(bool owned);
-    static void removeAds();
+    static void          ownBallSkin(const std::string &ballId);
+    static StringList    getOwnedBallSkins();
+    static bool          isOwnedBallSkin(const std::string &ballId);
     
-    static bool checkReview(float popupDelay = 0);
+    static void          setSelectedBallSkin(const std::string &ballId);
+    static std::string   getSelectedBallSkin();
+    
+    static bool          isOwnRemoveAdsItem();
+    static void          setOwnRemoveAdsItem(bool owned);
+    static void          removeAds();
+    
+    static bool          checkReview(float popupDelay = 0);
+    
+private:
+    StringList ballSkins;
 };
 
 #endif /* User_hpp */

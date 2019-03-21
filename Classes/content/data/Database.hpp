@@ -13,6 +13,7 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
+#include "model/BallSkinData.h"
 #include "model/BrickData.h"
 #include "model/PatternData.h"
 #include "model/StageData.h"
@@ -34,6 +35,7 @@ public:
 private:
     Database();
     
+    void parseBallSkinJson();
     void parseBrickJson();
     void parseStageJson();
     void parseFriendsJson();
@@ -41,6 +43,9 @@ private:
     
 public:
     static void              addTempStage();
+    
+    static BallSkinDataList  getBallSkins();
+    static BallSkinData      getBallSkin(const std::string &ballId);
     
     static StageDataList     getStages();
     static StageData         getStage(int stage);

@@ -14,6 +14,7 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
+#define BALL_SKIN__FILE         (DIR_DATA + "ball_skin.json")
 #define BRICK_FILE              (DIR_DATA + "brick.json")
 #define FRIENDS_FILE            (DIR_DATA + "friends.json")
 #define DEMO_FILE               (DIR_DATA + "demo.json")
@@ -43,10 +44,40 @@ Database::~Database() {
 
 void Database::init() {
     
+    parseBallSkinJson();
     parseBrickJson();
     parseStageJson();
     parseFriendsJson();
     parseDemoJson();
+}
+
+/**
+ * ball_skin.json
+ */
+void Database::parseBallSkinJson() {
+    
+    CCLOG("========== PARSE START (ball_skin.json)  ==========");
+    string json = SBStringUtils::readTextFile(BALL_SKIN__FILE);
+    
+    rapidjson::Document doc;
+    doc.Parse(json.c_str());
+    
+    auto list = doc.GetArray();
+    
+    for( int i = 0; i < list.Size(); ++i ) {
+        const rapidjson::Value &v = list[i];
+        
+        BallSkinData ballSkin;
+        ballSkin.ballId = v["ball_id"].GetString();
+        ballSkin.type = (BallSkinType)v["type"].GetInt();
+        ballSkin.unlockAmount = v["unlock_amount"].GetInt();
+        
+        ballSkins.push_back(ballSkin);
+        
+        CCLOG("%s", ballSkin.toString().c_str());
+    }
+    
+    CCLOG("========== PARSE END (ball_skin.json)  ==========");
 }
 
 /**
@@ -343,6 +374,26 @@ void Database::addTempStage() {
     
     auto &stages = getInstance()->stages;
     stages.push_back(stage);
+}
+
+/**
+ * 볼 스킨 데이터를 반환합니다
+ */
+BallSkinDataList Database::getBallSkins() {
+    return instance->ballSkins;
+}
+
+BallSkinData Database::getBallSkin(const string &ballId) {
+    
+    auto skins = getBallSkins();
+    
+    for( auto ballSkin : skins ) {
+        if( ballSkin.ballId == ballId ) {
+            return ballSkin;
+        }
+    }
+    
+    return BallSkinData();
 }
 
 /**

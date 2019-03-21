@@ -15,6 +15,15 @@
 
 #include "data/model/BrickData.h"
 
+#define BALL_SMALL_IMAGE(__ball__) \
+ContentResourceHelper::getBallImageFile(__ball__, "small")
+
+#define BALL_LARGE_IMAGE(__ball__) \
+ContentResourceHelper::getBallImageFile(__ball__, "large")
+
+#define SELECTED_BALL_IMAGE \
+ContentResourceHelper::getSelectedBallImage()
+
 #define BRICK_IDLE_ANIM_FILES(__image__) \
 ContentResourceHelper::getBrickAnimationFiles(__image__, "idle")
 
@@ -31,6 +40,10 @@ class ContentResourceHelper {
 public:
     static void preload();
     
+    static std::string getBallImageFile(const std::string &ballId,
+                                        const std::string &imgKey);
+    static std::string getSelectedBallImage();
+    
     static std::string getStageBackgroundFile(int stage);
     
     static std::string getBrickBackgroundFile(const BrickData &data, bool elite, int step);
@@ -38,6 +51,8 @@ public:
                                              const std::string &animKey);
     
     // static std::string getBrickWhiteImageFile(const std::string &image);
+    
+    static std::string getFriendAnimationFile(const std::string &friendId);
     
     static cocos2d::Animation* createBrickAnimation(const BrickData &data,
                                                     BrickImageType type);

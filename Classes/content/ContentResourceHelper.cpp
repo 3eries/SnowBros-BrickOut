@@ -8,12 +8,23 @@
 #include "ContentResourceHelper.hpp"
 
 #include "Define.h"
+#include "User.hpp"
 
 USING_NS_CC;
 using namespace std;
 
 void ContentResourceHelper::preload() {
     
+}
+
+string ContentResourceHelper::getBallImageFile(const string &ballId, const string &imgKey) {
+    
+    return DIR_BALL + STR_FORMAT("%s_%s.png", ballId.c_str(), imgKey.c_str());
+}
+
+string ContentResourceHelper::getSelectedBallImage() {
+    
+    return BALL_SMALL_IMAGE(User::getSelectedBallSkin());
 }
 
 string ContentResourceHelper::getStageBackgroundFile(int stage) {
@@ -55,6 +66,11 @@ StringList ContentResourceHelper::getBrickAnimationFiles(const string &image, co
     }
     
     return anims;
+}
+
+string ContentResourceHelper::getFriendAnimationFile(const string &friendId) {
+    
+    return DIR_FRIEND + friendId + ANIM_EXT;
 }
 
 Animation* ContentResourceHelper::createBrickAnimation(const BrickData &data, BrickImageType type) {

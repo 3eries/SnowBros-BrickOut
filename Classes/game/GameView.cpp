@@ -829,7 +829,7 @@ void GameView::eatItem(Item *item, bool isFallAction) {
     switch( item->getData().type ) {
         // 기본 볼 개수 증가
         case ItemType::POWER_UP: {
-            auto ballItem = Sprite::create(BALL_IMAGE);
+            auto ballItem = Sprite::create(SELECTED_BALL_IMAGE);
             ballItem->setAnchorPoint(ANCHOR_M);
             ballItem->setPosition(item->getPosition());
             addChild(ballItem, (int)ZOrder::BALL);
