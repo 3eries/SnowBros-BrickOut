@@ -17,7 +17,7 @@
 #include "Define.h"
 #include "GameManager.hpp"
 
-#include "TileLayer.hpp"
+#include "object/TileLayer.hpp"
 
 class Ball;
 class FriendsLayer;
@@ -110,6 +110,7 @@ private:
     void shootStop();
     
     void withdrawBalls(float delay = 0);
+    void checkAutoWithdrawBalls(float dt);
     
     void checkWithdrawGuide(float dt);
     void stopWithdrawGuide();

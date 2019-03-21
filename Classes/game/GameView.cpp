@@ -22,6 +22,7 @@
 
 #include "object/tile/TileFactory.hpp"
 #include "object/tile/Brick_10012.hpp"
+#include "object/tile/GhostBrick.hpp"
 #include "object/tile/Item.hpp"
 
 #include "ui/TopMenu.hpp"
@@ -33,6 +34,7 @@ using namespace spine;
 using namespace std;
 
 static const string SCHEDULER_SHOOT                 = "SCHEDULER_SHOOT";
+static const string SCHEDULER_CHECK_AUTO_WITHDRAW   = "SCHEDULER_CHECK_AUTO_WITHDRAW";
 static const string SCHEDULER_CHECK_WITHDRAW_GUIDE  = "SCHEDULER_CHECK_WITHDRAW_GUIDE";
 
 static const float  DRAG_MIN_DIST                   = 200; // 드래그 판단 거리
@@ -382,6 +384,7 @@ void GameView::onFallFinished() {
     
     Log::i("onFallFinished");
     
+    unschedule(SCHEDULER_CHECK_AUTO_WITHDRAW);
     updateBallCountUI();
     
     // 스테이지 클리어
@@ -435,7 +438,7 @@ void GameView::onBrickBreak(Brick *brick) {
     if( bricks.size() == 0 ) {
         // 남은 아이템 없으면 볼 회수
         if( items.size() == 0 ) {
-            withdrawBalls(0.5f);
+            // withdrawBalls(0.5f);
         }
     }
     // 남은 브릭 있음
@@ -657,6 +660,7 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     SBDirector::postDelayed(this, [=]() {
         isWithdrawEnabled = true;
+        schedule(CC_CALLBACK_1(GameView::checkAutoWithdrawBalls, this), 1, SCHEDULER_CHECK_AUTO_WITHDRAW);
     }, SHOOT_INTERVAL*2);
 }
 
@@ -670,9 +674,11 @@ void GameView::shootStop() {
  */
 void GameView::withdrawBalls(float delay) {
     
-    if( isWithdraw ) {
+    if( isWithdraw || !isWithdrawEnabled ) {
         return;
     }
+    
+    unschedule(SCHEDULER_CHECK_AUTO_WITHDRAW);
     
     if( delay > 0 ) {
         SBDirector::postDelayed(this, [=]() {
@@ -740,6 +746,45 @@ void GameView::withdrawBalls(float delay) {
     SBDirector::postDelayed(this, [=]() {
         this->onFallFinished();
     }, BALL_WITHDRAW_MOVE_DURATION+0.5f);
+}
+
+/**
+ * 자동 볼 회수
+ */
+void GameView::checkAutoWithdrawBalls(float dt) {
+    
+    if( !isWithdrawEnabled ) {
+        unschedule(SCHEDULER_CHECK_AUTO_WITHDRAW);
+        return;
+    }
+    
+    // 남은 아이템 체크
+    if( tileLayer->getItems().size() > 0 ) {
+        return;
+    }
+    
+    // 남은 브릭 체크, 유효하지 않은 브릭 빼고 체크
+    auto bricks = tileLayer->getBricks();
+    
+    SBCollection::remove(bricks, [](Brick *brick) {
+        // 중립 브릭 제외
+        if( brick->getData().type == BrickType::SPECIAL_NEUTRAL ) {
+            return true;
+        }
+        
+        // 투명화된 고스트 브릭 제외
+        auto ghostBrick = dynamic_cast<GhostBrick*>(brick);
+        
+        if( ghostBrick && ghostBrick->isGhostState() ) {
+            return true;
+        }
+        
+        return false;
+    });
+    
+    if( bricks.size() == 0 ) {
+        withdrawBalls();
+    }
 }
 
 /**

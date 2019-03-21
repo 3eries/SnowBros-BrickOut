@@ -27,6 +27,9 @@ private:
     void onNextFloor(const FloorData &floor) override;
     
     void updateOpacity();
+    
+private:
+    SB_SYNTHESIZE_READONLY_BOOL(ghostState, GhostState);
 };
 
 #endif /* GhostBrick_hpp */

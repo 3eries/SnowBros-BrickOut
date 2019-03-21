@@ -75,14 +75,18 @@ void GhostBrick::updateOpacity() {
     
     // 투명화
     if( getFloorChangedCount() % 2 == 0 ) {
+        ghostState = true;
         setCollisionLocked(true);
         setActive(false, false);
+        
         runAction(FadeTo::create(TILE_ENTER_DURATION, 255*0.3f));
     }
     // 반투명화
     else {
+        ghostState = false;
         setCollisionLocked(false);
         setActive(true, false);
+        
         runAction(FadeIn::create(TILE_ENTER_DURATION));
     }
 }
