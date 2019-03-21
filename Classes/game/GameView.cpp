@@ -843,7 +843,7 @@ void GameView::checkWithdrawGuide(float dt) {
 //            }, 2.0f);
 //        }
         guide->removeFromParent();
-        schedule(CC_CALLBACK_1(GameView::checkWithdrawGuide, this), 2, SCHEDULER_CHECK_WITHDRAW_GUIDE);
+        schedule(CC_CALLBACK_1(GameView::checkWithdrawGuide, this), 3, SCHEDULER_CHECK_WITHDRAW_GUIDE);
     });
     
     unschedule(SCHEDULER_CHECK_WITHDRAW_GUIDE);
