@@ -187,49 +187,30 @@ void SBPhysicsObject::setNeedRemove(bool isNeedRemove) {
     this->needRemove = isNeedRemove;
     
     if( isNeedRemove ) {
-        sleep(false);
+        setBodyAwake(false);
         setCollisionLocked(true);
     }
 }
 
-void SBPhysicsObject::setActive(bool isActive, bool updateVisible) {
+void SBPhysicsObject::setBodyActive(bool isActive) {
     
     if( body ) {
         body->SetActive(isActive);
     }
-    
-    if( node && updateVisible ) {
-        node->setVisible(isActive);
-    }
 }
 
-void SBPhysicsObject::setAwake(bool isAwake, bool updateVisible) {
+void SBPhysicsObject::setBodyAwake(bool isAwake) {
 
     if( body ) {
         body->SetAwake(isAwake);
     }
-
-    if( node && updateVisible ) {
-        node->setVisible(isAwake);
-    }
 }
 
-
-void SBPhysicsObject::awake(bool updateVisible) {
-
-    setAwake(true, updateVisible);
-}
-
-void SBPhysicsObject::sleep(bool updateVisible) {
-
-    setAwake(false, updateVisible);
-}
-
-bool SBPhysicsObject::isActive() {
+bool SBPhysicsObject::isBodyActive() {
     return body && body->IsActive();
 }
 
-bool SBPhysicsObject::isAwake() {
+bool SBPhysicsObject::isBodyAwake() {
     return body && body->IsAwake();
 }
 

@@ -76,16 +76,13 @@ public:
     virtual void endContact(b2Fixture *other, b2Contact *contact) {};
     
     virtual void setNeedRemove(bool isNeedRemove);
+        
+    virtual void setBodyActive(bool isActive);
+    virtual void setBodyAwake(bool isAwake);
     
-    virtual void setActive(bool isActive, bool updateVisible = true);
+    bool isBodyActive();
+    bool isBodyAwake();
     
-    virtual void setAwake(bool isAwake, bool updateVisible = true);
-    virtual void awake(bool updateVisible = true);
-    virtual void sleep(bool updateVisible = true);
-    
-    bool isActive();
-    bool isAwake();
-
     virtual void setBodyPosition(const cocos2d::Vec2 &p);
     float        getBodyVelocityAngle();
     

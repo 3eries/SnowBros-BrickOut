@@ -359,7 +359,7 @@ void GameView::onShootingReady() {
     auto items = tileLayer->getItems();
     
     for( auto item : items ) {
-        item->setActive(false, false);
+        item->setBodyActive(false);
     }
     
     // 볼 위치 설정
@@ -485,7 +485,7 @@ void GameView::onPhysicsUpdate() {
             for( auto ball : balls ) {
                 auto body = ball->getBody();
                 
-                if( !body || !ball->isActive() || !ball->isAwake() || ball->isCollisionLocked() ) {
+                if( !body || !ball->isBodyActive() || !ball->isBodyAwake() || ball->isCollisionLocked() ) {
                     continue;
                 }
                 
@@ -526,7 +526,7 @@ void GameView::onContactItem(Ball *ball, Game::Tile *itemTile) {
     
     auto item = dynamic_cast<Item*>(itemTile);
     
-    if( !item->isAwake() ) {
+    if( !item->isBodyAwake() ) {
         Log::w("아이템 sleep 상태에서 충돌 이벤트 발생!!").showMessageBox();
         return;
     }
@@ -595,7 +595,7 @@ void GameView::shoot(const Vec2 &endPosition) {
     auto items = tileLayer->getItems();
     
     for( auto item : items ) {
-        item->setActive(true);
+        item->setBodyActive(true);
     }
     
     // 속도 설정
@@ -614,8 +614,8 @@ void GameView::shoot(const Vec2 &endPosition) {
         ball->setSyncLocked(true);
         ball->setBodyPosition(ball->getPosition() + Vec2(0,4));
         
-        // awake
-        ball->awake();
+        // 상태 변경
+        ball->setBodyAwake(true);
         ball->setVisible(false);
     }
     
@@ -935,7 +935,7 @@ void GameView::addBall(int count, bool updateUI) {
     for( int i = 0; i < count && balls.size() <= MAX_BALL_COUNT; ++i ) {
         auto ball = Ball::create();
         ball->setPosition(aimController->getStartPosition());
-        ball->sleep(false);
+        ball->setBodyAwake(false);
         ball->setCollisionLocked(true);
         addChild(ball, (int)ZOrder::BALL);
     

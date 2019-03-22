@@ -119,8 +119,8 @@ void DemoView::shoot() {
         ball->setSyncLocked(true);
         ball->setBodyPosition(ball->getPosition() + Vec2(0,4));
         
-        // awake
-        ball->awake();
+        // 상태 변경
+        ball->setBodyAwake(true);
         ball->setVisible(false);
     }
     
@@ -338,7 +338,7 @@ void DemoView::initBall() {
     for( int i = 0; i < GAME_CONFIG->getFirstBallCount(); ++i ) {
         auto ball = DemoBall::create(world);
         ball->setPosition(shootingPosition);
-        ball->sleep(false);
+        ball->setBodyAwake(false);
         ball->setCollisionLocked(true);
         addChild(ball);
         

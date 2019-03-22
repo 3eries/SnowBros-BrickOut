@@ -90,7 +90,7 @@ void Tile::enterWithAction() {
  */
 void Tile::removeWithAction() {
     
-    sleep(false);
+    setBodyAwake(false);
     setCollisionLocked(true);
     
     b2Filter filter;

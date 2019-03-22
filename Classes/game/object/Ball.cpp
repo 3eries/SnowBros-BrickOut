@@ -179,7 +179,7 @@ void Ball::shoot(b2Vec2 velocity) {
     
     // 활성화
     setFall(false);
-    awake(false);
+    setBodyAwake(true);
     setCollisionLocked(false);
     setOpacity(255);
     image->setRotation(0);
@@ -202,7 +202,7 @@ void Ball::fallToFloor() {
     unschedule(SCHEDULER_CHECK_MOVEMENT);
     
     setFall(true);
-    sleep(false);
+    setBodyAwake(false);
     setCollisionLocked(true);
     setSyncLocked(true);
     
@@ -260,7 +260,7 @@ void Ball::checkMovement(float dt) {
  */
 void Ball::sleepWithAction() {
     
-    sleep(false);
+    setBodyAwake(false);
     
     auto fadeOut = FadeOut::create(0.1f);
     auto hide = Hide::create();

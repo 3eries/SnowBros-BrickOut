@@ -319,7 +319,7 @@ void AimController::setEnabled(bool isEnabled, BrickList bricks) {
     if( isEnabled ) {
         // 충돌 체크용 브릭 바디 생성
         for( auto brick : bricks ) {
-            if( !brick->isActive() ) {
+            if( !brick->isBodyActive() ) {
                 continue;
             }
             

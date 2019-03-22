@@ -77,7 +77,7 @@ void GhostBrick::updateOpacity() {
     if( getFloorChangedCount() % 2 == 0 ) {
         ghostState = true;
         setCollisionLocked(true);
-        setActive(false, false);
+        setBodyActive(false);
         
         runAction(FadeTo::create(TILE_ENTER_DURATION, 255*0.3f));
     }
@@ -85,7 +85,7 @@ void GhostBrick::updateOpacity() {
     else {
         ghostState = false;
         setCollisionLocked(false);
-        setActive(true, false);
+        setBodyActive(true);
         
         runAction(FadeIn::create(TILE_ENTER_DURATION));
     }

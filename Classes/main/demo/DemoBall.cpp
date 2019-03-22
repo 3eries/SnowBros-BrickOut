@@ -134,7 +134,7 @@ void DemoBall::shoot(b2Vec2 velocity) {
     
     // 활성화
     setFall(false);
-    awake(false);
+    setBodyAwake(true);
     setCollisionLocked(false);
     setOpacity(255);
     image->setRotation(0);
@@ -190,7 +190,7 @@ void DemoBall::onContactFloor() {
     
     // 비활성화
     setFall(true);
-    sleep(false);
+    setBodyAwake(false);
     setCollisionLocked(true);
     image->runAction(RotateTo::create(0.05f, 0));
 }
