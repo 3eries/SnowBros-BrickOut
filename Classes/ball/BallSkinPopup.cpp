@@ -70,7 +70,7 @@ void BallSkinPopup::initBackgroundView() {
     
     BasePopup::initBackgroundView();
     
-    setBackgroundColor(Color::POPUP_BG);
+    setBackgroundColor(/*Color::POPUP_BG*/Color4B(0,0,0,255*0.8f));
 }
 
 void BallSkinPopup::initContentView() {
@@ -80,6 +80,27 @@ void BallSkinPopup::initContentView() {
     initBg();
     initButton();
     initListView();
+    
+    // 현재 사용중인 볼스킨으로 포커스
+    onSelectedCell(getCell(User::getSelectedBallSkin()));
+    
+    ballListView->setBounceEnabled(false);
+    ballListView->jumpToItem(selectedCell->getRowIndex(), Vec2::ANCHOR_MIDDLE, Vec2::ANCHOR_MIDDLE);
+    ballListView->setBounceEnabled(true);
+}
+
+/**
+ * 볼 아이디에 해당하는 셀을 반환합니다
+ */
+BallSkin::ListCell* BallSkinPopup::getCell(const string &ballId) {
+    
+    for( auto cell : cells ) {
+        if( cell->getData().ballData.ballId == ballId ) {
+            return cell;
+        }
+    }
+    
+    return nullptr;
 }
 
 /**
@@ -126,10 +147,6 @@ void BallSkinPopup::onSelectedCell(BallSkin::ListCell *cell) {
     
     // 이미 소유한 볼
     if( cell->isUnlocked() ) {
-        // 볼 스킨으로 설정되지 않은 경우, 선택 버튼 노출
-//        if( User::getSelectedBallSkin() != ballData.ballId ) {
-//        }
-        
         if( prevCell ) {
             showButton(selectButton, withAction);
             hideButton(unlockButton, false);
@@ -312,6 +329,7 @@ void BallSkinPopup::initListView() {
     // Watch Ad 데이터 초기화
     BallSkin::CellData watchAdData;
     watchAdData.isWatchAd = true;
+    // FIXME: 광고 보기 보상 수량
     watchAdData.amount = 100;
     datas.push_back(watchAdData);
     
@@ -333,9 +351,7 @@ void BallSkinPopup::initListView() {
     ballListView->setGravity(ListView::Gravity::CENTER_HORIZONTAL);
     ballListView->setItemsMargin(LIST_CELL_PADDING);
     ballListView->setBounceEnabled(true);
-    ballListView->setScrollBarEnabled(true);
-    ballListView->setScrollBarPositionFromCorner(Vec2(7, 0));
-    ballListView->setScrollBarColor(Color3B::GRAY);
+    ballListView->setScrollBarEnabled(false);
     ballListView->setAnchorPoint(ANCHOR_M);
     ballListView->setPosition(Vec2MC(0, -41));
     ballListView->setContentSize(LIST_SIZE);
@@ -368,7 +384,7 @@ void BallSkinPopup::initListView() {
         int len = 3;
         len = MIN((int)datas.size()-i, len);
         
-        BallSkin::Cells cells;
+        BallSkin::Cells rowCells;
         
         for( int j = 0; j < len; ++j ) {
             auto cellData = datas[i+j];
@@ -379,17 +395,14 @@ void BallSkinPopup::initListView() {
             cell->setOnClickListener(CC_CALLBACK_1(BallSkinPopup::onSelectedCell, this));
             cell->setUnlocked(User::isOwnedBallSkin(ballData.ballId));
             
-            if( User::getSelectedBallSkin() == ballData.ballId ) {
-                onSelectedCell(cell);
-            }
-            
+            rowCells.push_back(cell);
             cells.push_back(cell);
         }
         
         // BG_unit3 Vec2MC(0, 238) , Size(536, 164)     y = 878, 796 960
         // BG_unit3 Vec2MC(0, 68) , Size(536, 164)      y = 708, 790, 626
         // BG_unit3 Vec2MC(0, -102) , Size(536, 164)    y = 538, 620
-        auto row = BallSkin::ListRow::create(cells);
+        auto row = BallSkin::ListRow::create(rowCells);
         row->setRowIndex(rowIndex);
         row->setAnchorPoint(ANCHOR_M);
         ballListView->pushBackCustomItem(row);
