@@ -49,11 +49,11 @@ private:
     void initButton();
     void initListView();
     
+    BallSkin::ListCell* getCell(const std::string &ballId);
+    
     void onSelectedCell(BallSkin::ListCell *cell);
     void onClickUnlockButton();
     void onClickSelectButton();
-    
-    void onBallSelected(const BallSkinData &data);
     
     void showButton(cocos2d::ui::Widget *btn, bool withAction);
     void hideButton(cocos2d::ui::Widget *btn, bool withAction);
@@ -68,6 +68,8 @@ private:
     CC_SYNTHESIZE(BallSkinDataListener, onBallSelectedListener, OnBallSelectedListener);
     
     cocos2d::ui::ListView*  ballListView;
+    
+    BallSkin::Cells         cells;
     BallSkin::ListCell*     selectedCell;
     
     BallSkin::UnlockButton* unlockButton;

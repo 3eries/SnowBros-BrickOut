@@ -22,7 +22,7 @@
 #include "SettingPopup.hpp"
 
 #include "demo/DemoView.hpp"
-#include "BallSKinPopup.hpp"
+#include "BallSkinPopup.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
