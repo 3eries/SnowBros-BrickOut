@@ -86,12 +86,19 @@ void GameConfigEdit::editBoxReturn(EditBox *editBox) {
             if( text == "" ) {
                 editBox->setText(TO_STRING(TEST_HELPER->getStartStage()).c_str());
             } else {
+                // update stage
                 int stage = TO_INTEGER(text);
                 stage = MIN(Database::getLastStage().stage, stage);
                 
                 TEST_HELPER->setStartStage(stage);
                 editBox->setText(TO_STRING(stage).c_str());
             }
+            
+            // update ball count
+            TEST_HELPER->setFirstBallCount(Database::getStageFirstBallCount(TEST_HELPER->getStartStage()));
+            
+            auto ballCountBox = getChildByTag<EditBox*>(Tag::EDIT_BOX_BALL_COUNT);
+            ballCountBox->setText(TO_STRING(TEST_HELPER->getFirstBallCount()).c_str());
         } break;
             
         case Tag::EDIT_BOX_BALL_COUNT: {

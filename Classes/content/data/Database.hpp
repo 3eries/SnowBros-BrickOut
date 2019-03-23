@@ -61,6 +61,8 @@ public:
     static bool              isStageLastFloor(int stage, int floor);
     static bool              isStageLastFloor(const FloorData &data);
     
+    static int               getStageFirstBallCount(int stage);
+    
     static BrickDataMap      getBricks();
     static BrickData         getBrick(const std::string &brickId);
     

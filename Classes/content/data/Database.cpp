@@ -8,6 +8,7 @@
 #include "Database.hpp"
 
 #include "Define.h"
+#include "GameConfiguration.hpp"
 #include "../ContentResourceHelper.hpp"
 
 USING_NS_CC;
@@ -480,6 +481,18 @@ bool Database::isStageLastFloor(int stage, int floor) {
 
 bool Database::isStageLastFloor(const FloorData &data) {
     return isStageLastFloor(data.stage, data.floor);
+}
+
+/**
+ * 해당 스테이지의 최초 볼 개수를 반환합니다
+ */
+int Database::getStageFirstBallCount(int stage) {
+    
+    if( stage == 1 ) {
+        return GAME_CONFIG->getFirstBallCount();
+    } else {
+        return getStage(stage-1).finalBallCount;
+    }
 }
 
 /**
