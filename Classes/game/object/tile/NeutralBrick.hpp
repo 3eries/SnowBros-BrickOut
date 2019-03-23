@@ -27,7 +27,8 @@ private:
     void initHpGage() override;
   
 public:
-    void runRemoveAction() override;
+    void down() override;
+    void removeWithAction() override;
     void sufferDamage(int damage) override;
 };
 

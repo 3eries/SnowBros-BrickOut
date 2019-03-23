@@ -63,9 +63,29 @@ void NeutralBrick::initHpGage() {
     // HP 게이지 없음
 }
 
-void NeutralBrick::runRemoveAction() {
+void NeutralBrick::down() {
     
-    // 제거 연출 없음
+    Brick::down();
+}
+
+void NeutralBrick::removeWithAction() {
+
+    Game::Tile::removeWithAction();
+    
+    auto remove = [=]() {
+        this->setVisible(false);
+        this->setNeedRemove(true);
+    };
+    
+    // 마지막 칸의 중립 브릭은 이미 퇴장 연출이 진행되었기 때문에 바로 삭제
+    if( getTilePosition().y == 0 ) {
+        remove();
+        return;
+    }
+    
+    auto fadeOut = FadeOut::create(TILE_ENTER_DURATION);
+    auto callFunc = CallFunc::create(remove);
+    getImage()->runAction(Sequence::create(fadeOut, callFunc, nullptr));
 }
 
 void NeutralBrick::sufferDamage(int damage) {

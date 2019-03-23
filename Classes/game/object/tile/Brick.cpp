@@ -58,7 +58,7 @@ bool Brick::init() {
     initImage();
 
     if( def.tile.pos != INVALID_TILE_POSITION ) {
-        setTilePosition(def.tile.pos, false);
+        setTilePosition(def.tile.pos);
     }
     
     setImageFlippedX(def.tile.isFlippedX);
@@ -269,6 +269,16 @@ void Brick::setImageFlippedY(bool flippedY) {
 }
 
 /**
+ * 타일 비활성화
+ */
+void Brick::inactiveTile() {
+    
+    Game::Tile::inactiveTile();
+    
+    setOnBreakListener(nullptr);
+}
+
+/**
  * 등장
  */
 void Brick::enterWithAction() {
@@ -282,19 +292,31 @@ void Brick::enterWithAction() {
 void Brick::removeWithAction() {
     
     Game::Tile::removeWithAction();
- 
-    setOnBreakListener(nullptr);
+    
+    /*
+    setBgVisible(false);
+    
+    auto rotate = RepeatForever::create(RotateBy::create(0.1f, 100));
+    runAction(rotate);
+    
+    auto move = MoveBy::create(0.5f, Vec2(0, -320));
+    auto callFunc = CallFunc::create([=]() {
+        setVisible(false);
+        setNeedRemove(true);
+    });
+    runAction(Sequence::create(move, callFunc, nullptr));
+    
+    runAction(ScaleTo::create(0.5f, 0.7f));
+    
+    {
+        auto delay = DelayTime::create(0.1f);
+        auto fadeOut = FadeOut::create(0.4f);
+        image->runAction(Sequence::create(delay, fadeOut, nullptr));
+    }
+    */
     
     setVisible(false);
     setNeedRemove(true);
-    
-    runRemoveAction();
-}
-
-/**
- * 제거 연출
- */
-void Brick::runRemoveAction() {
     
     const int ROWS = 6;
     const float W = getContentSize().width / ROWS;
@@ -352,6 +374,7 @@ void Brick::runRemoveAction() {
         }
     }
     
+    // particle_brick.plist
     /*
     auto particle = ParticleSystemQuad::create(DIR_IMG_GAME + "particle_brick.plist");
     particle->setAnchorPoint(ANCHOR_M);
@@ -361,11 +384,11 @@ void Brick::runRemoveAction() {
     particle->setAutoRemoveOnFinish(true);
     // particle->setScale(0.2f);
     getParent()->addChild(particle, SBZOrder::BOTTOM);
-
+    
     if( data.isBoss() ) {
         particle->setScale(particle->getScale() * 1.5f);
     }
-     */
+    */
 }
 
 /**
@@ -492,7 +515,9 @@ void Brick::updateHpUI() {
 
 void Brick::setBgVisible(bool isVisible) {
     
-    bg->setVisible(isVisible);
+    if( bg ) {
+        bg->setVisible(isVisible);
+    }
 }
 
 void Brick::setHpVisible(bool isVisible) {

@@ -27,8 +27,8 @@ private:
     void onNextFloor(const FloorData &floor) override;
     
 public:
-    void setTilePosition(const TilePosition &tilePos, bool action = true,
-                         SBCallback onActionFinished = nullptr) override;
+//    void setTilePosition(const TilePosition &tilePos, bool action = true,
+//                         SBCallback onActionFinished = nullptr) override;
     
 private:
     CC_SYNTHESIZE(std::vector<Brick*>, parts, Parts);

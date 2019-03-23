@@ -65,27 +65,27 @@ void Brick_10012::onNextFloor(const FloorData &floor) {
     Brick::onNextFloor(floor);
 }
 
-void Brick_10012::setTilePosition(const TilePosition &tilePos, bool action,
-                                  SBCallback onActionFinished) {
-    
-    Brick::setTilePosition(tilePos, action, onActionFinished);
-    
-    // 파츠 좌표 업데이트
-    /*
-    auto facePart = parts[0];
-    
-    // 합체
-    if( getFloorChangedCount() % 2 == 0 ) {
-        facePart->setBgVisible(false);
-        facePart->setHpVisible(false);
-        facePart->setTilePosition(tilePos, action);
-    }
-    // 앞으로!
-    else {
-        facePart->setTilePosition(tilePos, , [=]() {
-            facePart->setBgVisible(true);
-            facePart->setHpVisible(true);
-        });
-    }
-     */
-}
+//void Brick_10012::setTilePosition(const TilePosition &tilePos, bool action,
+//                                  SBCallback onActionFinished) {
+//    
+//    Brick::setTilePosition(tilePos, action, onActionFinished);
+//    
+//    // 파츠 좌표 업데이트
+//    /*
+//    auto facePart = parts[0];
+//    
+//    // 합체
+//    if( getFloorChangedCount() % 2 == 0 ) {
+//        facePart->setBgVisible(false);
+//        facePart->setHpVisible(false);
+//        facePart->setTilePosition(tilePos, action);
+//    }
+//    // 앞으로!
+//    else {
+//        facePart->setTilePosition(tilePos, , [=]() {
+//            facePart->setBgVisible(true);
+//            facePart->setHpVisible(true);
+//        });
+//    }
+//     */
+//}

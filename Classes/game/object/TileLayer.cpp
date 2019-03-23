@@ -280,7 +280,7 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
     
     auto addBrickWithDropData = [=](Brick *brick, FloorDropData &dropData) -> Brick* {
         
-        brick->setTilePosition(dropData.getAvailablePosition(brick->getData()), false);
+        brick->setTilePosition(dropData.getAvailablePosition(brick->getData()));
         this->addBrick(brick);
         
         dropData.dropped(brick);
@@ -378,7 +378,7 @@ void TileLayer::initFloorItem(const FloorData &floor) {
             def.floorData = floor;
             
             auto item = TileFactory::createItem(def);
-            item->setTilePosition(positions[0], false);
+            item->setTilePosition(positions[0]);
             addTile(item);
             
             positions.erase(positions.begin());

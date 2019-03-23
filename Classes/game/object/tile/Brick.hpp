@@ -51,10 +51,10 @@ public:
     virtual void setImageFlippedX(bool flippedX);
     virtual void setImageFlippedY(bool flippedY);
     
+    virtual void inactiveTile() override;
+    
     virtual void enterWithAction() override;
     virtual void removeWithAction() override;
-    
-    virtual void runRemoveAction();
     
     virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     virtual void onBreak();

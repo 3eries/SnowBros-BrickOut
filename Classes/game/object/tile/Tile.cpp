@@ -77,18 +77,9 @@ void Tile::onNextFloor(const FloorData &floor) {
 }
     
 /**
- * 등장
+ * 타일 비활성화
  */
-void Tile::enterWithAction() {
-    
-//    setScale(0);
-//    runAction(ScaleTo::create(TILE_ENTER_DURATION, 1));
-}
-
-/**
- * 제거
- */
-void Tile::removeWithAction() {
+void Tile::inactiveTile() {
     
     setBodyAwake(false);
     setCollisionLocked(true);
@@ -100,7 +91,6 @@ void Tile::removeWithAction() {
     for( auto f = getBody()->GetFixtureList(); f; f = f->GetNext() ) {
         f->SetFilterData(filter);
     }
-    
 }
 
 /**
@@ -109,12 +99,33 @@ void Tile::removeWithAction() {
 void Tile::down() {
     
     CCASSERT(tilePos.y > 0, "Tile::down error.");
-    setTilePosition(TilePosition(tilePos.x, tilePos.y-1));
+    moveWithAction(TilePosition(tilePos.x, tilePos.y-1), TILE_MOVE_DURATION, CC_CALLBACK_0(Tile::onDownFinished, this));
+}
+
+void Tile::onDownFinished() {
+}
+
+/**
+ * 등장 액션
+ */
+void Tile::enterWithAction() {
+    
+//    setScale(0);
+//    runAction(ScaleTo::create(TILE_ENTER_DURATION, 1));
+}
+
+/**
+ * 제거 액션
+ */
+void Tile::removeWithAction() {
+    
+    inactiveTile();
 }
 
 /**
  * 타일 좌표 설정
  */
+/*
 void Tile::setTilePosition(const TilePosition &tilePos, bool action, SBCallback onActionFinished) {
     
     CCASSERT(tilePos != INVALID_TILE_POSITION, "Tile::setTilePosition error.");
@@ -138,6 +149,34 @@ void Tile::setTilePosition(const TilePosition &tilePos, bool action, SBCallback 
         setPosition(p);
         syncNodeToBody();
     }
+}
+*/
+
+void Tile::setTilePosition(const TilePosition &tilePos) {
+    
+    CCASSERT(tilePos != INVALID_TILE_POSITION, "Tile::setTilePosition error.");
+    
+    this->tilePos = tilePos;
+    
+    setPosition(convertToTilePosition(tilePos, rows, columns));
+    syncNodeToBody();
+}
+ 
+void Tile::moveWithAction(const TilePosition &tilePos, float duration, SBCallback onActionFinished) {
+    
+    CCASSERT(tilePos != INVALID_TILE_POSITION, "Tile::moveWithAction error.");
+    
+    this->tilePos = tilePos;
+    
+    auto move = MoveTo::create(duration, convertToTilePosition(tilePos, rows, columns));
+    auto callFunc = CallFunc::create([=]() {
+        this->syncNodeToBody();
+        
+        if( onActionFinished ) {
+            onActionFinished();
+        }
+    });
+    runAction(Sequence::create(move, callFunc, nullptr));
 }
     
 /**

@@ -38,14 +38,19 @@ protected:
     virtual void onNextFloor(const FloorData &floor);
     
 public:
+    virtual void inactiveTile();
+    virtual void down();
+    virtual void onDownFinished();
+    
     virtual void enterWithAction();
     virtual void removeWithAction();
     
-    virtual void down();
-    
 public:
-    virtual void setTilePosition(const TilePosition &tilePos, bool action = true,
-                                 SBCallback onActionFinished = nullptr);
+//    virtual void setTilePosition(const TilePosition &tilePos, bool action = true,
+//                                 SBCallback onActionFinished = nullptr);
+    virtual void setTilePosition(const TilePosition &tilePos);
+    virtual void moveWithAction(const TilePosition &tilePos, float duration,
+                                SBCallback onActionFinished = nullptr);
     virtual bool isContainsPosition(const TilePosition &p);
     
     static cocos2d::Vec2 convertToTilePosition(int x, int y, int w = 1, int h = 1);
