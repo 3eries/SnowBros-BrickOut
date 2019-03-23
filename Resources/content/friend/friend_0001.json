@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "0HLZI3mfQUVGuNKoML+qKIXUFu4", "spine": "3.7.85", "width": 162, "height": 150, "images": "./friend_0001/", "audio": "D:/슈퍼밤/snowbros_ballz/spine" },
+"skeleton": { "hash": "tb6hnOyeb2lEeQq38k4o7/IPlsA", "spine": "3.7.85", "width": 162, "height": 150, "images": "./friend_0001/", "audio": "D:/슈퍼밤/snowbros_ballz/spine" },
 "bones": [
 	{ "name": "root" },
 	{ "name": "friends_01", "parent": "root", "y": -529 },
@@ -66,7 +66,7 @@
 				"attachment": [
 					{ "time": 0, "name": "friends_00001_die_01" },
 					{ "time": 0.0667, "name": "friends_00001_die_02" },
-					{ "time": 0.1333, "name": "friends_00001_die_03" },
+					{ "time": 0.1333, "name": "friends_00001_die_01" },
 					{ "time": 0.2, "name": "friends_00001_die_02" },
 					{ "time": 0.2667, "name": "friends_00001_die_01" },
 					{ "time": 0.3333, "name": "friends_00001_die_02" },
@@ -161,21 +161,15 @@
 			"friends_00001_clear_01": {
 				"attachment": [
 					{ "time": 0, "name": "friends_00001_clear_01" },
-					{ "time": 0.0667, "name": "friends_00001_clear_02" },
-					{ "time": 0.1333, "name": "friends_00001_clear_01" },
-					{ "time": 0.2, "name": "friends_00001_clear_02" },
+					{ "time": 0.1333, "name": "friends_00001_clear_02" },
 					{ "time": 0.2667, "name": "friends_00001_clear_01" },
-					{ "time": 0.3333, "name": "friends_00001_clear_02" },
-					{ "time": 0.4, "name": "friends_00001_clear_01" },
-					{ "time": 0.4667, "name": "friends_00001_clear_02" },
+					{ "time": 0.4, "name": "friends_00001_clear_02" },
 					{ "time": 0.5333, "name": "friends_00001_clear_01" },
-					{ "time": 0.6, "name": "friends_00001_clear_02" },
-					{ "time": 0.6667, "name": "friends_00001_clear_01" },
-					{ "time": 0.7333, "name": "friends_00001_clear_02" },
+					{ "time": 0.6667, "name": "friends_00001_clear_02" },
 					{ "time": 0.8, "name": "friends_00001_clear_01" },
-					{ "time": 0.8667, "name": "friends_00001_clear_02" },
-					{ "time": 0.9333, "name": "friends_00001_clear_01" },
-					{ "time": 1, "name": null }
+					{ "time": 0.9333, "name": "friends_00001_clear_02" },
+					{ "time": 1.0667, "name": "friends_00001_clear_01" },
+					{ "time": 1.1333, "name": null }
 				]
 			},
 			"friends_00001_clear_1": {
@@ -188,7 +182,7 @@
 			"friends_01": {
 				"translate": [
 					{ "time": 0, "x": 0, "y": 0 },
-					{ "time": 1, "x": 0, "y": 1244 }
+					{ "time": 1.1333, "x": 0, "y": 1244 }
 				]
 			}
 		}

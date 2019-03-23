@@ -1,0 +1,209 @@
+
+friend_0004.png
+size: 2048,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+friends_00004_clear_01
+  rotate: false
+  xy: 2, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_clear_02
+  rotate: false
+  xy: 166, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_die_01
+  rotate: false
+  xy: 2, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_die_02
+  rotate: false
+  xy: 166, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_die_03
+  rotate: false
+  xy: 330, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_die_04
+  rotate: false
+  xy: 166, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_die_05
+  rotate: false
+  xy: 330, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_die_06
+  rotate: false
+  xy: 494, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_die_07
+  rotate: false
+  xy: 330, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_idle_01
+  rotate: false
+  xy: 494, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_idle_02
+  rotate: false
+  xy: 658, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_move_01
+  rotate: false
+  xy: 494, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_move_02
+  rotate: false
+  xy: 658, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_move_03
+  rotate: false
+  xy: 822, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_start_01
+  rotate: false
+  xy: 658, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_start_02
+  rotate: false
+  xy: 822, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_start_03
+  rotate: false
+  xy: 986, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_start_04
+  rotate: false
+  xy: 822, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_start_05
+  rotate: false
+  xy: 986, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_start_06
+  rotate: false
+  xy: 1150, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_start_07
+  rotate: false
+  xy: 2, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_high_01
+  rotate: false
+  xy: 986, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_high_02
+  rotate: false
+  xy: 1150, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_high_03
+  rotate: false
+  xy: 1314, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_high_04
+  rotate: false
+  xy: 1150, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_low_01
+  rotate: false
+  xy: 1314, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_low_02
+  rotate: false
+  xy: 1478, 306
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_low_03
+  rotate: false
+  xy: 1314, 2
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1
+friends_00004_throw_low_04
+  rotate: false
+  xy: 1478, 154
+  size: 162, 150
+  orig: 162, 150
+  offset: 0, 0
+  index: -1

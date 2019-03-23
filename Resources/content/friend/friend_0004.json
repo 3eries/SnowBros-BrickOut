@@ -1,0 +1,243 @@
+{
+"skeleton": { "hash": "uJM6NLijtSkAKqZcsqWRu/8Ahdo", "spine": "3.7.85", "width": 162, "height": 150, "images": "./friend_0004/", "audio": "D:/슈퍼밤/snowbros_ballz/spine" },
+"bones": [
+	{ "name": "root" },
+	{ "name": "friend_04", "parent": "root", "y": -529 },
+	{ "name": "friends_hide", "parent": "root", "y": -529 }
+],
+"slots": [
+	{ "name": "friends_00004_clear_1", "bone": "friends_hide", "attachment": "friends_00004_idle_01" },
+	{ "name": "friends_00004_clear_01", "bone": "friend_04", "attachment": "friends_00004_idle_01" }
+],
+"skins": {
+	"default": {
+		"friends_00004_clear_01": {
+			"friends_00004_clear_01": { "width": 162, "height": 150 },
+			"friends_00004_clear_02": { "width": 162, "height": 150 },
+			"friends_00004_die_01": { "width": 162, "height": 150 },
+			"friends_00004_die_02": { "width": 162, "height": 150 },
+			"friends_00004_die_03": { "width": 162, "height": 150 },
+			"friends_00004_die_04": { "width": 162, "height": 150 },
+			"friends_00004_die_05": { "width": 162, "height": 150 },
+			"friends_00004_die_06": { "width": 162, "height": 150 },
+			"friends_00004_die_07": { "width": 162, "height": 150 },
+			"friends_00004_idle_01": { "width": 162, "height": 150 },
+			"friends_00004_idle_02": { "width": 162, "height": 150 },
+			"friends_00004_move_01": { "width": 162, "height": 150 },
+			"friends_00004_move_02": { "width": 162, "height": 150 },
+			"friends_00004_move_03": { "width": 162, "height": 150 },
+			"friends_00004_start_01": { "width": 162, "height": 150 },
+			"friends_00004_start_02": { "width": 162, "height": 150 },
+			"friends_00004_start_03": { "width": 162, "height": 150 },
+			"friends_00004_start_04": { "width": 162, "height": 150 },
+			"friends_00004_start_05": { "width": 162, "height": 150 },
+			"friends_00004_start_06": { "width": 162, "height": 150 },
+			"friends_00004_start_07": { "width": 162, "height": 150 },
+			"friends_00004_throw_high_01": { "width": 162, "height": 150 },
+			"friends_00004_throw_high_02": { "width": 162, "height": 150 },
+			"friends_00004_throw_high_03": { "width": 162, "height": 150 },
+			"friends_00004_throw_high_04": { "width": 162, "height": 150 },
+			"friends_00004_throw_low_01": { "width": 162, "height": 150 },
+			"friends_00004_throw_low_02": { "width": 162, "height": 150 },
+			"friends_00004_throw_low_03": { "width": 162, "height": 150 },
+			"friends_00004_throw_low_04": { "width": 162, "height": 150 }
+		},
+		"friends_00004_clear_1": {
+			"friends_00004_idle_01": { "width": 162, "height": 150 },
+			"friends_00004_idle_02": { "width": 162, "height": 150 }
+		}
+	}
+},
+"animations": {
+	"clear": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		}
+	},
+	"die": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": "friends_00004_die_01" },
+					{ "time": 0.0667, "name": "friends_00004_die_02" },
+					{ "time": 0.1333, "name": "friends_00004_die_01" },
+					{ "time": 0.2, "name": "friends_00004_die_02" },
+					{ "time": 0.2667, "name": "friends_00004_die_01" },
+					{ "time": 0.3333, "name": "friends_00004_die_02" },
+					{ "time": 0.4, "name": "friends_00004_die_03" },
+					{ "time": 0.4667, "name": "friends_00004_die_02" },
+					{ "time": 0.5333, "name": "friends_00004_die_01" },
+					{ "time": 0.6, "name": "friends_00004_die_02" },
+					{ "time": 0.6667, "name": "friends_00004_die_03" },
+					{ "time": 0.7333, "name": "friends_00004_die_04" },
+					{ "time": 0.8, "name": "friends_00004_die_05" },
+					{ "time": 0.8667, "name": "friends_00004_die_06" },
+					{ "time": 0.9333, "name": "friends_00004_die_07" },
+					{ "time": 1, "name": null }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		}
+	},
+	"idle": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": "friends_00004_idle_01" },
+					{ "time": 0.6667, "name": "friends_00004_idle_02" },
+					{ "time": 1.3333, "name": "friends_00004_idle_01" }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		}
+	},
+	"move": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": "friends_00004_move_01" },
+					{ "time": 0.0667, "name": "friends_00004_move_02" },
+					{ "time": 0.1333, "name": "friends_00004_move_03" },
+					{ "time": 0.2, "name": "friends_00004_move_02" },
+					{ "time": 0.2667, "name": "friends_00004_move_01" }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		}
+	},
+	"shoot_high": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": "friends_00004_throw_high_01" },
+					{ "time": 0.0667, "name": "friends_00004_throw_high_02" },
+					{ "time": 0.1333, "name": "friends_00004_throw_high_03" },
+					{ "time": 0.2, "name": "friends_00004_throw_high_04" }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		}
+	},
+	"shoot_low": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": "friends_00004_throw_low_01" },
+					{ "time": 0.0667, "name": "friends_00004_throw_low_02" },
+					{ "time": 0.1333, "name": "friends_00004_throw_low_03" },
+					{ "time": 0.2, "name": "friends_00004_throw_low_04" }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		}
+	},
+	"stage_clear": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": "friends_00004_clear_01" },
+					{ "time": 0.1333, "name": "friends_00004_clear_02" },
+					{ "time": 0.2667, "name": "friends_00004_clear_01" },
+					{ "time": 0.4, "name": "friends_00004_clear_02" },
+					{ "time": 0.5333, "name": "friends_00004_clear_01" },
+					{ "time": 0.6667, "name": "friends_00004_clear_02" },
+					{ "time": 0.8, "name": "friends_00004_clear_01" },
+					{ "time": 0.9333, "name": "friends_00004_clear_02" },
+					{ "time": 1.0667, "name": "friends_00004_clear_01" },
+					{ "time": 1.1333, "name": null }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null }
+				]
+			}
+		},
+		"bones": {
+			"friend_04": {
+				"translate": [
+					{ "time": 0, "x": 0, "y": 0 },
+					{ "time": 1.1333, "x": 0, "y": 1244 }
+				]
+			}
+		}
+	},
+	"stage_start": {
+		"slots": {
+			"friends_00004_clear_01": {
+				"attachment": [
+					{ "time": 0, "name": "friends_00004_start_01" },
+					{ "time": 0.0667, "name": "friends_00004_start_02" },
+					{ "time": 0.1333, "name": "friends_00004_start_03" },
+					{ "time": 0.2, "name": "friends_00004_start_04" },
+					{ "time": 0.2667, "name": "friends_00004_start_05" },
+					{ "time": 0.3333, "name": "friends_00004_start_06" },
+					{ "time": 0.4, "name": "friends_00004_start_07" },
+					{ "time": 0.4667, "name": null }
+				]
+			},
+			"friends_00004_clear_1": {
+				"attachment": [
+					{ "time": 0, "name": null },
+					{ "time": 0.1333, "name": "friends_00004_idle_01" },
+					{ "time": 0.1667, "name": null },
+					{ "time": 0.2, "name": "friends_00004_idle_01" },
+					{ "time": 0.2333, "name": null },
+					{ "time": 0.2667, "name": "friends_00004_idle_01" },
+					{ "time": 0.3, "name": null },
+					{ "time": 0.3333, "name": "friends_00004_idle_01" },
+					{ "time": 0.3667, "name": null },
+					{ "time": 0.4, "name": "friends_00004_idle_01" },
+					{ "time": 0.4333, "name": null },
+					{ "time": 0.4667, "name": "friends_00004_idle_01" },
+					{ "time": 0.5, "name": null },
+					{ "time": 0.5333, "name": "friends_00004_idle_01" },
+					{ "time": 0.5667, "name": null },
+					{ "time": 0.6, "name": "friends_00004_idle_01" },
+					{ "time": 0.6333, "name": null },
+					{ "time": 0.6667, "name": "friends_00004_idle_01" },
+					{ "time": 0.7, "name": null },
+					{ "time": 0.7333, "name": "friends_00004_idle_01" },
+					{ "time": 0.7667, "name": null },
+					{ "time": 0.8, "name": "friends_00004_idle_01" },
+					{ "time": 0.8333, "name": null },
+					{ "time": 0.8667, "name": "friends_00004_idle_01" },
+					{ "time": 0.9, "name": null },
+					{ "time": 0.9333, "name": "friends_00004_idle_01" },
+					{ "time": 0.9667, "name": null },
+					{ "time": 1, "name": "friends_00004_idle_01" }
+				]
+			}
+		}
+	}
+}
+}
