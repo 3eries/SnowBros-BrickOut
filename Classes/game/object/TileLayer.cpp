@@ -151,9 +151,6 @@ void TileLayer::onFloorChanged(const FloorData &floor) {
     
     // 데이터 있음
     if( !floor.isNull() ) {
-        // 엘리트 브릭 드랍률 업데이트
-        updateEliteBrickDropRate(floor);
-        
         // 마지막 보스인 경우 연출 후 타일 추가
         if( floor.isExistBoss() && GameManager::getStage().getLastFloor().floor == floor.floor) {
             auto effectLayer = SBNodeUtils::createTouchNode();
@@ -222,7 +219,7 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
     
     resetDropSpace(dropData);
     
-    Log::i("TileLayer::initFloorBrick(%d-%d) availableTileCount: %d, eliteBrickDropRate: %d", floor.stage, GameManager::getFloorInStage(), dropData.availableTileCount, eliteBrickDropRate);
+    Log::i("TileLayer::initFloorBrick(%d-%d) availableTileCount: %d", floor.stage, GameManager::getFloorInStage(), dropData.availableTileCount);
     
     // 가용 칸수 체크
     if( dropData.isNoSpace() ) {
@@ -309,6 +306,11 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
     auto eliteBrickData = floor.getRandomNormalBrick();
     
     if( dropData.checkSpace(eliteBrickData) ) {
+        // 드랍률 업데이트
+        updateEliteBrickDropRate(floor);
+        
+        Log::i("TileLayer::initFloorBrick(%d-%d) eliteBrickDropRate: %d", floor.stage, GameManager::getFloorInStage(), eliteBrickDropRate);
+        
         uniform_int_distribution<int> dist(1,100);
         isEliteDropped = (dist(randomEngine.eliteBrickDrop) <= eliteBrickDropRate);
         
