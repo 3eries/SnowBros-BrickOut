@@ -16,7 +16,7 @@
 #include "ContentManager.hpp"
 #include "../../GameDefine.h"
 
-namespace Game {
+NS_GAME_BEGIN
     
 /** @class Tile
  * @brief 타일은 맵의 기본 구성 단위입니다
@@ -59,6 +59,6 @@ protected:
     CC_SYNTHESIZE_READONLY(int, floorChangedCount, FloorChangedCount);
 };
     
-} // namespace Game
+NS_GAME_END
 
 #endif /* Tile_hpp */

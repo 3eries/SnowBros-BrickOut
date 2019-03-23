@@ -12,6 +12,10 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
+#define NS_GAME_BEGIN         namespace Game {
+#define NS_GAME_END           }
+#define USING_NS_GAME         using namespace Game
+
 enum GameState {
     NONE            = (1 << 0),
     ENTERED         = (1 << 1),     // 게임 진입

@@ -14,7 +14,7 @@
 USING_NS_CC;
 using namespace std;
 
-namespace Game {
+NS_GAME_BEGIN
 
 Tile::Tile(int rows, int columns, const FloorData &floorData) : SBPhysicsObject(this),
 rows(rows),
@@ -171,4 +171,4 @@ Vec2 Tile::convertToTilePosition(const TilePosition &p, int w, int h) {
     return convertToTilePosition((int)p.x, (int)p.y, w, h);
 }
     
-} // namespace Game
+NS_GAME_END
