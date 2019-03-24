@@ -48,7 +48,7 @@ static const float                            GAME_RESULT_DELAY                =
 #define                                       MAP_DIAGONAL                       MAP_ORIGIN.distance(cocos2d::Vec2(MAP_CONTENT_SIZE)) // 대각선
 
 // Ball
-#define                                       SHOOTING_MAX_ANGLE                 75                // 발사 최대 각도
+#define                                       SHOOTING_MAX_ANGLE                 80                // 발사 최대 각도
 #define                                       SHOOT_INTERVAL                     (PHYSICS_FPS * 3) // 발사 시간 간격
 
 static const float                            BALL_RADIUS                      = 20;
