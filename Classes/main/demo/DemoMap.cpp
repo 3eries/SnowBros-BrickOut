@@ -79,10 +79,10 @@ bool DemoMap::init(const StageData &stage, b2World *world) {
     };
     
     PhysicsCategory categorys[] = {
-        PhysicsCategory::WALL,
-        PhysicsCategory::WALL,
+        PhysicsCategory::WALL_LEFT,
+        PhysicsCategory::WALL_RIGHT,
         PhysicsCategory::FLOOR,
-        PhysicsCategory::WALL,
+        PhysicsCategory::WALL_TOP,
     };
     
     for( int i = 0; i < 4; ++i ) {
@@ -94,7 +94,7 @@ bool DemoMap::init(const StageData &stage, b2World *world) {
         
         b2Filter filter;
         filter.categoryBits = categorys[i];
-        filter.maskBits = PhysicsCategory::BALL;
+        filter.maskBits = PHYSICS_MASK_BITS_WALL;
         
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &shape;

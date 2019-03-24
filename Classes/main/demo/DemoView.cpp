@@ -246,11 +246,19 @@ void DemoView::BeginContact(b2Contact *contact) {
     
     // 벽 체크
     {
-        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::WALL, contact);
+        PhysicsCategory wallCategorys[] = {
+            PhysicsCategory::WALL_LEFT,
+            PhysicsCategory::WALL_RIGHT,
+            PhysicsCategory::WALL_TOP,
+        };
         
-        if( objs.obj1 && objs.obj2 ) {
-            auto ball = (DemoBall*)objs.obj1;
-            ball->onContactWall();
+        for( auto wallCategory : wallCategorys ) {
+            auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, wallCategory, contact);
+            
+            if( objs.obj1 && objs.obj2 ) {
+                auto ball = (DemoBall*)objs.obj1;
+                ball->onContactWall();
+            }
         }
     }
 }

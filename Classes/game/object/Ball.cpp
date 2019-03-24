@@ -122,7 +122,7 @@ b2Body* Ball::createBody(SBPhysicsObject *userData) {
     
     b2Filter filter;
     filter.categoryBits = PhysicsCategory::BALL;
-    filter.maskBits = PhysicsCategory::WALL | PhysicsCategory::FLOOR | PhysicsCategory::BRICK | PhysicsCategory::ITEM;
+    filter.maskBits = PHYSICS_MASK_BITS_BALL;
     
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &circle;

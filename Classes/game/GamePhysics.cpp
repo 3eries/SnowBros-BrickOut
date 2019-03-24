@@ -202,15 +202,23 @@ void PhysicsManager::BeginContact(b2Contact *contact) {
     
     // 벽 체크
     {
-        auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, PhysicsCategory::WALL, fixtureA, fixtureB);
+        PhysicsCategory wallCategorys[] = {
+            PhysicsCategory::WALL_LEFT,
+            PhysicsCategory::WALL_RIGHT,
+            PhysicsCategory::WALL_TOP,
+        };
         
-        if( objs.obj1 && objs.obj2 ) {
-            dispatchOnContactWall((Ball*)objs.obj1);
+        for( auto wallCategory : wallCategorys ) {
+            auto objs = SBPhysics::findCollisionObjects(PhysicsCategory::BALL, wallCategory, fixtureA, fixtureB);
             
+            if( objs.obj1 && objs.obj2 ) {
+                dispatchOnContactWall((Ball*)objs.obj1);
+                
 #if DEBUG_LOG_ENABLED
-            CCLOG("\t> Wall ball awake: %d, wall awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
+                CCLOG("\t> Wall ball awake: %d, wall awake: %d", objs.obj1->isAwake(), objs.obj2->isAwake());
 #endif
-            return;
+                return;
+            }
         }
     }
     

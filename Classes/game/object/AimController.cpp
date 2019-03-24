@@ -64,117 +64,6 @@ void AimController::shoot() {
     }
 }
 
-//void AimController::rayCast(const Vec2 &startPos, const Vec2 &endPos) {
-//
-//    // The ray extends from p1 to p1 + maxFraction * (p2 - p1).
-//    b2RayCastInput input;
-//    input.p1 = PTM(startPos);      // 시작점
-//    input.p2 = PTM(endPos); // 종료점
-//    input.maxFraction = 1;
-//
-//    //check every fixture of every body to find closest
-//    float closestFraction = 1; //start with end of line as p2
-//    b2Vec2 intersectionNormal(0,0);
-//
-//    b2RayCastOutput output;
-//
-//    auto fixture = shootingObj.ball->getBody()->GetFixtureList();
-//    if( !fixture->RayCast(&output, input, 0) ) {
-//        CCLOG("AimController RayCast error.");
-//        // CCASSERT(false, "AimController RayCast error.");
-//    }
-//
-//    if( output.fraction < closestFraction ) {
-//        closestFraction = output.fraction;
-//        intersectionNormal = output.normal;
-//    }
-//
-//    CCLOG("output.fraction: %f", output.fraction);
-//
-//    /*
-//     for (b2Body* b = m_world->GetBodyList(); b; b = b->GetNext()) {
-//     for (b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext()) {
-//
-//     b2RayCastOutput output;
-//     if ( ! f->RayCast( &output, input ) )
-//     continue;
-//     if ( output.fraction < closestFraction ) {
-//     closestFraction = output.fraction;
-//     intersectionNormal = output.normal;
-//     }
-//     }
-//     }
-//     */
-//
-//    b2Vec2 intersectionPoint = input.p1 + closestFraction * (input.p2 - input.p1);
-//    debugPoint->setPosition(MTP(intersectionPoint));
-//
-//    //draw this part of the ray
-//    /*
-//     glBegin(GL_LINES);
-//     glVertex2f( p1.x, p1.y );
-//     glVertex2f( intersectionPoint.x, intersectionPoint.y );
-//     glEnd();
-//
-//     if ( closestFraction == 1 )
-//     return; //ray hit nothing so we can finish here
-//     if ( closestFraction == 0 )
-//     return;
-//
-//     //still some ray left to reflect
-//     b2Vec2 remainingRay = (p2 - intersectionPoint);
-//     b2Vec2 projectedOntoNormal = b2Dot(remainingRay, intersectionNormal) * intersectionNormal;
-//     b2Vec2 nextp2 = p2 - 2 * projectedOntoNormal;
-//
-//     //recurse
-//     drawReflectedRay(intersectionPoint, nextp2);
-//     */
-//}
-
-class RayCastCallback : public b2RayCastCallback {
-public:
-    RayCastCallback() {};
-    ~RayCastCallback() {};
-    
-    float32 ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float32 fraction) {
-        
-        this->point = point;
-        this->normal = normal;
-        
-        return fraction;
-    }
-    
-    b2Vec2 point;
-    b2Vec2 normal;
-};
-
-/**
- * 레이 캐스트
- */
-void AimController::rayCast(const Vec2 &startPos, const Vec2 &endPos) {
-    
-    b2Vec2 p1 = PTM(startPos);  // 시작점
-    b2Vec2 p2 = PTM(endPos);    // 종료점
-    
-    RayCastCallback callback;
-    world->RayCast(&callback, p1, p2);
-    
-    // 충돌 지점 설정
-    this->endPosition = MTP(callback.point);
-    
-    // 조준선 업데이트
-    const float angle = SBMath::getDegree(startPos, this->endPosition);
-    const float dist = startPos.getDistance(this->endPosition);
-    
-    shootingObj.updateLine(startPos, this->endPosition, angle, dist);
-    
-//    auto debugDraw = PhysicsManager::getDebugDrawView()->getDebugDraw();
-//    debugDraw->DrawPoint(callback.point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
-//    debugDraw->DrawSegment(p1, callback.point, b2Color(0.8f, 0.8f, 0.8f));
-//    b2Vec2 head = callback.point + 0.5f * callback.normal;
-//    debugDraw->DrawSegment(callback.point, head, b2Color(0.9f, 0.9f, 0.4f));
-}
-
 /**
  * 터치 시작
  */
@@ -251,10 +140,10 @@ void AimController::onTouchMoved(Touch *touch, Event *event) {
         shootingAngle = MIN(SHOOTING_MAX_ANGLE, shootingAngle);
         shootingAngle = MAX(-SHOOTING_MAX_ANGLE, shootingAngle);
         
-        Vec2 virtualEndPosition = startPosition;
-        virtualEndPosition += (Vec2::forAngle(-CC_DEGREES_TO_RADIANS(shootingAngle-90)) * MAP_DIAGONAL/*dist*/);
+        Vec2 virtualEndPosition = SBMath::getEndPosition(startPosition, shootingAngle, MAP_DIAGONAL);
         
-        rayCast(startPosition, virtualEndPosition);
+        RayCastCallback callback;
+        rayCast(callback, startPosition, virtualEndPosition);
     }
     
     // 터치 기준 조준선 업데이트
@@ -288,6 +177,50 @@ void AimController::onTouchCancelled(Touch *touch, Event *event) {
     
     isTouchCancelled = true;
     onTouchEnded(touch, event);
+}
+
+/**
+ * 레이 캐스트
+ */
+void AimController::rayCast(RayCastCallback &callback,
+                            const Vec2 &startPos, const Vec2 &endPos) {
+    
+    b2Vec2 p1 = PTM(startPos); // 시작점
+    b2Vec2 p2 = PTM(endPos);   // 종료점
+    
+    world->RayCast(&callback, p1, p2);
+    
+    // 충돌 지점 설정
+    this->endPosition = MTP(callback.point);
+    
+    // 조준선 업데이트
+    const float angle = SBMath::getDegree(startPos, this->endPosition);
+    const float dist = startPos.getDistance(this->endPosition);
+    
+    shootingObj.updateLine(startPos, this->endPosition, angle, dist);
+    
+    // 벽 조준 시 두번째 조준선 노출
+    auto bits = callback.fixture->GetFilterData().categoryBits;
+    
+    if( bits == PhysicsCategory::WALL_LEFT || bits == PhysicsCategory::WALL_RIGHT ||
+        bits == PhysicsCategory::WALL_TOP ) {
+        Vec2  secondStartPos = this->endPosition;
+        float secondDist = 300;
+        float secondAngle = (bits != PhysicsCategory::WALL_TOP) ? -angle : 180-angle;
+        
+        auto secondEndPos = SBMath::getEndPosition(secondStartPos, secondAngle, secondDist);
+        shootingObj.secondLine.setVisible(true);
+        shootingObj.secondLine.updateLine(secondStartPos, secondEndPos, secondAngle, secondDist);
+        
+    } else {
+        shootingObj.secondLine.setVisible(false);
+    }
+    
+//    auto debugDraw = PhysicsManager::getDebugDrawView()->getDebugDraw();
+//    debugDraw->DrawPoint(callback.point, 5.0f, b2Color(0.4f, 0.9f, 0.4f));
+//    debugDraw->DrawSegment(p1, callback.point, b2Color(0.8f, 0.8f, 0.8f));
+//    b2Vec2 head = callback.point + 0.5f * callback.normal;
+//    debugDraw->DrawSegment(callback.point, head, b2Color(0.9f, 0.9f, 0.4f));
 }
 
 /**
@@ -388,6 +321,10 @@ void AimController::initAimObject() {
         shootingObj.line = createAimLine();
         shootingObj.line.line->setOpacity(255 * 0.4f);
         
+        shootingObj.secondLine = createAimLine();
+        shootingObj.secondLine.line->setOpacity(255*0.4f);
+        shootingObj.secondLine.setVisible(false);
+        
         // Ball
         shootingObj.ballBody = Ball::createBody();
         
@@ -436,9 +373,9 @@ void AimController::initCollisionWall() {
     };
     
     PhysicsCategory categorys[] = {
-        PhysicsCategory::WALL,
-        PhysicsCategory::WALL,
-        PhysicsCategory::WALL,
+        PhysicsCategory::WALL_LEFT,
+        PhysicsCategory::WALL_RIGHT,
+        PhysicsCategory::WALL_TOP,
     };
     
     for( int i = 0; i < 3; ++i ) {
@@ -450,7 +387,7 @@ void AimController::initCollisionWall() {
         
         b2Filter filter;
         filter.categoryBits = categorys[i];
-        filter.maskBits = PhysicsCategory::BALL;
+        filter.maskBits = PHYSICS_MASK_BITS_WALL;
         
         b2FixtureDef fixtureDef;
         fixtureDef.shape = &shape;

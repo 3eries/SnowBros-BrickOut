@@ -34,12 +34,33 @@ private:
     
 private:
     void shoot();
-    void rayCast(const cocos2d::Vec2 &startPos, const cocos2d::Vec2 &endPos);
     
     bool onTouchBegan(cocos2d::Touch *touch, cocos2d::Event*);
     void onTouchMoved(cocos2d::Touch *touch, cocos2d::Event*);
     void onTouchEnded(cocos2d::Touch *touch, cocos2d::Event*);
     void onTouchCancelled(cocos2d::Touch *touch, cocos2d::Event*);
+    
+    class RayCastCallback : public b2RayCastCallback {
+    public:
+        RayCastCallback() {};
+        ~RayCastCallback() {};
+        
+        float32 ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float32 fraction) {
+            
+            this->fixture = fixture;
+            this->point = point;
+            this->normal = normal;
+            
+            return fraction;
+        }
+        
+        b2Fixture *fixture;
+        b2Vec2 point;
+        b2Vec2 normal;
+    };
+    
+    void rayCast(RayCastCallback &callback,
+                 const cocos2d::Vec2 &startPos, const cocos2d::Vec2 &endPos);
     
 public:
     void setEnabled(bool isEnabled, BrickList bricks = BrickList());
@@ -80,13 +101,15 @@ private:
      * 슈팅 오브젝트
      */
     struct ShootingObject {
-        b2Body          *ballBody;  // 볼
-        cocos2d::Node   *endMark;   // 최종 위치 마크
-        AimLine          line;      // 조준선
+        b2Body          *ballBody;   // 볼
+        cocos2d::Node   *endMark;    // 최종 위치 마크
+        AimLine          line;       // 조준선
+        AimLine          secondLine; // 두번째 조준선, 벽을 조준할 경우에만 생성됨
         
         void setVisible(bool isVisible) {
             if( endMark )         endMark->setVisible(isVisible);
             line.setVisible(isVisible);
+            secondLine.setVisible(isVisible);
         };
         
         void updateLine(const cocos2d::Vec2 &start, const cocos2d::Vec2 &end,

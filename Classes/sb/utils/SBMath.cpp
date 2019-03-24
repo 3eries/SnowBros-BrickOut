@@ -35,3 +35,14 @@ float SBMath::getDegree(const Vec2 &from, const Vec2 &to) {
      
     return CC_RADIANS_TO_DEGREES(atan2f(to.x - from.x, to.y - from.y));
 }
+
+/**
+ * 종료 좌표를 반환합니다
+ */
+Vec2 SBMath::getEndPosition(const Vec2 &startPos, float angle, float dist) {
+    
+    Vec2 p = startPos;
+    p += (Vec2::forAngle(-CC_DEGREES_TO_RADIANS(angle-90)) * dist);
+    
+    return p;
+}

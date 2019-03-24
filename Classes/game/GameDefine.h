@@ -90,12 +90,18 @@ static const cocos2d::Size                    ITEM_CONTENT_SIZE                =
 static const float                            PHYSICS_FPS                      = 1 / 50.0f;
 
 enum PhysicsCategory {
-    WALL        = (1 << 0),
-    FLOOR       = (1 << 1),
-    BALL        = (1 << 2),
-    BRICK       = (1 << 3),
-    ITEM        = (1 << 4),
+    WALL_LEFT   = (1 << 0),     // 왼쪽 벽
+    WALL_RIGHT  = (1 << 1),     // 오른쪽 벽
+    WALL_TOP    = (1 << 2),     // 천장
+    FLOOR       = (1 << 3),
+    BALL        = (1 << 4),
+    BRICK       = (1 << 5),
+    ITEM        = (1 << 6),
 };
+
+static const uint16 PHYSICS_MASK_BITS_WALL = (PhysicsCategory::BALL);
+static const uint16 PHYSICS_MASK_BITS_BALL = (PhysicsCategory::WALL_LEFT | PhysicsCategory::WALL_RIGHT | PhysicsCategory::WALL_TOP |
+                                              PhysicsCategory::FLOOR | PhysicsCategory::BRICK | PhysicsCategory::ITEM);
 
 #endif /* GameDefine_h */
 
