@@ -50,7 +50,6 @@ bool SplashScene::init() {
     }
     
     ResourceHelper::preload();
-    ContentResourceHelper::preload();
     
     initLaunchImage();
     login();
@@ -208,8 +207,6 @@ void SplashScene::login() {
     
     patchMgr->patch();
     
-    User::getInstance()->init();
-    
     loginCompleted();
 }
 
@@ -218,9 +215,14 @@ void SplashScene::login() {
  */
 void SplashScene::loginCompleted() {
     
-    if( !isLoginCompleted ) {
-        isLoginCompleted = true;
+    if( isLoginCompleted ) {
+        return;
     }
+    
+    isLoginCompleted = true;
+    
+    User::getInstance()->init();
+    ContentResourceHelper::preload();
 }
 
 

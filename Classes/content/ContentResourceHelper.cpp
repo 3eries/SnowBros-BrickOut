@@ -8,13 +8,34 @@
 #include "ContentResourceHelper.hpp"
 
 #include "Define.h"
+#include "data/Database.hpp"
 #include "User.hpp"
 
 USING_NS_CC;
 using namespace std;
 
+/**
+ * 컨텐츠 리소스 preload
+ */
 void ContentResourceHelper::preload() {
     
+    auto textureCache = Director::getInstance()->getTextureCache();
+    
+    auto getAnimPNG = [](string anim) -> string {
+        return SBStringUtils::replaceAll(anim, ANIM_EXT, ".png");
+    };
+    
+    // 선택한 볼 스킨
+    textureCache->addImage(SELECTED_BALL_IMAGE);
+    
+    // 유저 덱의 프렌즈
+    // FIXME: 현재는 덱 기능이 없어 모든 프렌즈 리소스 preload
+    auto friends = Database::getFriends();
+    
+    for( auto friendData : friends ) {
+        string file = getAnimPNG(getFriendAnimationFile(friendData.friendId));
+        textureCache->addImageAsync(file, nullptr);
+    }
 }
 
 string ContentResourceHelper::getBallImageFile(const string &ballId, const string &imgKey) {
