@@ -67,6 +67,22 @@ public:
     void setStartPosition(const cocos2d::Vec2 &startPosition);
     
 private:
+    CC_SYNTHESIZE(SBCallback, onAimingStartListener, OnAimingStartListener);
+    CC_SYNTHESIZE(SBCallback, onAimingCancelledListener, OnAimingCancelledListener);
+    CC_SYNTHESIZE(std::function<void(cocos2d::Vec2)>, onShootListener, OnShootListener);
+    
+    CC_SYNTHESIZE_READONLY(cocos2d::Vec2, startPosition, StartPosition); // 볼 출발 위치
+    CC_SYNTHESIZE_READONLY(cocos2d::Vec2, endPosition, EndPosition);     // 볼 최종 위치
+    
+    bool isTouchCancelled;
+    
+    b2World *world;
+    b2Body *wallBody;
+    std::vector<b2Body*> brickBodies;
+    
+    float prevAngle;
+    
+private:
     /**
      * 조준선
      */
@@ -123,22 +139,8 @@ private:
         }
     };
     
-private:
-    CC_SYNTHESIZE(std::function<void(cocos2d::Vec2)>, onShootListener, OnShootListener);
-    
-    CC_SYNTHESIZE_READONLY(cocos2d::Vec2, startPosition, StartPosition); // 볼 출발 위치
-    CC_SYNTHESIZE_READONLY(cocos2d::Vec2, endPosition, EndPosition);     // 볼 최종 위치
-    
-    bool isTouchCancelled;
-    
-    b2World *world;
-    b2Body *wallBody;
-    std::vector<b2Body*> brickBodies;
-    
     ShootingObject shootingObj; // 슈팅 오브젝트
     AimLine touchAimLine;       // 터치 기준 조준선
-    
-    float prevAngle;
 };
 
 #endif /* AimController_hpp */

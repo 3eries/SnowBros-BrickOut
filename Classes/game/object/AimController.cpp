@@ -24,6 +24,8 @@ static const float LINE_PADDING         = 25;   // 조준선 간격
 static const Color4B DEBUG_AIM_LINE_COLOR               = Color4B(0,0,255,255*0.2f);
 
 AimController::AimController() :
+onAimingStartListener(nullptr),
+onAimingCancelledListener(nullptr),
 onShootListener(nullptr),
 startPosition(FIRST_SHOOTING_POSITION),
 world(GameManager::getPhysicsManager()->getWorld()) {
@@ -79,6 +81,10 @@ bool AimController::onTouchBegan(Touch *touch, Event*) {
     
     if( superbomb::isMultiTouch(touch) ) {
         return true;
+    }
+    
+    if( onAimingStartListener ) {
+        onAimingStartListener();
     }
     
     initCollisionBrick();
@@ -165,7 +171,11 @@ void AimController::onTouchEnded(Touch *touch, Event*) {
     shootingObj.setVisible(false);
     touchAimLine.setVisible(false);
     
-    if( !isTouchCancelled ) {
+    if( isTouchCancelled ) {
+        if( onAimingCancelledListener ) {
+            onAimingCancelledListener();
+        }
+    } else {
         shoot();
     }
 }
@@ -176,6 +186,7 @@ void AimController::onTouchEnded(Touch *touch, Event*) {
 void AimController::onTouchCancelled(Touch *touch, Event *event) {
     
     isTouchCancelled = true;
+    
     onTouchEnded(touch, event);
 }
 

@@ -342,7 +342,7 @@ void GameView::onShootingReady() {
     brickDownBtn->stopAllActions();
     brickDownBtn->setOpacity(255);
     
-    if( !GameManager::isStageLastFloor() && !tileLayer->isExistTile<Brick*>(1) ) {
+    if( checkBrickDown() ) {
         brickDownBtn->setVisible(true);
         brickDownBtn->setOpacity(0);
         
@@ -367,6 +367,24 @@ void GameView::onShootingReady() {
         ball->setPosition(aimController->getStartPosition());
         ball->setSyncLocked(false);
         ball->syncNodeToBody();
+    }
+}
+
+/**
+ * 조준 시작
+ */
+void GameView::onAimingStart() {
+    
+    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(false);
+}
+
+/**
+ * 조준 취소
+ */
+void GameView::onAimingCancelled() {
+    
+    if( checkBrickDown() ) {
+        getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(true);
     }
 }
 
@@ -1023,7 +1041,15 @@ void GameView::removeBall(Ball *ball) {
 }
 
 /**
- * 스테이지 클리어 체크
+ * 브릭 다운 가능 여부를 반환합니다
+ */
+bool GameView::checkBrickDown() {
+    
+    return !GameManager::isStageLastFloor() && !tileLayer->isExistTile<Brick*>(1);
+}
+
+/**
+ * 스테이지 클리어 여부를 반환합니다
  */
 bool GameView::checkStageClear() {
     
@@ -1291,6 +1317,8 @@ void GameView::initAimController() {
     
     aimController = AimController::create();
     aimController->setEnabled(false);
+    aimController->setOnAimingStartListener(CC_CALLBACK_0(GameView::onAimingStart, this));
+    aimController->setOnAimingCancelledListener(CC_CALLBACK_0(GameView::onAimingCancelled, this));
     aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
     addChild(aimController, (int)ZOrder::AIM_CONTROLLER);
 }
