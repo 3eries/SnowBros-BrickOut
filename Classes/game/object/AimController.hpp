@@ -68,7 +68,7 @@ public:
     
 private:
     CC_SYNTHESIZE(SBCallback, onAimingStartListener, OnAimingStartListener);
-    CC_SYNTHESIZE(SBCallback, onAimingCancelledListener, OnAimingCancelledListener);
+    CC_SYNTHESIZE(SBCallback, onAimingEndListener, OnAimingEndListener);
     CC_SYNTHESIZE(std::function<void(cocos2d::Vec2)>, onShootListener, OnShootListener);
     
     CC_SYNTHESIZE_READONLY(cocos2d::Vec2, startPosition, StartPosition); // 볼 출발 위치

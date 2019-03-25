@@ -25,7 +25,7 @@ static const Color4B DEBUG_AIM_LINE_COLOR               = Color4B(0,0,255,255*0.
 
 AimController::AimController() :
 onAimingStartListener(nullptr),
-onAimingCancelledListener(nullptr),
+onAimingEndListener(nullptr),
 onShootListener(nullptr),
 startPosition(FIRST_SHOOTING_POSITION),
 world(GameManager::getPhysicsManager()->getWorld()) {
@@ -171,11 +171,11 @@ void AimController::onTouchEnded(Touch *touch, Event*) {
     shootingObj.setVisible(false);
     touchAimLine.setVisible(false);
     
-    if( isTouchCancelled ) {
-        if( onAimingCancelledListener ) {
-            onAimingCancelledListener();
-        }
-    } else {
+    if( onAimingEndListener ) {
+        onAimingEndListener();
+    }
+    
+    if( !isTouchCancelled ) {
         shoot();
     }
 }

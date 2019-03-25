@@ -379,9 +379,9 @@ void GameView::onAimingStart() {
 }
 
 /**
- * 조준 취소
+ * 조준 종료
  */
-void GameView::onAimingCancelled() {
+void GameView::onAimingEnd() {
     
     if( checkBrickDown() ) {
         getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(true);
@@ -607,7 +607,10 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     shootIndex = 0;
     fallenBallCount = 0;
-    getChildByTag(Tag::BTN_BRICK_DOWN)->setVisible(false);
+    
+    auto brickDownBtn = getChildByTag(Tag::BTN_BRICK_DOWN);
+    brickDownBtn->stopAllActions();
+    brickDownBtn->setVisible(false);
     
     // 아이템 활성화
     auto items = tileLayer->getItems();
@@ -1318,7 +1321,7 @@ void GameView::initAimController() {
     aimController = AimController::create();
     aimController->setEnabled(false);
     aimController->setOnAimingStartListener(CC_CALLBACK_0(GameView::onAimingStart, this));
-    aimController->setOnAimingCancelledListener(CC_CALLBACK_0(GameView::onAimingCancelled, this));
+    aimController->setOnAimingEndListener(CC_CALLBACK_0(GameView::onAimingEnd, this));
     aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
     addChild(aimController, (int)ZOrder::AIM_CONTROLLER);
 }

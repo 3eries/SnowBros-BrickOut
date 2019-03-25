@@ -95,9 +95,9 @@ private:
     void onTileDownFinished() ;             // 1. 타일 이동 완료
     void onShootingReady();                 // 2. 발사 준비
     void onAimingStart();                   // 3. 조준 시작
-    void onAimingCancelled();               // 3-1. 조준 취소
-    void onShootFinished();                 // 4. 발사 완료
-    void onFallFinished();                  // 5. 모든 볼 추락 완료
+    void onAimingEnd();                     // 4. 조준 종료
+    void onShootFinished();                 // 5. 발사 완료
+    void onFallFinished();                  // 6. 모든 볼 추락 완료
     
     void onBrickBreak(Brick *brick);
     
