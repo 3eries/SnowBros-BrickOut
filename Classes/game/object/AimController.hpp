@@ -30,7 +30,9 @@ private:
     void initCollisionBrick();
     
     struct AimLine;
-    AimLine createAimLine();
+    static AimLine createAimLine(std::function<cocos2d::Node*()> createLineFunc,
+                                 const cocos2d::Size &lineSize, float linePadding,
+                                 float actionDuration);
     
 private:
     void shoot();
@@ -87,11 +89,12 @@ private:
      * 조준선
      */
     struct AimLine {
-        cocos2d::ClippingNode *clippingNode;
-        cocos2d::Node         *stencil;
-        cocos2d::Node         *line;
+        cocos2d::ClippingNode*      clippingNode;
+        cocos2d::Node*              stencil;
+        cocos2d::Node*              lineLayer;
+        std::vector<cocos2d::Node*> lines;
         
-        AimLine() : clippingNode(nullptr), stencil(nullptr), line(nullptr) {}
+        AimLine() : clippingNode(nullptr), stencil(nullptr), lineLayer(nullptr) {}
         
         void setVisible(bool isVisible) {
             if( clippingNode )    clippingNode->setVisible(isVisible);
@@ -100,7 +103,7 @@ private:
         void updateLine(const cocos2d::Vec2 &start, const cocos2d::Vec2 &end,
                         float angle, float dist) {
             
-            cocos2d::Node *nodes[] = { stencil, line, };
+            cocos2d::Node *nodes[] = { stencil, lineLayer, };
             
             for( auto n : nodes ) {
                 if( n ) {

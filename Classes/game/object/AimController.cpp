@@ -329,12 +329,32 @@ void AimController::initAimObject() {
     // 슈팅 오브젝트
     {
         // Line
-        shootingObj.line = createAimLine();
-        shootingObj.line.line->setOpacity(255 * 0.4f);
+        Size  LINE_SIZE(BALL_SIZE * 0.65f);
+        float LINE_PADDING = 25;
+        float ACTION_DURATION = 12;
         
-        shootingObj.secondLine = createAimLine();
-        shootingObj.secondLine.line->setOpacity(255*0.4f);
+        auto createLineFunc = [=]() -> Node* {
+            auto line = Node::create();
+            line->setContentSize(LINE_SIZE);
+            line->setCascadeOpacityEnabled(true);
+            
+            auto img = Sprite::create(SELECTED_BALL_IMAGE);
+            img->setAnchorPoint(ANCHOR_M);
+            img->setPosition(Vec2MC(LINE_SIZE, 0, 0));
+            img->setScale(LINE_SIZE.height / BALL_SIZE.height);
+            line->addChild(img);
+            
+            return line;
+        };
+        
+        shootingObj.line = createAimLine(createLineFunc, LINE_SIZE, LINE_PADDING, ACTION_DURATION);
+        shootingObj.line.lineLayer->setOpacity(255*0.4f);
+        addChild(shootingObj.line.clippingNode);
+        
+        shootingObj.secondLine = createAimLine(createLineFunc, LINE_SIZE, LINE_PADDING, ACTION_DURATION);
+        shootingObj.secondLine.lineLayer->setOpacity(255*0.4f);
         shootingObj.secondLine.setVisible(false);
+        addChild(shootingObj.secondLine.clippingNode);
         
         // Ball
         shootingObj.ballBody = Ball::createBody();
@@ -356,8 +376,21 @@ void AimController::initAimObject() {
     }
     
     // 터치 기준 조준선
-    touchAimLine = createAimLine();
-    touchAimLine.line->setOpacity(255 * 0.4f);
+    Size  LINE_SIZE(4,12);
+    float LINE_PADDING = 8;
+    float ACTION_DURATION = 21;
+    
+    auto createLineFunc = [=]() -> Node* {
+        auto line = LayerColor::create(Color4B(0,255,255,255));
+        line->setIgnoreAnchorPointForPosition(false);
+        line->setContentSize(LINE_SIZE);
+        
+        return line;
+    };
+    
+    touchAimLine = createAimLine(createLineFunc, LINE_SIZE, LINE_PADDING, ACTION_DURATION);
+    touchAimLine.lineLayer->setOpacity(255);
+    addChild(touchAimLine.clippingNode);
 }
 
 /**
@@ -417,9 +450,9 @@ void AimController::initCollisionBrick() {
     
 }
 
-AimController::AimLine AimController::createAimLine() {
-    
-    Size  LINE_SIZE = BALL_SIZE * 0.65f;
+AimController::AimLine AimController::createAimLine(function<Node*()> createLineFunc,
+                                                    const Size &lineSize, float linePadding,
+                                                    float actionDuration) {
     
     AimLine aimLine;
     
@@ -427,75 +460,74 @@ AimController::AimLine AimController::createAimLine() {
     auto stencil = LayerColor::create(Color4B::RED);
     stencil->setIgnoreAnchorPointForPosition(false);
     stencil->setAnchorPoint(ANCHOR_MB);
-    stencil->setContentSize(Size(LINE_SIZE.width, SB_WIN_SIZE.height));
-    
+    stencil->setContentSize(Size(lineSize.width*1.1f, SB_WIN_SIZE.height));
     aimLine.stencil = stencil;
     
     auto clippingNode = ClippingNode::create(stencil);
-    addChild(clippingNode);
-    
     aimLine.clippingNode = clippingNode;
     
     // 영역 확인용
     /*
-    {
-        auto n = LayerColor::create(DEBUG_AIM_LINE_COLOR);
-        n->setIgnoreAnchorPointForPosition(false);
-        n->setAnchorPoint(Vec2::ZERO);
-        n->setPosition(Vec2::ZERO);
-        n->setContentSize(SB_WIN_SIZE);
-        clippingNode->addChild(n);
-    }
-    */
-     
+     {
+     auto n = LayerColor::create(DEBUG_AIM_LINE_COLOR);
+     n->setIgnoreAnchorPointForPosition(false);
+     n->setAnchorPoint(Vec2::ZERO);
+     n->setPosition(Vec2::ZERO);
+     n->setContentSize(SB_WIN_SIZE);
+     clippingNode->addChild(n);
+     }
+     */
+    
     // LineLayer 생성
     float LINE_DIST = MAP_DIAGONAL;
-    int   LINE_COUNT = LINE_DIST / (LINE_SIZE.height + LINE_PADDING);
+    int   LINE_COUNT = LINE_DIST / (lineSize.height + linePadding);
     
     auto lineLayer = Node::create();
     lineLayer->setAnchorPoint(ANCHOR_MB);
-    lineLayer->setContentSize(Size(LINE_SIZE.width, MAP_CONTENT_HEIGHT));
+    lineLayer->setContentSize(Size(lineSize.width, LINE_DIST));
     lineLayer->setCascadeOpacityEnabled(true);
     clippingNode->addChild(lineLayer);
     
-    aimLine.line = lineLayer;
+    aimLine.lineLayer = lineLayer;
     
     // 개별 Line 생성
     auto getPosY = [=](int i) {
-        return i * (LINE_SIZE.height + LINE_PADDING);
+        return -lineSize.height + (i * (lineSize.height + linePadding));
     };
     
-    float MIN_Y = 0;
-    float MAX_Y = getPosY(LINE_COUNT-1);
-    float ACTION_DURATION = 10.0f;
+    float MIN_Y = getPosY(0);
+    float MAX_Y = getPosY(LINE_COUNT);
     
     int cnt = 0;
     
-    for( int i = 0; i < LINE_COUNT /*posY <= MAX_Y*/; ++i ) {
-        auto line = Node::create();
+    for( int i = 0; i < LINE_COUNT; ++i ) {
+        auto line = createLineFunc();
         line->setAnchorPoint(ANCHOR_MB);
-        line->setPosition(Vec2BC(LINE_SIZE, 0, getPosY(i)));
-        line->setContentSize(LINE_SIZE);
-        line->setCascadeOpacityEnabled(true);
+        line->setPosition(Vec2BC(lineSize, 0, getPosY(i)));
         lineLayer->addChild(line);
         
+        /*
         {
-            auto img = Sprite::create(SELECTED_BALL_IMAGE);
-            img->setAnchorPoint(ANCHOR_M);
-            img->setPosition(Vec2MC(LINE_SIZE, 0, 0));
-            img->setScale(LINE_SIZE.height / BALL_SIZE.height);
-            line->addChild(img);
+            auto lbl = Label::createWithTTF(TO_STRING(i), FONT_RETRO, 20, Size::ZERO,
+                                            TextHAlignment::CENTER, TextVAlignment::CENTER);
+            lbl->setAnchorPoint(ANCHOR_M);
+            lbl->setPosition(Vec2MC(lineSize, 0,0));
+            lbl->setTextColor(Color4B::WHITE);
+            lbl->enableOutline(Color4B::BLACK, 3);
+            lbl->setScale((lineSize.height*0.8f) / lbl->getContentSize().height);
+            line->addChild(lbl);
         }
-        
+        */
+         
         // action
         float diff = MAX_Y - line->getPositionY();
-        float duration = ACTION_DURATION * (diff / MAX_Y);
+        float duration = actionDuration * (diff / (MAX_Y-MIN_Y));
         
         auto moveOut = MoveTo::create(duration, Vec2(line->getPositionX(), MAX_Y));
         auto callFunc = CallFunc::create([=]() {
             
             auto moveStart = MoveTo::create(0, Vec2(line->getPositionX(), MIN_Y));
-            auto moveEnd = MoveTo::create(ACTION_DURATION, Vec2(line->getPositionX(), MAX_Y));
+            auto moveEnd = MoveTo::create(actionDuration, Vec2(line->getPositionX(), MAX_Y));
             line->runAction(RepeatForever::create(Sequence::create(moveStart, moveEnd, nullptr)));
         });
         line->runAction(Sequence::create(moveOut, callFunc, nullptr));
@@ -507,4 +539,3 @@ AimController::AimLine AimController::createAimLine() {
     
     return aimLine;
 }
-

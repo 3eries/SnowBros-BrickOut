@@ -39,8 +39,8 @@ private:
     
     enum class ZOrder {
         TILE = 0,
-        BALL,
         AIM_CONTROLLER = 100,
+        BALL,
         MENU,
     };
     
