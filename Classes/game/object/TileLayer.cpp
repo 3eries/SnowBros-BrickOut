@@ -431,6 +431,8 @@ Brick* TileLayer::addBrick(Brick *brick) {
     
     CCASSERT(brick != nullptr, "TileLayer::addBrick error.");
     
+    GAME_MANAGER->addBrick(brick->getData());
+    
     brick->setOnBreakListener([=](Node*) {
         onBrickBreakListener(brick);
     });

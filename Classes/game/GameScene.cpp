@@ -247,7 +247,7 @@ void GameScene::onBoostEnd() {
  */
 void GameScene::onStageClear() {
     
-    showStageClearPopup(GameManager::getStage());
+    showStageClearPopup();
 }
 
 /**
@@ -327,9 +327,9 @@ void GameScene::showPausePopup() {
 /**
  * 스테이지 클리어 팝업 노출
  */
-void GameScene::showStageClearPopup(const StageData &stage) {
+void GameScene::showStageClearPopup() {
     
-    auto popup = StageClearPopup::create(stage);
+    auto popup = StageClearPopup::create(GameManager::getStage(), GAME_MANAGER->getBricks());
     SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
     
     popup->setOnNextListener([=]() {

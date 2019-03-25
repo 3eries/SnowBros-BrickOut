@@ -163,6 +163,21 @@ void GameManager::addScore(int score) {
     setScore(getInstance()->getScore() + score);
 }
 
+/**
+ * 브릭을 추가합니다
+ */
+void GameManager::addBrick(const BrickData &brick) {
+    
+    auto list = SBCollection::find(bricks, [brick](const BrickData &b) -> bool {
+        return brick.brickId == b.brickId;
+    });
+    
+    // 없을때만 추가
+    if( list.size() == 0 ) {
+        bricks.push_back(brick);
+    }
+}
+
 GameEventDispatcher* GameManager::getEventDispatcher() {
     return getInstance()->eventDispatcher;
 }
@@ -444,6 +459,8 @@ void GameManager::onStageChanged() {
     
     auto stage = getStage();
     Log::i("GameManager::onStageChanged: %d-%d(%d)", stage.stage, getFloorInStage(), getFloor().floor);
+    
+    instance->bricks.clear();
     
     getEventDispatcher()->dispatchOnStageChanged(stage);
     onFloorChanged();

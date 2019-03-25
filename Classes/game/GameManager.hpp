@@ -24,6 +24,8 @@
 class GameScene;
 class GameView;
 
+#define GAME_MANAGER    GameManager::getInstance()
+
 /** @class GameManager
  * @brief 이 클래스는 게임 공통 데이터를 관리하고 상태 전환을 담당합니다
  * 별도의 초기화는 필요 없습니다.
@@ -63,6 +65,9 @@ public:
     static void     setScore(int score);
     static void     addScore(int score);
     
+    // Bick
+    void            addBrick(const BrickData &brick);
+    
     // Getter
     static GameEventDispatcher* getEventDispatcher();
     static PhysicsManager*      getPhysicsManager();
@@ -92,6 +97,9 @@ private:
     int score;                                                    // 스코어
     CC_SYNTHESIZE_READONLY(int, continueCount, ContinueCount);    // 이어하기한 횟수
     
+    // 스테이지에 등장한 브릭 리스트, 스테이지 전환 시 리셋
+    CC_SYNTHESIZE_READONLY(BrickDataList, bricks, Bricks);
+                           
 // Game Event
 public:
     static void onGameEnter();
