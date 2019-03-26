@@ -58,6 +58,7 @@ public:
     
     static cocos2d::Rect getBoundingBoxInWorld(cocos2d::Node *n,
                                                float scaleX = 1, float scaleY = 1);
+    static cocos2d::Rect getBoundingBoxInWorld(cocos2d::Node *n, bool scale);
     static cocos2d::Size getChildrenBoundingSize(cocos2d::Node *n);
     
     static bool isPointInside(cocos2d::Node *n, cocos2d::Point point,

@@ -69,6 +69,7 @@ static const std::string DIR_IMG_MAIN_IPAD          = DIR_ADD(DIR_IMG_MAIN, "ipa
 static const std::string DIR_IMG_GAME               = DIR_ADD(DIR_IMG, "game");
 static const std::string DIR_IMG_GAME_IPAD          = DIR_ADD(DIR_IMG_GAME, "ipad");
 static const std::string DIR_IMG_BALL_SKIN          = DIR_ADD(DIR_IMG, "ball_skin");
+static const std::string DIR_IMG_STAGE_CLEAR        = DIR_ADD(DIR_IMG, "clear");
 
 static const std::string DIR_CONTENT                = "content/";
 static const std::string DIR_DATA                   = DIR_ADD(DIR_CONTENT, "data");
@@ -100,6 +101,8 @@ static const std::string FONT_NEW_RECORD            = DIR_FONT + "Sabo-Filled.ot
 static const std::string FONT_FAMOUS_SAYING         = DIR_FONT + "game_over.ttf";
 static const std::string FONT_STAGE                 = DIR_FONT + "ui_stage.fnt";
 static const std::string FONT_STAGE_LARGE           = DIR_FONT + "stage_big.fnt";
+static const std::string FONT_STAGE_LARGE_Y         = DIR_FONT + "stage_big_yellow.fnt";
+static const std::string FONT_COIN_BLUE             = DIR_FONT + "coin_blue.fnt";
 
 // 사운드 경로
 static const std::string DIR_SOUND                  = "sounds/";

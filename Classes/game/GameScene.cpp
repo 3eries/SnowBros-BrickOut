@@ -329,7 +329,10 @@ void GameScene::showPausePopup() {
  */
 void GameScene::showStageClearPopup() {
     
-    auto popup = StageClearPopup::create(GameManager::getStage(), GAME_MANAGER->getBricks());
+    auto stage = GameManager::getStage();
+    int rewardCoin = stage.getRandomCoinDropCount();
+    
+    auto popup = StageClearPopup::create(stage, GAME_MANAGER->getBricks(), rewardCoin);
     SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
     
     popup->setOnNextListener([=]() {

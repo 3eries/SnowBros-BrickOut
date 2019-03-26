@@ -168,8 +168,10 @@ bool SBNodeUtils::hasVisibleParents(Node *n) {
     return true;
 }
 
-Rect SBNodeUtils::getBoundingBoxInWorld(Node *n,
-                                        float scaleX, float scaleY) {
+/**
+ * 노드의 화면상에 절대 좌표를 반환합니다
+ */
+Rect SBNodeUtils::getBoundingBoxInWorld(Node *n, float scaleX, float scaleY) {
     
     /*
      if( !n->isRunning() || !n->getParent() ) {
@@ -216,8 +218,17 @@ Rect SBNodeUtils::getBoundingBoxInWorld(Node *n,
     return Rect(pos.x, pos.y, size.width, size.height);
 }
 
+Rect SBNodeUtils::getBoundingBoxInWorld(Node *n, bool scale) {
+
+    if( scale ) {
+        return getBoundingBoxInWorld(n, n->getScaleX(), n->getScaleY());
+    } else {
+        return getBoundingBoxInWorld(n, 1, 1);
+    }
+}
+
 /**
- *  노드의 자식 좌표, 크기를 계산하여 노드의 크기를 반환한다.
+ * 노드의 자식 좌표, 크기를 계산하여 노드의 크기를 반환한다.
  */
 Size SBNodeUtils::getChildrenBoundingSize(Node *n) {
     

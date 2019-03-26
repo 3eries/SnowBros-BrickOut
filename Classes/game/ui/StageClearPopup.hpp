@@ -19,13 +19,14 @@
 
 class StageClearPopup : public BasePopup {
 public:
-    static StageClearPopup* create(const StageData &stage, BrickDataList bricks);
+    static StageClearPopup* create(const StageData &stage, BrickDataList bricks,
+                                   int rewardCoin);
     ~StageClearPopup();
     
 private:
     StageClearPopup();
     
-    bool init(const StageData &stage, BrickDataList bricks);
+    bool init(const StageData &stage, BrickDataList bricks, int rewardCoin);
     void onEnter() override;
     
     void initBackgroundView() override;
@@ -33,7 +34,7 @@ private:
     
     void initTitle();
     void initBrick();
-    void initMoney();
+    void initCoin();
     void initMenu();
     
 public:
@@ -44,37 +45,13 @@ public:
     
 private:
     StageData stage;
-    BrickDataList bossBricks;
-    BrickDataList normalBricks;
+    BrickDataList bossBrickDatas;
+    BrickDataList normalBrickDatas;
+    int rewardCoin;
     
     CC_SYNTHESIZE(SBCallback, onNextListener, OnNextListener);
     
-    /**
-     * 브릭이 표시되는 1개 층
-     */
-    class BrickLayer : public cocos2d::Node {
-    public:
-        CREATE_FUNC(BrickLayer);
-        ~BrickLayer();
-        
-        bool add(SBAnimationSprite *brick);
-        void addFinish();
-        
-        cocos2d::Size        getChildrenBoundingSize();
-        float                getBrickTotalWidth();
-        static cocos2d::Size getBrickSize(cocos2d::Node *brick);
-        
-    private:
-        BrickLayer();
-        
-        bool init() override;
-        
-        CC_SYNTHESIZE_READONLY(std::vector<cocos2d::Node*>, bricks, Bricks);
-        float brickPosX;
-    };
-    
-    std::vector<BrickLayer*>    brickLayers;
-    std::vector<cocos2d::Node*> brickNodes;
+    std::vector<cocos2d::Node*> bricks;
     int brickEnterIndex;
 };
 
