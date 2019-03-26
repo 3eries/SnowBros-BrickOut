@@ -109,6 +109,7 @@
 		1DC2B7E4222EE30800C8EF98 /* SBTransition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC2B7E2222EE30800C8EF98 /* SBTransition.cpp */; };
 		1DC8553721902C9F007E180C /* GiftManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8553521902C9F007E180C /* GiftManager.cpp */; };
 		1DC8554121902FB2007E180C /* GiftListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8553F21902FB2007E180C /* GiftListener.cpp */; };
+		1DD308DB224ABBDB002A50E8 /* BannerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD308D9224ABBDB002A50E8 /* BannerView.cpp */; };
 		1DD38B5720FC93D200811604 /* SBActionHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD38B5520FC93D200811604 /* SBActionHelper.cpp */; };
 		1DD6979C21B84EAC005FDC62 /* GameMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD6979A21B84EAC005FDC62 /* GameMap.cpp */; };
 		1DD6979F21B84ED1005FDC62 /* GamePhysics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD6979D21B84ED1005FDC62 /* GamePhysics.cpp */; };
@@ -404,6 +405,8 @@
 		1DC8553821902CA9007E180C /* GiftDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GiftDefine.h; sourceTree = "<group>"; };
 		1DC8553F21902FB2007E180C /* GiftListener.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GiftListener.cpp; sourceTree = "<group>"; };
 		1DC8554021902FB2007E180C /* GiftListener.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GiftListener.hpp; sourceTree = "<group>"; };
+		1DD308D9224ABBDB002A50E8 /* BannerView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BannerView.cpp; sourceTree = "<group>"; };
+		1DD308DA224ABBDB002A50E8 /* BannerView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BannerView.hpp; sourceTree = "<group>"; };
 		1DD38B5520FC93D200811604 /* SBActionHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBActionHelper.cpp; sourceTree = "<group>"; };
 		1DD38B5620FC93D200811604 /* SBActionHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBActionHelper.hpp; sourceTree = "<group>"; };
 		1DD6979A21B84EAC005FDC62 /* GameMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameMap.cpp; sourceTree = "<group>"; };
@@ -839,6 +842,8 @@
 		1D45C49820A8A9DC007E63AD /* ui */ = {
 			isa = PBXGroup;
 			children = (
+				1DD308D9224ABBDB002A50E8 /* BannerView.cpp */,
+				1DD308DA224ABBDB002A50E8 /* BannerView.hpp */,
 				1DA723E82109FEAE002B7ADE /* CommonLoadingBar.cpp */,
 				1DA723EB2109FEAE002B7ADE /* CommonLoadingBar.hpp */,
 				1D8F54A220D2A8C4009E2201 /* LogoView.cpp */,
@@ -1515,6 +1520,7 @@
 				1D8F54A420D2A8C4009E2201 /* LogoView.cpp in Sources */,
 				1DEEE24721B525BA00DD4776 /* Define.cpp in Sources */,
 				1DA0409E21037F6B001980BA /* SBJniHelper.cpp in Sources */,
+				1DD308DB224ABBDB002A50E8 /* BannerView.cpp in Sources */,
 				1D86438D2152385D001841C9 /* SBSecurity.cpp in Sources */,
 				1D3DF50E210466EE0055B66E /* PluginPlay.cpp in Sources */,
 				1D7CC52A223AB27500671D5B /* TileLayer.cpp in Sources */,
