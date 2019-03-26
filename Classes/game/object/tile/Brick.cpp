@@ -246,6 +246,7 @@ void Brick::setImage(BrickImageType type, bool isRunAnimation) {
     switch( type ) {
         case BrickImageType::IDLE:        image->setAnimation(anim);       break;
         case BrickImageType::DAMAGE:      image->setAnimation(anim, 1);    break;
+        case BrickImageType::HIDE:        image->setAnimation(anim);       break;
         default:
             CCASSERT(false, "Brick::setImage error.");
             break;

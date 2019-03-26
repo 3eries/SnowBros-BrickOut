@@ -104,6 +104,10 @@ Animation* ContentResourceHelper::createBrickAnimation(const BrickData &data, Br
         case BrickImageType::DAMAGE: {
             return SBNodeUtils::createAnimation(data.damageAnims, data.damageAnimInterval);
         }
+
+        case BrickImageType::HIDE: {
+            return SBNodeUtils::createAnimation(BRICK_HIDE_ANIM_FILES(data.image), data.idleAnimInterval);
+        }
             
         default:
             CCASSERT(false, "ContentResourceHelper::createBrickAnimation error.");

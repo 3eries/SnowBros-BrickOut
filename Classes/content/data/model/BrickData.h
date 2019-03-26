@@ -26,6 +26,7 @@ enum class BrickImageType {
     NONE,
     IDLE,
     DAMAGE,
+    HIDE,       // 고스트 브릭 전용
 };
 
 static const int BRICK_INFINITY_HP = -1;

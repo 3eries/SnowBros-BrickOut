@@ -30,6 +30,9 @@ ContentResourceHelper::getBrickAnimationFiles(__image__, "idle")
 #define BRICK_DAMAGE_ANIM_FILES(__image__) \
 ContentResourceHelper::getBrickAnimationFiles(__image__, "damage")
 
+#define BRICK_HIDE_ANIM_FILES(__image__) \
+ContentResourceHelper::getBrickAnimationFiles(__image__, "hide")
+
 #define BRICK_WHITE_IMAGE(__image__) \
 std::string("white_" + __image__)
 

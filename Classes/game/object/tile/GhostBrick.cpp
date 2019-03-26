@@ -79,14 +79,22 @@ void GhostBrick::updateOpacity() {
         setCollisionLocked(true);
         setBodyActive(false);
         
-        runAction(FadeTo::create(TILE_ENTER_DURATION, 255*0.3f));
+        auto fadeOut = FadeTo::create(TILE_ENTER_DURATION, 255*0.3f);
+        auto callFunc = CallFunc::create([=]() {
+            this->setImage(BrickImageType::HIDE, true);
+        });
+        runAction(Sequence::create(fadeOut, callFunc, nullptr));
     }
     // 반투명화
     else {
         ghostState = false;
         setCollisionLocked(false);
         setBodyActive(true);
-        
-        runAction(FadeIn::create(TILE_ENTER_DURATION));
+
+        auto fadeIn = FadeIn::create(TILE_ENTER_DURATION);
+        auto callFunc = CallFunc::create([=]() {
+            this->setImage(BrickImageType::IDLE, true);
+        });
+        runAction(Sequence::create(fadeIn, callFunc, nullptr));
     }
 }
