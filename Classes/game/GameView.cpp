@@ -721,9 +721,8 @@ void GameView::withdrawBalls(float delay) {
     stopWithdrawGuide();
     
     // 발사된 볼 회수
-    Vec2 movePosition = aimController->getStartPosition();
+    Vec2 finalPosition = aimController->getStartPosition();
     
-    // for( auto ball : balls ) {
     for( int i = 0; i < shootIndex; ++i ) {
         auto ball = balls[i];
         
@@ -734,31 +733,41 @@ void GameView::withdrawBalls(float delay) {
         ball->fallToFloor();
          
         // 시작 위치로 이동
+        ball->stopAllActions();
+        
         Vec2 spreadPos(ball->getPosition() + Vec2(random<int>(-80, 80), random<int>(50, 80)));
         spreadPos.x = MIN(MAP_BOUNDING_BOX.getMaxX()*0.9f, spreadPos.x);
         spreadPos.x = MAX(MAP_BOUNDING_BOX.getMinX()*1.1f, spreadPos.x);
         spreadPos.y = MIN(MAP_BOUNDING_BOX.getMaxY()*0.9f, spreadPos.y);
         spreadPos.y = MAX(MAP_BOUNDING_BOX.getMinY()*1.1f, spreadPos.y);
         
-        auto spread = MoveTo::create(0.07f, spreadPos);
+        auto spread = Spawn::create(MoveTo::create(0.07f, spreadPos),
+                                    RotateTo::create(0.07f, SBMath::getDegree(spreadPos, finalPosition)),
+                                    nullptr);
         auto delay = DelayTime::create(random<int>(0,3) * 0.1f);
-        auto move = MoveTo::create(BALL_WITHDRAW_MOVE_DURATION, movePosition);
         auto callFunc = CallFunc::create([=]() {
-            
-            // 두번째 볼부터 hide
-            if( i > 0 ) {
-                ball->setVisible(false);
-            }
+        
+            auto move = MoveTo::create(BALL_WITHDRAW_MOVE_DURATION, finalPosition);
+            auto callFunc = CallFunc::create([=]() {
+                
+                ball->setRotation(0);
+                
+                // 두번째 볼부터 hide
+                if( i > 0 ) {
+                    ball->setVisible(false);
+                }
+            });
+            ball->runAction(Sequence::create(move, callFunc, nullptr));
         });
-        ball->runAction(Sequence::create(spread, delay, move, callFunc, nullptr));
+        ball->runAction(Sequence::create(spread, delay, callFunc, nullptr));
     }
     
     // 발사되지 않은 볼 회수
     for( int i = shootIndex; i < balls.size(); ++i ) {
         auto ball = balls[i];
         
-        if( !ball->getPosition().equals(movePosition) ) {
-            auto move = MoveTo::create(BALL_JOIN_MOVE_DURATION, movePosition);
+        if( !ball->getPosition().equals(finalPosition) ) {
+            auto move = MoveTo::create(BALL_JOIN_MOVE_DURATION, finalPosition);
             ball->runAction(move);
         }
     }

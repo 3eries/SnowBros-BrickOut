@@ -159,7 +159,7 @@ bool Ball::afterStep() {
     syncBodyToNode();
     
     if( !isSyncLocked() ) {
-        image->setRotation(getBodyVelocityAngle());
+        setRotation(getBodyVelocityAngle());
     }
     
 //    const float angle = SBMath::getDegree(Vec2::ZERO, MTP(getBody()->GetLinearVelocity()));
@@ -182,7 +182,7 @@ void Ball::shoot(b2Vec2 velocity) {
     setBodyAwake(true);
     setCollisionLocked(false);
     setOpacity(255);
-    image->setRotation(0);
+    setRotation(0);
     
     // 발사
     getBody()->SetLinearVelocity(velocity);
@@ -206,7 +206,7 @@ void Ball::fallToFloor() {
     setCollisionLocked(true);
     setSyncLocked(true);
     
-    image->runAction(RotateTo::create(0.05f, 0));
+    runAction(RotateTo::create(0.05f, 0));
 }
 
 void Ball::checkMovement(float dt) {

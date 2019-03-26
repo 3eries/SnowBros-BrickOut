@@ -108,7 +108,7 @@ bool DemoBall::afterStep() {
     syncBodyToNode();
     
     if( !isSyncLocked() ) {
-        image->setRotation(getBodyVelocityAngle());
+        setRotation(getBodyVelocityAngle());
     }
     
     // check movement
@@ -137,7 +137,7 @@ void DemoBall::shoot(b2Vec2 velocity) {
     setBodyAwake(true);
     setCollisionLocked(false);
     setOpacity(255);
-    image->setRotation(0);
+    setRotation(0);
     
     // 발사
     getBody()->SetLinearVelocity(velocity);
@@ -192,5 +192,5 @@ void DemoBall::onContactFloor() {
     setFall(true);
     setBodyAwake(false);
     setCollisionLocked(true);
-    image->runAction(RotateTo::create(0.05f, 0));
+    runAction(RotateTo::create(0.05f, 0));
 }
