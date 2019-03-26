@@ -1064,7 +1064,7 @@ bool GameView::checkStageClear() {
  */
 void GameView::showStageLabel(int stage) {
     
-    auto label = Label::createWithBMFont(FONT_GAME_STAGE_LARGE, STR_FORMAT("STAGE %d", stage),
+    auto label = Label::createWithBMFont(FONT_STAGE_LARGE, STR_FORMAT("S %d", stage),
                                          TextHAlignment::CENTER);
     label->setAnchorPoint(ANCHOR_M);
     addChild(label);
