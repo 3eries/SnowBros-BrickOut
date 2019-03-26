@@ -253,18 +253,17 @@ void TopMenu::initStage() {
     const auto bgSize(getContentSize());
     
     // 스테이지
-    // game_bg_stage.png Vec2TL(76, -36) , Size(144, 72)
+    // game_bg_stage.png Vec2TL(88, -36) , Size(168, 72)
     auto stageBg = Sprite::create(DIR_IMG_GAME + "game_bg_stage.png");
     stageBg->setAnchorPoint(ANCHOR_M);
-    stageBg->setPosition(Vec2TL(bgSize, 76, -36));
+    stageBg->setPosition(Vec2TL(bgSize, 88, -36));
     addChild(stageBg, 1);
     
-    // BM_font Vec2TL(76, -44) , Size(64, 40)
-    auto stageLabel = Label::createWithBMFont(FONT_GAME_STAGE, "1",
-                                              TextHAlignment::CENTER);
+    // BM_font Vec2TL(88, -44) , Size(64, 40)
+    auto stageLabel = Label::createWithBMFont(FONT_STAGE, "1", TextHAlignment::CENTER);
     stageLabel->setTag(Tag::STAGE);
     stageLabel->setAnchorPoint(ANCHOR_M);
-    stageLabel->setPosition(Vec2TL(bgSize, 76, -44 + 4));
+    stageLabel->setPosition(Vec2TL(bgSize, 88, -44));
     addChild(stageLabel, 1);
     
     // Floor 진행바
@@ -274,10 +273,10 @@ void TopMenu::initStage() {
     floorProgressBar.layer = layer;
     
     // Gage
-    // game_gage_stage_bg.png Vec2TC(8, -38) , Size(432, 52)
+    // game_gage_stage_bg.png Vec2TC(20, -38) , Size(408, 52)
     auto gageBg = Sprite::create(DIR_IMG_GAME + "game_gage_stage_bg.png");
     gageBg->setAnchorPoint(ANCHOR_M);
-    gageBg->setPosition(Vec2TC(bgSize, 8, -38));
+    gageBg->setPosition(Vec2TC(bgSize, 20, -38));
     layer->addChild(gageBg);
     
     auto gageBgSize = gageBg->getContentSize();
@@ -297,11 +296,11 @@ void TopMenu::initStage() {
     layer->addChild(gageBossIcon);
     
     // Label
-    // 12/34 size:30 stroke:3 Vec2TC(7, -14) , Size(119, 31)
+    // 12/34 size:30 stroke:3 Vec2TC(19, -14) , Size(119, 31)
     floorProgressBar.label = Label::createWithTTF("", FONT_COMMODORE, 30, Size::ZERO,
                                                   TextHAlignment::CENTER, TextVAlignment::CENTER);
     floorProgressBar.label->setAnchorPoint(ANCHOR_M);
-    floorProgressBar.label->setPosition(Vec2TC(bgSize, 7, -14));
+    floorProgressBar.label->setPosition(Vec2TC(bgSize, 19, -14));
     floorProgressBar.label->setTextColor(Color4B::WHITE);
     floorProgressBar.label->enableOutline(Color4B::BLACK, 3);
     layer->addChild(floorProgressBar.label);
