@@ -49,6 +49,12 @@ private:
         
         float32 ReportFixture(b2Fixture *fixture, const b2Vec2 &point, const b2Vec2 &normal, float32 fraction) {
             
+            auto body = fixture->GetBody();
+            
+            if( !body->IsAwake() ) {
+                return -1;
+            }
+            
             this->fixture = fixture;
             this->point = point;
             this->normal = normal;
