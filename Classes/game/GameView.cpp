@@ -299,7 +299,7 @@ void GameView::onNextFloor(const FloorData &floor) {
         return;
     }
     
-    // 마지막 칸에 있는 아이템 획득
+    // 마지막 칸에 있는 아이템 자동 획득
     auto items = tileLayer->getTiles<Item*>(1);
     
     for( auto item : items ) {
@@ -438,9 +438,9 @@ void GameView::onBrickBreak(Brick *brick) {
         }, STAGE_CLEAR_DELAY, true);
         
         // 볼 회수
-        withdrawBalls(0.5f);
+        withdrawBall(0.5f);
         
-        // 남아있는 아이템 획득
+        // 남아있는 아이템 자동 획득
         for( auto item : items ) {
             eatItem((Item*)item, false);
         }
@@ -681,7 +681,7 @@ void GameView::shoot(const Vec2 &endPosition) {
     
     SBDirector::postDelayed(this, [=]() {
         isWithdrawEnabled = true;
-        schedule(CC_CALLBACK_1(GameView::checkAutoWithdrawBalls, this), 1, SCHEDULER_CHECK_AUTO_WITHDRAW);
+        schedule(CC_CALLBACK_1(GameView::checkAutoWithdrawBall, this), 1, SCHEDULER_CHECK_AUTO_WITHDRAW);
     }, SHOOT_INTERVAL*2);
 }
 
@@ -693,7 +693,7 @@ void GameView::shootStop() {
 /**
  * 모든 볼을 회수합니다
  */
-void GameView::withdrawBalls(float delay) {
+void GameView::withdrawBall(float delay) {
     
     if( isWithdraw || !isWithdrawEnabled ) {
         return;
@@ -703,7 +703,7 @@ void GameView::withdrawBalls(float delay) {
     
     if( delay > 0 ) {
         SBDirector::postDelayed(this, [=]() {
-            this->withdrawBalls();
+            this->withdrawBall();
         }, delay);
         
         return;
@@ -781,7 +781,7 @@ void GameView::withdrawBalls(float delay) {
 /**
  * 자동 볼 회수
  */
-void GameView::checkAutoWithdrawBalls(float dt) {
+void GameView::checkAutoWithdrawBall(float dt) {
     
     if( !isWithdrawEnabled ) {
         unschedule(SCHEDULER_CHECK_AUTO_WITHDRAW);
@@ -813,7 +813,7 @@ void GameView::checkAutoWithdrawBalls(float dt) {
     });
     
     if( bricks.size() == 0 ) {
-        withdrawBalls();
+        withdrawBall();
     }
 }
 
@@ -1136,7 +1136,7 @@ void GameView::onTouchMoved(Touch *touch, Event *event) {
         Log::i("onTouchMoved dist: %f, isDragged: %d, fallenBallCount: %d", dist, isDragged, fallenBallCount);
         
         if( isDragged ) {
-            withdrawBalls();
+            withdrawBall();
         }
     }
 }

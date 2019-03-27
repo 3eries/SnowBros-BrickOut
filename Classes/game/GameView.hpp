@@ -111,8 +111,8 @@ private:
     void shoot(const cocos2d::Vec2 &endPosition);
     void shootStop();
     
-    void withdrawBalls(float delay = 0);
-    void checkAutoWithdrawBalls(float dt);
+    void withdrawBall(float delay = 0);
+    void checkAutoWithdrawBall(float dt);
     
     void checkWithdrawGuide(float dt);
     void stopWithdrawGuide();
