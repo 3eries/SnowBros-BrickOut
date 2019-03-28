@@ -83,12 +83,13 @@ private:
     
     CC_SYNTHESIZE_READONLY(std::vector<Game::Tile*>, tiles, Tiles);
     CC_SYNTHESIZE(int, ballCount, BallCount);
-    CC_SYNTHESIZE(int, friendsBallCount, FriendsBallCount);
+    CC_SYNTHESIZE(int, friendsPower, FriendsPower);
     
     struct RandomEngine {
         std::mt19937 brickPosition;
         std::mt19937 eliteBrickDrop;
         std::mt19937 ballCountUp;
+        std::mt19937 friendsPowerUp;
     };
     RandomEngine randomEngine;
     
@@ -134,6 +135,7 @@ public:
     BrickList                getBricks();
     BrickList                getBricks(const std::string &brickId);
     ItemList                 getItems();
+    ItemList                 getItems(ItemType type);
 
     Game::Tile*              getTile(const TilePosition &pos);
     bool                     isExistTile(const TilePosition &pos,

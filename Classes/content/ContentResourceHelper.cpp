@@ -94,6 +94,11 @@ string ContentResourceHelper::getFriendAnimationFile(const string &friendId) {
     return DIR_FRIEND + friendId + ANIM_EXT;
 }
 
+string ContentResourceHelper::getFriendBallImageFile(const string &friendId) {
+    
+    return DIR_FRIEND + STR_FORMAT("%s_ball.png", friendId.c_str());
+}
+
 Animation* ContentResourceHelper::createBrickAnimation(const BrickData &data, BrickImageType type) {
     
     switch( type ) {

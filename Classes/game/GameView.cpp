@@ -44,6 +44,9 @@ static const float  DRAG_MIN_DIST                   = 200; // 드래그 판단 �
 
 GameView::GameView() :
 gameMgr(GameManager::getInstance()),
+aimController(nullptr),
+tileLayer(nullptr),
+friendsLayer(nullptr),
 tunnelingCount(0),
 tunnelingCountLabel(nullptr),
 bodyCountLabel(nullptr) {
@@ -68,10 +71,10 @@ bool GameView::init() {
     initBg();
     initMenu();
     initMap();
-    initBall();
+    initAimController();
     initTile();
     initFriends();
-    initAimController();
+    initBall();
     initTouchListener();
     initGameListener();
     initPhysicsListener();
@@ -97,6 +100,16 @@ void GameView::onEnterTransitionDidFinish() {
     line->setPosition(Vec2(0, (MAP_BOUNDING_BOX.getMidY() + 200)));
     line->setContentSize(Size(SB_WIN_SIZE.width, 10));
     addChild(line, INT_MAX);
+    */
+    
+    /*
+    SBDirector::postDelayed(this, [=]() {
+        GAME_MANAGER->addBrick(Database::getBrick("brick_00001"));
+        GAME_MANAGER->addBrick(Database::getBrick("brick_00002"));
+        GAME_MANAGER->addBrick(Database::getBrick("brick_00003"));
+        GAME_MANAGER->addBrick(Database::getBrick("brick_10001"));
+        GameManager::onStageClear();
+    }, 4, true);
     */
 }
 
@@ -131,13 +144,6 @@ void GameView::onGameExit() {
  */
 void GameView::onGameReset() {
     
-    addBallQueue.clear();
-    
-#if ENABLE_TEST_MENU
-    addBall(TEST_HELPER->getFirstBallCount());
-#else
-    addBall(GAME_CONFIG->getFirstBallCount());
-#endif
 }
 
 /**
@@ -396,11 +402,17 @@ void GameView::onShootFinished() {
 }
 
 /**
- * 모든 볼 추락 완료
+ * 프렌즈 볼을 포함한 모든 볼 추락 완료
  */
-void GameView::onFallFinished() {
+void GameView::onAllBallFallFinished() {
     
-    Log::i("onFallFinished");
+    Log::i("onAllBallFallFinished flag: %d", isAllBallFallFinished);
+    
+    if( isAllBallFallFinished ) {
+        return;
+    }
+    
+    isAllBallFallFinished = true;
     
     unschedule(SCHEDULER_CHECK_AUTO_WITHDRAW);
     updateBallCountUI();
@@ -417,6 +429,20 @@ void GameView::onFallFinished() {
     
     // 다음 층으로 전환
     GameManager::onNextFloor();
+}
+
+/**
+ * 프렌즈 볼 추락 완료
+ */
+void GameView::onFriendsBallFallFinished() {
+    
+    Log::i("onFriendsBallFallFinished isUserBallFallFinished: %d", isUserBallFallFinished());
+    
+    // 모든 볼 추락
+    if( isUserBallFallFinished() ) {
+        stopWithdrawGuide();
+        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onAllBallFallFinished, this), 0.1f);
+    }
 }
 
 /**
@@ -568,6 +594,11 @@ void GameView::onContactFloor(Ball *ball) {
         return;
     }
 
+    // 프렌즈 볼은 처리하지 않음
+    if( dynamic_cast<FriendBall*>(ball) ) {
+        return;
+    }
+    
     ++fallenBallCount;
 //    Log::i("onContactFloor fallenBallCount: %d", fallenBallCount);
     
@@ -593,10 +624,14 @@ void GameView::onContactFloor(Ball *ball) {
     ball->runAction(Sequence::create(move, callFunc, nullptr));
     
     // 모든 볼 추락
-    if( fallenBallCount == balls.size() ) {
-        stopWithdrawGuide();
-        
-        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onFallFinished, this), BALL_JOIN_MOVE_DURATION*0.5f);
+    if( isUserBallFallFinished() ) {
+        Log::i("GameView::onContactFloor user ball fall finished.");
+    
+        if( isFriendsBallFallFinished() ) {
+            stopWithdrawGuide();
+            SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onAllBallFallFinished, this),
+                                    BALL_JOIN_MOVE_DURATION*0.5f);
+        }
     }
 }
 
@@ -605,8 +640,11 @@ void GameView::onContactFloor(Ball *ball) {
  */
 void GameView::shoot(const Vec2 &endPosition) {
     
+    Log::i("GameView::shoot");
+    
     shootIndex = 0;
     fallenBallCount = 0;
+    isAllBallFallFinished = false;
     
     auto brickDownBtn = getChildByTag(Tag::BTN_BRICK_DOWN);
     brickDownBtn->stopAllActions();
@@ -651,6 +689,8 @@ void GameView::shoot(const Vec2 &endPosition) {
             return;
         }
         
+        // Log::i("GameView::shoot ballIndex: %d", shootIndex);
+        
         auto ball = balls[shootIndex];
         
         // 발사
@@ -664,6 +704,11 @@ void GameView::shoot(const Vec2 &endPosition) {
             ballCountLabel->setString("X" + TO_STRING(balls.size() - shootIndex));
             // 다음볼 show
             balls[shootIndex]->setVisible(true);
+            
+            // 프렌즈 볼 슈팅
+            if( shootIndex >= balls.size()*0.3f && !friendsLayer->isShot() ) {
+                friendsLayer->shoot(this->tileLayer);
+            }
         }
         // 슈팅 완료
         else {
@@ -687,6 +732,7 @@ void GameView::shoot(const Vec2 &endPosition) {
 
 void GameView::shootStop() {
     
+    friendsLayer->shootStop();
     unschedule(SCHEDULER_SHOOT);
 }
 
@@ -709,7 +755,7 @@ void GameView::withdrawBall(float delay) {
         return;
     }
     
-    CCLOG("withdrawBalls shootIndex: %d", shootIndex);
+    Log::i("GameView::withdrawBall shootIndex: %d", shootIndex);
     
     shootStop();
     
@@ -719,6 +765,9 @@ void GameView::withdrawBall(float delay) {
     ballCountLabel->setVisible(false);
     
     stopWithdrawGuide();
+    
+    // 프렌즈 볼 회수
+    friendsLayer->withdrawBall();
     
     // 발사된 볼 회수
     Vec2 finalPosition = aimController->getStartPosition();
@@ -774,7 +823,7 @@ void GameView::withdrawBall(float delay) {
     
     // 모든 볼 추락 완료
     SBDirector::postDelayed(this, [=]() {
-        this->onFallFinished();
+        this->onAllBallFallFinished();
     }, BALL_WITHDRAW_MOVE_DURATION+0.5f);
 }
 
@@ -945,6 +994,7 @@ void GameView::eatItem(Item *item, bool isFallAction) {
         // 프렌즈 볼 개수 증가
         case ItemType::FRIENDS_POWER_UP: {
             friendsLayer->eatFriendsItem(item);
+            tileLayer->setFriendsPower(friendsLayer->getFriendsPower());
         } break;
             
         default:
@@ -965,6 +1015,7 @@ void GameView::addBall(int count, bool updateUI) {
     for( int i = 0; i < count && balls.size() <= MAX_BALL_COUNT; ++i ) {
         auto ball = Ball::create();
         ball->setPosition(aimController->getStartPosition());
+        ball->setVisible(false);
         ball->setBodyAwake(false);
         ball->setCollisionLocked(true);
         addChild(ball, (int)ZOrder::BALL);
@@ -1021,9 +1072,9 @@ void GameView::addBallFromQueue() {
                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
         label->setAnchorPoint(ANCHOR_MB);
         label->setPosition(ballCountLabel->getPosition() + Vec2(0, 40));
-        label->setColor(Color3B(119, 255, 0));
+        label->setTextColor(Color4B(119, 255, 0, 255));
         label->enableOutline(Color4B::BLACK, 3);
-        addChild(label, SBZOrder::BOTTOM);
+        addChild(label, SBZOrder::MIDDLE);
         
         auto move = MoveBy::create(0.8f, Vec2(0, 70));
         auto remove = RemoveSelf::create();
@@ -1050,6 +1101,30 @@ void GameView::removeBall(Ball *ball) {
     
     // remove ball
     ball->setNeedRemove(true);
+}
+
+/**
+ * 모든 볼이 추락했는지를 반환합니다
+ */
+//bool GameView::isAllBallFallFinished() {
+//
+//    return isUserBallFallFinished() && isFriendsBallFallFinished();
+//}
+
+/**
+ * 모든 유저 볼이 추락했는지를 반환합니다
+ */
+bool GameView::isUserBallFallFinished() {
+    
+    return fallenBallCount == balls.size();
+}
+
+/**
+ * 모든 프렌즈 볼이 추락했는지를 반환합니다
+ */
+bool GameView::isFriendsBallFallFinished() {
+    
+    return friendsLayer->isFallFinished();
 }
 
 /**
@@ -1256,18 +1331,16 @@ void GameView::initMap() {
 }
 
 /**
- * 볼 초기화
+ * 조준 컨트롤러 초기화
  */
-void GameView::initBall() {
+void GameView::initAimController() {
     
-    // 볼 갯수 표시 라벨
-    ballCountLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
-                                          TextHAlignment::CENTER, TextVAlignment::CENTER);
-    ballCountLabel->setAnchorPoint(ANCHOR_M);
-    ballCountLabel->setPosition(Vec2BC(0, 25));
-    ballCountLabel->setTextColor(Color4B::WHITE);
-    ballCountLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(ballCountLabel);
+    aimController = AimController::create();
+    aimController->setEnabled(false);
+    aimController->setOnAimingStartListener(CC_CALLBACK_0(GameView::onAimingStart, this));
+    aimController->setOnAimingEndListener(CC_CALLBACK_0(GameView::onAimingEnd, this));
+    aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
+    addChild(aimController, (int)ZOrder::AIM_CONTROLLER);
 }
 
 /**
@@ -1288,7 +1361,7 @@ void GameView::initTile() {
     
 #if DEBUG_DRAW_TILE
     auto parent = getChildByTag(Tag::DEBUG_DRAW_VIEW);
-
+    
     const int TILE_ROWS = GAME_CONFIG->getTileRows();
     const int TILE_COLUMNS = GAME_CONFIG->getTileColumns();
     
@@ -1301,7 +1374,7 @@ void GameView::initTile() {
             tile->setPosition(Game::Tile::convertToTilePosition(x, y));
             tile->setContentSize(MEASURE_TILE_SIZE(1, 1));
             parent->addChild(tile, -1);
-
+            
             auto label = Label::createWithTTF(STR_FORMAT("%d,%d", x, y), FONT_COMMODORE, 20);
             label->setAnchorPoint(ANCHOR_M);
             label->setPosition(Vec2MC(tile->getContentSize(), 0, 0));
@@ -1318,21 +1391,34 @@ void GameView::initTile() {
 void GameView::initFriends() {
     
     friendsLayer = FriendsLayer::create();
+    friendsLayer->setOnFallFinishedListener(CC_CALLBACK_0(GameView::onFriendsBallFallFinished, this));
     friendsLayer->updatePosition(FIRST_SHOOTING_POSITION, false);
-    addChild(friendsLayer);
+    addChild(friendsLayer, (int)ZOrder::FRIENDS);
+    
+    tileLayer->setFriendsPower(friendsLayer->getFriendsPower());
 }
 
 /**
- * 조준 컨트롤러 초기화
+ * 볼 초기화
  */
-void GameView::initAimController() {
+void GameView::initBall() {
     
-    aimController = AimController::create();
-    aimController->setEnabled(false);
-    aimController->setOnAimingStartListener(CC_CALLBACK_0(GameView::onAimingStart, this));
-    aimController->setOnAimingEndListener(CC_CALLBACK_0(GameView::onAimingEnd, this));
-    aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
-    addChild(aimController, (int)ZOrder::AIM_CONTROLLER);
+    // 볼 갯수 표시 라벨
+    ballCountLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
+                                          TextHAlignment::CENTER, TextVAlignment::CENTER);
+    ballCountLabel->setAnchorPoint(ANCHOR_M);
+    ballCountLabel->setPosition(Vec2BC(0, 25));
+    ballCountLabel->setTextColor(Color4B::WHITE);
+    ballCountLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(ballCountLabel, (int)ZOrder::BALL);
+    
+#if ENABLE_TEST_MENU
+    addBall(TEST_HELPER->getFirstBallCount());
+#else
+    addBall(GAME_CONFIG->getFirstBallCount());
+#endif
+    
+    balls[0]->setVisible(true);
 }
 
 /**

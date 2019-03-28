@@ -7,6 +7,10 @@
 
 #include "FriendsLayer.hpp"
 
+#include "GameConfiguration.hpp"
+#include "User.hpp"
+
+#include "TileLayer.hpp"
 #include "tile/Item.hpp"
 
 USING_NS_CC;
@@ -16,8 +20,9 @@ using namespace std;
 #define        SLOT_COUNT          5
 #define        FRIENDS_POS_Y       (SB_WIN_SIZE.height*0.5f)
 
-FriendsLayer::FriendsLayer() {
-    
+FriendsLayer::FriendsLayer() :
+onFallFinishedListener(nullptr),
+friendsPower(1) {
 }
 
 FriendsLayer::~FriendsLayer() {
@@ -48,6 +53,203 @@ void FriendsLayer::cleanup() {
 }
 
 /**
+ * 프렌즈 초기화
+ */
+void FriendsLayer::initFriends() {
+    
+    auto friendDatas = User::getFriendsDeck();
+    random_shuffle(friendDatas.begin(), friendDatas.end());
+    
+    for( int i = 0; i < friendDatas.size(); ++i ) {
+        auto friendNode = createFriend(friendDatas[i]);
+        friendNode->setOnFallFinishedListener(CC_CALLBACK_1(FriendsLayer::onFallFinished, this));
+        friendNode->setCascadeColorEnabled(true);
+        addChild(friendNode);
+        
+        friends.push_back(friendNode);
+    }
+    
+    // 슬롯 리스트 생성
+    int w = SB_WIN_SIZE.width / SLOT_COUNT;
+    
+    for( int i = 0; i < SLOT_COUNT; ++i ) {
+        Slot slot;
+        slot.index = i;
+        slot.pos = Vec2BL((w*i) + (w*0.5f), FRIENDS_POS_Y);
+        slots.push_back(slot);
+        
+        /*
+         auto n = LayerColor::create(Color4B(0,0,255,255*0.5f));
+         n->setIgnoreAnchorPointForPosition(false);
+         n->setAnchorPoint(ANCHOR_M);
+         n->setPosition(slot.pos);
+         n->setContentSize(Size(70, 75));
+         addChild(n);
+         */
+    }
+}
+
+/**
+ * 게임 리스너 초기화
+ */
+void FriendsLayer::initGameListener() {
+    
+    auto listener = GameEventListener::create(this);
+    listener->onGameEnter               = CC_CALLBACK_0(FriendsLayer::onGameEnter, this);
+    listener->onGameExit                = CC_CALLBACK_0(FriendsLayer::onGameExit, this);
+    listener->onGameReset               = CC_CALLBACK_0(FriendsLayer::onGameReset, this);
+    listener->onGameStart               = CC_CALLBACK_0(FriendsLayer::onGameStart, this);
+    listener->onGameRestart             = CC_CALLBACK_0(FriendsLayer::onGameRestart, this);
+    listener->onGameOver                = CC_CALLBACK_0(FriendsLayer::onGameOver, this);
+    listener->onGameContinue            = CC_CALLBACK_0(FriendsLayer::onGameContinue, this);
+    listener->onGameResult              = CC_CALLBACK_0(FriendsLayer::onGameResult, this);
+    listener->onBoostStart              = CC_CALLBACK_0(FriendsLayer::onBoostStart, this);
+    listener->onBoostEnd                = CC_CALLBACK_0(FriendsLayer::onBoostEnd, this);
+    listener->onStageChanged            = CC_CALLBACK_1(FriendsLayer::onStageChanged, this);
+    listener->onStageClear              = CC_CALLBACK_0(FriendsLayer::onStageClear, this);
+    listener->onMoveNextStage           = CC_CALLBACK_1(FriendsLayer::onMoveNextStage, this);
+    listener->onMoveNextStageFinished   = CC_CALLBACK_1(FriendsLayer::onMoveNextStageFinished, this);
+    listener->onFloorChanged            = CC_CALLBACK_1(FriendsLayer::onFloorChanged, this);
+    listener->onNextFloor               = CC_CALLBACK_1(FriendsLayer::onNextFloor, this);
+    GameManager::getEventDispatcher()->addListener(listener);
+}
+
+Friend* FriendsLayer::createFriend(const FriendData &data) {
+    
+    FriendDef def(data, friendsPower);
+    
+    return Friend::create(def);
+}
+
+/**
+ * 프렌즈 볼 발사
+ */
+void FriendsLayer::shoot(TileLayer *tileLayer) {
+    
+    if( shot ) {
+        return;
+    }
+    
+    Log::i("FriendsLayer::shoot");
+    
+    shot = true;
+    
+    if( tileLayer->getBricks().size() == 0 ) {
+        return;
+    }
+    
+    Brick *forwardBrick = nullptr;
+    
+    for( int y = 1; y < GAME_CONFIG->getTileColumns(); ++y ) {
+        auto bricks = tileLayer->getTiles<Brick*>(y);
+        
+        if( bricks.size() > 0 ) {
+            forwardBrick = bricks[arc4random() % bricks.size()];
+            break;
+        }
+    }
+    
+    if( !forwardBrick ) {
+        return;
+    }
+    
+    auto endPos = forwardBrick->getPosition();
+    
+    for( auto friendNode : friends ) {
+        friendNode->shoot(endPos);
+    }
+}
+
+/**
+ * 프렌즈 볼 발사 정지
+ */
+void FriendsLayer::shootStop() {
+
+    for( auto friendNode : friends ) {
+        friendNode->shootStop();
+    }
+}
+
+/**
+ * 1개 프렌드의 볼 추락 완료
+ */
+void FriendsLayer::onFallFinished(Friend *friendNode) {
+    
+    // 모든 볼이 추락했으면 리스너 실행
+    if( isFallFinished() && onFallFinishedListener ) {
+        onFallFinishedListener();
+    }
+}
+
+/**
+ * 프렌즈 볼 회수
+ */
+void FriendsLayer::withdrawBall() {
+
+    for( auto friendNode : friends ) {
+        friendNode->withdrawBall();
+    }
+}
+
+/**
+ * 모든 볼이 추락했는지를 반환합니다
+ */
+bool FriendsLayer::isFallFinished() {
+    
+    for( auto friendNode : friends ) {
+        if( !friendNode->isFallFinished() ) {
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+/**
+ * 아이템 획득
+ */
+void FriendsLayer::eatFriendsItem(Item *item) {
+    
+    switch( item->getData().type ) {
+        // 프렌즈 파워업
+        case ItemType::FRIENDS_POWER_UP: {
+            ++friendsPower;
+            
+            // 연출
+            for( auto friendNode : friends ) {
+                auto label = Label::createWithTTF("POWER UP", FONT_COMMODORE, 20, Size::ZERO,
+                                                  TextHAlignment::CENTER, TextVAlignment::CENTER);
+                label->setAnchorPoint(ANCHOR_MB);
+                label->setPosition(Vec2(friendNode->getPositionX(), SHOOTING_POSITION_Y) + Vec2(0, 30));
+                label->setTextColor(Color4B(255, 255, 255, 255));
+                label->enableOutline(Color4B::BLACK, 3);
+                addChild(label, SBZOrder::MIDDLE);
+                
+                auto move = MoveBy::create(0.8f, Vec2(0, 70));
+                auto remove = RemoveSelf::create();
+                label->runAction(Sequence::create(move, remove, nullptr));
+            }
+        } break;
+            
+        default:
+            CCASSERT(false, "FriendsLayer::eatFriendsItem error: invalid item.");
+            break;
+    }
+}
+
+/**
+ * 프렌즈 파워 업데이트
+ */
+void FriendsLayer::updateFriendsPower() {
+    
+    Log::i("FriendsLayer::updateFriendsPower friendsPower: %d", friendsPower);
+    
+    for( auto friendNode : friends ) {
+        friendNode->setPower(friendsPower);
+    }
+}
+
+/**
  * 볼을 기준으로 좌표 업데이트
  */
 void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
@@ -67,6 +269,8 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
         auto friendNode = friends[i];
         auto slot = sortedSlots[i];
         
+        friendNode->setPowerVisible(true);
+        
         if( withAction ) {
             int diff = abs(slot.index - getNearSlot(friendNode->getPosition()).index);
             if( diff == 0 ) {
@@ -76,10 +280,12 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
             
             friendNode->setImage(Friend::ImageType::MOVE);
             friendNode->setImageFlippedX(slot.pos.x < friendNode->getPositionX());
+            friendNode->setPowerVisible(false);
             
             auto move = MoveTo::create(diff * 0.25f, slot.pos);
             auto callFunc = CallFunc::create([=]() {
                 friendNode->setImage(Friend::ImageType::IDLE);
+                friendNode->setPowerVisible(true);
                 slot.put(friendNode);
             });
             friendNode->runAction(Sequence::create(move, callFunc, nullptr));
@@ -88,64 +294,6 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
             slot.put(friendNode);
         }
     }
-}
-
-/**
- * 아이템 획득
- */
-void FriendsLayer::eatFriendsItem(Item *item) {
-    
-    switch( item->getData().type ) {
-        // 프렌즈 볼 개수 증가
-        case ItemType::FRIENDS_POWER_UP: {
-            ++toAddFriendsBalls;
-        } break;
-            
-        default:
-            CCASSERT(false, "FriendsLayer::eatFriendsItem error: invalid item.");
-            break;
-    }
-}
-
-/**
- * 좌표와 가까운 슬롯을 반환합니다
- */
-FriendsLayer::Slot FriendsLayer::getNearSlot(const Vec2 &pos) {
-    
-    int savedDist = INT_MAX;
-    Slot nearSlot;
-    
-    for( auto slot : slots ) {
-        float dist = slot.pos.getDistance(pos);
-        
-        // CCLOG("slotIndex: %d dist: %f", slot.index, dist);
-        
-        if( dist < savedDist ) {
-            nearSlot = slot;
-            savedDist = dist;
-        }
-    }
-    
-    return nearSlot;
-}
-
-/**
- * 볼 슬롯을 기준으로하여 정렬된 슬롯 리스트를 반환합니다
- */
-FriendsLayer::Slots FriendsLayer::getSortedSlots(const Slot &ballSlot) {
-    
-    switch( ballSlot.index ) {
-        case 0: return Slots({ slots[1], slots[2], slots[3], slots[4], });
-        case 1: return Slots({ slots[0], slots[2], slots[3], slots[4], });
-        case 2: return Slots({ slots[1], slots[3], slots[0], slots[4], });
-        case 3: return Slots({ slots[2], slots[4], slots[1], slots[0], });
-        case 4: return Slots({ slots[3], slots[2], slots[1], slots[0], });
-        default:
-            CCASSERT(false, "FriendsLayer::getSortedSlots error.");
-            break;
-    }
-    
-    return Slots();
 }
 
 /**
@@ -165,7 +313,8 @@ void FriendsLayer::onGameExit() {
  */
 void FriendsLayer::onGameReset() {
     
-    toAddFriendsBalls = 0;
+    shot = false;
+    friendsPower = 1;
 }
 
 /**
@@ -178,18 +327,6 @@ void FriendsLayer::onGameStart() {
  * 게임 재시작
  */
 void FriendsLayer::onGameRestart() {
-}
-
-/**
- * 게임 일시정지
- */
-void FriendsLayer::onGamePause() {
-}
-
-/**
- * 게임 재게
- */
-void FriendsLayer::onGameResume() {
 }
 
 /**
@@ -264,80 +401,57 @@ void FriendsLayer::onMoveNextStageFinished(const StageData &stage) {
  * 층 변경
  */
 void FriendsLayer::onFloorChanged(const FloorData &floor) {
+    
+    shot = false;
+    
+    // 파워 업데이트
+    updateFriendsPower();
 }
 
 /**
  * 다음 층
  */
 void FriendsLayer::onNextFloor(const FloorData &floor) {
-    
-    // 획득한 아이템 반영
-    if( toAddFriendsBalls > 0 ) {
-        // TODO:
-        toAddFriendsBalls = 0;
-    }
 }
 
 /**
- * 프렌즈 초기화
+ * 좌표와 가까운 슬롯을 반환합니다
  */
-void FriendsLayer::initFriends() {
- 
-    // game_friends_02_idle1.png Vec2BL(46, 81) , Size(63, 75)
-    FriendDataList friendDatas = Database::getFriends();
-    random_shuffle(friendDatas.begin(), friendDatas.end());
+FriendsLayer::Slot FriendsLayer::getNearSlot(const Vec2 &pos) {
     
-    for( int i = 0; i < 4/*보유 프렌즈 수*/; ++i ) {
-        auto friendNode = Friend::create(friendDatas[i]);
-        friendNode->setCascadeColorEnabled(true);
-        addChild(friendNode);
+    int savedDist = INT_MAX;
+    Slot nearSlot;
+    
+    for( auto slot : slots ) {
+        float dist = slot.pos.getDistance(pos);
         
-        friends.push_back(friendNode);
+        // CCLOG("slotIndex: %d dist: %f", slot.index, dist);
+        
+        if( dist < savedDist ) {
+            nearSlot = slot;
+            savedDist = dist;
+        }
     }
     
-    // 슬롯 리스트 생성
-    int w = SB_WIN_SIZE.width / SLOT_COUNT;
-    
-    for( int i = 0; i < SLOT_COUNT; ++i ) {
-        Slot slot;
-        slot.index = i;
-        slot.pos = Vec2BL((w*i) + (w*0.5f), FRIENDS_POS_Y);
-        slots.push_back(slot);
-        
-        /*
-        auto n = LayerColor::create(Color4B(0,0,255,255*0.5f));
-        n->setIgnoreAnchorPointForPosition(false);
-        n->setAnchorPoint(ANCHOR_M);
-        n->setPosition(slot.pos);
-        n->setContentSize(Size(70, 75));
-        addChild(n);
-        */
-    }
+    return nearSlot;
 }
 
 /**
- * 게임 리스너 초기화
+ * 볼 슬롯을 기준으로하여 정렬된 슬롯 리스트를 반환합니다
  */
-void FriendsLayer::initGameListener() {
+FriendsLayer::Slots FriendsLayer::getSortedSlots(const Slot &ballSlot) {
     
-    auto listener = GameEventListener::create(this);
-    listener->onGameEnter               = CC_CALLBACK_0(FriendsLayer::onGameEnter, this);
-    listener->onGameExit                = CC_CALLBACK_0(FriendsLayer::onGameExit, this);
-    listener->onGameReset               = CC_CALLBACK_0(FriendsLayer::onGameReset, this);
-    listener->onGameStart               = CC_CALLBACK_0(FriendsLayer::onGameStart, this);
-    listener->onGameRestart             = CC_CALLBACK_0(FriendsLayer::onGameRestart, this);
-    listener->onGamePause               = CC_CALLBACK_0(FriendsLayer::onGamePause, this);
-    listener->onGameResume              = CC_CALLBACK_0(FriendsLayer::onGameResume, this);
-    listener->onGameOver                = CC_CALLBACK_0(FriendsLayer::onGameOver, this);
-    listener->onGameContinue            = CC_CALLBACK_0(FriendsLayer::onGameContinue, this);
-    listener->onGameResult              = CC_CALLBACK_0(FriendsLayer::onGameResult, this);
-    listener->onBoostStart              = CC_CALLBACK_0(FriendsLayer::onBoostStart, this);
-    listener->onBoostEnd                = CC_CALLBACK_0(FriendsLayer::onBoostEnd, this);
-    listener->onStageChanged            = CC_CALLBACK_1(FriendsLayer::onStageChanged, this);
-    listener->onStageClear              = CC_CALLBACK_0(FriendsLayer::onStageClear, this);
-    listener->onMoveNextStage           = CC_CALLBACK_1(FriendsLayer::onMoveNextStage, this);
-    listener->onMoveNextStageFinished   = CC_CALLBACK_1(FriendsLayer::onMoveNextStageFinished, this);
-    listener->onFloorChanged            = CC_CALLBACK_1(FriendsLayer::onFloorChanged, this);
-    listener->onNextFloor               = CC_CALLBACK_1(FriendsLayer::onNextFloor, this);
-    GameManager::getEventDispatcher()->addListener(listener);
+    switch( ballSlot.index ) {
+        case 0: return Slots({ slots[1], slots[2], slots[3], slots[4], });
+        case 1: return Slots({ slots[0], slots[2], slots[3], slots[4], });
+        case 2: return Slots({ slots[1], slots[3], slots[0], slots[4], });
+        case 3: return Slots({ slots[2], slots[4], slots[1], slots[0], });
+        case 4: return Slots({ slots[3], slots[2], slots[1], slots[0], });
+        default:
+            CCASSERT(false, "FriendsLayer::getSortedSlots error.");
+            break;
+    }
+    
+    return Slots();
 }
+

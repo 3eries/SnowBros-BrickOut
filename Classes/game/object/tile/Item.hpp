@@ -19,6 +19,7 @@ struct ItemDef {
     FloorData floorData;
     
     explicit ItemDef(ItemData _data) : data(_data) {}
+    explicit ItemDef(ItemType type) : data(ItemData(type)) {}
 };
 
 class Item : public Game::Tile {

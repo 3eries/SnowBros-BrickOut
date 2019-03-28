@@ -56,6 +56,7 @@ public:
     // static std::string getBrickWhiteImageFile(const std::string &image);
     
     static std::string getFriendAnimationFile(const std::string &friendId);
+    static std::string getFriendBallImageFile(const std::string &friendId);
     
     static cocos2d::Animation* createBrickAnimation(const BrickData &data,
                                                     BrickImageType type);

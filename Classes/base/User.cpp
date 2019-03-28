@@ -170,6 +170,24 @@ string User::getSelectedBallSkin() {
 }
 
 /**
+ * 프렌즈 덱을 반환합니다
+ */
+FriendDataList User::getFriendsDeck() {
+    
+    vector<string> friendIds({
+        "friend_0001", "friend_0002", "friend_0004", "friend_0005"
+    });
+    
+    FriendDataList friends;
+    
+    for( string friendId : friendIds ) {
+        friends.push_back(Database::getFriend(friendId));
+    }
+    
+    return friends;
+}
+
+/**
  * 광고 제거 아이템 보유 여부
  */
 bool User::isOwnRemoveAdsItem() {

@@ -287,9 +287,7 @@ void Database::parseFriendsJson() {
     for( int i = 0; i < list.Size(); ++i ) {
         const rapidjson::Value &v = list[i];
         
-        FriendData friendData;
-        friendData.friendId = v["friend_id"].GetString();
-        
+        FriendData friendData(v);
         friends.push_back(friendData);
         
         CCLOG("%s", friendData.toString().c_str());

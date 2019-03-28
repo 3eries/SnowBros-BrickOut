@@ -29,7 +29,8 @@ using namespace std;
 TileLayer::TileLayer() :
 onBrickAddedListener(nullptr),
 onTileDownFinishedListener(nullptr),
-onBrickBreakListener(nullptr) {
+onBrickBreakListener(nullptr),
+ballCount(0), friendsPower(0) {
 }
 
 TileLayer::~TileLayer() {
@@ -93,6 +94,7 @@ void TileLayer::onGameExit() {
  * 게임 리셋
  */
 void TileLayer::onGameReset() {
+    
 }
 
 /**
@@ -344,9 +346,76 @@ void TileLayer::initFloorItem(const FloorData &floor) {
         return;
     }
     
-    // 볼 증가 아이템
     auto stage = GameManager::getStage();
     
+    auto addItem = [=](ItemType type, TilePositions &positions) {
+        
+        CCASSERT(positions.size() > 0, "TileLayer::initFloorItem::addItem error.");
+        
+        ItemDef def(type);
+        def.floorData = floor;
+        
+        auto item = TileFactory::createItem(def);
+        item->setTilePosition(positions[0]);
+        addTile(item);
+        
+        positions.erase(positions.begin());
+    };
+    
+    auto checkDrop = [=](ItemType itemType, int currentCount, int finalCount,
+                         mt19937 &randomEngine) -> bool {
+
+        int diff = finalCount - currentCount;
+        int chance = stage.getLastFloor().floor - floor.floor; // 마지막층 전까지 기회있음
+        
+        if( chance < diff ) {
+            Log::w("아이템(%d) 드랍 에러: 최종 개수에 도달할 수 없습니다.", itemType).showMessageBox();
+        }
+        
+        Log::i("TileLayer::initFloorItem checkDrop item: %d, diff: %d, chance: %d", itemType, diff, chance);
+        
+        if( diff <= 0 ) {
+            return false;
+        }
+        
+        // 무조건 드랍
+        if( chance == diff ) {
+            return true;
+        }
+        // 확률로 드랍, 고정 확률 58%
+        else {
+            // int len = (chance - ballDiff) + 1;
+            // isDrop = (arc4random() % len) == 0;
+            uniform_int_distribution<int> dist(1,100);
+            int rnd = dist(randomEngine);
+            // CCLOG("rnd: %d", rnd);
+            
+            return rnd <= 58;
+        }
+    };
+    
+    // 볼 증가 아이템
+    {
+        int currentCount = (int)(ballCount + getItems(ItemType::POWER_UP).size());
+        
+        if( checkDrop(ItemType::POWER_UP, currentCount, stage.finalBallCount,
+                      randomEngine.ballCountUp) ) {
+            addItem(ItemType::POWER_UP, positions);
+        }
+    }
+    
+    // 프렌즈 파워 증가 아이템
+    if( positions.size() > 0 ) {
+        int currentCount = (int)(friendsPower + getItems(ItemType::FRIENDS_POWER_UP).size());
+        Log::i("TileLayer::initFloorItem friendsPower: %d", friendsPower);
+        
+        if( checkDrop(ItemType::FRIENDS_POWER_UP, currentCount, stage.finalFriendsBallCount,
+                      randomEngine.friendsPowerUp) ) {
+            addItem(ItemType::FRIENDS_POWER_UP, positions);
+        }
+    }
+    
+    /*
     int currentBallCount = (int)(ballCount + getItems().size());
     int finalBallCount = stage.finalBallCount;
     int ballDiff = finalBallCount - currentBallCount;
@@ -374,18 +443,10 @@ void TileLayer::initFloorItem(const FloorData &floor) {
         }
         
         if( isDrop ) {
-            ItemData data(ItemType::POWER_UP);
-            
-            ItemDef def(data);
-            def.floorData = floor;
-            
-            auto item = TileFactory::createItem(def);
-            item->setTilePosition(positions[0]);
-            addTile(item);
-            
-            positions.erase(positions.begin());
+            addItem(ItemType::POWER_UP, positions);
         }
     }
+    */
 }
 
 /**
@@ -540,6 +601,7 @@ void TileLayer::resetRandomEngine() {
         &randomEngine.brickPosition,
         &randomEngine.eliteBrickDrop,
         &randomEngine.ballCountUp,
+        &randomEngine.friendsPowerUp,
     };
     
     const int SIMULATION_COUNT = 5000;
@@ -590,6 +652,13 @@ BrickList TileLayer::getBricks(const string &brickId) {
 
 ItemList TileLayer::getItems() {
     return getTiles<Item*>();
+}
+
+ItemList TileLayer::getItems(ItemType type) {
+    
+    return SBCollection::find(getItems(), [type](Item *item) -> bool {
+        return item->getData().type == type;
+    });
 }
 
 /**

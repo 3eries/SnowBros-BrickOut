@@ -21,7 +21,7 @@ using namespace std;
 static const string SCHEDULER_CHECK_MOVEMENT = "SCHEDULER_CHECK_MOVEMENT";
 
 Ball::Ball() : SBPhysicsObject(this),
-damage(1),
+power(1),
 fall(false) {
 }
 
@@ -40,7 +40,26 @@ bool Ball::init() {
     setContentSize(BALL_SIZE);
     setCascadeOpacityEnabled(true);
     
-    // 이미지 초기화
+    initImage();
+    initPhysicsListener();
+    
+    setBody(createBody((SBPhysicsObject*)this));
+    
+    return true;
+}
+
+void Ball::cleanup() {
+    
+    removeListeners(this);
+    
+    Node::cleanup();
+}
+
+/**
+ * 이미지 초기화
+ */
+void Ball::initImage() {
+    
     image = Sprite::create();
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(BALL_SIZE, 0, 0));
@@ -57,34 +76,6 @@ bool Ball::init() {
         updateImage();
     });
     getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
-    
-    //
-//    {
-//        auto lbl = Label::createWithTTF("7", FONT_RETRO, 20, Size::ZERO,
-//                                        TextHAlignment::CENTER, TextVAlignment::CENTER);
-//        lbl->setTag(123);
-//        lbl->setAnchorPoint(ANCHOR_M);
-//        lbl->setPosition(Vec2MC(getContentSize(), 0,0));
-//        lbl->setTextColor(Color4B::WHITE);
-//        lbl->enableOutline(Color4B::BLACK, 3);
-//        lbl->setScale((getContentSize().height*0.8f) / lbl->getContentSize().height);
-//        addChild(lbl);
-//    }
-    //
-    
-    // 물리 객체 초기화
-    setBody(createBody((SBPhysicsObject*)this));
-    
-    initPhysicsListener();
-    
-    return true;
-}
-
-void Ball::cleanup() {
-    
-    removeListeners(this);
-    
-    Node::cleanup();
 }
 
 /**
@@ -161,9 +152,6 @@ bool Ball::afterStep() {
     if( !isSyncLocked() ) {
         setRotation(getBodyVelocityAngle());
     }
-    
-//    const float angle = SBMath::getDegree(Vec2::ZERO, MTP(getBody()->GetLinearVelocity()));
-//    getChildByTag(123)->setRotation(angle);
     
     return true;
 }
@@ -267,6 +255,27 @@ void Ball::sleepWithAction() {
     runAction(Sequence::create(fadeOut, hide, nullptr));
 }
 
+/**
+ * 히트 연출
+ */
+void Ball::runHitAction(Vec2 contactPoint) {
+    
+    StringList anims;
+    
+    for( int i = 1; i <= 4; ++i ) {
+        anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
+    }
+    
+    auto effect = SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);
+    effect->setAnchorPoint(ANCHOR_M);
+    effect->setPosition(contactPoint);
+    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::MIDDLE);
+    
+    effect->runAnimation([=](Node*) {
+        effect->removeFromParent();
+    });
+}
+
 void Ball::onBeginContact(b2Contact *contact) {
 }
 
@@ -318,21 +327,7 @@ void Ball::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
     brickContactCount++;
     wallContactCount = 0;
     
-    // 히트 연출
-    StringList anims;
-    
-    for( int i = 1; i <= 4; ++i ) {
-        anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
-    }
-    
-    auto effect = SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);
-    effect->setAnchorPoint(ANCHOR_M);
-    effect->setPosition(contactPoint);
-    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::MIDDLE);
-    
-    effect->runAnimation([=](Node*) {
-        effect->removeFromParent();
-    });
+    runHitAction(contactPoint);
 }
 
 /**

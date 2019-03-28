@@ -17,6 +17,7 @@
 
 #include "friend/Friend.hpp"
 
+class TileLayer;
 class Item;
 
 class FriendsLayer : public cocos2d::Node {
@@ -33,9 +34,55 @@ private:
     void initFriends();
     void initGameListener();
     
+    Friend* createFriend(const FriendData &data);
+    
 public:
-    void updatePosition(const cocos2d::Vec2 &ballPos, bool withAction);
+    void shoot(TileLayer *tileLayer);
+    void shootStop();
+    
+    void onFallFinished(Friend *friendNode);
+    bool isFallFinished();
+    
+    void withdrawBall();
+    
     void eatFriendsItem(Item *item);
+    
+    void updateFriendsPower();
+    void updatePosition(const cocos2d::Vec2 &ballPos, bool withAction);
+    
+// Game Event
+private:
+    void onGameEnter();
+    void onGameExit();
+    void onGameReset();
+    void onGameStart();
+    void onGameRestart();
+    void onGameOver();
+    void onGameContinue();
+    void onGameResult();
+    
+    void onBoostStart();
+    void onBoostEnd();
+    
+    void onStageChanged(const StageData &stage);
+    void onStageClear();
+    
+    void onMoveNextStage(const StageData &stage);
+    void onMoveNextStageFinished(const StageData &stage);
+    
+    void onFloorChanged(const FloorData &floor);
+    void onNextFloor(const FloorData &floor);
+    
+private:
+    CC_SYNTHESIZE(SBCallback, onFallFinishedListener, OnFallFinishedListener);
+    
+    std::vector<Friend*> friends;
+    
+    // 볼 발사 여부
+    SB_SYNTHESIZE_READONLY_BOOL(shot, Shot);
+    
+    // 프렌즈 파워
+    CC_SYNTHESIZE_READONLY(int, friendsPower, FriendsPower);
     
 private:
     struct Slot {
@@ -61,40 +108,10 @@ private:
     };
     
     typedef std::vector<Slot> Slots;
+    Slots slots;
     
     Slot  getNearSlot(const cocos2d::Vec2 &pos);
     Slots getSortedSlots(const Slot &ballSlot);
-    
-// Game Event
-private:
-    void onGameEnter();
-    void onGameExit();
-    void onGameReset();
-    void onGameStart();
-    void onGameRestart();
-    void onGamePause();
-    void onGameResume();
-    void onGameOver();
-    void onGameContinue();
-    void onGameResult();
-    
-    void onBoostStart();
-    void onBoostEnd();
-    
-    void onStageChanged(const StageData &stage);
-    void onStageClear();
-    
-    void onMoveNextStage(const StageData &stage);
-    void onMoveNextStageFinished(const StageData &stage);
-    
-    void onFloorChanged(const FloorData &floor);
-    void onNextFloor(const FloorData &floor);
-    
-private:
-    std::vector<Friend*> friends;
-    Slots slots;
-    
-    int toAddFriendsBalls;               // 프렌즈에 추가돼야 할 볼 개수
 };
 
 #endif /* FriendsLayer_hpp */

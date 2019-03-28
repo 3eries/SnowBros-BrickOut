@@ -7,6 +7,7 @@
 #include "SBPhysics.hpp"
 
 #include "../utils/SBMath.hpp"
+#include "../utils/SBNodeUtils.hpp"
 
 USING_NS_CC;
 using namespace std;
@@ -67,13 +68,21 @@ void SBPhysics::removeBodies(b2World *world) {
 
 void SBPhysics::syncNodeToBody(Node *node, b2Body *body) {
     
+    auto box = SB_BOUNDING_BOX_IN_WORLD(node);
     float radians = CC_DEGREES_TO_RADIANS(node->getRotation());
-    body->SetTransform(PTM(node->getPosition()), radians);
+    
+    body->SetTransform(PTM(box.getMidX(), box.getMidY()), radians);
 }
 
 void SBPhysics::syncBodyToNode(b2Body *body, cocos2d::Node *node) {
     
-    node->setPosition(Vec2(MTP(body->GetPosition().x), MTP(body->GetPosition().y)));
+    auto pos = MTP(body->GetPosition());
+    
+    if( node->getParent() ) {
+        pos = node->getParent()->convertToNodeSpace(pos);
+    }
+    
+    node->setPosition(pos);
     node->setRotation(CC_RADIANS_TO_DEGREES(body->GetAngle()));
 }
 

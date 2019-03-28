@@ -20,44 +20,45 @@ namespace Game {
 class Ball : public cocos2d::Node, public SBPhysicsObject {
 public:
     CREATE_FUNC(Ball);
-    ~Ball();
+    virtual ~Ball();
     
-private:
+protected:
     Ball();
     
-    bool init() override;
-    void cleanup() override;
+    virtual bool init() override;
+    virtual void cleanup() override;
     
-    void initPhysicsListener();
+    virtual void initImage();
+    virtual void initPhysicsListener();
     
 public:
     static b2Body* createBody(SBPhysicsObject *userData = nullptr);
     
-    bool beforeStep() override;
-    bool afterStep() override;
+    virtual bool beforeStep() override;
+    virtual bool afterStep() override;
     
-    void shoot(b2Vec2 velocity);
-    void fallToFloor();
+    virtual void shoot(b2Vec2 velocity);
+    virtual void fallToFloor();
     
-    void checkMovement(float dt);
+    virtual void checkMovement(float dt);
     
-    void sleepWithAction();
+    virtual void sleepWithAction();
+    virtual void runHitAction(cocos2d::Vec2 contactPoint);
     
-private:
-    void onBeginContact(b2Contact *contact);
-    void onEndContact(b2Contact *contact);
-    void onPreSolve(b2Contact *contact, const b2Manifold *oldManifold);
-    void onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
-    void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
-    void onContactItem(Ball *ball, Game::Tile *item);
-    void onContactWall(Ball *ball);
-    void onContactFloor(Ball *ball);
+protected:
+    virtual void onBeginContact(b2Contact *contact);
+    virtual void onEndContact(b2Contact *contact);
+    virtual void onPreSolve(b2Contact *contact, const b2Manifold *oldManifold);
+    virtual void onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
+    virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
+    virtual void onContactItem(Ball *ball, Game::Tile *item);
+    virtual void onContactWall(Ball *ball);
+    virtual void onContactFloor(Ball *ball);
     
-private:
+protected:
     cocos2d::Sprite *image;
     
-    CC_SYNTHESIZE(int, damage, Damage);
-    
+    CC_SYNTHESIZE(int, power, Power);
     SB_SYNTHESIZE_BOOL(fall, Fall);   // 추락 여부
     
     // 충돌 횟수

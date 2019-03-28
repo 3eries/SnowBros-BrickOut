@@ -39,6 +39,7 @@ private:
     
     enum class ZOrder {
         TILE = 0,
+        FRIENDS,
         AIM_CONTROLLER = 100,
         BALL,
         MENU,
@@ -57,10 +58,10 @@ private:
     void initBg();
     void initMenu();
     void initMap();
-    void initBall();
+    void initAimController();
     void initTile();
     void initFriends();
-    void initAimController();
+    void initBall();
     void initTouchListener();
     void initGameListener();
     void initPhysicsListener();
@@ -97,8 +98,9 @@ private:
     void onAimingStart();                   // 3. 조준 시작
     void onAimingEnd();                     // 4. 조준 종료
     void onShootFinished();                 // 5. 발사 완료
-    void onFallFinished();                  // 6. 모든 볼 추락 완료
+    void onAllBallFallFinished();           // 6. 모든 볼 추락 완료
     
+    void onFriendsBallFallFinished();
     void onBrickBreak(Brick *brick);
     
     void onPhysicsUpdate();
@@ -125,6 +127,10 @@ private:
     void addBallFromQueue();
     void removeBall(Ball *ball);
     
+    // bool isAllBallFallFinished();
+    bool isUserBallFallFinished();
+    bool isFriendsBallFallFinished();
+    
     bool checkBrickDown();
     bool checkStageClear();
     
@@ -146,11 +152,12 @@ private:
     cocos2d::Label*    ballCountLabel;
     int                shootIndex;               // 발사된 볼 인덱스
     int                fallenBallCount;          // 떨어진 볼 개수
+    bool               isAllBallFallFinished;    // 모든 볼 추락 완료 여부 
     std::vector<cocos2d::Sprite*> addBallQueue;  // 추가돼야 할 볼
     
+    AimController *aimController;
     TileLayer *tileLayer;
     FriendsLayer *friendsLayer;
-    AimController *aimController;
     
     bool isWithdrawEnabled; // 볼 회수 기능 활성화 여부
     bool isWithdraw;        // 볼 회수 여부

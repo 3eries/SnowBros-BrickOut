@@ -12,6 +12,8 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
+#include "ContentManager.hpp"
+
 class User : public cocos2d::Ref {
 public:
     static User* getInstance();
@@ -26,18 +28,20 @@ public:
     void init();
     void initOwnedBallSkins();
     
-    static void          ownBallSkin(const std::string &ballId);
-    static StringList    getOwnedBallSkins();
-    static bool          isOwnedBallSkin(const std::string &ballId);
+    static void             ownBallSkin(const std::string &ballId);
+    static StringList       getOwnedBallSkins();
+    static bool             isOwnedBallSkin(const std::string &ballId);
     
-    static void          setSelectedBallSkin(const std::string &ballId);
-    static std::string   getSelectedBallSkin();
+    static void             setSelectedBallSkin(const std::string &ballId);
+    static std::string      getSelectedBallSkin();
     
-    static bool          isOwnRemoveAdsItem();
-    static void          setOwnRemoveAdsItem(bool owned);
-    static void          removeAds();
+    static FriendDataList   getFriendsDeck();
     
-    static bool          checkReview(float popupDelay = 0);
+    static bool             isOwnRemoveAdsItem();
+    static void             setOwnRemoveAdsItem(bool owned);
+    static void             removeAds();
+    
+    static bool             checkReview(float popupDelay = 0);
     
 private:
     StringList ballSkins;

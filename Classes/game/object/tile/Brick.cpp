@@ -402,7 +402,7 @@ void Brick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
         return;
     }
     
-    sufferDamage(ball->getDamage());
+    sufferDamage(ball->getPower());
 }
 
 /**

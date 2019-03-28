@@ -96,7 +96,7 @@ void ShieldBrick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoin
     }
     // 데미지 적용
     else {
-        sufferDamage(ball->getDamage());
+        sufferDamage(ball->getPower());
     }
 }
 
