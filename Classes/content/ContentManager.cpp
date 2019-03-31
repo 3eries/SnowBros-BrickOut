@@ -39,6 +39,8 @@ ContentManager::~ContentManager() {
 
 void ContentManager::init() {
     
+    ContentResourceHelper::getInstance();
+    
     db = Database::getInstance();
     db->init();
 }

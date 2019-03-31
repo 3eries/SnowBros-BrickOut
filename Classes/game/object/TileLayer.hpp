@@ -82,6 +82,7 @@ private:
                   OnBrickBreakListener);
     
     CC_SYNTHESIZE_READONLY(std::vector<Game::Tile*>, tiles, Tiles);
+    
     CC_SYNTHESIZE(int, ballCount, BallCount);
     CC_SYNTHESIZE(int, friendsPower, FriendsPower);
     

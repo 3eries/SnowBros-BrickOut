@@ -33,13 +33,18 @@ ContentResourceHelper::getBrickAnimationFiles(__image__, "damage")
 #define BRICK_HIDE_ANIM_FILES(__image__) \
 ContentResourceHelper::getBrickAnimationFiles(__image__, "hide")
 
-#define BRICK_WHITE_IMAGE(__image__) \
-std::string("white_" + __image__)
-
 #define BRICK_ANIMATION(__data__, __type__) \
 ContentResourceHelper::createBrickAnimation(__data__, __type__)
 
 class ContentResourceHelper {
+public:
+    static ContentResourceHelper* getInstance();
+    static void destroyInstance();
+    ~ContentResourceHelper();
+    
+private:
+    ContentResourceHelper();
+    
 public:
     static void preload();
     
@@ -49,17 +54,29 @@ public:
     
     static std::string getStageBackgroundFile(int stage);
     
+// Brick
+public:
     static std::string getBrickBackgroundFile(const BrickData &data, bool elite, int step);
     static StringList  getBrickAnimationFiles(const std::string &image,
                                              const std::string &animKey);
     
-    // static std::string getBrickWhiteImageFile(const std::string &image);
-    
-    static std::string getFriendAnimationFile(const std::string &friendId);
-    static std::string getFriendBallImageFile(const std::string &friendId);
-    
     static cocos2d::Animation* createBrickAnimation(const BrickData &data,
                                                     BrickImageType type);
+    
+// Brick White Texture
+public:
+    cocos2d::Texture2D* addBrickWhiteTexture(cocos2d::Texture2D *originTexture,
+                                             bool isFlippedX, bool isFlippedY);
+    cocos2d::Texture2D* getBrickWhiteTexture(const std::string &key);
+    void removeBrickWhiteTextures();
+    
+private:
+    cocos2d::Map<std::string, cocos2d::Texture2D*> brickWhiteTextures;
+
+// Friends
+public:
+    static std::string getFriendAnimationFile(const std::string &friendId);
+    static std::string getFriendBallImageFile(const std::string &friendId);
 };
 
 #endif /* ContentResourceHelper_hpp */

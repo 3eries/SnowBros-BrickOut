@@ -431,9 +431,16 @@ void Brick::sufferDamage(int damage) {
         image->runAnimation([=](Node*) {
             this->setImage(BrickImageType::IDLE, true);
         });
-    
+        
         // 흰색 브릭 반짝 연출
-        auto whiteEffect = createWhiteBrickEffect();
+        auto frame = image->getSpriteFrame();
+        auto tex = ContentResourceHelper::getInstance()->addBrickWhiteTexture(frame->getTexture(),
+                                                                              image->isFlippedX(),
+                                                                              image->isFlippedY());
+        auto whiteEffect = Sprite::createWithTexture(tex);
+        // auto whiteEffect = createWhiteBrickEffect();
+        whiteEffect->setAnchorPoint(image->getAnchorPoint());
+        whiteEffect->setPosition(image->getPosition());
         addChild(whiteEffect);
         
         SBDirector::postDelayed(this, [=]() {
@@ -549,27 +556,4 @@ bool Brick::isBroken() {
 
 float Brick::getHpRatio() {
     return (float)hp / originalHp;
-}
-
-Node* Brick::createWhiteBrickEffect() {
-    
-    auto size = getContentSize();
-    
-    auto stencil = Sprite::createWithSpriteFrame(image->getSpriteFrame());
-    stencil->setAnchorPoint(ANCHOR_M);
-    stencil->setPosition(Vec2MC(size, 0,0));
-    stencil->setFlippedX(image->isFlippedX());
-    stencil->setFlippedY(image->isFlippedY());
-    
-    auto clippingNode = ClippingNode::create(stencil);
-    clippingNode->setAnchorPoint(ANCHOR_M);
-    clippingNode->setPosition(Vec2MC(size, 0,0));
-    clippingNode->setContentSize(size);
-    clippingNode->setAlphaThreshold(0);
-
-    auto drawNode = DrawNode::create();
-    drawNode->drawSolidRect(Vec2::ZERO, stencil->getContentSize(), Color4F::WHITE);
-    clippingNode->addChild(drawNode);
-    
-    return clippingNode;
 }

@@ -74,8 +74,6 @@ public:
     bool    isBroken();
     float   getHpRatio();
     
-    cocos2d::Node* createWhiteBrickEffect();
-    
 protected:
     BrickDef def;
     CC_SYNTHESIZE_READONLY(BrickData, data, Data);

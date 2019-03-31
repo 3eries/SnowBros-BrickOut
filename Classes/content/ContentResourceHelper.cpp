@@ -14,6 +14,27 @@
 USING_NS_CC;
 using namespace std;
 
+static ContentResourceHelper *instance = nullptr;
+ContentResourceHelper* ContentResourceHelper::getInstance() {
+    
+    if( !instance ) {
+        instance = new ContentResourceHelper();
+    }
+    
+    return instance;
+}
+
+void ContentResourceHelper::destroyInstance() {
+    
+    CC_SAFE_DELETE(instance);
+}
+
+ContentResourceHelper::ContentResourceHelper() {
+}
+
+ContentResourceHelper::~ContentResourceHelper() {
+}
+
 /**
  * 컨텐츠 리소스 preload
  */
@@ -38,6 +59,9 @@ void ContentResourceHelper::preload() {
     }
 }
 
+/**
+ * 볼 이미지를 반환합니다
+ */
 string ContentResourceHelper::getBallImageFile(const string &ballId, const string &imgKey) {
     
     return DIR_BALL + STR_FORMAT("%s_%s.png", ballId.c_str(), imgKey.c_str());
@@ -48,11 +72,17 @@ string ContentResourceHelper::getSelectedBallImage() {
     return BALL_SMALL_IMAGE(User::getSelectedBallSkin());
 }
 
+/**
+ * 스테이지 배경 이미지를 반환합니다
+ */
 string ContentResourceHelper::getStageBackgroundFile(int stage) {
     
     return DIR_STAGE + STR_FORMAT("stage_%04d_bg.png", stage);
 }
 
+/**
+ * 브릭 배경 이미지를 반환합니다
+ */
 string ContentResourceHelper::getBrickBackgroundFile(const BrickData &data, bool elite, int step) {
     
     string type = "";
@@ -70,6 +100,9 @@ string ContentResourceHelper::getBrickBackgroundFile(const BrickData &data, bool
     return file;
 }
 
+/**
+ * 브릭 애니메이션을 반환합니다
+ */
 StringList ContentResourceHelper::getBrickAnimationFiles(const string &image, const string &animKey) {
     
     StringList anims;
@@ -89,16 +122,6 @@ StringList ContentResourceHelper::getBrickAnimationFiles(const string &image, co
     return anims;
 }
 
-string ContentResourceHelper::getFriendAnimationFile(const string &friendId) {
-    
-    return DIR_FRIEND + friendId + ANIM_EXT;
-}
-
-string ContentResourceHelper::getFriendBallImageFile(const string &friendId) {
-    
-    return DIR_FRIEND + STR_FORMAT("%s_ball.png", friendId.c_str());
-}
-
 Animation* ContentResourceHelper::createBrickAnimation(const BrickData &data, BrickImageType type) {
     
     switch( type ) {
@@ -109,7 +132,7 @@ Animation* ContentResourceHelper::createBrickAnimation(const BrickData &data, Br
         case BrickImageType::DAMAGE: {
             return SBNodeUtils::createAnimation(data.damageAnims, data.damageAnimInterval);
         }
-
+            
         case BrickImageType::HIDE: {
             return SBNodeUtils::createAnimation(BRICK_HIDE_ANIM_FILES(data.image), data.idleAnimInterval);
         }
@@ -118,4 +141,97 @@ Animation* ContentResourceHelper::createBrickAnimation(const BrickData &data, Br
             CCASSERT(false, "ContentResourceHelper::createBrickAnimation error.");
             break;
     }
+    
+    return nullptr;
 }
+
+/**
+ * 브릭 흰색 텍스처를 저장합니다
+ */
+Texture2D* ContentResourceHelper::addBrickWhiteTexture(Texture2D *originTexture,
+                                                       bool isFlippedX, bool isFlippedY) {
+    
+    auto getKey = [=]() -> string {
+        string path = originTexture->getPath();
+        string fileName = path.substr(path.find_last_of("/") + 1);
+        string image = SBStringUtils::replaceAll(fileName, ".png", "");
+        
+        return STR_FORMAT("%s_%d_%d", image.c_str(), isFlippedX, isFlippedY);
+    };
+    
+    string key = getKey();
+    
+    // 캐시된 텍스처 있는지 체크
+    Texture2D *tex = getBrickWhiteTexture(key);
+    
+    if( tex ) {
+        return tex;
+    }
+    
+    // 텍스처를 생성하여 저장합니다
+    auto size = originTexture->getContentSize();
+    
+    auto renderTexture = RenderTexture::create((int)size.width, (int)size.height,
+                                               Texture2D::PixelFormat::RGBA8888, GL_DEPTH24_STENCIL8);
+    
+    auto stencil = Sprite::createWithTexture(originTexture);
+    stencil->setAnchorPoint(ANCHOR_M);
+    stencil->setPosition(Vec2MC(size, 0,0));
+    stencil->setFlippedX(isFlippedX);
+    
+    // RenderTexture에서 스프라이트가 상하 반전되기 때문에 원래 값을 반전 시킨다
+    stencil->setFlippedY(!isFlippedY);
+    
+    auto clippingNode = ClippingNode::create(stencil);
+    clippingNode->setAnchorPoint(ANCHOR_M);
+    clippingNode->setPosition(Vec2MC(size, 0,0));
+    clippingNode->setContentSize(size);
+    clippingNode->setAlphaThreshold(0);
+    
+    auto drawNode = DrawNode::create();
+    drawNode->drawSolidRect(Vec2::ZERO, stencil->getContentSize(), Color4F::WHITE);
+    clippingNode->addChild(drawNode);
+    
+    renderTexture->begin();
+    clippingNode->Node::visit();
+    renderTexture->end();
+    
+    tex = renderTexture->getSprite()->getTexture();
+    brickWhiteTextures.insert(key, tex);
+    
+    return tex;
+}
+
+/**
+ * 브릭 흰색 텍스처를 반환합니다
+ */
+Texture2D* ContentResourceHelper::getBrickWhiteTexture(const string &key) {
+
+    if( brickWhiteTextures.find(key) != brickWhiteTextures.end() ) {
+        return brickWhiteTextures.at(key);
+    }
+    
+    return nullptr;
+}
+
+/**
+ * 브릭 흰색 텍스처를 제거합니다
+ */
+void ContentResourceHelper::removeBrickWhiteTextures() {
+    
+    brickWhiteTextures.clear();
+}
+
+/**
+ * 프렌즈 이미지를 반환합니다
+ */
+string ContentResourceHelper::getFriendAnimationFile(const string &friendId) {
+    
+    return DIR_FRIEND + friendId + ANIM_EXT;
+}
+
+string ContentResourceHelper::getFriendBallImageFile(const string &friendId) {
+    
+    return DIR_FRIEND + STR_FORMAT("%s_ball.png", friendId.c_str());
+}
+

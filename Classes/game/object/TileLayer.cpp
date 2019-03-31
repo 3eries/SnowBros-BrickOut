@@ -88,6 +88,8 @@ void TileLayer::onGameEnter() {
  * 게임 퇴장
  */
 void TileLayer::onGameExit() {
+    
+    ContentResourceHelper::getInstance()->removeBrickWhiteTextures();
 }
 
 /**
@@ -125,6 +127,8 @@ void TileLayer::onGameContinue() {
  * 스테이지 변경
  */
 void TileLayer::onStageChanged(const StageData &stage) {
+    
+    ContentResourceHelper::getInstance()->removeBrickWhiteTextures();
     
     // 랜덤 엔진 리셋
     resetRandomEngine();
