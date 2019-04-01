@@ -13,6 +13,7 @@
 #include "../GameView.hpp"
 
 #include "tile/Tile.hpp"
+#include "tile/Brick.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -319,13 +320,23 @@ void Ball::onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
 }
 
 /**
- * 볼 & 벽돌 충돌
+ * 볼 & 브릭 충돌
  */
-void Ball::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+void Ball::onContactBrick(Ball *ball, Game::Tile *tile, Vec2 contactPoint) {
     
+    // 충돌 횟수 업데이트
     contactCount++;
-    brickContactCount++;
-    wallContactCount = 0;
+    
+    // 중립 브릭은 벽 충돌로 분리
+    auto brick = (Brick*)tile;
+    
+    if( brick->getData().type != BrickType::SPECIAL_NEUTRAL ) {
+        brickContactCount++;
+        wallContactCount = 0;
+    } else {
+        brickContactCount = 0;
+        wallContactCount++;
+    }
     
     runHitAction(contactPoint);
 }
