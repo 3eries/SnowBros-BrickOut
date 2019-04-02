@@ -135,6 +135,8 @@ public:
     
     BrickList                getBricks();
     BrickList                getBricks(const std::string &brickId);
+    BrickList                getShootingTargetBricks();
+    
     ItemList                 getItems();
     ItemList                 getItems(ItemType type);
 

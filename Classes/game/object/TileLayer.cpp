@@ -19,6 +19,7 @@
 #include "tile/TileFactory.hpp"
 #include "tile/Brick_10012.hpp"
 #include "tile/NeutralBrick.hpp"
+#include "tile/GhostBrick.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -641,7 +642,7 @@ void TileLayer::resetRandomEngine() {
 }
 
 /**
- * 타일을 반환합니다
+ * 브릭을 반환합니다
  */
 BrickList TileLayer::getBricks() {
     return getTiles<Brick*>();
@@ -654,6 +655,32 @@ BrickList TileLayer::getBricks(const string &brickId) {
     });
 }
 
+BrickList TileLayer::getShootingTargetBricks() {
+    
+    auto bricks = getBricks();
+    
+    SBCollection::remove(bricks, [](Brick *brick) {
+        // 무한 HP 제외
+        if( brick->isInfinityHp() ) {
+            return true;
+        }
+        
+        // 투명화된 고스트 브릭 제외
+        auto ghostBrick = dynamic_cast<GhostBrick*>(brick);
+        
+        if( ghostBrick && ghostBrick->isGhostState() ) {
+            return true;
+        }
+        
+        return false;
+    });
+    
+    return bricks;
+}
+
+/**
+ * 아이템을 반환합니다
+ */
 ItemList TileLayer::getItems() {
     return getTiles<Item*>();
 }

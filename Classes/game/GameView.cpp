@@ -842,24 +842,8 @@ void GameView::checkAutoWithdrawBall(float dt) {
         return;
     }
     
-    // 남은 브릭 체크, 유효하지 않은 브릭 빼고 체크
-    auto bricks = tileLayer->getBricks();
-    
-    SBCollection::remove(bricks, [](Brick *brick) {
-        // 중립 브릭 제외
-        if( brick->getData().type == BrickType::SPECIAL_NEUTRAL ) {
-            return true;
-        }
-        
-        // 투명화된 고스트 브릭 제외
-        auto ghostBrick = dynamic_cast<GhostBrick*>(brick);
-        
-        if( ghostBrick && ghostBrick->isGhostState() ) {
-            return true;
-        }
-        
-        return false;
-    });
+    // 남은 브릭 체크
+    auto bricks = tileLayer->getShootingTargetBricks();
     
     if( bricks.size() == 0 ) {
         withdrawBall();
