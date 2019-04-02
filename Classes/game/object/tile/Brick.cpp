@@ -294,75 +294,66 @@ void Brick::removeWithAction() {
     
     Game::Tile::removeWithAction();
     
-    /*
-    setBgVisible(false);
-    
-    auto rotate = RepeatForever::create(RotateBy::create(0.1f, 100));
-    runAction(rotate);
-    
-    auto move = MoveBy::create(0.5f, Vec2(0, -320));
-    auto callFunc = CallFunc::create([=]() {
-        setVisible(false);
-        setNeedRemove(true);
-    });
-    runAction(Sequence::create(move, callFunc, nullptr));
-    
-    runAction(ScaleTo::create(0.5f, 0.7f));
-    
-    {
-        auto delay = DelayTime::create(0.1f);
-        auto fadeOut = FadeOut::create(0.4f);
-        image->runAction(Sequence::create(delay, fadeOut, nullptr));
-    }
-    */
-    
     setVisible(false);
     setNeedRemove(true);
     
-    const int ROWS = 6;
-    const float W = getContentSize().width / ROWS;
-    const int COLUMNS = getContentSize().height / W;
-    const float H = getContentSize().height / COLUMNS;
+    const int ROWS    = 6 * getData().width;
+    const int COLUMNS = 6 * getData().height;
     
-    const Vec2 ORIGIN = getPosition() - getAnchorPointInPoints();
+    const float PARTICLE_WIDTH = getContentSize().width / ROWS;
+    const float PARTICLE_HEIGHT = getContentSize().height / COLUMNS;
+    const Size  PARTICLE_SIZE(PARTICLE_WIDTH, PARTICLE_HEIGHT);
+    
+    const Vec2 CENTER = getPosition();
+    const Vec2 ORIGIN = CENTER - getAnchorPointInPoints();
+    
+    random_device rd;
+    mt19937 engine(rd());
     
     for( int row = 0; row < ROWS; ++row ) {
         for( int column = 0; column < COLUMNS; ++column ) {
+            const Vec2 PARTICLE_ORIGIN = ORIGIN + Vec2(row * PARTICLE_WIDTH, column * PARTICLE_HEIGHT);
+            const Vec2 PARTICLE_CENTER = PARTICLE_ORIGIN + (PARTICLE_SIZE*0.5f);
+            
             auto particle = LayerColor::create(Color4B(data.color));
             particle->setIgnoreAnchorPointForPosition(false);
-            particle->setAnchorPoint(ANCHOR_BL);
-            particle->setPosition(ORIGIN + Vec2(row*W, column*H));
-            particle->setContentSize(Size(W,H));
+            particle->setAnchorPoint(ANCHOR_M);
+            particle->setPosition(PARTICLE_CENTER);
+            particle->setContentSize(PARTICLE_SIZE);
             getParent()->addChild(particle, SBZOrder::BOTTOM);
+
+            const float DURATION = 0.8f;
             
-            const float DURATION = 0.7f;
-            
-            // move out
             {
-                int ran = ((arc4random() % 3)+3) * 5;
-                float x;
+                float diff = PARTICLE_CENTER.x - CENTER.x;
+                float ranX = SBMath::random(1,3) * 0.5f;
+                float dist = diff * ranX;
                 
-                if( row < 2 )         x = -ran;
-                else if( row > 3 )    x = ran;
-                else                  x = ((arc4random() % 3) * 2) * (arc4random() % 2 == 0 ? 1 : -1);
-                
-                auto moveX = MoveBy::create(DURATION*0.9f, Vec2(x, 0));
+                auto moveX = MoveBy::create(DURATION*1.1f, Vec2(dist, 0));
                 particle->runAction(moveX);
                 
-                auto moveY1 = MoveBy::create(DURATION*0.2f, Vec2(0, ((arc4random() % 4)+3) * 3));
-                auto moveY2 = MoveBy::create(DURATION*0.8f, Vec2(0, -320));
-                auto remove = RemoveSelf::create();
-                particle->runAction(Sequence::create(moveY1, moveY2, remove, nullptr));
+                float ranY = 50 * (SBMath::random(1,10) * 0.1f);
+                auto moveY = MoveBy::create(DURATION*1.1f, Vec2(0, -360 - ranY));
+                particle->runAction(moveY);
+            }
+             
+            // scale out
+            {
+                auto delay = DelayTime::create(DURATION*0.5f);
+                auto scaleOut = ScaleTo::create(DURATION*0.5f, 0.5f);
+                particle->runAction(Sequence::create(delay, scaleOut, nullptr));
             }
             
             // fade out
             {
                 auto delay = DelayTime::create(DURATION*0.6f);
                 auto fadeOut = FadeOut::create(DURATION*0.4f);
-                particle->runAction(Sequence::create(delay, fadeOut, nullptr));
+                auto remove = RemoveSelf::create();
+                particle->runAction(Sequence::create(delay, fadeOut, remove, nullptr));
             }
             
             // rotate
+            /*
             {
                 int ran = ((arc4random() % 3)+2) * 3;
                 float a;
