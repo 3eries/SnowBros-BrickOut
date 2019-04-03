@@ -363,6 +363,7 @@ void Brick::removeWithAction() {
                 else                  a = ran * (arc4random() % 2 == 0 ? 1 : -1);
                 particle->runAction(RotateBy::create(DURATION*0.5f, a));
             }
+            */
         }
     }
     
