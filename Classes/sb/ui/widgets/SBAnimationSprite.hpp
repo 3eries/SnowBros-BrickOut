@@ -41,10 +41,11 @@ public:
     virtual void stopAnimation();
     
 protected:
-    cocos2d::Animation *anim;
+    CC_SYNTHESIZE_READONLY(cocos2d::Animation*, anim, Animation);
     int loops;
     
     SB_SYNTHESIZE_BOOL(runningAnimation, RunningAnimation);
+    CC_SYNTHESIZE_READONLY(cocos2d::Animate*, animate, Animate);
     cocos2d::Action *action;
 };
 

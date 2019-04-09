@@ -13,14 +13,15 @@
 #include "../../GameView.hpp"
 
 #include "../tile/Tile.hpp"
+#include "../tile/Brick.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-FriendBall* FriendBall::create(const FriendData &data) {
+FriendBall* FriendBall::create(const FriendBallDef &def) {
     
-    auto ball = new FriendBall(data);
+    auto ball = new FriendBall(def);
     
     if( ball && ball->init() ) {
         ball->autorelease();
@@ -31,8 +32,11 @@ FriendBall* FriendBall::create(const FriendData &data) {
     return nullptr;
 }
 
-FriendBall::FriendBall(const FriendData &data) : Ball(),
-data(data),
+FriendBall::FriendBall(const FriendBallDef &def) : Ball(),
+data(def.data),
+ballIndex(def.index),
+tileLayer(nullptr),
+onContactBrickListener(nullptr),
 onContactFloorListener(nullptr) {
 }
 
@@ -54,10 +58,15 @@ bool FriendBall::init() {
  */
 void FriendBall::initImage() {
     
-    image = Sprite::create(ContentResourceHelper::getFriendBallImageFile(data.friendId));
-    image->setAnchorPoint(ANCHOR_M);
-    image->setPosition(Vec2MC(BALL_SIZE, 0, 0));
-    addChild(image);
+    auto animFiles = ContentResourceHelper::getFriendBallAnimationFiles(data.friendId);
+    
+    auto anim = SBAnimationSprite::create(animFiles, 0.06f);
+    anim->setAnchorPoint(ANCHOR_M);
+    anim->setPosition(Vec2MC(BALL_SIZE, 0, 0));
+    anim->runAnimation();
+    addChild(anim);
+    
+    this->image = anim;
 }
 
 /**
@@ -77,24 +86,25 @@ void FriendBall::fallToFloor() {
 }
 
 /**
- * 히트 연출
+ * 볼 히트 애니메이션을 생성합니다
  */
-void FriendBall::runHitAction(Vec2 contactPoint) {
+SBAnimationSprite* FriendBall::createHitAnimation() {
     
     StringList anims;
     
     for( int i = 1; i <= 4; ++i ) {
-        anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
+        anims.push_back(DIR_FRIEND + STR_FORMAT("friend_ball_hit_%02d.png", i));
     }
     
-    auto effect = SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);
-    effect->setAnchorPoint(ANCHOR_M);
-    effect->setPosition(contactPoint);
-    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::MIDDLE);
+    return SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);
+}
+
+/**
+ * 브릭 데미지 애니메이션을 생성합니다
+ */
+spine::SkeletonAnimation* FriendBall::createBrickDamageAnimation(Brick *brick, Vec2 contactPoint) {
     
-    effect->runAnimation([=](Node*) {
-        effect->removeFromParent();
-    });
+    return ContentResourceHelper::createFriendBrickDamageAnimation(data.friendId, brick->getData());
 }
 
 void FriendBall::onBeginContact(b2Contact *contact) {
@@ -118,11 +128,25 @@ void FriendBall::onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse
 }
 
 /**
- * 볼 & 벽돌 충돌
+ * 볼 & 브릭 충돌
  */
-void FriendBall::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+bool FriendBall::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
     
-    Ball::onContactBrick(ball, brick, contactPoint);
+    if( !Ball::onContactBrick(ball, brick, contactPoint) ) {
+        return false;
+    }
+    
+    if( onContactBrickListener ) {
+        onContactBrickListener(this, brick);
+    }
+    
+    // 브릭 충돌 후 제거
+    if( data.isRemoveAfterBrickContact ) {
+        onContactFloor(this);
+        setVisible(false);
+    }
+    
+    return true;
 }
 
 /**

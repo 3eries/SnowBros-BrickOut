@@ -148,7 +148,7 @@ void DemoView::shoot() {
             ballCountLabel->setVisible(false);
             this->shootStop();
         }
-    }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
+    }, SHOOTING_INTERVAL, SCHEDULER_SHOOT);
 }
 
 void DemoView::shootStop() {

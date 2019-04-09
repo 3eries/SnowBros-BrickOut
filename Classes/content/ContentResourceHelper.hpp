@@ -76,7 +76,8 @@ private:
 // Friends
 public:
     static std::string getFriendAnimationFile(const std::string &friendId);
-    static std::string getFriendBallImageFile(const std::string &friendId);
+    static StringList  getFriendBallAnimationFiles(const std::string &friendId);
+    static spine::SkeletonAnimation* createFriendBrickDamageAnimation(const std::string &friendId, const BrickData &brickData);
 };
 
 #endif /* ContentResourceHelper_hpp */

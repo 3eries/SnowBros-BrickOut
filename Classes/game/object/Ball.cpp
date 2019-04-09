@@ -22,7 +22,7 @@ using namespace std;
 static const string SCHEDULER_CHECK_MOVEMENT = "SCHEDULER_CHECK_MOVEMENT";
 
 Ball::Ball() : SBPhysicsObject(this),
-power(1),
+damage(1),
 fall(false) {
 }
 
@@ -257,9 +257,9 @@ void Ball::sleepWithAction() {
 }
 
 /**
- * 히트 연출
+ * 볼 히트 애니메이션을 생성합니다
  */
-void Ball::runHitAction(Vec2 contactPoint) {
+SBAnimationSprite* Ball::createHitAnimation() {
     
     StringList anims;
     
@@ -267,14 +267,7 @@ void Ball::runHitAction(Vec2 contactPoint) {
         anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
     }
     
-    auto effect = SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);
-    effect->setAnchorPoint(ANCHOR_M);
-    effect->setPosition(contactPoint);
-    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::MIDDLE);
-    
-    effect->runAnimation([=](Node*) {
-        effect->removeFromParent();
-    });
+    return SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);
 }
 
 void Ball::onBeginContact(b2Contact *contact) {
@@ -287,42 +280,17 @@ void Ball::onPreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
 }
 
 void Ball::onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse) {
-    
-    /*
-    // 바닥 충돌 무시
-    if( contact->GetFixtureA()->GetFilterData().categoryBits == PhysicsCategory::FLOOR ||
-        contact->GetFixtureB()->GetFilterData().categoryBits == PhysicsCategory::FLOOR ) {
-        return;
-    }
-
-    // 벽 충돌 무시
-    if( contact->GetFixtureA()->GetFilterData().categoryBits == PhysicsCategory::WALL ||
-        contact->GetFixtureB()->GetFilterData().categoryBits == PhysicsCategory::WALL ) {
-        return;
-    }
-    
-    // 히트 연출
-    StringList anims;
-    
-    for( int i = 1; i <= 4; ++i ) {
-        anims.push_back(DIR_IMG_GAME + STR_FORMAT("game_hit_%02d.png", i));
-    }
-    
-    auto effect = SBAnimationSprite::create(anims, ANIM_HIT_INTERVAL, 1);
-    effect->setAnchorPoint(ANCHOR_M);
-    effect->setPosition(SBPhysics::getContactPoint(contact));
-    GameManager::getInstance()->getView()->addChild(effect, SBZOrder::TOP);
-    
-    effect->runAnimation([=](Node*) {
-        effect->removeFromParent();
-    });
-    */
 }
 
 /**
  * 볼 & 브릭 충돌
  */
-void Ball::onContactBrick(Ball *ball, Game::Tile *tile, Vec2 contactPoint) {
+bool Ball::onContactBrick(Ball *ball, Game::Tile *tile, Vec2 contactPoint) {
+    
+    // 충돌 잠금 상태일 경우 충돌 무시
+    if( isCollisionLocked() ) {
+        return false;
+    }
     
     // 충돌 횟수 업데이트
     contactCount++;
@@ -338,7 +306,7 @@ void Ball::onContactBrick(Ball *ball, Game::Tile *tile, Vec2 contactPoint) {
         wallContactCount++;
     }
     
-    runHitAction(contactPoint);
+    return true;
 }
 
 /**

@@ -43,14 +43,15 @@ public:
     virtual void checkMovement(float dt);
     
     virtual void sleepWithAction();
-    virtual void runHitAction(cocos2d::Vec2 contactPoint);
+    
+    virtual SBAnimationSprite* createHitAnimation();
     
 protected:
     virtual void onBeginContact(b2Contact *contact);
     virtual void onEndContact(b2Contact *contact);
     virtual void onPreSolve(b2Contact *contact, const b2Manifold *oldManifold);
     virtual void onPostSolve(b2Contact *contact, const b2ContactImpulse *impulse);
-    virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
+    virtual bool onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     virtual void onContactItem(Ball *ball, Game::Tile *item);
     virtual void onContactWall(Ball *ball);
     virtual void onContactFloor(Ball *ball);
@@ -58,7 +59,7 @@ protected:
 protected:
     cocos2d::Sprite *image;
     
-    CC_SYNTHESIZE(int, power, Power);
+    CC_SYNTHESIZE(int, damage, Damage);
     SB_SYNTHESIZE_BOOL(fall, Fall);   // 추락 여부
     
     // 충돌 횟수

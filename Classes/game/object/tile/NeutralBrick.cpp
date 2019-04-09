@@ -88,7 +88,3 @@ void NeutralBrick::removeWithAction() {
     getImage()->runAction(Sequence::create(fadeOut, callFunc, nullptr));
 }
 
-void NeutralBrick::sufferDamage(int damage) {
-    
-    // 데미지 무시
-}

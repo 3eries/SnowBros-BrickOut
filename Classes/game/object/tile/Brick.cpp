@@ -12,6 +12,7 @@
 #include "../../GameManager.hpp"
 
 #include "../Ball.hpp"
+#include "../friend/FriendBall.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -36,6 +37,7 @@ def(def),
 data(def.data),
 originalHp(def.hp),
 hp(def.hp),
+prevHp(0),
 onBreakListener(nullptr),
 bg(nullptr),
 image(nullptr),
@@ -44,7 +46,9 @@ isRunningDamageWhiteEffect(false) {
 }
 
 Brick::~Brick() {
-    
+ 
+    ballHitAnims.clear();
+    friendsBallHitAnims.clear();
 }
 
 bool Brick::init() {
@@ -79,7 +83,7 @@ void Brick::onEnter() {
  */
 void Brick::initPhysics() {
     
-    Size size(getPhysicsSize());
+    Size size(getPhysicsSize() + Size(BRICK_PHYSICS_PADDING_X, BRICK_PHYSICS_PADDING_Y));
     
     b2BodyDef bodyDef;
     bodyDef.userData = (SBPhysicsObject*)this;
@@ -120,7 +124,7 @@ void Brick::initBg() {
     bg->setPosition(Vec2MC(getContentSize(), 0, 0));
     // bg->setColor(Color3B(0,0,0));
     // bg->setOpacity(255*0.3f);
-    addChild(bg, -1);
+    addChild(bg, (int)ZOrder::BG);
 }
 
 /**
@@ -131,7 +135,7 @@ void Brick::initImage() {
     image = SBAnimationSprite::create();
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(getContentSize(), 0, 0));
-    addChild(image);
+    addChild(image, (int)ZOrder::IMAGE);
     
     setImage(BrickImageType::IDLE, true);
 }
@@ -157,7 +161,7 @@ void Brick::initHpGage() {
         hpGage.label->setAnchorPoint(ANCHOR_MT);
         hpGage.label->setTextColor(Color4B::WHITE);
         hpGage.label->enableOutline(Color4B::BLACK, 3);
-        this->addChild(hpGage.label, 2);
+        this->addChild(hpGage.label, (int)ZOrder::HP_LABEL);
         
         return hpGage.label;
     };
@@ -221,7 +225,7 @@ void Brick::initHpGage() {
     hpGage.bg->setContentSize(Size(getContentSize().width*0.9f, bgSize.height));
     hpGage.bg->setAnchorPoint(ANCHOR_MT);
     hpGage.bg->setPosition(Vec2TC(getContentSize(), 0, is1x1() ? -9 : -8));
-    addChild(hpGage.bg, 1);
+    addChild(hpGage.bg, (int)ZOrder::HP_BAR);
     
     addGage();
 
@@ -320,7 +324,7 @@ void Brick::removeWithAction() {
             particle->setAnchorPoint(ANCHOR_M);
             particle->setPosition(PARTICLE_CENTER);
             particle->setContentSize(PARTICLE_SIZE);
-            getParent()->addChild(particle, SBZOrder::BOTTOM);
+            getParent()->addChild(particle, getLocalZOrder() + SBZOrder::BOTTOM);
 
             const float DURATION = 0.8f;
             
@@ -385,16 +389,68 @@ void Brick::removeWithAction() {
 }
 
 /**
- * 볼 & 벽돌 충돌
+ * 볼 히트 연출
  */
-void Brick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+void Brick::runBallHitAction(Ball *ball, Vec2 contactPoint) {
     
-    if( isBroken() ) {
-        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
+    const bool isFriendBall = dynamic_cast<FriendBall*>(ball);
+    auto &anims = !isFriendBall ? ballHitAnims : friendsBallHitAnims;
+    
+    // 제거된 애니메이션 정리
+    SBCollection::remove(anims, [](SBAnimationSprite *anim) -> bool {
+        return !anim->getParent() && !anim->isRunning();
+    });
+    
+    // 해당 좌표에 애니메이션이 없을때만 생성
+    auto contactPointAnims = SBCollection::find(anims, [contactPoint](SBAnimationSprite *anim) -> bool {
+        auto p = anim->getPosition();
+        return (int)p.x == (int)contactPoint.x && (int)p.y == (int)contactPoint.y;
+    });
+    
+    if( contactPointAnims.size() == 0 ) {
+        auto anim = ball->createHitAnimation();
+        anim->setAnchorPoint(ANCHOR_M);
+        anim->setPosition(contactPoint);
+        // GameManager::getInstance()->getView()->addChild(anim, SBZOrder::MIDDLE);
+        getParent()->addChild(anim, getLocalZOrder() + SBZOrder::MIDDLE);
+        
+        anims.pushBack(anim);
+        
+        anim->runAnimation([=](Node*) {
+            anim->removeFromParent();
+        });
+    }
+}
+
+/**
+ * 프렌즈볼에 의한 데미지 연출
+ */
+void Brick::runFriendBallDamageAction(FriendBall *ball, Vec2 contactPoint) {
+    
+    auto anim = ball->createBrickDamageAnimation(this, contactPoint);
+    if( !anim ) {
         return;
     }
     
-    sufferDamage(ball->getPower());
+    anim->setAnchorPoint(ANCHOR_M);
+    anim->setPosition(Vec2MC(getContentSize(), 0,0));
+    addChild(anim, (int)Brick::ZOrder::DAMAGE_EFFECT + ball->getData().brickDamageEffectZOrder);
+}
+
+/**
+ * 볼 & 벽돌 충돌
+ */
+bool Brick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+    
+    if( isBroken() ) {
+        Log::w("이미 깨진 브릭에 충돌 이벤트 발생!!").showMessageBox();
+        return false;
+    }
+    
+    runBallHitAction(ball, contactPoint);
+    sufferDamage(ball, contactPoint);
+    
+    return true;
 }
 
 /**
@@ -412,8 +468,13 @@ void Brick::onBreak() {
 /**
  * 데미지를 입습니다
  */
-void Brick::sufferDamage(int damage) {
+bool Brick::sufferDamage(Ball *ball, Vec2 contactPoint, bool withBallDamageAction) {
     
+    if( !canDamage() ) {
+        return false;
+    }
+    
+    const int damage = ball->getDamage();
     setHp(hp - damage);
     
     // 브릭 애니메이션 변경
@@ -430,7 +491,6 @@ void Brick::sufferDamage(int damage) {
                                                                               image->isFlippedX(),
                                                                               image->isFlippedY());
         auto whiteEffect = Sprite::createWithTexture(tex);
-        // auto whiteEffect = createWhiteBrickEffect();
         whiteEffect->setAnchorPoint(image->getAnchorPoint());
         whiteEffect->setPosition(image->getPosition());
         addChild(whiteEffect);
@@ -439,6 +499,39 @@ void Brick::sufferDamage(int damage) {
             whiteEffect->removeFromParent();
         }, 0.03f);
     }
+    
+    // 프렌즈볼 데미지 연출
+    if( withBallDamageAction ) {
+        auto friendBall = dynamic_cast<FriendBall*>(ball);
+        
+        if( friendBall ) {
+            runFriendBallDamageAction(friendBall, contactPoint);
+        }
+    }
+    
+    return true;
+    
+    // 데미지 연출
+    /*
+    if( damage > 1 && !isInfinityHp() ) {
+        auto gageBox = SB_BOUNDING_BOX_IN_WORLD(hpGage.label);
+        
+        auto label = Label::createWithTTF(TO_STRING(damage), FONT_COMMODORE, 45,
+                                          Size::ZERO, TextHAlignment::CENTER, TextVAlignment::CENTER);
+        label->setAnchorPoint(ANCHOR_M);
+        label->setPosition(Vec2(gageBox.getMidX(), gageBox.getMidY()));
+        label->setTextColor(Color4B::WHITE);
+        label->enableOutline(Color4B::BLACK, 3);
+        getParent()->addChild(label, SBZOrder::BOTTOM);
+        
+        label->setScale(0.2f);
+        
+        auto scale = ScaleTo::create(0.2f, 1);
+        auto delay = DelayTime::create(0.3f);
+        auto remove = RemoveSelf::create();
+        label->runAction(Sequence::create(scale, delay, remove, nullptr));
+    }
+     */
     
     // 흰색 브릭 반짝 연출
     /*
@@ -471,6 +564,11 @@ void Brick::sufferDamage(int damage) {
      */
 }
 
+bool Brick::sufferDamage(Ball *ball, Vec2 contactPoint) {
+    
+    return sufferDamage(ball, contactPoint, dynamic_cast<FriendBall*>(ball));
+}
+
 /**
  * HP 설정
  */
@@ -480,6 +578,7 @@ void Brick::setHp(int hp, bool updateUI) {
         return;
     }
     
+    this->prevHp = this->hp;
     this->hp = MAX(0, hp);
     
     if( updateUI ) {
@@ -508,9 +607,27 @@ void Brick::updateHpUI() {
     
     bg->setTexture(ContentResourceHelper::getBrickBackgroundFile(data, isElite(), bgStep));
     
-    // 게이지
-    hpGage.gage->setScaleX(hpRatio);
-    hpGage.label->setString(TO_STRING(hp));
+    // 게이지 & 라벨
+    hpGage.gage->stopAllActions();
+    hpGage.label->stopAllActions();
+    
+    const int diff = prevHp - hp;
+    
+    if( diff == 1 ) {
+        hpGage.gage->setScaleX(hpRatio);
+        hpGage.label->setString(TO_STRING(hp));
+    }
+    // 이전 HP와 2이상 차이나면 감소 연출
+    else {
+        const float DURATION = 0.1f;
+        hpGage.gage->runAction(ScaleTo::create(DURATION, hpRatio, hpGage.gage->getScaleY()));
+        
+        auto numberAction = ActionFloat::create(DURATION, prevHp, hp, [=](float value) {
+            int i = (int)value;
+            hpGage.label->setString(TO_STRING(i));
+        });
+        hpGage.label->runAction(numberAction);
+    }
 }
 
 void Brick::setBgVisible(bool isVisible) {
@@ -528,6 +645,15 @@ void Brick::setHpVisible(bool isVisible) {
     
     hpGage.bg->setVisible(isVisible);
     hpGage.label->setVisible(isVisible);
+}
+
+/**
+ * 데미지를 입을 수 있는 상태인지 반환합니다
+ */
+bool Brick::canDamage() {
+    
+    // 깨지지 않고 무한 HP가 아니면 데미지를 입을 수 있습니다
+    return !isBroken() && !isInfinityHp();
 }
 
 bool Brick::isElite() {

@@ -35,8 +35,8 @@ SBAnimationSprite::SBAnimationSprite() :
 anim(nullptr),
 loops(0),
 runningAnimation(false),
+animate(nullptr),
 action(nullptr) {
-    
 }
 
 SBAnimationSprite::~SBAnimationSprite() {
@@ -118,7 +118,7 @@ void SBAnimationSprite::runAnimation(SBCallbackNode onCompletedListener) {
     
     runningAnimation = true;
     
-    auto animate = Animate::create(anim);
+    animate = Animate::create(anim);
     
     if( loops == LOOP_FOREVER ) {
         action = RepeatForever::create(animate);

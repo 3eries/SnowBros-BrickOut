@@ -20,9 +20,23 @@ using namespace std;
 #define        SLOT_COUNT          5
 #define        FRIENDS_POS_Y       (SB_WIN_SIZE.height*0.5f)
 
-FriendsLayer::FriendsLayer() :
+FriendsLayer* FriendsLayer::create(TileLayer *tileLayer) {
+    
+    auto layer = new FriendsLayer(tileLayer);
+    
+    if( layer && layer->init() ) {
+        layer->autorelease();
+        return layer;
+    }
+    
+    CC_SAFE_DELETE(layer);
+    return nullptr;
+}
+
+FriendsLayer::FriendsLayer(TileLayer *tileLayer) :
+tileLayer(tileLayer),
 onFallFinishedListener(nullptr),
-friendsPower(1) {
+friendsDamage(1) {
 }
 
 FriendsLayer::~FriendsLayer() {
@@ -63,6 +77,7 @@ void FriendsLayer::initFriends() {
     for( int i = 0; i < friendDatas.size(); ++i ) {
         auto friendNode = createFriend(friendDatas[i]);
         friendNode->setOnFallFinishedListener(CC_CALLBACK_1(FriendsLayer::onFallFinished, this));
+        friendNode->setTileLayer(tileLayer);
         friendNode->setCascadeColorEnabled(true);
         addChild(friendNode);
         
@@ -116,7 +131,9 @@ void FriendsLayer::initGameListener() {
 
 Friend* FriendsLayer::createFriend(const FriendData &data) {
     
-    FriendDef def(data, friendsPower);
+    FriendDef def(data);
+    def.damage = friendsDamage;
+    def.tileLayer = tileLayer;
     
     return Friend::create(def);
 }
@@ -124,7 +141,7 @@ Friend* FriendsLayer::createFriend(const FriendData &data) {
 /**
  * 프렌즈 볼 발사
  */
-void FriendsLayer::shoot(TileLayer *tileLayer) {
+void FriendsLayer::shoot() {
     
     if( shot ) {
         return;
@@ -134,29 +151,8 @@ void FriendsLayer::shoot(TileLayer *tileLayer) {
     
     shot = true;
     
-    if( tileLayer->getBricks().size() == 0 ) {
-        return;
-    }
-    
-    Brick *forwardBrick = nullptr;
-    
-    for( int y = 1; y < GAME_CONFIG->getTileColumns(); ++y ) {
-        auto bricks = tileLayer->getTiles<Brick*>(y);
-        
-        if( bricks.size() > 0 ) {
-            forwardBrick = bricks[arc4random() % bricks.size()];
-            break;
-        }
-    }
-    
-    if( !forwardBrick ) {
-        return;
-    }
-    
-    auto endPos = forwardBrick->getPosition();
-    
     for( auto friendNode : friends ) {
-        friendNode->shoot(endPos);
+        friendNode->shoot();
     }
 }
 
@@ -213,7 +209,7 @@ void FriendsLayer::eatFriendsItem(Item *item) {
     switch( item->getData().type ) {
         // 프렌즈 파워업
         case ItemType::FRIENDS_POWER_UP: {
-            ++friendsPower;
+            ++friendsDamage;
             
             // 연출
             for( auto friendNode : friends ) {
@@ -225,7 +221,7 @@ void FriendsLayer::eatFriendsItem(Item *item) {
                 label->enableOutline(Color4B::BLACK, 3);
                 addChild(label, SBZOrder::MIDDLE);
                 
-                auto move = MoveBy::create(0.8f, Vec2(0, 70));
+                auto move = MoveBy::create(0.8f, Vec2(0, 50));
                 auto remove = RemoveSelf::create();
                 label->runAction(Sequence::create(move, remove, nullptr));
             }
@@ -238,14 +234,14 @@ void FriendsLayer::eatFriendsItem(Item *item) {
 }
 
 /**
- * 프렌즈 파워 업데이트
+ * 프렌즈 데미지 업데이트
  */
-void FriendsLayer::updateFriendsPower() {
+void FriendsLayer::updateFriendsDamage() {
     
-    Log::i("FriendsLayer::updateFriendsPower friendsPower: %d", friendsPower);
+    Log::i("FriendsLayer::updateFriendsDamage damage: %d", friendsDamage);
     
     for( auto friendNode : friends ) {
-        friendNode->setPower(friendsPower);
+        friendNode->setDamage(friendsDamage);
     }
 }
 
@@ -269,7 +265,7 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
         auto friendNode = friends[i];
         auto slot = sortedSlots[i];
         
-        friendNode->setPowerVisible(true);
+        friendNode->setDamageVisible(true);
         
         if( withAction ) {
             int diff = abs(slot.index - getNearSlot(friendNode->getPosition()).index);
@@ -280,12 +276,12 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
             
             friendNode->setImage(Friend::ImageType::MOVE);
             friendNode->setImageFlippedX(slot.pos.x < friendNode->getPositionX());
-            friendNode->setPowerVisible(false);
+            friendNode->setDamageVisible(false);
             
             auto move = MoveTo::create(diff * 0.25f, slot.pos);
             auto callFunc = CallFunc::create([=]() {
                 friendNode->setImage(Friend::ImageType::IDLE);
-                friendNode->setPowerVisible(true);
+                friendNode->setDamageVisible(true);
                 slot.put(friendNode);
             });
             friendNode->runAction(Sequence::create(move, callFunc, nullptr));
@@ -314,7 +310,7 @@ void FriendsLayer::onGameExit() {
 void FriendsLayer::onGameReset() {
     
     shot = false;
-    friendsPower = 1;
+    friendsDamage = 1;
 }
 
 /**
@@ -404,8 +400,8 @@ void FriendsLayer::onFloorChanged(const FloorData &floor) {
     
     shot = false;
     
-    // 파워 업데이트
-    updateFriendsPower();
+    // 데미지 업데이트
+    updateFriendsDamage();
 }
 
 /**

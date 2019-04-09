@@ -20,7 +20,6 @@ USING_NS_CC;
 using namespace cocos2d::ui;
 using namespace std;
 
-static const float LINE_PADDING         = 25;   // 조준선 간격
 static const Color4B DEBUG_AIM_LINE_COLOR               = Color4B(0,0,255,255*0.2f);
 
 AimController::AimController() :

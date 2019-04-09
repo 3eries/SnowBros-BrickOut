@@ -15,6 +15,7 @@
 #include "Tile.hpp"
 
 class Ball;
+class FriendBall;
 
 struct BrickDef {
     BrickData data;
@@ -34,6 +35,17 @@ class Brick : public Game::Tile {
 public:
     static Brick* create(const BrickDef &def);
     virtual ~Brick();
+    
+public:
+    enum class ZOrder {
+        BG            = -1,
+        IMAGE,
+        
+        DAMAGE_EFFECT = 5,
+        
+        HP_BAR        = 10,
+        HP_LABEL,
+    };
     
 protected:
     Brick(const BrickDef &def);
@@ -56,10 +68,15 @@ public:
     virtual void enterWithAction() override;
     virtual void removeWithAction() override;
     
-    virtual void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
+    virtual void runBallHitAction(Ball *ball, cocos2d::Vec2 contactPoint);
+    virtual void runFriendBallDamageAction(FriendBall *ball, cocos2d::Vec2 contactPoint);
+    
+    virtual bool onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
     virtual void onBreak();
     
-    virtual void sufferDamage(int damage);
+    virtual bool sufferDamage(Ball *ball, cocos2d::Vec2 contactPoint,
+                              bool withBallDamageAction);
+    virtual bool sufferDamage(Ball *ball, cocos2d::Vec2 contactPoint);
     virtual void setHp(int hp, bool updateUI = true);
     
     virtual void updateHpUI();
@@ -67,18 +84,20 @@ public:
     virtual void setBgVisible(bool isVisible);
     virtual void setHpVisible(bool isVisible);
     
-    bool    isElite();
-    bool    isBoss();
-    bool    isInfinityHp();
+    virtual bool canDamage();
     
-    bool    isBroken();
-    float   getHpRatio();
+    bool         isElite();
+    bool         isBoss();
+    bool         isInfinityHp();
+    bool         isBroken();
+    float        getHpRatio();
     
 protected:
     BrickDef def;
     CC_SYNTHESIZE_READONLY(BrickData, data, Data);
     CC_SYNTHESIZE_READONLY(int, originalHp, OriginalHp);
     CC_SYNTHESIZE_READONLY(int, hp, Hp);
+    int prevHp;
     
     CC_SYNTHESIZE(SBCallbackNode, onBreakListener, OnBreakListener)
     
@@ -98,6 +117,10 @@ protected:
     HpGage hpGage;
     
     bool isRunningDamageWhiteEffect;
+    
+    typedef cocos2d::Vector<SBAnimationSprite*> BallHitAnimations;
+    BallHitAnimations ballHitAnims;
+    BallHitAnimations friendsBallHitAnims;
 };
 
 typedef std::function<void(Brick*)> OnBrickListener;

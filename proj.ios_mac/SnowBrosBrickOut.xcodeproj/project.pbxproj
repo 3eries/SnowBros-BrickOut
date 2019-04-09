@@ -71,6 +71,7 @@
 		1D622140214F500400567075 /* SBJSON.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D62213E214F500400567075 /* SBJSON.cpp */; };
 		1D6505542201A6DB00B4BB0D /* FriendsLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D6505522201A6DB00B4BB0D /* FriendsLayer.cpp */; };
 		1D69EBE721BC31A600DC5FF9 /* AimController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D69EBE521BC31A600DC5FF9 /* AimController.cpp */; };
+		1D7833FB22528EF700A15154 /* PassBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7833F922528EF700A15154 /* PassBall.cpp */; };
 		1D7CC52A223AB27500671D5B /* TileLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7CC528223AB27500671D5B /* TileLayer.cpp */; };
 		1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709321C9786400CF907F /* TopMenu.cpp */; };
 		1D7E709B21CA355A00CF907F /* StageClearPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D7E709921CA355A00CF907F /* StageClearPopup.cpp */; };
@@ -104,6 +105,8 @@
 		1DA98BC820B46F64006BC169 /* GameManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA98BC620B46F61006BC169 /* GameManager.cpp */; };
 		1DA98BD220B47E66006BC169 /* User.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA98BD020B47E66006BC169 /* User.cpp */; };
 		1DACEF9C21CB8CAA003FF4AC /* SBDebug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DACEF9A21CB8CAA003FF4AC /* SBDebug.cpp */; };
+		1DB4B8CD2252D092009481B3 /* SplashBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB4B8CB2252D092009481B3 /* SplashBall.cpp */; };
+		1DB4B8DC225C14FA009481B3 /* CriticalBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB4B8DA225C14FA009481B3 /* CriticalBall.cpp */; };
 		1DBC68E820E49B9300CA85F0 /* CreditPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */; };
 		1DBCE73421AEB9F4002D8DC3 /* SBEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBCE73221AEB9F4002D8DC3 /* SBEvent.cpp */; };
 		1DC2B7E4222EE30800C8EF98 /* SBTransition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC2B7E2222EE30800C8EF98 /* SBTransition.cpp */; };
@@ -111,7 +114,6 @@
 		1DC8554121902FB2007E180C /* GiftListener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8553F21902FB2007E180C /* GiftListener.cpp */; };
 		1DD308DB224ABBDB002A50E8 /* BannerView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD308D9224ABBDB002A50E8 /* BannerView.cpp */; };
 		1DD308E0224AF38B002A50E8 /* FriendBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD308DE224AF38B002A50E8 /* FriendBall.cpp */; };
-		1DD308E3224AF3AF002A50E8 /* ShootingFriend.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD308E1224AF3AF002A50E8 /* ShootingFriend.cpp */; };
 		1DD38B5720FC93D200811604 /* SBActionHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD38B5520FC93D200811604 /* SBActionHelper.cpp */; };
 		1DD6979C21B84EAC005FDC62 /* GameMap.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD6979A21B84EAC005FDC62 /* GameMap.cpp */; };
 		1DD6979F21B84ED1005FDC62 /* GamePhysics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DD6979D21B84ED1005FDC62 /* GamePhysics.cpp */; };
@@ -329,6 +331,8 @@
 		1D6505532201A6DB00B4BB0D /* FriendsLayer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FriendsLayer.hpp; sourceTree = "<group>"; };
 		1D69EBE521BC31A600DC5FF9 /* AimController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AimController.cpp; sourceTree = "<group>"; };
 		1D69EBE621BC31A600DC5FF9 /* AimController.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = AimController.hpp; sourceTree = "<group>"; };
+		1D7833F922528EF700A15154 /* PassBall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PassBall.cpp; sourceTree = "<group>"; };
+		1D7833FA22528EF700A15154 /* PassBall.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PassBall.hpp; sourceTree = "<group>"; };
 		1D7CC528223AB27500671D5B /* TileLayer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TileLayer.cpp; sourceTree = "<group>"; };
 		1D7CC529223AB27500671D5B /* TileLayer.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TileLayer.hpp; sourceTree = "<group>"; };
 		1D7E709321C9786400CF907F /* TopMenu.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TopMenu.cpp; sourceTree = "<group>"; };
@@ -395,6 +399,11 @@
 		1DA98BD120B47E66006BC169 /* User.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = User.hpp; sourceTree = "<group>"; };
 		1DACEF9A21CB8CAA003FF4AC /* SBDebug.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBDebug.cpp; sourceTree = "<group>"; };
 		1DACEF9B21CB8CAA003FF4AC /* SBDebug.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBDebug.hpp; sourceTree = "<group>"; };
+		1DB4B8CB2252D092009481B3 /* SplashBall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SplashBall.cpp; sourceTree = "<group>"; };
+		1DB4B8CC2252D092009481B3 /* SplashBall.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SplashBall.hpp; sourceTree = "<group>"; };
+		1DB4B8D5225577FE009481B3 /* FriendsPackData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FriendsPackData.h; sourceTree = "<group>"; };
+		1DB4B8DA225C14FA009481B3 /* CriticalBall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CriticalBall.cpp; sourceTree = "<group>"; };
+		1DB4B8DB225C14FA009481B3 /* CriticalBall.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CriticalBall.hpp; sourceTree = "<group>"; };
 		1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CreditPopup.cpp; sourceTree = "<group>"; };
 		1DBC68E720E49B9300CA85F0 /* CreditPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CreditPopup.hpp; sourceTree = "<group>"; };
 		1DBCE71C21AE8A3E002D8DC3 /* SBPluginConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBPluginConfig.h; sourceTree = "<group>"; };
@@ -411,8 +420,6 @@
 		1DD308DA224ABBDB002A50E8 /* BannerView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BannerView.hpp; sourceTree = "<group>"; };
 		1DD308DE224AF38B002A50E8 /* FriendBall.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FriendBall.cpp; sourceTree = "<group>"; };
 		1DD308DF224AF38B002A50E8 /* FriendBall.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FriendBall.hpp; sourceTree = "<group>"; };
-		1DD308E1224AF3AF002A50E8 /* ShootingFriend.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShootingFriend.cpp; sourceTree = "<group>"; };
-		1DD308E2224AF3AF002A50E8 /* ShootingFriend.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ShootingFriend.hpp; sourceTree = "<group>"; };
 		1DD38B5520FC93D200811604 /* SBActionHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBActionHelper.cpp; sourceTree = "<group>"; };
 		1DD38B5620FC93D200811604 /* SBActionHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBActionHelper.hpp; sourceTree = "<group>"; };
 		1DD6979A21B84EAC005FDC62 /* GameMap.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameMap.cpp; sourceTree = "<group>"; };
@@ -585,12 +592,16 @@
 		1D13227B21C24D1B005F4370 /* friend */ = {
 			isa = PBXGroup;
 			children = (
+				1DB4B8DA225C14FA009481B3 /* CriticalBall.cpp */,
+				1DB4B8DB225C14FA009481B3 /* CriticalBall.hpp */,
 				1D13227E21C24D39005F4370 /* Friend.cpp */,
 				1D13227F21C24D39005F4370 /* Friend.hpp */,
 				1DD308DE224AF38B002A50E8 /* FriendBall.cpp */,
 				1DD308DF224AF38B002A50E8 /* FriendBall.hpp */,
-				1DD308E1224AF3AF002A50E8 /* ShootingFriend.cpp */,
-				1DD308E2224AF3AF002A50E8 /* ShootingFriend.hpp */,
+				1D7833F922528EF700A15154 /* PassBall.cpp */,
+				1D7833FA22528EF700A15154 /* PassBall.hpp */,
+				1DB4B8CB2252D092009481B3 /* SplashBall.cpp */,
+				1DB4B8CC2252D092009481B3 /* SplashBall.hpp */,
 			);
 			path = friend;
 			sourceTree = "<group>";
@@ -634,6 +645,7 @@
 				1D8538932236DBB90087DF1A /* DemoData.h */,
 				1D25EE14220B398400DD126A /* FloorData.h */,
 				1D1AAC0F2242BD1300B08799 /* FriendData.h */,
+				1DB4B8D5225577FE009481B3 /* FriendsPackData.h */,
 				1D25EE12220B398400DD126A /* ItemData.h */,
 				1DA204A42212BE4700656689 /* PatternData.h */,
 				1D25EE13220B398400DD126A /* StageData.h */,
@@ -1497,6 +1509,8 @@
 				1DA0408921034661001980BA /* Analytics-android.cpp in Sources */,
 				1D24F6EB21218A56002461A7 /* ReviewHelper.cpp in Sources */,
 				1D25EE17220B398500DD126A /* Database.cpp in Sources */,
+				1DB4B8DC225C14FA009481B3 /* CriticalBall.cpp in Sources */,
+				1D7833FB22528EF700A15154 /* PassBall.cpp in Sources */,
 				1DC2B7E4222EE30800C8EF98 /* SBTransition.cpp in Sources */,
 				1D25EE32220E6BC200DD126A /* Brick_10012.cpp in Sources */,
 				1D1F3C8D20ACD36F0035A36C /* ResourceHelper.cpp in Sources */,
@@ -1508,8 +1522,8 @@
 				1DE1DC2620F759C800BB3238 /* SBEffect.cpp in Sources */,
 				1D45C48A20A8A7B8007E63AD /* SBStringUtils.cpp in Sources */,
 				1D2247C12150EADF00439BBD /* SBMath.cpp in Sources */,
-				1DD308E3224AF3AF002A50E8 /* ShootingFriend.cpp in Sources */,
 				1D25EE2C220E1E6D00DD126A /* TestCase.cpp in Sources */,
+				1DB4B8CD2252D092009481B3 /* SplashBall.cpp in Sources */,
 				1DF4B4FF21B6B0BC00835223 /* SettingPopup.cpp in Sources */,
 				1DA98BD220B47E66006BC169 /* User.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,

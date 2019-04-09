@@ -22,11 +22,11 @@ class Item;
 
 class FriendsLayer : public cocos2d::Node {
 public:
-    CREATE_FUNC(FriendsLayer);
+    static FriendsLayer* create(TileLayer *tileLayer);
     ~FriendsLayer();
     
 private:
-    FriendsLayer();
+    FriendsLayer(TileLayer *tileLayer);
     
     bool init() override;
     void cleanup() override;
@@ -37,7 +37,7 @@ private:
     Friend* createFriend(const FriendData &data);
     
 public:
-    void shoot(TileLayer *tileLayer);
+    void shoot();
     void shootStop();
     
     void onFallFinished(Friend *friendNode);
@@ -47,7 +47,7 @@ public:
     
     void eatFriendsItem(Item *item);
     
-    void updateFriendsPower();
+    void updateFriendsDamage();
     void updatePosition(const cocos2d::Vec2 &ballPos, bool withAction);
     
 // Game Event
@@ -76,13 +76,14 @@ private:
 private:
     CC_SYNTHESIZE(SBCallback, onFallFinishedListener, OnFallFinishedListener);
     
+    TileLayer *tileLayer;
     std::vector<Friend*> friends;
     
     // 볼 발사 여부
     SB_SYNTHESIZE_READONLY_BOOL(shot, Shot);
     
-    // 프렌즈 파워
-    CC_SYNTHESIZE_READONLY(int, friendsPower, FriendsPower);
+    // 프렌즈 데미지
+    CC_SYNTHESIZE_READONLY(int, friendsDamage, FriendsDamage);
     
 private:
     struct Slot {

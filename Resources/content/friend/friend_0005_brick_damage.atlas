@@ -1,0 +1,20 @@
+
+friend_0005_brick_damage.png
+size: 1024,128
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+effect_water_01
+  rotate: false
+  xy: 2, 2
+  size: 268, 92
+  orig: 268, 92
+  offset: 0, 0
+  index: -1
+effect_water_02
+  rotate: false
+  xy: 272, 2
+  size: 268, 92
+  orig: 268, 92
+  offset: 0, 0
+  index: -1

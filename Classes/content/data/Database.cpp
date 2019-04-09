@@ -287,10 +287,12 @@ void Database::parseFriendsJson() {
     for( int i = 0; i < list.Size(); ++i ) {
         const rapidjson::Value &v = list[i];
         
-        FriendData friendData(v);
-        friends.push_back(friendData);
+        FriendsPackData packData(v);
+        friendsPacks.push_back(packData);
         
-        CCLOG("%s", friendData.toString().c_str());
+        SBCollection::addAll(friends, packData.friends);
+        
+        CCLOG("%s", packData.toString().c_str());
     }
     
     CCLOG("========== PARSE END (friends.json)  ==========");
@@ -515,6 +517,23 @@ BrickData Database::getBrick(const string &brickId) {
 /**
  * 프렌즈 데이터를 반환합니다
  */
+FriendsPackDataList Database::getFriendsPacks() {
+    return instance->friendsPacks;
+}
+
+FriendsPackData Database::getFriendsPack(const string &packId) {
+    
+    auto packs = getFriendsPacks();
+    
+    for( auto packData : packs ) {
+        if( packData.packId == packId ) {
+            return packData;
+        }
+    }
+    
+    return FriendsPackData();
+}
+
 FriendDataList Database::getFriends() {
     return instance->friends;
 }

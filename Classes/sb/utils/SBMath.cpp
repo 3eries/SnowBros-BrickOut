@@ -7,6 +7,7 @@
 #include "SBMath.hpp"
 
 USING_NS_CC;
+using namespace std;
 
 /**
  * 자릿수를 반환합니다
@@ -45,4 +46,13 @@ Vec2 SBMath::getEndPosition(const Vec2 &startPos, float angle, float dist) {
     p += (Vec2::forAngle(-CC_DEGREES_TO_RADIANS(angle-90)) * dist);
     
     return p;
+}
+
+int SBMath::random(int min, int max) {
+ 
+    random_device rd;
+    mt19937 engine(rd());
+    
+    uniform_int_distribution<int> dist(min, max);
+    return dist(engine);
 }

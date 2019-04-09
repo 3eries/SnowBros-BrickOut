@@ -29,7 +29,6 @@ private:
 public:
     void down() override;
     void removeWithAction() override;
-    void sufferDamage(int damage) override;
 };
 
 #endif /* NeutralBrick_hpp */

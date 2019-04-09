@@ -7,8 +7,6 @@
 
 #include "GamePhysics.hpp"
 
-#include "GameDefine.h"
-
 #include "object/Ball.hpp"
 #include "object/tile/Tile.hpp"
 #include "object/tile/Brick.hpp"
@@ -331,9 +329,11 @@ void PhysicsManager::PostSolve(b2Contact *contact, const b2ContactImpulse *impul
         
         if( objs.obj1 && objs.obj2 ) {
             auto ball = (Ball*)objs.obj1;
-            auto brick = (Game::Tile*)objs.obj2;
+            auto brick = (Brick*)objs.obj2;
             
-            dispatchOnContactBrick(ball, brick, SBPhysics::getContactPoint(contact));
+            if( !brick->isBroken() ) {
+                dispatchOnContactBrick(ball, brick, SBPhysics::getContactPoint(contact));
+            }
             
 #if DEBUG_LOG_ENABLED
             CCLOG("\t> Brick hp: %d, ball awake: %d, brick awake: %d", brick->getHp(), ball->isAwake(), brick->isAwake());

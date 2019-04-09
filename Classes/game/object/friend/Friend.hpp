@@ -16,12 +16,14 @@
 #include "../../../content/data/model/FriendData.h"
 #include "FriendBall.hpp"
 
+class TileLayer;
+
 struct FriendDef {
     FriendData data;
-    int power;
+    int damage;
+    TileLayer *tileLayer;
     
-    FriendDef(const FriendData &_data, int _power) : data(_data), power(_power) {}
-    FriendDef(const FriendData &_data) : data(_data), power(1) {}
+    FriendDef(const FriendData &_data) : data(_data), damage(1), tileLayer(nullptr) {}
 };
 
 class Friend : public cocos2d::Node {
@@ -48,7 +50,6 @@ protected:
     
     virtual void initImage();
     virtual void initBall();
-    virtual void initPhysicsListener();
     
     virtual FriendBall* createBall();
     virtual void        addBall(int count = 1);
@@ -56,39 +57,41 @@ protected:
     int                 getBallCount();
     
 private:
-//    virtual void onContactBrick(Ball *ball, Game::Tile *brickTile, cocos2d::Vec2 contactPoint);
-//    virtual void onContactWall(Ball *ball);
+    virtual void onContactBrick(FriendBall *ball, Game::Tile *brick);
     virtual void onContactFloor(FriendBall *ball);
     
 public:
-    virtual void    shoot(cocos2d::Vec2 endPosition);
-    virtual void    shootStop();
-    virtual void    onShootFinished();
+    virtual void          shoot();
+    virtual void          shootStop();
+    virtual void          onShootFinished();
     
-    virtual void    withdrawBall();
+    cocos2d::Vec2         getShootingPosition();
+    virtual cocos2d::Vec2 getShootingTargetPosition();
     
-    bool            isFallFinished();
-    cocos2d::Vec2   getShootingPosition();
+    virtual void          withdrawBall();
     
-    virtual void    setImage(ImageType type, SBCallback onAnimationFinished = nullptr);
-    virtual void    setImageFlippedX(bool flippedX);
+    bool                  isFallFinished();
     
-    virtual void    setPower(int power);
-    virtual void    setPowerVisible(bool isVisible);
+    virtual void          setImage(ImageType type, SBCallback onAnimationFinished = nullptr);
+    virtual void          setImageFlippedX(bool flippedX);
+    
+    virtual void          setDamage(int damage);
+    virtual void          setDamageVisible(bool isVisible);
     
 protected:
     CC_SYNTHESIZE(std::function<void(Friend*)>, onFallFinishedListener,
                   OnFallFinishedListener);
+    CC_SYNTHESIZE(TileLayer*, tileLayer, TileLayer);
     
     CC_SYNTHESIZE_READONLY(FriendData, data, Data);
-    CC_SYNTHESIZE_READONLY(int, power, Power);
+    CC_SYNTHESIZE_READONLY(int, damage, Damage);
     
     int shootIndex;       // 발사된 볼 인덱스
     int fallenBallCount;  // 떨어진 볼 개수
     
     spine::SkeletonAnimation *image;
     std::vector<FriendBall*> balls;
-    cocos2d::Label *powerLabel;
+    cocos2d::Label *damageLabel;
 };
 
 #endif /* Friend_hpp */

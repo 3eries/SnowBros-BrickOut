@@ -23,7 +23,7 @@ private:
     bool init() override;
     void onEnter() override;
     
-    void onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint) override;
+    bool onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint) override;
     
 private:
     SBAnimationSprite *shieldAnim;

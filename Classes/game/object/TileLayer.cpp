@@ -31,7 +31,7 @@ TileLayer::TileLayer() :
 onBrickAddedListener(nullptr),
 onTileDownFinishedListener(nullptr),
 onBrickBreakListener(nullptr),
-ballCount(0), friendsPower(0) {
+ballCount(0), friendsDamage(0) {
 }
 
 TileLayer::~TileLayer() {
@@ -206,7 +206,7 @@ void TileLayer::initFloorTile(const FloorData &floor) {
     // 타일 등장 연출 완료 후 이동
     SBDirector::postDelayed(this, [=]() {
         this->downTile();
-    }, /*TILE_ENTER_DURATION + 0.1f*/0.3f);
+    }, TILE_ENTER_DURATION);
 }
 
 /**
@@ -227,11 +227,6 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
     resetDropSpace(dropData);
     
     Log::i("TileLayer::initFloorBrick(%d-%d) availableTileCount: %d", floor.stage, GameManager::getFloorInStage(), dropData.availableTileCount);
-    
-    // 가용 칸수 체크
-    if( dropData.isNoSpace() ) {
-        return;
-    }
     
     // 패턴
     if( !floor.pattern.isNull() ) {
@@ -255,6 +250,11 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
             bossBrick->setParts(partBricks);
         }
         
+        return;
+    }
+    
+    // 가용 칸수 체크
+    if( dropData.isNoSpace() ) {
         return;
     }
     
@@ -411,8 +411,8 @@ void TileLayer::initFloorItem(const FloorData &floor) {
     
     // 프렌즈 파워 증가 아이템
     if( positions.size() > 0 ) {
-        int currentCount = (int)(friendsPower + getItems(ItemType::FRIENDS_POWER_UP).size());
-        Log::i("TileLayer::initFloorItem friendsPower: %d", friendsPower);
+        int currentCount = (int)(friendsDamage + getItems(ItemType::FRIENDS_POWER_UP).size());
+        Log::i("TileLayer::initFloorItem friendsDamage: %d", friendsDamage);
         
         if( checkDrop(ItemType::FRIENDS_POWER_UP, currentCount, stage.finalFriendsBallCount,
                       randomEngine.friendsPowerUp) ) {
@@ -655,27 +655,11 @@ BrickList TileLayer::getBricks(const string &brickId) {
     });
 }
 
-BrickList TileLayer::getShootingTargetBricks() {
+BrickList TileLayer::getCanDamageBricks() {
     
-    auto bricks = getBricks();
-    
-    SBCollection::remove(bricks, [](Brick *brick) {
-        // 무한 HP 제외
-        if( brick->isInfinityHp() ) {
-            return true;
-        }
-        
-        // 투명화된 고스트 브릭 제외
-        auto ghostBrick = dynamic_cast<GhostBrick*>(brick);
-        
-        if( ghostBrick && ghostBrick->isGhostState() ) {
-            return true;
-        }
-        
-        return false;
+    return SBCollection::find(getBricks(), [](Brick *brick) -> bool  {
+        return brick->canDamage();
     });
-    
-    return bricks;
 }
 
 /**

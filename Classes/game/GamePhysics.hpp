@@ -14,6 +14,7 @@
 #include "superbomb.h"
 #include "Box2D/Box2D.h"
 
+#include "GameDefine.h"
 #include "object/GameMap.hpp"
 
 class Ball;
@@ -38,6 +39,7 @@ public:
     
     std::function<void(Ball*,Game::Tile*,cocos2d::Vec2)>     onContactBrick;
     std::function<void(Ball*,Game::Tile*)>                   onContactItem;
+//    std::function<void(Ball*,PhysicsCategory)>               onContactWall;
     std::function<void(Ball*)>                               onContactWall;
     std::function<void(Ball*)>                               onContactFloor;
     

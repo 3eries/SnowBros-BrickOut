@@ -706,8 +706,8 @@ void GameView::shoot(const Vec2 &endPosition) {
             balls[shootIndex]->setVisible(true);
             
             // 프렌즈 볼 슈팅
-            if( shootIndex >= balls.size()*0.3f && !friendsLayer->isShot() ) {
-                friendsLayer->shoot(this->tileLayer);
+            if( !friendsLayer->isShot() && shootIndex >= balls.size()*0.3f ) {
+                friendsLayer->shoot();
             }
         }
         // 슈팅 완료
@@ -717,7 +717,7 @@ void GameView::shoot(const Vec2 &endPosition) {
             this->shootStop();
             this->onShootFinished();
         }
-    }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
+    }, SHOOTING_INTERVAL, SCHEDULER_SHOOT);
     
     // 볼 회수 기능 활성화
     isWithdrawEnabled = false;
@@ -727,12 +727,11 @@ void GameView::shoot(const Vec2 &endPosition) {
     SBDirector::postDelayed(this, [=]() {
         isWithdrawEnabled = true;
         schedule(CC_CALLBACK_1(GameView::checkAutoWithdrawBall, this), 1, SCHEDULER_CHECK_AUTO_WITHDRAW);
-    }, SHOOT_INTERVAL*2);
+    }, SHOOTING_INTERVAL*2);
 }
 
 void GameView::shootStop() {
     
-    friendsLayer->shootStop();
     unschedule(SCHEDULER_SHOOT);
 }
 
@@ -758,6 +757,7 @@ void GameView::withdrawBall(float delay) {
     Log::i("GameView::withdrawBall shootIndex: %d", shootIndex);
     
     shootStop();
+    friendsLayer->shootStop();
     
     isWithdrawEnabled = false;
     isWithdraw = true;
@@ -843,7 +843,7 @@ void GameView::checkAutoWithdrawBall(float dt) {
     }
     
     // 남은 브릭 체크
-    auto bricks = tileLayer->getShootingTargetBricks();
+    auto bricks = tileLayer->getCanDamageBricks();
     
     if( bricks.size() == 0 ) {
         withdrawBall();
@@ -978,7 +978,7 @@ void GameView::eatItem(Item *item, bool isFallAction) {
         // 프렌즈 볼 개수 증가
         case ItemType::FRIENDS_POWER_UP: {
             friendsLayer->eatFriendsItem(item);
-            tileLayer->setFriendsPower(friendsLayer->getFriendsPower());
+            tileLayer->setFriendsDamage(friendsLayer->getFriendsDamage());
         } break;
             
         default:
@@ -1374,12 +1374,12 @@ void GameView::initTile() {
  */
 void GameView::initFriends() {
     
-    friendsLayer = FriendsLayer::create();
+    friendsLayer = FriendsLayer::create(tileLayer);
     friendsLayer->setOnFallFinishedListener(CC_CALLBACK_0(GameView::onFriendsBallFallFinished, this));
     friendsLayer->updatePosition(FIRST_SHOOTING_POSITION, false);
     addChild(friendsLayer, (int)ZOrder::FRIENDS);
     
-    tileLayer->setFriendsPower(friendsLayer->getFriendsPower());
+    tileLayer->setFriendsDamage(friendsLayer->getFriendsDamage());
 }
 
 /**

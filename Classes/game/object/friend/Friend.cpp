@@ -13,11 +13,15 @@
 
 #include "../../GameManager.hpp"
 #include "../../GameDefine.h"
+#include "../TileLayer.hpp"
+
+#include "CriticalBall.hpp"
+#include "SplashBall.hpp"
+#include "PassBall.hpp"
 
 USING_NS_CC;
 using namespace std;
 
-#define FRIEND_SIZE                     Size(63, 75)
 #define BALL_POSITION                   Vec2BC(0, SHOOTING_POSITION_Y)
 
 #define ANIM_NAME_IDLE                  "idle"
@@ -45,6 +49,7 @@ Friend* Friend::create(const FriendDef &def) {
 
 Friend::Friend() :
 onFallFinishedListener(nullptr),
+tileLayer(nullptr),
 shootIndex(0),
 fallenBallCount(0) {
 }
@@ -60,6 +65,7 @@ bool Friend::init(const FriendDef &def) {
     }
     
     this->data = def.data;
+    this->tileLayer = def.tileLayer;
     
     setAnchorPoint(ANCHOR_M);
     setPosition(Vec2MC(0,0));
@@ -68,9 +74,8 @@ bool Friend::init(const FriendDef &def) {
     
     initImage();
     initBall();
-    initPhysicsListener();
     
-    setPower(def.power);
+    setDamage(def.damage);
     
     return true;
 }
@@ -89,29 +94,15 @@ void Friend::initImage() {
 
 void Friend::initBall() {
     
-    addBall(data.power);
+    addBall(1);
     
-    // power label
-    powerLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
-                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
-    powerLabel->setAnchorPoint(ANCHOR_M);
-    powerLabel->setPosition(Vec2BC(0, 25));
-    powerLabel->setTextColor(Color4B::WHITE);
-    powerLabel->enableOutline(Color4B::BLACK, 3);
-    addChild(powerLabel);
-}
-
-/**
- * 물리 리스너 초기화
- */
-void Friend::initPhysicsListener() {
-    
-//    auto listener = GamePhysicsListener::create();
-//    listener->setTarget(this);
-//    listener->onContactBrick        = CC_CALLBACK_3(Friend::onContactBrick, this);
-//    listener->onContactWall         = CC_CALLBACK_1(Friend::onContactWall, this);
-//    listener->onContactFloor        = CC_CALLBACK_1(Friend::onContactFloor, this);
-//    GameManager::getPhysicsManager()->addListener(listener);
+    damageLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
+                                       TextHAlignment::CENTER, TextVAlignment::CENTER);
+    damageLabel->setAnchorPoint(ANCHOR_M);
+    damageLabel->setPosition(Vec2BC(0, 25));
+    damageLabel->setTextColor(Color4B::WHITE);
+    damageLabel->enableOutline(Color4B::BLACK, 3);
+    addChild(damageLabel);
 }
 
 /**
@@ -119,7 +110,14 @@ void Friend::initPhysicsListener() {
  */
 FriendBall* Friend::createBall() {
     
-    return FriendBall::create(data);
+    FriendBallDef def(data);
+    def.index = getBallCount();
+    
+    if( data.type == FriendType::CRITICAL )     return CriticalBall::create(def);
+    if( data.type == FriendType::SPLASH )       return SplashBall::create(def);
+    if( data.type == FriendType::PASS )         return PassBall::create(def);
+    
+    return FriendBall::create(def);
 }
 
 void Friend::addBall(int count) {
@@ -128,6 +126,8 @@ void Friend::addBall(int count) {
     
     for( int i = 0; i < count && getBallCount() <= MAX_BALL_COUNT; ++i ) {
         auto ball = createBall();
+        ball->setTileLayer(tileLayer);
+        ball->setOnContactBrickListener(CC_CALLBACK_2(Friend::onContactBrick, this));
         ball->setOnContactFloorListener(CC_CALLBACK_1(Friend::onContactFloor, this));
         ball->setPosition(BALL_POSITION);
         ball->setVisible(false);
@@ -137,12 +137,6 @@ void Friend::addBall(int count) {
         
         balls.push_back(ball);
     }
-    
-//    tileLayer->setBallCount((int)balls.size());
-//
-//    if( updateUI ) {
-//        updateBallCountUI();
-//    }
 }
 
 int Friend::getBallCount() {
@@ -150,17 +144,11 @@ int Friend::getBallCount() {
     return (int)balls.size();
 }
 
-///**
-// * 볼 & 벽돌 충돌
-// */
-//void Friend::onContactBrick(Ball *ball, Game::Tile *brickTile, Vec2 contactPoint) {
-//}
-//
-///**
-// * 볼 & 벽 충돌
-// */
-//void Friend::onContactWall(Ball *ball) {
-//}
+/**
+ * 볼 & 브릭 충돌
+ */
+void Friend::onContactBrick(FriendBall *ball, Game::Tile *brick) {
+}
 
 /**
  * 볼 & 바닥 충돌
@@ -188,22 +176,29 @@ void Friend::onContactFloor(FriendBall *ball) {
 /**
  * 볼 발사
  */
-void Friend::shoot(Vec2 endPosition) {
+void Friend::shoot() {
+    
+    // 타겟 브릭이 없으면 발사하지 않음
+    if( tileLayer->getCanDamageBricks().size() == 0 ) {
+        fallenBallCount = getBallCount();
+        return;
+    }
     
     shootIndex = 0;
     fallenBallCount = 0;
     
     // 좌표 보정
     Vec2 shootingPosition = getShootingPosition();
+    Vec2 targetPosition = getShootingTargetPosition();
     
-    float angle = SBMath::getDegree(shootingPosition, endPosition);
+    float angle = SBMath::getDegree(shootingPosition, targetPosition);
     angle = MIN(SHOOTING_MAX_ANGLE, angle);
     angle = MAX(-SHOOTING_MAX_ANGLE, angle);
     
-    endPosition = SBMath::getEndPosition(shootingPosition, angle, shootingPosition.getDistance(endPosition));
+    targetPosition = SBMath::getEndPosition(shootingPosition, angle, shootingPosition.getDistance(targetPosition));
     
     // 속도 설정
-    Vec2 diff = endPosition - shootingPosition;
+    Vec2 diff = targetPosition - shootingPosition;
     
     b2Vec2 velocity = PTM(diff);
     velocity.Normalize();
@@ -232,6 +227,8 @@ void Friend::shoot(Vec2 endPosition) {
         }
         */
         
+        CCLOG("Friend::shoot index: %d", shootIndex);
+        
         auto ball = balls[shootIndex];
         
         // 발사
@@ -243,16 +240,16 @@ void Friend::shoot(Vec2 endPosition) {
         
         // 슈팅 진행중
         if( shootIndex < getBallCount() ) {
-            powerLabel->setString(STR_FORMAT("X%d", getBallCount() - shootIndex));
+            damageLabel->setString(STR_FORMAT("X%d", getBallCount() - shootIndex));
         }
         // 슈팅 완료
         else {
-            this->setPowerVisible(false);
+            this->setDamageVisible(false);
             
             this->shootStop();
             this->onShootFinished();
         }
-    }, SHOOT_INTERVAL, SCHEDULER_SHOOT);
+    }, SHOOTING_INTERVAL / data.shootingInterval, SCHEDULER_SHOOT);
     
     // 이미지 변경
     // 원본은 오른쪽을 본다
@@ -274,6 +271,57 @@ void Friend::shootStop() {
  */
 void Friend::onShootFinished() {
     
+}
+
+/**
+ * 발사 좌표를 반환합니다
+ */
+Vec2 Friend::getShootingPosition() {
+    
+    return Vec2(getPositionX(), SHOOTING_POSITION_Y);
+}
+
+/**
+ * 발사 대상 좌표를 반환합니다
+ */
+Vec2 Friend::getShootingTargetPosition() {
+    
+    // 패스 타입은 최저 각도로 발사
+//    if( data.type == FriendType::PASS ) {
+//        float angle = arc4random() % 2 == 0 ? SHOOTING_MAX_ANGLE : -SHOOTING_MAX_ANGLE;
+//        auto pos = SBMath::getEndPosition(getShootingPosition(), angle, MAP_CONTENT_WIDTH);
+//
+//        return pos;
+//    }
+    
+    Brick *target = nullptr;
+    
+    for( int y = 1; y < GAME_CONFIG->getTileColumns(); ++y ) {
+        auto bricks = tileLayer->getTiles<Brick*>(y);
+        
+        SBCollection::remove(bricks, [](Brick *b) -> bool {
+            
+            // 무한 HP 예외처리
+            if( b->isInfinityHp() ) {
+                return true;
+            }
+            
+            return false;
+        });
+        
+        if( bricks.size() > 0 ) {
+            target = bricks[arc4random() % bricks.size()];
+            break;
+        }
+    }
+    
+    // 타겟 없음, 발생할 수 없는 상황이지만 중앙에 쏩시다
+    if( !target ) {
+        return Vec2MC(0,0);
+    }
+    
+    auto box = SB_BOUNDING_BOX_IN_WORLD(target);
+    return Vec2(box.getMidX(), box.getMinY());
 }
 
 /**
@@ -309,14 +357,6 @@ void Friend::withdrawBall() {
 bool Friend::isFallFinished() {
     
     return fallenBallCount == getBallCount();
-}
-
-/**
- * 발사 좌표를 반환합니다
- */
-Vec2 Friend::getShootingPosition() {
-    
-    return Vec2(getPositionX(), SHOOTING_POSITION_Y);
 }
 
 /**
@@ -357,25 +397,25 @@ void Friend::setImageFlippedX(bool flippedX) {
     image->setScaleX(flippedX ? -1 : 1);
 }
 
-void Friend::setPower(int power) {
- 
-    power += data.power;
-    power -= 1;
+void Friend::setDamage(int damage) {
     
-    this->power = power;
-    powerLabel->setString(STR_FORMAT("X%d", power));
+    damage += data.damage;
+    damage -= 1;
     
-    // 단일 볼 타입
-    if( data.type == FriendType::ONE_SHOT ) {
-        balls[0]->setPower(power);
+    this->damage = damage;
+    damageLabel->setString(STR_FORMAT("X%d", damage));
+    
+    // 단일 볼, 데미지 증가
+    if( data.isSingleBall ) {
+        balls[0]->setDamage(damage);
     }
-    // 개수 증가 타입
+    // 개수 증가
     else {
-        addBall(power - getBallCount());
+        addBall(damage - getBallCount());
     }
 }
 
-void Friend::setPowerVisible(bool isVisible) {
+void Friend::setDamageVisible(bool isVisible) {
     
-    powerLabel->setVisible(isVisible);
+    damageLabel->setVisible(isVisible);
 }

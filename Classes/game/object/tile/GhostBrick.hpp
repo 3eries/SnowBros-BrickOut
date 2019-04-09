@@ -28,6 +28,9 @@ private:
     
     void updateOpacity();
     
+public:
+    bool canDamage() override;
+    
 private:
     SB_SYNTHESIZE_READONLY_BOOL(ghostState, GhostState);
 };

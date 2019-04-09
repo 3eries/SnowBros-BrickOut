@@ -9,9 +9,9 @@
 
 #include "Define.h"
 #include "../../GameManager.hpp"
-#include "../../GameView.hpp"
 
 #include "../Ball.hpp"
+#include "../friend/FriendBall.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -52,7 +52,7 @@ bool ShieldBrick::init() {
     shieldAnim = SBAnimationSprite::create(anims, 0.2f);
     shieldAnim->setAnchorPoint(ANCHOR_MB);
     shieldAnim->setPosition(Vec2BC(getContentSize(), 0, 0));
-    addChild(shieldAnim, 1);
+    addChild(shieldAnim, (int)ZOrder::HP_BAR);
     
     shieldAnim->runAnimation();
     
@@ -64,20 +64,21 @@ void ShieldBrick::onEnter() {
     Brick::onEnter();
 }
 
-void ShieldBrick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
+bool ShieldBrick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoint) {
     
-    if( isBroken() ) {
-        Log::w("이미 깨진 벽돌 충돌 이벤트 발생!!").showMessageBox();
-        return;
+    // 볼이 크리티컬 볼이면 무조건 데미지
+    auto friendBall = dynamic_cast<FriendBall*>(ball);
+    
+    if( friendBall && friendBall->getData().type == FriendType::CRITICAL ) {
+        return Brick::onContactBrick(ball, brick, contactPoint);
     }
     
+    // 하단부 충돌, 방어
     auto localContactPoint = convertToNodeSpace(contactPoint);
     
-//    if( SB_BOUNDING_BOX_IN_WORLD(shieldAnim) ) {
-//    }
-    
-    // 하단부 충돌, 방어
     if( localContactPoint.y <= 5 ) {
+        runBallHitAction(ball, contactPoint);
+        
         int ranX = (arc4random() % 10) * (arc4random() % 2 == 0 ? 2 : -2);
         int ranY = (arc4random() % 10) * (arc4random() % 2 == 0 ? 2 : -2);
         
@@ -88,15 +89,17 @@ void ShieldBrick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoin
         effect->setPosition(Vec2(contactPoint.x, getPosition().y+30) + Vec2(ranX, ranY));
         effect->setTextColor(Color4B(255,255,255,255));
         effect->enableOutline(Color4B::BLACK, 3);
-        GameManager::getInstance()->getView()->addChild(effect, SBZOrder::BOTTOM);
+        getParent()->addChild(effect, getLocalZOrder() + SBZOrder::BOTTOM);
         
         auto delay = DelayTime::create(0.1f);
         auto remove = RemoveSelf::create();
         effect->runAction(Sequence::create(delay, remove, nullptr));
+        
+        return false;
     }
-    // 데미지 적용
+    // 데미지
     else {
-        sufferDamage(ball->getPower());
+        return Brick::onContactBrick(ball, brick, contactPoint);
     }
 }
 

@@ -18,7 +18,7 @@
 #include "model/PatternData.h"
 #include "model/StageData.h"
 #include "model/ItemData.h"
-#include "model/FriendData.h"
+#include "model/FriendsPackData.h"
 #include "model/DemoData.h"
 
 /** @class Database
@@ -42,42 +42,48 @@ private:
     void parseDemoJson();
     
 public:
-    static void              addTempStage();
+    static void                addTempStage();
     
-    static BallSkinDataList  getBallSkins();
-    static BallSkinData      getBallSkin(const std::string &ballId);
+    static BallSkinDataList    getBallSkins();
+    static BallSkinData        getBallSkin(const std::string &ballId);
     
-    static StageDataList     getStages();
-    static StageData         getStage(int stage);
-    static StageData         getFirstStage();
-    static StageData         getLastStage();
-    static bool              isLastStage(int stage);
+    static StageDataList       getStages();
+    static StageData           getStage(int stage);
+    static StageData           getFirstStage();
+    static StageData           getLastStage();
+    static bool                isLastStage(int stage);
     
-    static FloorDataList     getFloors();
-    static FloorData         getFloor(int floor);
-    static bool              isLastFloor(int floor);
+    static FloorDataList       getFloors();
+    static FloorData           getFloor(int floor);
+    static bool                isLastFloor(int floor);
     
-    static FloorDataList     getStageFloors(int stage);
-    static bool              isStageLastFloor(int stage, int floor);
-    static bool              isStageLastFloor(const FloorData &data);
+    static FloorDataList       getStageFloors(int stage);
+    static bool                isStageLastFloor(int stage, int floor);
+    static bool                isStageLastFloor(const FloorData &data);
     
-    static int               getStageFirstBallCount(int stage);
+    static int                 getStageFirstBallCount(int stage);
     
-    static BrickDataMap      getBricks();
-    static BrickData         getBrick(const std::string &brickId);
+    static BrickDataMap        getBricks();
+    static BrickData           getBrick(const std::string &brickId);
     
-    static FriendDataList    getFriends();
-    static FriendData        getFriend(const std::string &friendId);
+    static FriendsPackDataList getFriendsPacks();
+    static FriendsPackData     getFriendsPack(const std::string &packId);
     
-    static DemoStageDataList getDemoStages();
-    static DemoStageData     getDemoStage(int stage);
+    static FriendDataList      getFriends();
+    static FriendData          getFriend(const std::string &friendId);
+    
+    static DemoStageDataList   getDemoStages();
+    static DemoStageData       getDemoStage(int stage);
     
 private:
     BallSkinDataList ballSkins;
     StageDataList stages;
     FloorDataList floors;
     BrickDataMap bricks;
+    
+    FriendsPackDataList friendsPacks;
     FriendDataList friends;
+    
     DemoStageDataList demoStages;
 };
 

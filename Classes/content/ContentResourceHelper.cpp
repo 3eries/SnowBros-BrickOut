@@ -230,8 +230,36 @@ string ContentResourceHelper::getFriendAnimationFile(const string &friendId) {
     return DIR_FRIEND + friendId + ANIM_EXT;
 }
 
-string ContentResourceHelper::getFriendBallImageFile(const string &friendId) {
+StringList ContentResourceHelper::getFriendBallAnimationFiles(const string &friendId) {
     
-    return DIR_FRIEND + STR_FORMAT("%s_ball.png", friendId.c_str());
+    StringList anims;
+    int i = 0;
+    
+    while( true ) {
+        string file = DIR_FRIEND + STR_FORMAT("%s_ball_%02d.png", friendId.c_str(), i+1);
+        
+        if( !FileUtils::getInstance()->isFileExist(file) ) {
+            break;
+        }
+        
+        anims.push_back(file);
+        ++i;
+    }
+    
+    return anims;
 }
 
+spine::SkeletonAnimation* ContentResourceHelper::createFriendBrickDamageAnimation(const string &friendId,
+                                                                                  const BrickData &brickData) {
+    
+    string file = DIR_FRIEND + STR_FORMAT("%s_brick_damage.json", friendId.c_str());
+    
+    if( !FileUtils::getInstance()->isFileExist(file) ) {
+        return nullptr;
+    }
+    
+    string animName = STR_FORMAT("run_%dx%d", brickData.width, brickData.height);
+    
+    auto anim = SBSpineHelper::runAnimation(nullptr, file, animName, true);
+    return anim;
+}

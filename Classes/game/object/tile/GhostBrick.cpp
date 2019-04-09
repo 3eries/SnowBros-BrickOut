@@ -98,3 +98,12 @@ void GhostBrick::updateOpacity() {
         runAction(Sequence::create(fadeIn, callFunc, nullptr));
     }
 }
+
+bool GhostBrick::canDamage() {
+    
+    if( !Brick::canDamage() ) {
+        return false;
+    }
+    
+    return !isGhostState();
+}

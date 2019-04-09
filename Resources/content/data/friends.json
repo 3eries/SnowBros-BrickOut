@@ -1,37 +1,70 @@
 [{
-    "friend_id": "friend_0001",
-    "name": "Nick",
-    "type": 1,
-    "power": 1
+    "pack_id": "pack_001",
+    "pack_name": "SNOW BROS 1",
+    "friends": [{
+        "friend_id": "friend_0001",
+        "name": "Nick",
+        "price": 100,
+        "type": 1,
+        "damage": 1,
+        "shooting_interval": 1,
+        "ball_speed": 1
+    },
+    {
+        "friend_id": "friend_0002",
+        "name": "Tom",
+        "price": 100,
+        "type": 1,
+        "damage": 1,
+        "shooting_interval": 1,
+        "ball_speed": 1
+    }
+    ]
 },
 {
-    "friend_id": "friend_0002",
-    "name": "Tom",
-    "type": 1,
-    "power": 1
-},
-{
-    "friend_id": "friend_0003",
-    "name": "Nick",
-    "type": 1,
-    "power": 1
-},
-{
-    "friend_id": "friend_0004",
-    "name": "Bobby",
-    "type": 2,
-    "power": 1
-},
-{
-    "friend_id": "friend_0005",
-    "name": "Roy",
-    "type": 3,
-    "power": 1
-},
-{
-    "friend_id": "friend_0006",
-    "name": "Richard",
-    "type": 4,
-    "power": 1
+    "pack_id": "pack_002",
+    "pack_name": "SNOW BROS 2",
+    "friends": [{
+        "friend_id": "friend_0003",
+        "name": "Nick",
+        "price": 200,
+        "type": 1,
+        "damage": 1,
+        "shooting_interval": 1,
+        "ball_speed": 1
+    },
+    {
+        "friend_id": "friend_0004",
+        "name": "Bobby",
+        "price": 1000,
+        "type": 2,
+        "single_ball": true,
+        "remove_after_brick_contact": true,
+        "damage": 1,
+        "shooting_interval": 1,
+        "ball_speed": 1,
+        "brick_damage_effect_zorder": 1
+    },
+    {
+        "friend_id": "friend_0005",
+        "name": "Roy",
+        "price": 1000,
+        "type": 3,
+        "remove_after_brick_contact": true,
+        "damage": 1,
+        "shooting_interval": 1,
+        "ball_speed": 1
+    },
+    {
+        "friend_id": "friend_0006",
+        "name": "Richard",
+        "price": 1000,
+        "type": 4,
+        "single_ball": true,
+        "damage": 1,
+        "shooting_interval": 1,
+        "ball_speed": 1
+    }
+    ]
 }
 ]

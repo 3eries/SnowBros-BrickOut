@@ -29,7 +29,7 @@ enum GameState {
     RESULT          = (1 << 9),     // 결과 화면
 };
 
-#define                                       TILE_ENTER_DURATION                0.15f    // 타일 등장 시간
+#define                                       TILE_ENTER_DURATION                0.3f     // 타일 등장 시간
 #define                                       TILE_MOVE_DURATION                 0.18f    // 타일 이동 시간
 
 static const float                            MOVE_NEXT_STAGE_DURATION         = 1.4f;    // 다음 스테이지 이동 시간
@@ -49,7 +49,7 @@ static const float                            GAME_RESULT_DELAY                =
 
 // Ball
 #define                                       SHOOTING_MAX_ANGLE                 80                // 발사 최대 각도
-#define                                       SHOOT_INTERVAL                     (PHYSICS_FPS * 3) // 발사 시간 간격
+#define                                       SHOOTING_INTERVAL                  (PHYSICS_FPS * 4) // 발사 시간 간격
 
 static const float                            BALL_RADIUS                      = 20;
 static const cocos2d::Size                    BALL_SIZE                        = cocos2d::Size(BALL_RADIUS*2, BALL_RADIUS*2);
@@ -80,6 +80,10 @@ static const float                            TILE_CONTENT_WIDTH               =
 static const float                            TILE_CONTENT_HEIGHT              = 112;
 static const cocos2d::Size                    TILE_CONTENT_SIZE                = cocos2d::Size(TILE_CONTENT_WIDTH, TILE_CONTENT_HEIGHT);
 
+// 브릭의 충돌 영역을 눈에 보이는 것보다 넓히기 위해 별도의 PADDING 값을 정의한다
+static const float                            BRICK_PHYSICS_PADDING_X          = 2;
+static const float                            BRICK_PHYSICS_PADDING_Y          = 2;
+
 #define MEASURE_TILE_SIZE(__rows__, __columns__) \
 cocos2d::Size((TILE_CONTENT_SIZE.width*__rows__) + (TILE_PADDING_X*(__rows__-1)), (TILE_CONTENT_SIZE.height*__columns__) + (TILE_PADDING_Y*(__columns__-1)))
 
@@ -87,7 +91,7 @@ cocos2d::Size((TILE_CONTENT_SIZE.width*__rows__) + (TILE_PADDING_X*(__rows__-1))
 static const cocos2d::Size                    ITEM_CONTENT_SIZE                = cocos2d::Size(40, 48);
 
 // Physics
-static const float                            PHYSICS_FPS                      = 1 / 50.0f;
+static const float                            PHYSICS_FPS                      = 1 / 60.0f;
 
 enum PhysicsCategory {
     WALL_LEFT   = (1 << 0),     // 왼쪽 벽
