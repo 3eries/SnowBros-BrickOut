@@ -127,13 +127,13 @@ void PassBall::onPreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
     
     auto brick = (Brick*)objs.obj2;
     
+    // 볼이 통과할 수 있게 해당 충돌 비활성화
+    contact->SetEnabled(false);
+    
     // 이미 깨진 브릭 예외 처리
     if( brick->isBroken() ) {
         return;
     }
-    
-    // 볼이 통과할 수 있게 해당 충돌 비활성화
-    contact->SetEnabled(false);
     
     // 강제로 충돌, 이번 턴에서 이미 충돌한 브릭은 예외
     if( !SBCollection::contains(contactBricks, brick) ) {
