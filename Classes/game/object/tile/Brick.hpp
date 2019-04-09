@@ -85,6 +85,7 @@ public:
     virtual void setHpVisible(bool isVisible);
     
     virtual bool canDamage();
+    virtual bool canDamagePoint(cocos2d::Vec2 p);
     
     bool         isElite();
     bool         isBoss();

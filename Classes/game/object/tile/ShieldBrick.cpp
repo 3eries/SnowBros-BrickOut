@@ -73,10 +73,12 @@ bool ShieldBrick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoin
         return Brick::onContactBrick(ball, brick, contactPoint);
     }
     
+    // 데미지
+    if( canDamagePoint(contactPoint) ) {
+        return Brick::onContactBrick(ball, brick, contactPoint);
+    }
     // 하단부 충돌, 방어
-    auto localContactPoint = convertToNodeSpace(contactPoint);
-    
-    if( localContactPoint.y <= 5 ) {
+    else {
         runBallHitAction(ball, contactPoint);
         
         int ranX = (arc4random() % 10) * (arc4random() % 2 == 0 ? 2 : -2);
@@ -97,9 +99,9 @@ bool ShieldBrick::onContactBrick(Ball *ball, Game::Tile *brick, Vec2 contactPoin
         
         return false;
     }
-    // 데미지
-    else {
-        return Brick::onContactBrick(ball, brick, contactPoint);
-    }
 }
 
+bool ShieldBrick::canDamagePoint(Vec2 p) {
+    
+    return convertToNodeSpace(p).y > 5;
+}

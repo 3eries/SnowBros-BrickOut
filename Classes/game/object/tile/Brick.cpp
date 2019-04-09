@@ -656,6 +656,13 @@ bool Brick::canDamage() {
     return !isBroken() && !isInfinityHp();
 }
 
+/**
+ * 데미지를 입을 수 있는 좌표인지 반환합니다
+ */
+bool Brick::canDamagePoint(Vec2 p) {
+    return true;
+}
+
 bool Brick::isElite() {
     return def.elite;
 }

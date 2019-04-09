@@ -25,6 +25,8 @@ private:
     
     bool onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint) override;
     
+    bool canDamagePoint(cocos2d::Vec2 p) override;
+    
 private:
     SBAnimationSprite *shieldAnim;
 };

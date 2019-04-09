@@ -115,7 +115,7 @@ bool SplashBall::onContactBrick(Ball *ball, Game::Tile *tile, Vec2 contactPoint)
         return false;
     }
     
-    if( !brick->canDamage() ) {
+    if( !brick->canDamage() || !brick->canDamagePoint(contactPoint) ) {
         return false;
     }
     
