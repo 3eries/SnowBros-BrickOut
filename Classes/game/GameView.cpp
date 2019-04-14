@@ -726,11 +726,11 @@ void GameView::shoot(const Vec2 &endPosition) {
     // 볼 회수 기능 활성화
     isWithdrawEnabled = false;
     isWithdraw = false;
-    schedule(CC_CALLBACK_1(GameView::checkWithdrawGuide, this), 1, SCHEDULER_CHECK_WITHDRAW_GUIDE);
     
     SBDirector::postDelayed(this, [=]() {
         isWithdrawEnabled = true;
         schedule(CC_CALLBACK_1(GameView::checkAutoWithdrawBall, this), 1, SCHEDULER_CHECK_AUTO_WITHDRAW);
+        schedule(CC_CALLBACK_1(GameView::checkWithdrawGuide, this), 1, SCHEDULER_CHECK_WITHDRAW_GUIDE);
     }, SHOOTING_INTERVAL*2);
 }
 
@@ -744,7 +744,7 @@ void GameView::shootStop() {
  */
 void GameView::withdrawBall(float delay) {
     
-    if( isWithdraw || !isWithdrawEnabled ) {
+    if( isWithdraw || !isWithdrawEnabled || isAllBallFallFinished ) {
         return;
     }
     
@@ -761,7 +761,6 @@ void GameView::withdrawBall(float delay) {
     Log::i("GameView::withdrawBall shootIndex: %d", shootIndex);
     
     shootStop();
-    friendsLayer->shootStop();
     
     isWithdrawEnabled = false;
     isWithdraw = true;
