@@ -177,7 +177,6 @@ void Brick::initHpGage() {
         
         if( isElite() || data.isSpecial() )   file = "game_gage_brick_yellow.png";
         else if( data.isBoss() )              file = "game_gage_brick_big_red.png";
-        else if( this->isInfinityHp() )       file = "game_gage_brick_big_blue.png";
         
         return DIR_CONTENT_BRICK + file;
     };
@@ -208,11 +207,6 @@ void Brick::initHpGage() {
     } else {
         addLabel(25);
         hpGage.label->setPosition(Vec2TC(getContentSize(), 0, 6));
-    }
-    
-    if( isInfinityHp() ) {
-        hpGage.label->setTextColor(Color4B(254,239,12,255));
-        hpGage.label->setString("MAX");
     }
     
     // HP Gage
