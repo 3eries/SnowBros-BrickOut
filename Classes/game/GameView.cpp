@@ -467,14 +467,21 @@ void GameView::onBrickBreak(Brick *brick) {
         // 볼 회수
         withdrawBall(0.5f);
         
-        // 남아있는 아이템 자동 획득
-        for( auto item : items ) {
-            eatItem((Item*)item, false);
-        }
         // 프렌즈 데미지 숨김
         friendsLayer->setDamageVisible(false);
         
-        addBallFromQueue();
+        // 남아있는 아이템 자동 획득
+        // b2World가 Lock 상태 일수 있으므로 스케줄러로 처리
+        scheduleOnce([=](float dt) {
+            auto items = tileLayer->getItems();
+            
+            for( auto item : items ) {
+                this->eatItem(item, false);
+            }
+            
+            this->addBallFromQueue();
+            
+        }, 0.05f, "STAGE_CLEAR_EAT_ITEM_DELAY");
         
         return;
     }
@@ -483,10 +490,6 @@ void GameView::onBrickBreak(Brick *brick) {
     
     // 남은 브릭 없음
     if( bricks.size() == 0 ) {
-        // 남은 아이템 없으면 볼 회수
-        if( items.size() == 0 ) {
-            // withdrawBalls(0.5f);
-        }
     }
     // 남은 브릭 있음
     else {
