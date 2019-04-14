@@ -20,6 +20,7 @@ Tile::Tile(int rows, int columns, const FloorData &floorData) : SBPhysicsObject(
 rows(rows),
 columns(columns),
 floorData(floorData),
+available(true),
 floorChangedCount(0) {
 }
 
@@ -70,16 +71,20 @@ void Tile::onStageClear() {
 
 void Tile::onFloorChanged(const FloorData &floor) {
     
-    floorChangedCount++;
+    this->floorData = floor;
 }
 
 void Tile::onNextFloor(const FloorData &floor) {
+    
+    floorChangedCount++;
 }
     
 /**
- * 타일 비활성화
+ * 타일 제거 준비
  */
-void Tile::inactiveTile() {
+void Tile::prepareRemove() {
+    
+    available = false;
     
     setBodyAwake(false);
     setCollisionLocked(true);
@@ -119,7 +124,7 @@ void Tile::enterWithAction() {
  */
 void Tile::removeWithAction() {
     
-    inactiveTile();
+    prepareRemove();
 }
 
 /**

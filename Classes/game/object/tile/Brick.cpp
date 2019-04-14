@@ -268,11 +268,11 @@ void Brick::setImageFlippedY(bool flippedY) {
 }
 
 /**
- * 타일 비활성화
+ * 타일 제거 준비
  */
-void Brick::inactiveTile() {
+void Brick::prepareRemove() {
     
-    Game::Tile::inactiveTile();
+    Game::Tile::prepareRemove();
     
     setOnBreakListener(nullptr);
 }

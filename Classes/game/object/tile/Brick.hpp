@@ -59,33 +59,33 @@ protected:
     virtual void initHpGage();
     
 public:
-    virtual void setImage(BrickImageType type, bool isRunAnimation);
-    virtual void setImageFlippedX(bool flippedX);
-    virtual void setImageFlippedY(bool flippedY);
+    virtual void    setImage(BrickImageType type, bool isRunAnimation);
+    virtual void    setImageFlippedX(bool flippedX);
+    virtual void    setImageFlippedY(bool flippedY);
     
-    virtual void inactiveTile() override;
+    virtual void    prepareRemove() override;
     
-    virtual void enterWithAction() override;
-    virtual void removeWithAction() override;
+    virtual void    enterWithAction() override;
+    virtual void    removeWithAction() override;
     
-    virtual void runBallHitAction(Ball *ball, cocos2d::Vec2 contactPoint);
-    virtual void runFriendBallDamageAction(FriendBall *ball, cocos2d::Vec2 contactPoint);
+    virtual void    runBallHitAction(Ball *ball, cocos2d::Vec2 contactPoint);
+    virtual void    runFriendBallDamageAction(FriendBall *ball, cocos2d::Vec2 contactPoint);
     
-    virtual bool onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
-    virtual void onBreak();
+    virtual bool    onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
+    virtual void    onBreak();
     
-    virtual bool sufferDamage(Ball *ball, cocos2d::Vec2 contactPoint,
+    virtual bool    sufferDamage(Ball *ball, cocos2d::Vec2 contactPoint,
                               bool withBallDamageAction);
-    virtual bool sufferDamage(Ball *ball, cocos2d::Vec2 contactPoint);
-    virtual void setHp(int hp, bool updateUI = true);
+    virtual bool    sufferDamage(Ball *ball, cocos2d::Vec2 contactPoint);
+    virtual void    setHp(int hp, bool updateUI = true);
     
-    virtual void updateHpUI();
+    virtual void    updateHpUI();
     
-    virtual void setBgVisible(bool isVisible);
-    virtual void setHpVisible(bool isVisible);
+    virtual void    setBgVisible(bool isVisible);
+    virtual void    setHpVisible(bool isVisible);
     
-    virtual bool canDamage();
-    virtual bool canDamagePoint(cocos2d::Vec2 p);
+    virtual bool    canDamage();
+    virtual bool    canDamagePoint(cocos2d::Vec2 p);
     
     bool         isElite();
     bool         isBoss();

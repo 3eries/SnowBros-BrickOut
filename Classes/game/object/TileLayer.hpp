@@ -63,6 +63,7 @@ public:
     
 public:
     bool        checkStageClear();
+    void        prepareRemoveTile();
     
     Brick*      addBrick(Brick *brick);
     Game::Tile* addTile(Game::Tile *tile);

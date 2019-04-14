@@ -153,6 +153,7 @@ void TileLayer::onFloorChanged(const FloorData &floor) {
     // 게임 오버 직전, 타일만 이동
     if( !isRowClear(1) ) {
         downTile();
+        prepareRemoveTile();
         return;
     }
     
@@ -488,6 +489,16 @@ bool TileLayer::checkStageClear() {
     */
      
     return bricks.size() == 0;
+}
+
+/**
+ * 타일 제거 준비
+ */
+void TileLayer::prepareRemoveTile() {
+    
+    for( auto tile : tiles ) {
+        tile->prepareRemove();
+    }
 }
 
 /**

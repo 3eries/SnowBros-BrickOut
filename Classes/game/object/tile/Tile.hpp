@@ -38,7 +38,8 @@ protected:
     virtual void onNextFloor(const FloorData &floor);
     
 public:
-    virtual void inactiveTile();
+    virtual void prepareRemove();
+    
     virtual void down();
     virtual void onDownFinished();
     
@@ -61,6 +62,11 @@ protected:
     CC_SYNTHESIZE_READONLY(int, columns, Columns);  // 세로칸
     CC_SYNTHESIZE_READONLY(FloorData, floorData, FloorData);
     CC_SYNTHESIZE_READONLY(TilePosition, tilePos, TilePosition);
+    
+    // 타일 유효 여부
+    SB_SYNTHESIZE_READONLY_BOOL(available, Available);
+    
+    // 층 변경 횟수, onNextFloor 호출 시 업데이트
     CC_SYNTHESIZE_READONLY(int, floorChangedCount, FloorChangedCount);
 };
     
