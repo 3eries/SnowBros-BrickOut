@@ -151,8 +151,9 @@ void FriendsLayer::shoot() {
     
     shot = true;
     
-    for( auto friendNode : friends ) {
-        friendNode->shoot();
+    for( int i = 0; i < friends.size(); ++i ) {
+        auto friendNode = friends[i];
+        friendNode->shoot(i*1.0f);
     }
 }
 

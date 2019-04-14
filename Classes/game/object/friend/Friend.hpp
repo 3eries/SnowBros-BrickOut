@@ -61,7 +61,7 @@ private:
     virtual void onContactFloor(FriendBall *ball);
     
 public:
-    virtual void          shoot();
+    virtual void          shoot(float delay);
     virtual void          shootStop();
     virtual void          onShootFinished();
     
@@ -77,6 +77,8 @@ public:
     
     virtual void          setDamage(int damage);
     virtual void          setDamageVisible(bool isVisible);
+    
+    float                 getBallMaxVelocity();
     
 protected:
     CC_SYNTHESIZE(std::function<void(Friend*)>, onFallFinishedListener,

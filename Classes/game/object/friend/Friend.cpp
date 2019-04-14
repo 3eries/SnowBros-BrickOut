@@ -32,7 +32,8 @@ using namespace std;
 #define ANIM_NAME_SHOOT_LOW             "shoot_low"
 #define ANIM_NAME_SHOOT_HIGH            "shoot_high"
 
-static const string SCHEDULER_SHOOT   = "SCHEDULER_SHOOT";
+static const string SCHEDULER_SHOOT         = "SCHEDULER_SHOOT";
+static const string SCHEDULER_SHOOT_DELAY   = "SCHEDULER_SHOOT_DELAY";
 
 Friend* Friend::create(const FriendDef &def) {
     
@@ -176,16 +177,29 @@ void Friend::onContactFloor(FriendBall *ball) {
 /**
  * 볼 발사
  */
-void Friend::shoot() {
+void Friend::shoot(float delay) {
+    
+    shootIndex = 0;
+    fallenBallCount = 0;
+    
+    if( delay > 0 ) {
+        scheduleOnce([=](float dt) {
+            this->shoot(0);
+        }, delay, SCHEDULER_SHOOT_DELAY);
+        
+        return;
+    }
     
     // 타겟 브릭이 없으면 발사하지 않음
     if( tileLayer->getCanDamageBricks().size() == 0 ) {
         fallenBallCount = getBallCount();
+        
+        if( onFallFinishedListener ) {
+            onFallFinishedListener(this);
+        }
+        
         return;
     }
-    
-    shootIndex = 0;
-    fallenBallCount = 0;
     
     // 좌표 보정
     Vec2 shootingPosition = getShootingPosition();
@@ -202,8 +216,8 @@ void Friend::shoot() {
     
     b2Vec2 velocity = PTM(diff);
     velocity.Normalize();
-    velocity.x *= BALL_MAX_VELOCITY;
-    velocity.y *= BALL_MAX_VELOCITY;
+    velocity.x *= getBallMaxVelocity();
+    velocity.y *= getBallMaxVelocity();
     
     // 볼 업데이트
     for( auto ball : balls ) {
@@ -249,20 +263,22 @@ void Friend::shoot() {
             this->shootStop();
             this->onShootFinished();
         }
-    }, SHOOTING_INTERVAL / data.shootingInterval, SCHEDULER_SHOOT);
+    }, SHOOTING_INTERVAL * data.shootingInterval, SCHEDULER_SHOOT);
     
     // 이미지 변경
-    // 원본은 오른쪽을 본다
     ImageType shootType = fabsf(diff.x) > 150 ? ImageType::SHOOT_LOW : ImageType::SHOOT_HIGH;
     
     setImage(shootType, [=]() {
         this->setImage(Friend::ImageType::IDLE);
     });
+    
+    // 좌우 반전, 원본은 오른쪽을 본다
     setImageFlippedX(diff.x < 0);
 }
 
 void Friend::shootStop() {
     
+    unschedule(SCHEDULER_SHOOT_DELAY);
     unschedule(SCHEDULER_SHOOT);
 }
 
@@ -418,4 +434,9 @@ void Friend::setDamage(int damage) {
 void Friend::setDamageVisible(bool isVisible) {
     
     damageLabel->setVisible(isVisible);
+}
+
+float Friend::getBallMaxVelocity() {
+    
+    return BALL_MAX_VELOCITY * data.ballSpeed;
 }
