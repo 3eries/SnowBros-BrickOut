@@ -50,6 +50,8 @@ public:
     void updateFriendsDamage();
     void updatePosition(const cocos2d::Vec2 &ballPos, bool withAction);
     
+    void setDamageVisible(bool isVisible);
+    
 // Game Event
 private:
     void onGameEnter();

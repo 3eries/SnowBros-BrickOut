@@ -470,6 +470,8 @@ void GameView::onBrickBreak(Brick *brick) {
         for( auto item : items ) {
             eatItem((Item*)item, false);
         }
+        // 프렌즈 데미지 숨김
+        friendsLayer->setDamageVisible(false);
         
         addBallFromQueue();
         

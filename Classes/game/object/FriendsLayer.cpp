@@ -293,6 +293,14 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
     }
 }
 
+void FriendsLayer::setDamageVisible(bool isVisible) {
+    
+    for( int i = 0; i < friends.size(); ++i ) {
+        auto friendNode = friends[i];
+        friendNode->setDamageVisible(isVisible);
+    }
+}
+
 /**
  * 게임 진입
  */
