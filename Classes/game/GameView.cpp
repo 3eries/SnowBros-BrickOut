@@ -414,7 +414,9 @@ void GameView::onAllBallFallFinished() {
     
     isAllBallFallFinished = true;
     
+    stopWithdrawGuide();
     unschedule(SCHEDULER_CHECK_AUTO_WITHDRAW);
+    
     updateBallCountUI();
     
     // 스테이지 클리어
@@ -428,7 +430,9 @@ void GameView::onAllBallFallFinished() {
     }
     
     // 다음 층으로 전환
-    GameManager::onNextFloor();
+    SBDirector::postDelayed(this, [=]() {
+        GameManager::onNextFloor();
+    }, NEXT_FLOOR_DELAY);
 }
 
 /**
@@ -440,8 +444,7 @@ void GameView::onFriendsBallFallFinished() {
     
     // 모든 볼 추락
     if( isUserBallFallFinished() ) {
-        stopWithdrawGuide();
-        SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onAllBallFallFinished, this), 0.1f);
+        onAllBallFallFinished();
     }
 }
 
@@ -456,8 +459,6 @@ void GameView::onBrickBreak(Brick *brick) {
     tileLayer->removeTile(brick);
     
     // 스테이지 클리어
-    auto items = tileLayer->getItems();
-    
     if( checkStageClear() ) {
         SBDirector::postDelayed(this, [=]() {
             GameManager::onStageClear();
@@ -630,9 +631,7 @@ void GameView::onContactFloor(Ball *ball) {
         Log::i("GameView::onContactFloor user ball fall finished.");
     
         if( isFriendsBallFallFinished() ) {
-            stopWithdrawGuide();
-            SBDirector::postDelayed(this, CC_CALLBACK_0(GameView::onAllBallFallFinished, this),
-                                    BALL_JOIN_MOVE_DURATION*0.5f);
+            onAllBallFallFinished();
         }
     }
 }
@@ -826,7 +825,7 @@ void GameView::withdrawBall(float delay) {
     // 모든 볼 추락 완료
     SBDirector::postDelayed(this, [=]() {
         this->onAllBallFallFinished();
-    }, BALL_WITHDRAW_MOVE_DURATION+0.5f);
+    }, BALL_WITHDRAW_MOVE_DURATION);
 }
 
 /**
@@ -1088,14 +1087,6 @@ void GameView::removeBall(Ball *ball) {
     // remove ball
     ball->setNeedRemove(true);
 }
-
-/**
- * 모든 볼이 추락했는지를 반환합니다
- */
-//bool GameView::isAllBallFallFinished() {
-//
-//    return isUserBallFallFinished() && isFriendsBallFallFinished();
-//}
 
 /**
  * 모든 유저 볼이 추락했는지를 반환합니다

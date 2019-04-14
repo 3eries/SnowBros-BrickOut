@@ -29,12 +29,13 @@ enum GameState {
     RESULT          = (1 << 9),     // 결과 화면
 };
 
-#define                                       TILE_ENTER_DURATION                0.3f     // 타일 등장 시간
-#define                                       TILE_MOVE_DURATION                 0.18f    // 타일 이동 시간
+#define                                       TILE_ENTER_DURATION                0.3f  // 타일 등장 시간
+#define                                       TILE_MOVE_DURATION                 0.18f // 타일 이동 시간
 
-static const float                            MOVE_NEXT_STAGE_DURATION         = 1.4f;    // 다음 스테이지 이동 시간
-static const float                            STAGE_CLEAR_DELAY                = 2.0f;    // 스테이지 클리어 지연 시간
-static const float                            GAME_RESULT_DELAY                = 1.5f;    // 게임 오버 -> 결과 노출까지의 지연 시간
+#define                                       NEXT_FLOOR_DELAY                   0.5f  // 모든 볼 추락 -> 다음 층 전환 지연 시간
+#define                                       MOVE_NEXT_STAGE_DURATION           1.4f  // 다음 스테이지 이동 시간
+#define                                       STAGE_CLEAR_DELAY                  2.0f  // 스테이지 클리어 지연 시간
+#define                                       GAME_RESULT_DELAY                  1.5f  // 게임 오버 -> 결과 노출까지의 지연 시간
 
 // Map
 #define                                       MAP_CONTENT_WIDTH                  720

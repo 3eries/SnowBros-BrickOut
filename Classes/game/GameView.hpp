@@ -127,7 +127,6 @@ private:
     void addBallFromQueue();
     void removeBall(Ball *ball);
     
-    // bool isAllBallFallFinished();
     bool isUserBallFallFinished();
     bool isFriendsBallFallFinished();
     
