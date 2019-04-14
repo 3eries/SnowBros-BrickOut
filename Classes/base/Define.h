@@ -72,11 +72,11 @@ static const std::string DIR_IMG_BALL_SKIN          = DIR_ADD(DIR_IMG, "ball_ski
 static const std::string DIR_IMG_STAGE_CLEAR        = DIR_ADD(DIR_IMG, "clear");
 
 static const std::string DIR_CONTENT                = "content/";
-static const std::string DIR_DATA                   = DIR_ADD(DIR_CONTENT, "data");
-static const std::string DIR_BALL                   = DIR_ADD(DIR_CONTENT, "ball");
-static const std::string DIR_BRICK                  = DIR_ADD(DIR_CONTENT, "brick");
-static const std::string DIR_FRIEND                 = DIR_ADD(DIR_CONTENT, "friend");
-static const std::string DIR_STAGE                  = DIR_ADD(DIR_CONTENT, "stage");
+static const std::string DIR_CONTENT_DATA           = DIR_ADD(DIR_CONTENT, "data");
+static const std::string DIR_CONTENT_BALL           = DIR_ADD(DIR_CONTENT, "ball");
+static const std::string DIR_CONTENT_BRICK          = DIR_ADD(DIR_CONTENT, "brick");
+static const std::string DIR_CONTENT_FRIEND         = DIR_ADD(DIR_CONTENT, "friend");
+static const std::string DIR_CONTENT_STAGE          = DIR_ADD(DIR_CONTENT, "stage");
 
 // 스파인 애니메이션
 static const std::string ANIM_EXT                   = ".json";

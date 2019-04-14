@@ -93,7 +93,7 @@ SBAnimationSprite* FriendBall::createHitAnimation() {
     StringList anims;
     
     for( int i = 1; i <= 4; ++i ) {
-        anims.push_back(DIR_FRIEND + STR_FORMAT("friend_ball_hit_%02d.png", i));
+        anims.push_back(DIR_CONTENT_FRIEND + STR_FORMAT("friend_ball_hit_%02d.png", i));
     }
     
     return SBAnimationSprite::create(anims, BALL_ANIM_HIT_INTERVAL, 1);

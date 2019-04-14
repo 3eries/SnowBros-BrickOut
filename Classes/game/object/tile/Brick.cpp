@@ -168,7 +168,7 @@ void Brick::initHpGage() {
     
     auto getGageBgFile = [=]() {
       
-        return DIR_BRICK + string(is1x1() ? "game_gage_brick_bg.png" : "game_gage_brick_big_bg.png");
+        return DIR_CONTENT_BRICK + string(is1x1() ? "game_gage_brick_bg.png" : "game_gage_brick_big_bg.png");
     };
     
     auto getGageFile = [=]() {
@@ -179,7 +179,7 @@ void Brick::initHpGage() {
         else if( data.isBoss() )              file = "game_gage_brick_big_red.png";
         else if( this->isInfinityHp() )       file = "game_gage_brick_big_blue.png";
         
-        return DIR_BRICK + file;
+        return DIR_CONTENT_BRICK + file;
     };
     
     auto addGage = [=]() -> Sprite* {

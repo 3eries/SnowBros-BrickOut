@@ -64,7 +64,7 @@ void ContentResourceHelper::preload() {
  */
 string ContentResourceHelper::getBallImageFile(const string &ballId, const string &imgKey) {
     
-    return DIR_BALL + STR_FORMAT("%s_%s.png", ballId.c_str(), imgKey.c_str());
+    return DIR_CONTENT_BALL + STR_FORMAT("%s_%s.png", ballId.c_str(), imgKey.c_str());
 }
 
 string ContentResourceHelper::getSelectedBallImage() {
@@ -77,7 +77,7 @@ string ContentResourceHelper::getSelectedBallImage() {
  */
 string ContentResourceHelper::getStageBackgroundFile(int stage) {
     
-    return DIR_STAGE + STR_FORMAT("stage_%04d_bg.png", stage);
+    return DIR_CONTENT_STAGE + STR_FORMAT("stage_%04d_bg.png", stage);
 }
 
 /**
@@ -90,7 +90,7 @@ string ContentResourceHelper::getBrickBackgroundFile(const BrickData &data, bool
     if( elite )                   type = "_elite";
     else if( data.isSpecial() )   type = "_special";
     
-    string file = DIR_BRICK + STR_FORMAT("brick_bg_%dx%d%s_%02d.png",
+    string file = DIR_CONTENT_BRICK + STR_FORMAT("brick_bg_%dx%d%s_%02d.png",
                                          data.width, data.height, type.c_str(), step);
     
     if( !FileUtils::getInstance()->isFileExist(file) ) {
@@ -109,7 +109,7 @@ StringList ContentResourceHelper::getBrickAnimationFiles(const string &image, co
     int i = 0;
     
     while( true ) {
-        string file = DIR_BRICK + STR_FORMAT("%s_%s_%02d.png", image.c_str(), animKey.c_str(), i+1);
+        string file = DIR_CONTENT_BRICK + STR_FORMAT("%s_%s_%02d.png", image.c_str(), animKey.c_str(), i+1);
         
         if( !FileUtils::getInstance()->isFileExist(file) ) {
             break;
@@ -227,7 +227,7 @@ void ContentResourceHelper::removeBrickWhiteTextures() {
  */
 string ContentResourceHelper::getFriendAnimationFile(const string &friendId) {
     
-    return DIR_FRIEND + friendId + ANIM_EXT;
+    return DIR_CONTENT_FRIEND + friendId + ANIM_EXT;
 }
 
 StringList ContentResourceHelper::getFriendBallAnimationFiles(const string &friendId) {
@@ -236,7 +236,7 @@ StringList ContentResourceHelper::getFriendBallAnimationFiles(const string &frie
     int i = 0;
     
     while( true ) {
-        string file = DIR_FRIEND + STR_FORMAT("%s_ball_%02d.png", friendId.c_str(), i+1);
+        string file = DIR_CONTENT_FRIEND + STR_FORMAT("%s_ball_%02d.png", friendId.c_str(), i+1);
         
         if( !FileUtils::getInstance()->isFileExist(file) ) {
             break;
@@ -252,7 +252,7 @@ StringList ContentResourceHelper::getFriendBallAnimationFiles(const string &frie
 spine::SkeletonAnimation* ContentResourceHelper::createFriendBrickDamageAnimation(const string &friendId,
                                                                                   const BrickData &brickData) {
     
-    string file = DIR_FRIEND + STR_FORMAT("%s_brick_damage.json", friendId.c_str());
+    string file = DIR_CONTENT_FRIEND + STR_FORMAT("%s_brick_damage.json", friendId.c_str());
     
     if( !FileUtils::getInstance()->isFileExist(file) ) {
         return nullptr;

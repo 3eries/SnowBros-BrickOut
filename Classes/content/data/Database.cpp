@@ -15,10 +15,10 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-#define BALL_SKIN__FILE         (DIR_DATA + "ball_skin.json")
-#define BRICK_FILE              (DIR_DATA + "brick.json")
-#define FRIENDS_FILE            (DIR_DATA + "friends.json")
-#define DEMO_FILE               (DIR_DATA + "demo.json")
+#define BALL_SKIN__FILE         (DIR_CONTENT_DATA + "ball_skin.json")
+#define BRICK_FILE              (DIR_CONTENT_DATA + "brick.json")
+#define FRIENDS_FILE            (DIR_CONTENT_DATA + "friends.json")
+#define DEMO_FILE               (DIR_CONTENT_DATA + "demo.json")
 
 static Database *instance = nullptr;
 Database* Database::getInstance() {
@@ -117,7 +117,7 @@ void Database::parseStageJson() {
     
     while( true ) {
         string fileName = STR_FORMAT("stage_%04d.json", stageIdx+1);
-        string filePath = DIR_DATA + fileName;
+        string filePath = DIR_CONTENT_DATA + fileName;
         
         stageIdx++;
         
