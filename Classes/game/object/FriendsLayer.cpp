@@ -214,17 +214,14 @@ void FriendsLayer::eatFriendsItem(Item *item) {
             
             // 연출
             for( auto friendNode : friends ) {
-                auto label = Label::createWithTTF("POWER UP", FONT_COMMODORE, 20, Size::ZERO,
-                                                  TextHAlignment::CENTER, TextVAlignment::CENTER);
-                label->setAnchorPoint(ANCHOR_MB);
-                label->setPosition(Vec2(friendNode->getPositionX(), SHOOTING_POSITION_Y) + Vec2(0, 30));
-                label->setTextColor(Color4B(255, 255, 255, 255));
-                label->enableOutline(Color4B::BLACK, 3);
-                addChild(label, SBZOrder::MIDDLE);
+                auto effect = Sprite::create(DIR_IMG_GAME + "game_power_up.png");
+                effect->setAnchorPoint(ANCHOR_MB);
+                effect->setPosition(Vec2(friendNode->getPositionX(), SHOOTING_POSITION_Y) + Vec2(0, 30));
+                addChild(effect, SBZOrder::MIDDLE);
                 
                 auto move = MoveBy::create(0.8f, Vec2(0, 50));
                 auto remove = RemoveSelf::create();
-                label->runAction(Sequence::create(move, remove, nullptr));
+                effect->runAction(Sequence::create(move, remove, nullptr));
             }
         } break;
             
