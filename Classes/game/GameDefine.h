@@ -29,7 +29,6 @@ enum GameState {
     RESULT          = (1 << 9),     // 결과 화면
 };
 
-#define                                       TILE_ENTER_DURATION                0.3f  // 타일 등장 시간
 #define                                       TILE_MOVE_DURATION                 0.18f // 타일 이동 시간
 
 #define                                       NEXT_FLOOR_DELAY                   0.5f  // 모든 볼 추락 -> 다음 층 전환 지연 시간
@@ -67,9 +66,6 @@ static const float                            BALL_MAX_VELOCITY                =
 static const float                            WALL_BORDER                      = BALL_SIZE.height * 1.3f; // 벽 두께
 
 // Tile
-typedef cocos2d::Vec2 TilePosition;
-typedef std::vector<TilePosition> TilePositions;
-
 #define                                       TILE_POSITION_MAX_Y                (GAME_CONFIG->getTileColumns()-1)
 
 #define                                       TILE_ORIGIN                        (Vec2(60, 104) - (TILE_CONTENT_SIZE*0.5f))

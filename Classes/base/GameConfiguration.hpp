@@ -34,10 +34,11 @@ private:
     
     // 맵의 가로줄에 표시되는 타일 갯수
     CC_SYNTHESIZE_READONLY(int, tileRows, TileRows);
-
     // 맵의 세로줄에 표시되는 타일 갯수
     CC_SYNTHESIZE_READONLY(int, tileColumns, TileColumns);
-
+    // 타일 등장 시간
+    CC_SYNTHESIZE_READONLY(float, tileEnterDuration, TileEnterDuration);
+    
     CC_SYNTHESIZE_READONLY(int, firstBallCount, FirstBallCount);        // 최초 볼 갯수
     CC_SYNTHESIZE_READONLY(int, maxBallCount, MaxBallCount);            // 최대 볼 갯수
     CC_SYNTHESIZE_READONLY(int, maxScore, MaxScore);                    // 최대 스코어

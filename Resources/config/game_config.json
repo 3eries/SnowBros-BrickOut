@@ -8,6 +8,7 @@
     "first_ball_skin": "ball_00001",
     "tile_rows": 6,
     "tile_columns": 10,
+    "tile_enter_duration": 0.3,
     "first_ball_count": 10,
     "max_ball_count": 1000,
     "max_score": 999999999

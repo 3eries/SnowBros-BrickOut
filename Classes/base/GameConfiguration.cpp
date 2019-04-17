@@ -60,6 +60,7 @@ void GameConfiguration::parse(const string &json) {
     firstBallSkin        = doc["first_ball_skin"].GetString();
     tileRows             = doc["tile_rows"].GetInt();
     tileColumns          = doc["tile_columns"].GetInt();
+    tileEnterDuration    = doc["tile_enter_duration"].GetFloat();
     firstBallCount       = doc["first_ball_count"].GetInt();
     maxBallCount         = doc["max_ball_count"].GetInt();
     maxScore             = doc["max_score"].GetInt();
