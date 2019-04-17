@@ -96,7 +96,6 @@ bool AppDelegate::applicationDidFinishLaunching() {
     RankingManager::getInstance()->init();
 //    GameConfiguration::getInstance()->init();
     GiftManager::getInstance()->init();
-    ContentManager::getInstance()->init();
     
     // run
     SceneManager::getInstance()->replace(SceneType::SPLASH);
