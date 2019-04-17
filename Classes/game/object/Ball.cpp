@@ -181,6 +181,29 @@ void Ball::shoot(b2Vec2 velocity) {
 }
 
 /**
+ * 볼의 최대 속도를 반환합니다
+ */
+float Ball::getMaxVelocity() {
+    
+    return BALL_MAX_VELOCITY;
+}
+
+/**
+ * 볼의 발사 속도를 반환합니다
+ */
+b2Vec2 Ball::getShootingVelocity(const Vec2 &start, const Vec2 &end, float maxVelocity) {
+    
+    Vec2 diff = end - start;
+    
+    b2Vec2 v = PTM(diff);
+    v.Normalize();
+    v.x *= maxVelocity;
+    v.y *= maxVelocity;
+    
+    return v;
+}
+
+/**
  * 추락
  */
 void Ball::fallToFloor() {

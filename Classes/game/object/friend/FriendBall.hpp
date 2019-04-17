@@ -38,8 +38,9 @@ protected:
     virtual void initImage() override;
     
 public:
-    virtual void shoot(b2Vec2 velocity) override;
-    virtual void fallToFloor() override;
+    virtual void    shoot(b2Vec2 velocity) override;
+    virtual float   getMaxVelocity() override;
+    virtual void    fallToFloor() override;
     
     virtual SBAnimationSprite*        createHitAnimation() override;
     virtual spine::SkeletonAnimation* createBrickDamageAnimation(Brick *brick,

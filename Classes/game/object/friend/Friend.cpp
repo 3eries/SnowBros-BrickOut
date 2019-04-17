@@ -212,12 +212,9 @@ void Friend::shoot(float delay) {
     targetPosition = SBMath::getEndPosition(shootingPosition, angle, shootingPosition.getDistance(targetPosition));
     
     // 속도 설정
+    b2Vec2 velocity = Ball::getShootingVelocity(shootingPosition, targetPosition,
+                                                getBallMaxVelocity());
     Vec2 diff = targetPosition - shootingPosition;
-    
-    b2Vec2 velocity = PTM(diff);
-    velocity.Normalize();
-    velocity.x *= getBallMaxVelocity();
-    velocity.y *= getBallMaxVelocity();
     
     // 볼 업데이트
     for( auto ball : balls ) {
@@ -438,5 +435,5 @@ void Friend::setDamageVisible(bool isVisible) {
 
 float Friend::getBallMaxVelocity() {
     
-    return BALL_MAX_VELOCITY * data.ballSpeed;
+    return balls[0]->getMaxVelocity();
 }

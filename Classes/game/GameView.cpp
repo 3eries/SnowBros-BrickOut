@@ -662,13 +662,8 @@ void GameView::shoot(const Vec2 &endPosition) {
     }
     
     // 속도 설정
-    Vec2 diff = endPosition - aimController->getStartPosition();
-    
-    b2Vec2 velocity = PTM(diff);
-    velocity.Normalize();
-    velocity.x *= BALL_MAX_VELOCITY;
-    velocity.y *= BALL_MAX_VELOCITY;
-    
+    b2Vec2 velocity = Ball::getShootingVelocity(aimController->getStartPosition(), endPosition,
+                                                balls[0]->getMaxVelocity());
     // Log::i("shoot velocity: %f,%f", velocity.x, velocity.y);
     
     // 볼 업데이트

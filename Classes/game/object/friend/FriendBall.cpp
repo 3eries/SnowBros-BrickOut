@@ -77,6 +77,11 @@ void FriendBall::shoot(b2Vec2 velocity) {
     Ball::shoot(velocity);
 }
 
+float FriendBall::getMaxVelocity() {
+    
+    return BALL_MAX_VELOCITY * data.ballSpeed;
+}
+
 /**
  * 추락
  */

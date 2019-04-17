@@ -32,17 +32,21 @@ protected:
     virtual void initPhysicsListener();
     
 public:
-    static b2Body* createBody(SBPhysicsObject *userData = nullptr);
+    static b2Body*  createBody(SBPhysicsObject *userData = nullptr);
     
-    virtual bool beforeStep() override;
-    virtual bool afterStep() override;
+    virtual bool    beforeStep() override;
+    virtual bool    afterStep() override;
     
-    virtual void shoot(b2Vec2 velocity);
-    virtual void fallToFloor();
+    virtual void    shoot(b2Vec2 velocity);
+    virtual float   getMaxVelocity();
     
-    virtual void checkMovement(float dt);
+    static  b2Vec2  getShootingVelocity(const cocos2d::Vec2 &start, const cocos2d::Vec2 &end,
+                                        float maxVelocity);
+    virtual void    fallToFloor();
     
-    virtual void sleepWithAction();
+    virtual void    checkMovement(float dt);
+    
+    virtual void    sleepWithAction();
     
     virtual SBAnimationSprite* createHitAnimation();
     
