@@ -14,6 +14,7 @@
 #include "superbomb.h"
 #include "Tile.hpp"
 
+class TileLayer;
 class Ball;
 class FriendBall;
 
@@ -71,7 +72,9 @@ public:
     virtual void    runBallHitAction(Ball *ball, cocos2d::Vec2 contactPoint);
     virtual void    runFriendBallDamageAction(FriendBall *ball, cocos2d::Vec2 contactPoint);
     
+    virtual void    onPreSolve(b2Contact *contact, const b2Manifold *oldManifold);
     virtual bool    onContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint);
+    
     virtual void    onBreak();
     
     virtual bool    sufferDamage(Ball *ball, cocos2d::Vec2 contactPoint,
@@ -86,6 +89,7 @@ public:
     
     virtual bool    canDamage();
     virtual bool    canDamagePoint(cocos2d::Vec2 p);
+    virtual float   getEnterDuration();
     
     bool         isElite();
     bool         isBoss();
@@ -100,6 +104,7 @@ protected:
     CC_SYNTHESIZE_READONLY(int, hp, Hp);
     int prevHp;
     
+    CC_SYNTHESIZE(TileLayer*, tileLayer, TileLayer);
     CC_SYNTHESIZE(SBCallbackNode, onBreakListener, OnBreakListener)
     
     cocos2d::Sprite *bg;

@@ -101,6 +101,10 @@ void Database::parseBrickJson() {
         brick.idleAnims = BRICK_IDLE_ANIM_FILES(brick.image);
         brick.damageAnims = BRICK_DAMAGE_ANIM_FILES(brick.image);
         
+        if( brick.enterDuration == 0 ) {
+            brick.enterDuration = GAME_CONFIG->getTileEnterDuration();
+        }
+        
         bricks[brick.brickId] = brick;
         
         CCLOG("%s", brick.toString().c_str());

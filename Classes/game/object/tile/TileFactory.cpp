@@ -11,9 +11,11 @@
 #include "../../GameDefine.h"
 
 #include "Brick_10012.hpp"
+#include "NeutralBrick.hpp"
 #include "ShieldBrick.hpp"
 #include "GhostBrick.hpp"
-#include "NeutralBrick.hpp"
+#include "TeleportBrick.hpp"
+#include "TornadoBrick.hpp"
 
 USING_NS_CC;
 using namespace std;
@@ -34,6 +36,8 @@ Brick* TileFactory::createBrick(const BrickDef &def) {
     switch( data.type ) {
         case BrickType::SPECIAL_SHIELD:     return ShieldBrick::create(def);
         case BrickType::SPECIAL_GHOST:      return GhostBrick::create(def);
+        case BrickType::SPECIAL_TELEPORT:   return TeleportBrick::create(def);
+        case BrickType::SPECIAL_TORNADO:    return TornadoBrick::create(def);
         case BrickType::SPECIAL_NEUTRAL:    return NeutralBrick::create(def);
         default: break;
     }

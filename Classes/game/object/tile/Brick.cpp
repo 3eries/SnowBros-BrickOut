@@ -38,6 +38,7 @@ data(def.data),
 originalHp(def.hp),
 hp(def.hp),
 prevHp(0),
+tileLayer(nullptr),
 onBreakListener(nullptr),
 bg(nullptr),
 image(nullptr),
@@ -60,6 +61,7 @@ bool Brick::init() {
     initPhysics();
     initBg();
     initImage();
+    setLocalZOrder(data.zOrder);
 
     if( def.tile.pos != INVALID_TILE_POSITION ) {
         setTilePosition(def.tile.pos);
@@ -110,6 +112,7 @@ void Brick::initPhysics() {
     auto listener = GamePhysicsListener::create();
     listener->setTarget(this);
     listener->setContactTarget(this);
+    listener->onPreSolve     = CC_CALLBACK_2(Brick::onPreSolve, this);
     listener->onContactBrick = CC_CALLBACK_3(Brick::onContactBrick, this);
     GameManager::getPhysicsManager()->addListener(listener);
 }
@@ -431,6 +434,9 @@ void Brick::runFriendBallDamageAction(FriendBall *ball, Vec2 contactPoint) {
     addChild(anim, (int)Brick::ZOrder::DAMAGE_EFFECT + ball->getData().brickDamageEffectZOrder);
 }
 
+void Brick::onPreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
+}
+
 /**
  * 볼 & 벽돌 충돌
  */
@@ -655,6 +661,13 @@ bool Brick::canDamage() {
  */
 bool Brick::canDamagePoint(Vec2 p) {
     return true;
+}
+
+/**
+ * 등장 시간을 반환합니다
+ */
+float Brick::getEnterDuration() {
+    return data.enterDuration;
 }
 
 bool Brick::isElite() {

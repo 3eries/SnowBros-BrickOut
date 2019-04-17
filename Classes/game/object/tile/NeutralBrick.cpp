@@ -83,7 +83,7 @@ void NeutralBrick::removeWithAction() {
         return;
     }
     
-    auto fadeOut = FadeOut::create(TILE_ENTER_DURATION);
+    auto fadeOut = FadeOut::create(data.enterDuration);
     auto callFunc = CallFunc::create(remove);
     getImage()->runAction(Sequence::create(fadeOut, callFunc, nullptr));
 }

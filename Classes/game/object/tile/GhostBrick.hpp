@@ -26,7 +26,7 @@ private:
     void onFloorChanged(const FloorData &floor) override;
     void onNextFloor(const FloorData &floor) override;
     
-    void updateOpacity();
+    void updateState();
     
 public:
     bool canDamage() override;

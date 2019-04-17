@@ -204,10 +204,21 @@ void TileLayer::initFloorTile(const FloorData &floor) {
     initFloorBrick(floor);
     initFloorItem(floor);
     
-    // 타일 등장 연출 완료 후 이동
+    // 타일 등장 연출 완료 후 이동, 가장 긴 시간을 기준으로 함 
+    auto bricks = getBricks();
+    float enterDuration = 0;
+    
+    for( auto brick : bricks ) {
+        float d = brick->getEnterDuration();
+        
+        if( d > enterDuration ) {
+            enterDuration = d;
+        }
+    }
+    
     SBDirector::postDelayed(this, [=]() {
         this->downTile();
-    }, TILE_ENTER_DURATION);
+    }, enterDuration);
 }
 
 /**
@@ -510,6 +521,7 @@ Brick* TileLayer::addBrick(Brick *brick) {
     
     GAME_MANAGER->addBrick(brick->getData());
     
+    brick->setTileLayer(this);
     brick->setOnBreakListener([=](Node*) {
         onBrickBreakListener(brick);
     });

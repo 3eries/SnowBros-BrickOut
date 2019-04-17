@@ -234,6 +234,40 @@
     "damage_anim_interval": 0.1
 },
 {
+    "id": "brick_01005",
+    "type": 13,
+    "width": 1,
+    "height": 1,
+    "color": "71,103,255",
+    "image": "brick_00015",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1,
+    "enter_duration": 1.2,
+    "zorder": 1
+},
+{
+    "id": "brick_01006",
+    "type": 14,
+    "width": 1,
+    "height": 1,
+    "color": "0,168,255",
+    "image": "brick_00004",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1,
+    "enter_duration": 1.5
+},
+{
+    "id": "brick_01007",
+    "type": 14,
+    "width": 1,
+    "height": 1,
+    "color": "255,48,71",
+    "image": "brick_00013",
+    "idle_anim_interval": 0.6,
+    "damage_anim_interval": 0.1,
+    "enter_duration": 1.5
+},
+{
     "id": "brick_01101",
     "type": 20,
     "width": 1,

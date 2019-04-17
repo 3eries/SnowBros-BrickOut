@@ -33,6 +33,8 @@
 		1D25EE2C220E1E6D00DD126A /* TestCase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D25EE2A220E1E6D00DD126A /* TestCase.cpp */; };
 		1D25EE2F220E1F1F00DD126A /* TestList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D25EE2D220E1F1F00DD126A /* TestList.cpp */; };
 		1D25EE32220E6BC200DD126A /* Brick_10012.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D25EE30220E6BC200DD126A /* Brick_10012.cpp */; };
+		1D28C93E22638ADC00CCC687 /* TeleportBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D28C93C22638ADC00CCC687 /* TeleportBrick.cpp */; };
+		1D28C9442263EBC400CCC687 /* TornadoBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D28C9422263EBC400CCC687 /* TornadoBrick.cpp */; };
 		1D3120DC20E9F9EA00D059C6 /* RankingManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D3120D920E9F9E900D059C6 /* RankingManager.cpp */; };
 		1D322ED622389CB30007DDFB /* NeutralBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D322ED422389CB30007DDFB /* NeutralBrick.cpp */; };
 		1D322EE52239E57B0007DDFB /* BallSkinPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D322EE32239E57B0007DDFB /* BallSkinPopup.cpp */; };
@@ -254,6 +256,10 @@
 		1D25EE2E220E1F1F00DD126A /* TestList.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TestList.hpp; sourceTree = "<group>"; };
 		1D25EE30220E6BC200DD126A /* Brick_10012.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Brick_10012.cpp; sourceTree = "<group>"; };
 		1D25EE31220E6BC200DD126A /* Brick_10012.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Brick_10012.hpp; sourceTree = "<group>"; };
+		1D28C93C22638ADC00CCC687 /* TeleportBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TeleportBrick.cpp; sourceTree = "<group>"; };
+		1D28C93D22638ADC00CCC687 /* TeleportBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TeleportBrick.hpp; sourceTree = "<group>"; };
+		1D28C9422263EBC400CCC687 /* TornadoBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TornadoBrick.cpp; sourceTree = "<group>"; };
+		1D28C9432263EBC400CCC687 /* TornadoBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TornadoBrick.hpp; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3120D820E9F9E900D059C6 /* RankingManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RankingManager.hpp; sourceTree = "<group>"; };
 		1D3120D920E9F9E900D059C6 /* RankingManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RankingManager.cpp; sourceTree = "<group>"; };
@@ -1122,10 +1128,14 @@
 				1D322ED522389CB30007DDFB /* NeutralBrick.hpp */,
 				1D9C034F22277FE500745356 /* ShieldBrick.cpp */,
 				1D9C035022277FE500745356 /* ShieldBrick.hpp */,
+				1D28C93C22638ADC00CCC687 /* TeleportBrick.cpp */,
+				1D28C93D22638ADC00CCC687 /* TeleportBrick.hpp */,
 				1DD697A121B8546F005FDC62 /* Tile.cpp */,
 				1DD697A221B8546F005FDC62 /* Tile.hpp */,
 				1D9C03482226B95500745356 /* TileFactory.cpp */,
 				1D9C03492226B95500745356 /* TileFactory.hpp */,
+				1D28C9422263EBC400CCC687 /* TornadoBrick.cpp */,
+				1D28C9432263EBC400CCC687 /* TornadoBrick.hpp */,
 			);
 			path = tile;
 			sourceTree = "<group>";
@@ -1445,10 +1455,12 @@
 				1D599D8D21AF029D00E758D8 /* GameEventDispatcher.cpp in Sources */,
 				1DEAFE672195C814001CE5B7 /* SBScheduleHelper.cpp in Sources */,
 				1DD6979C21B84EAC005FDC62 /* GameMap.cpp in Sources */,
+				1D28C9442263EBC400CCC687 /* TornadoBrick.cpp in Sources */,
 				1D45C48820A8A7B8007E63AD /* SBHttp.cpp in Sources */,
 				1D322EE52239E57B0007DDFB /* BallSkinPopup.cpp in Sources */,
 				1D1F3C9420AD4A3D0035A36C /* GameView.cpp in Sources */,
 				1DEEE24F21B57FCC00DD4776 /* ResultPopup.cpp in Sources */,
+				1D28C93E22638ADC00CCC687 /* TeleportBrick.cpp in Sources */,
 				1DD308E0224AF38B002A50E8 /* FriendBall.cpp in Sources */,
 				46880B8819C43A87006E1F66 /* AppDelegate.cpp in Sources */,
 				1D49A27C21AFAFA1005C26CB /* ContinuePopup.cpp in Sources */,

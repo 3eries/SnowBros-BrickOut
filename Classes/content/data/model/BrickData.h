@@ -17,6 +17,8 @@ enum class BrickType {
     SPECIAL             = 10,
     SPECIAL_SHIELD      = 11,
     SPECIAL_GHOST       = 12,
+    SPECIAL_TELEPORT    = 13,
+    SPECIAL_TORNADO     = 14,
     SPECIAL_NEUTRAL     = 20,
     BOSS_FRIENDS        = 50,
     BOSS                = 100,
@@ -41,6 +43,8 @@ struct BrickData {
     StringList               parts;
     float                    idleAnimInterval;
     float                    damageAnimInterval;
+    float                    enterDuration;
+    int                      zOrder;
     
     StringList               idleAnims;
     StringList               damageAnims;
@@ -52,9 +56,11 @@ struct BrickData {
         height = 0;
         idleAnimInterval = 0.6f;
         damageAnimInterval = 0.1f;
+        enterDuration = 0;
+        zOrder = 0;
     }
     
-    BrickData(const rapidjson::Value &v) {
+    BrickData(const rapidjson::Value &v) : BrickData() {
         // Required Properties
         brickId = v["id"].GetString();
         type    = (BrickType)v["type"].GetInt();
@@ -94,6 +100,12 @@ struct BrickData {
         // anim_interval
         if( v.HasMember("idle_anim_interval") )    idleAnimInterval = v["idle_anim_interval"].GetFloat();
         if( v.HasMember("damage_anim_interval") )  damageAnimInterval = v["damage_anim_interval"].GetFloat();
+        
+        // enter_duration
+        if( v.HasMember("enter_duration") )        enterDuration = v["enter_duration"].GetFloat();
+        
+        // zorder
+        if( v.HasMember("zorder") )                zOrder = v["zorder"].GetFloat();
     }
     
     bool isNull() const {
@@ -116,8 +128,8 @@ struct BrickData {
         std::string str = "\tBrickData {\n";
         str += STR_FORMAT("\t\tbrickId: %s, type: %d, width: %d, height: %d, color: %d,%d,%d \n",
                           brickId.c_str(), (int)type, width, height, color.r, color.g, color.b);
-        str += STR_FORMAT("\t\timage: %s, idleAnimInterval: %f, damageAnimInterval: %f \n",
-                          image.c_str(), idleAnimInterval, damageAnimInterval);
+        str += STR_FORMAT("\t\timage: %s, idleAnimInterval: %f, damageAnimInterval: %f, enterDuration: %f\n",
+                          image.c_str(), idleAnimInterval, damageAnimInterval, enterDuration);
         
         str += "\t\tparts: ";
         
