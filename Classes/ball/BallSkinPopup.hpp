@@ -65,8 +65,6 @@ public:
     void onEnterActionFinished() override;
     
 private:
-    CC_SYNTHESIZE(BallSkinDataListener, onBallSelectedListener, OnBallSelectedListener);
-    
     cocos2d::ui::ListView*  ballListView;
     
     BallSkin::Cells         cells;
@@ -120,17 +118,17 @@ private:
 /**
  * ListCell
  */
-struct CellData {
+struct ListCellData {
     bool isWatchAd;
     BallSkinData ballData;
     int amount;
     
-    CellData() : isWatchAd(false), amount(0) {}
+    ListCellData() : isWatchAd(false), amount(0) {}
 };
 
 class ListCell : public cocos2d::ui::Widget {
 public:
-    static ListCell* create(const CellData &data);
+    static ListCell* create(const ListCellData &data);
     ~ListCell();
     
     void setUnlocked(bool isUnlocked);
@@ -139,11 +137,11 @@ public:
 private:
     ListCell();
     
-    bool init(const CellData &data);
+    bool init(const ListCellData &data);
     
     CC_SYNTHESIZE(int, rowIndex, RowIndex);
     CC_SYNTHESIZE(OnCellListener, onClickListener, OnClickListener);
-    CC_SYNTHESIZE_READONLY(CellData, data, Data);
+    CC_SYNTHESIZE_READONLY(ListCellData, data, Data);
     SB_SYNTHESIZE_READONLY_BOOL(unlocked, Unlocked);
     SB_SYNTHESIZE_READONLY_BOOL(selected, Selected);
     

@@ -250,8 +250,8 @@ void MainScene::showSettingPopup() {
 void MainScene::showBallSkinPopup() {
     
     auto popup = BallSkinPopup::create();
-    popup->setOnBallSelectedListener([=](BallSkinData data) {
-    });
+    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
+}
     SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
 }
 

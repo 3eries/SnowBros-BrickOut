@@ -43,7 +43,6 @@ BallSkinPopup* BallSkinPopup::create() {
 }
 
 BallSkinPopup::BallSkinPopup() : BasePopup(PopupType::BALL_SKIN),
-onBallSelectedListener(nullptr),
 selectedCell(nullptr) {
 }
 
@@ -324,10 +323,10 @@ void BallSkinPopup::initButton() {
  */
 void BallSkinPopup::initListView() {
     
-    vector<BallSkin::CellData> datas;
+    vector<BallSkin::ListCellData> datas;
     
     // Watch Ad 데이터 초기화
-    BallSkin::CellData watchAdData;
+    BallSkin::ListCellData watchAdData;
     watchAdData.isWatchAd = true;
     // FIXME: 광고 보기 보상 수량
     watchAdData.amount = 100;
@@ -337,7 +336,7 @@ void BallSkinPopup::initListView() {
     auto ballSkins = Database::getBallSkins();
     
     for( auto ballSkin : ballSkins ) {
-        BallSkin::CellData data;
+        BallSkin::ListCellData data;
         data.ballData = ballSkin;
         data.amount = ballSkin.unlockAmount;
         datas.push_back(data);
@@ -588,7 +587,7 @@ bool ListRow::init(const Cells &cells) {
 
 #pragma mark- ListCell
 
-ListCell* ListCell::create(const CellData &data) {
+ListCell* ListCell::create(const ListCellData &data) {
     
     auto cell = new ListCell();
     
@@ -610,7 +609,7 @@ bg(nullptr), selectedImage(nullptr), ball(nullptr), coinLayer(nullptr), lockedLa
 ListCell::~ListCell() {
 }
 
-bool ListCell::init(const CellData &data) {
+bool ListCell::init(const ListCellData &data) {
     
     if( !Widget::init() ) {
         return false;
