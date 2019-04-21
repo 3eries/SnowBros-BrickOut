@@ -1381,7 +1381,7 @@ void GameView::initBall() {
     ballCountLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
     ballCountLabel->setAnchorPoint(ANCHOR_M);
-    ballCountLabel->setPosition(Vec2BC(0, 25));
+    ballCountLabel->setPosition(Vec2BC(0, BALL_DAMAGE_LABEL_POSITION_Y));
     ballCountLabel->setTextColor(Color4B::WHITE);
     ballCountLabel->enableOutline(Color4B::BLACK, 3);
     addChild(ballCountLabel, (int)ZOrder::BALL);

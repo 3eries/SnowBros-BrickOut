@@ -1,9 +1,9 @@
 {
-"skeleton": { "hash": "nEiBe/GNTtLSh6140yxL6byIGwI", "spine": "3.7.85", "width": 162, "height": 150, "images": "./friend_0005/", "audio": "D:/슈퍼밤/snowbros_ballz/spine" },
+"skeleton": { "hash": "NDeyCwn4aKcK1cH2T9GgD9DGsO4", "spine": "3.7.85", "width": 162, "height": 150, "images": "./friend_0005/", "audio": "D:/슈퍼밤/snowbros_ballz/spine" },
 "bones": [
 	{ "name": "root" },
-	{ "name": "friend_05", "parent": "root", "y": -529 },
-	{ "name": "friends_hide", "parent": "root", "y": -529 }
+	{ "name": "friend_05", "parent": "root" },
+	{ "name": "friends_hide", "parent": "root" }
 ],
 "slots": [
 	{ "name": "friends_00005_clear_1", "bone": "friends_hide", "attachment": "friends_00005_idle_01" },

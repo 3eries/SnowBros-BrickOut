@@ -69,7 +69,7 @@ bool Friend::init(const FriendDef &def) {
     this->tileLayer = def.tileLayer;
     
     setAnchorPoint(ANCHOR_M);
-    setPosition(Vec2MC(0,0));
+    setPosition(Vec2(0, GAME_FRIENDS_POS_Y));
     setContentSize(SB_WIN_SIZE);
     setCascadeOpacityEnabled(true);
     
@@ -100,7 +100,8 @@ void Friend::initBall() {
     damageLabel = Label::createWithTTF("X0", FONT_COMMODORE, 26, Size::ZERO,
                                        TextHAlignment::CENTER, TextVAlignment::CENTER);
     damageLabel->setAnchorPoint(ANCHOR_M);
-    damageLabel->setPosition(Vec2BC(0, 25));
+    damageLabel->setPosition(Vec2(Vec2BC(0,0).x,
+                                  convertToNodeSpace(Vec2(0, BALL_DAMAGE_LABEL_POSITION_Y)).y));
     damageLabel->setTextColor(Color4B::WHITE);
     damageLabel->enableOutline(Color4B::BLACK, 3);
     addChild(damageLabel);

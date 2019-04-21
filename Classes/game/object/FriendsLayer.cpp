@@ -18,7 +18,6 @@ USING_NS_SB;
 using namespace std;
 
 #define        SLOT_COUNT          5
-#define        FRIENDS_POS_Y       (SB_WIN_SIZE.height*0.5f)
 
 FriendsLayer* FriendsLayer::create(TileLayer *tileLayer) {
     
@@ -90,7 +89,7 @@ void FriendsLayer::initFriends() {
     for( int i = 0; i < SLOT_COUNT; ++i ) {
         Slot slot;
         slot.index = i;
-        slot.pos = Vec2BL((w*i) + (w*0.5f), FRIENDS_POS_Y);
+        slot.pos = Vec2((w*i) + (w*0.5f), GAME_FRIENDS_POS_Y);
         slots.push_back(slot);
         
         /*
@@ -263,8 +262,6 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
         auto friendNode = friends[i];
         auto slot = sortedSlots[i];
         
-        friendNode->setDamageVisible(true);
-        
         if( withAction ) {
             int diff = abs(slot.index - getNearSlot(friendNode->getPosition()).index);
             if( diff == 0 ) {
@@ -274,12 +271,10 @@ void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
             
             friendNode->setImage(Friend::ImageType::MOVE);
             friendNode->setImageFlippedX(slot.pos.x < friendNode->getPositionX());
-            friendNode->setDamageVisible(false);
             
             auto move = MoveTo::create(diff * 0.25f, slot.pos);
             auto callFunc = CallFunc::create([=]() {
                 friendNode->setImage(Friend::ImageType::IDLE);
-                friendNode->setDamageVisible(true);
                 slot.put(friendNode);
             });
             friendNode->runAction(Sequence::create(move, callFunc, nullptr));
@@ -408,6 +403,7 @@ void FriendsLayer::onFloorChanged(const FloorData &floor) {
     
     // 데미지 업데이트
     updateFriendsDamage();
+    setDamageVisible(true);
 }
 
 /**
