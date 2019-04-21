@@ -26,6 +26,7 @@ $(LOCAL_PATH)/../../../Classes/sb \
 $(LOCAL_PATH)/../../../Classes/ball \
 $(LOCAL_PATH)/../../../Classes/base \
 $(LOCAL_PATH)/../../../Classes/content \
+$(LOCAL_PATH)/../../../Classes/friend \
 $(LOCAL_PATH)/../../../Classes/gift \
 $(LOCAL_PATH)/../../../Classes/menu \
 $(LOCAL_PATH)/../../../Classes/popup \
