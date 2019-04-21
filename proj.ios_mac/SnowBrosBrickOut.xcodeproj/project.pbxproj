@@ -98,6 +98,7 @@
 		1D9C035422277FFB00745356 /* GhostBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C035222277FFB00745356 /* GhostBrick.cpp */; };
 		1D9DAB78226CFA990004AD4E /* DemoViewEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB76226CFA990004AD4E /* DemoViewEdit.cpp */; };
 		1D9DAB7E226CFF410004AD4E /* UserCoinView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB7C226CFF410004AD4E /* UserCoinView.cpp */; };
+		1D9DAB82226D0FC10004AD4E /* ShopPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB80226D0FC10004AD4E /* ShopPopup.cpp */; };
 		1D9ED20220C421D8006DE988 /* GameConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */; };
 		1DA0408721034661001980BA /* PluginManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407921034660001980BA /* PluginManager.cpp */; };
 		1DA0408821034661001980BA /* FirebaseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407E21034660001980BA /* FirebaseManager.cpp */; };
@@ -393,6 +394,8 @@
 		1D9DAB77226CFA990004AD4E /* DemoViewEdit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoViewEdit.hpp; sourceTree = "<group>"; };
 		1D9DAB7C226CFF410004AD4E /* UserCoinView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = UserCoinView.cpp; sourceTree = "<group>"; };
 		1D9DAB7D226CFF410004AD4E /* UserCoinView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UserCoinView.hpp; sourceTree = "<group>"; };
+		1D9DAB80226D0FC10004AD4E /* ShopPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShopPopup.cpp; sourceTree = "<group>"; };
+		1D9DAB81226D0FC10004AD4E /* ShopPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ShopPopup.hpp; sourceTree = "<group>"; };
 		1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameConfiguration.cpp; sourceTree = "<group>"; };
 		1D9ED20120C421D8006DE988 /* GameConfiguration.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameConfiguration.hpp; sourceTree = "<group>"; };
 		1DA0407921034660001980BA /* PluginManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PluginManager.cpp; sourceTree = "<group>"; };
@@ -1029,6 +1032,15 @@
 			path = spine;
 			sourceTree = "<group>";
 		};
+		1D9DAB7F226D0FB40004AD4E /* shop */ = {
+			isa = PBXGroup;
+			children = (
+				1D9DAB80226D0FC10004AD4E /* ShopPopup.cpp */,
+				1D9DAB81226D0FC10004AD4E /* ShopPopup.hpp */,
+			);
+			path = shop;
+			sourceTree = "<group>";
+		};
 		1DA0407D21034660001980BA /* firebase */ = {
 			isa = PBXGroup;
 			children = (
@@ -1321,6 +1333,7 @@
 				1D59F3D220FA69D200649A99 /* popup */,
 				1D3120D620E9F9E900D059C6 /* ranking */,
 				1D45C44C20A8A7B8007E63AD /* sb */,
+				1D9DAB7F226D0FB40004AD4E /* shop */,
 				1D45C48E20A8A7BC007E63AD /* splash */,
 				1DA98BC920B47CC4006BC169 /* test */,
 				1D45C49820A8A9DC007E63AD /* ui */,
@@ -1533,6 +1546,7 @@
 				1D45C47E20A8A7B8007E63AD /* SBButton.cpp in Sources */,
 				1DEA58182109A5B400CF6F98 /* AdsHelper.cpp in Sources */,
 				1D45C47D20A8A7B8007E63AD /* SBAnimationSprite.cpp in Sources */,
+				1D9DAB82226D0FC10004AD4E /* ShopPopup.cpp in Sources */,
 				1D107B242232E15400B3AEB4 /* DemoMap.cpp in Sources */,
 				1D86438F21523898001841C9 /* SBSecurity-android.cpp in Sources */,
 				1D9DAB7E226CFF410004AD4E /* UserCoinView.cpp in Sources */,

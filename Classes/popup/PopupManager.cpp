@@ -12,6 +12,7 @@
 #include "SceneManager.h"
 
 #include "ExitAlertPopup.hpp"
+#include "ShopPopup.hpp"
 #include "../main/CreditPopup.hpp"
 
 USING_NS_CC;
@@ -174,7 +175,11 @@ bool PopupManager::exists(PopupType type) {
 /**
  * 팝업 노출
  */
-BasePopup* PopupManager::show(OnPopupEvent onEventListener, PopupType type) {
+BasePopup* PopupManager::show(OnPopupEvent onEventListener, PopupType type, int zOrder) {
+    
+    if( zOrder == -1 ) {
+        zOrder = ZOrder::POPUP_BOTTOM;
+    }
     
     auto popup = createPopup(type);
     popup->setOnPopupEventListener([=](Node *sender, PopupEventType eventType) {
@@ -183,16 +188,16 @@ BasePopup* PopupManager::show(OnPopupEvent onEventListener, PopupType type) {
             onEventListener(sender, eventType);
         }
     });
-    SceneManager::getInstance()->getScene()->addChild(popup, ZOrder::POPUP_BOTTOM);
+    SceneManager::getInstance()->getScene()->addChild(popup, zOrder);
     
     popup->runEnterAction();
     
     return popup;
 }
 
-BasePopup* PopupManager::show(PopupType type) {
+BasePopup* PopupManager::show(PopupType type, int zOrder) {
 
-    return show(nullptr, type);
+    return show(nullptr, type, zOrder);
 }
 
 /**
@@ -306,6 +311,7 @@ BasePopup* PopupManager::createPopup(PopupType type) {
     switch( type ) {
         case PopupType::EXIT_APP:              return ExitAlertPopup::create();
         case PopupType::CREDIT:                return CreditPopup::create();
+        case PopupType::SHOP:                  return ShopPopup::create();
         default:
             return nullptr;
     }

@@ -106,10 +106,15 @@ void UserCoinView::initNormal() {
     
     // bg
     // common_bg_coin_user.png Vec2TL(112, -138) , Size(200, 52)
-    auto bg = Sprite::create(DIR_IMG_COMMON + "common_bg_coin_user.png");
+    auto bg = SBButton::create(DIR_IMG_COMMON + "common_bg_coin_user.png");
+    bg->setZoomScale(0);
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2TL(112, -138));
     addChild(bg);
+    
+    bg->setOnClickListener([=](Node*) {
+        this->onClick(getChildByTag(Tag::BTN_SHOP));
+    });
     
     // icon
     // common_icon_coin_tiny.png Vec2TL(38, -138) , Size(36, 36)
@@ -147,7 +152,7 @@ void UserCoinView::initNormal() {
 void UserCoinView::initShop() {
     
     // shop_bg_coin_user.png Vec2TL(112, -138) , Size(200, 52)
-    auto bg = Sprite::create(DIR_IMG_COMMON + "shop_bg_coin_user.png");
+    auto bg = Sprite::create(DIR_IMG_SHOP + "shop_bg_coin_user.png");
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2TL(112, -138));
     addChild(bg);

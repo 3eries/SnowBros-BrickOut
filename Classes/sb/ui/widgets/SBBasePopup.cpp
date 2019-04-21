@@ -91,11 +91,19 @@ void SBBasePopup::initContentView() {
 }
 
 void SBBasePopup::addBackgroundChild(Node *child, int localZOrder, int tag) {
+
+    if( child->getTag() != Node::INVALID_TAG ) {
+        tag = child->getTag();
+    }
     
     backgroundView->addChild(child, localZOrder, tag);
 }
 
 void SBBasePopup::addContentChild(Node *child, int localZOrder, int tag) {
+    
+    if( child->getTag() != Node::INVALID_TAG ) {
+        tag = child->getTag();
+    }
     
     contentView->addChild(child, localZOrder, tag);
 }

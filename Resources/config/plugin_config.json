@@ -19,13 +19,25 @@
                     "type": "remove_ads",
                     "id": "remove_ads",
                     "amount": 0,
-                    "price": ""
+                    "price": "$2.99"
                 },
-                "test_item": {
+                "coin_01": {
                     "type": "consumable",
-                    "id": "",
-                    "amount": 0,
-                    "price": ""
+                    "id": "coin_01",
+                    "amount": 500,
+                    "price": "$0.99"
+                },
+                "coin_02": {
+                    "type": "consumable",
+                    "id": "coin_02",
+                    "amount": 3000,
+                    "price": "$4.99"
+                },
+                "coin_03": {
+                    "type": "consumable",
+                    "id": "coin_03",
+                    "amount": 7500,
+                    "price": "$9.99"
                 }
             },
             "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2LYxV7C5qq1rAVr/QIJVcquhD0Oq+TGJimvfuSDyxBcKx51wTzLaFv1UZ4SPpnPxlQ3vNofj8p4eA1YxbCgcxXWzgoFWOb3wYrNL89Z7kt9AsHzVaZkkTymbmFJkJRqHAr7gEJ0o0LAqlEfcBQEJGPni1bunEahQEiquUkxL7CwTVCT/xu2h5QU/9OaozEWXfZawpPJHwL9diwn8VAwPkA2wN9EUkIGEHfYBMYZjuT3zL0AKwu0ETK6xyMtRSssgKJ55HuCG+ScvLYC3W3KprTfs6BNSKxqs9LMYazM0xuXCCUUwMGO0hnEkUoR86Mui4mfj1dMBHalWpYvu0HG79wIDAQAB"
@@ -51,14 +63,25 @@
                     "type": "remove_ads",
                     "id": "remove_ads",
                     "amount": 0,
-                    "price": ""
+                    "price": "$2.99"
                 },
-                
-                "test_item": {
+                "coin_01": {
                     "type": "consumable",
-                    "id": "",
-                    "amount": 0,
-                    "price": ""
+                    "id": "coin_01",
+                    "amount": 500,
+                    "price": "$0.99"
+                },
+                "coin_02": {
+                    "type": "consumable",
+                    "id": "coin_02",
+                    "amount": 3000,
+                    "price": "$4.99"
+                },
+                "coin_03": {
+                    "type": "consumable",
+                    "id": "coin_03",
+                    "amount": 7500,
+                    "price": "$9.99"
                 }
             }
         }

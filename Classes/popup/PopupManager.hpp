@@ -38,8 +38,8 @@ public:
     static bool             exists(PopupType type);
     
 public:
-    static BasePopup*       show(OnPopupEvent onEventListener, PopupType type);
-    static BasePopup*       show(PopupType type);
+    static BasePopup*       show(OnPopupEvent onEventListener, PopupType type, int zOrder = -1);
+    static BasePopup*       show(PopupType type, int zOrder = -1);
     
     static void             cross(OnPopupEvent onEventListener,
                                   BasePopup *popup1, BasePopup *popup2,

@@ -209,6 +209,7 @@ void MainScene::onClick(Node *sender) {
 
         // 상점
         case Tag::BTN_SHOP: {
+            PopupManager::show(PopupType::SHOP, ZOrder::POPUP_TOP);
         } break;
             
         // 리더보드
