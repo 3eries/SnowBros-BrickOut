@@ -58,6 +58,7 @@ static const std::string FA_EVENT_PARAM_ITEM_NAME               = "item_name";  
 static const std::string LEADER_BOARD_HIGH_SCORE                = "CgkIhM_O4eseEAIQAQ";
 
 // cocos2d::Director Event
+static const std::string DIRECTOR_EVENT_UPDATE_USER_COIN        = "DIRECTOR_EVENT_UPDATE_USER_COIN";
 static const std::string DIRECTOR_EVENT_UPDATE_BALL_SKIN        = "DIRECTOR_EVENT_UPDATE_BALL_SKIN";
 static const std::string DIRECTOR_EVENT_UPDATE_FRIENDS_DECK     = "DIRECTOR_EVENT_UPDATE_FRIENDS_DECK";
 

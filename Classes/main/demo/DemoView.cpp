@@ -10,6 +10,7 @@
 #include "Define.h"
 #include "ContentManager.hpp"
 #include "GameConfiguration.hpp"
+#include "TestHelper.hpp"
 #include "../../game/GameDefine.h"
 
 #include "DemoMap.hpp"
@@ -45,12 +46,20 @@ bool DemoView::init() {
     
     // 스테이지 랜덤 추출
     auto stages = Database::getDemoStages();
-    stage = stages[arc4random() % stages.size()];
+    // stage = stages[arc4random() % stages.size()];
+    stage = stages[0];
     
     initPhysics();
     initMap();
     initBrick();
+    
+#if ENABLE_TEST_MENU
+    if( TEST_HELPER->isDemoViewBallEnabled() ) {
+        initBall();
+    }
+#else
     initBall();
+#endif
     
     return true;
 }
@@ -68,7 +77,13 @@ void DemoView::onEnterTransitionDidFinish() {
     
     // 볼 발사!
     SBDirector::postDelayed(this, [=]() {
+#if ENABLE_TEST_MENU
+        if( TEST_HELPER->isDemoViewBallEnabled() ) {
+            this->shoot();
+        }
+#else
         this->shoot();
+#endif
     }, 0.5f);
 }
 
@@ -165,7 +180,7 @@ void DemoView::onFallFinished() {
     
     SBDirector::postDelayed(this, [=]() {
         this->shoot();
-    }, 1.5f);
+    }, 5.0f);
 }
 
 /**

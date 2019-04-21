@@ -16,6 +16,8 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
+#define USER_DEFAULT_KEY_USER_COIN                      "USER_COIN"
+
 #define USER_DEFAULT_KEY_OWNED_BALL_SKINS               "OWNED_BALL_SKINS"
 #define USER_DEFAULT_KEY_SELECTED_BALL_SKIN             "SELECTED_BALL_SKIN"
 
@@ -140,6 +142,57 @@ void User::initOwnedFriends() {
 //            friends.push_back(list[i].GetString());
 //        }
     }
+}
+
+/**
+ * 코인을 설정합니다
+ */
+void User::setCoin(int i) {
+    
+    UserDefault::getInstance()->setIntegerForKey(USER_DEFAULT_KEY_USER_COIN, i);
+    UserDefault::getInstance()->flush();
+    
+    Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(DIRECTOR_EVENT_UPDATE_USER_COIN);
+}
+
+/**
+ * 코인을 추가합니다
+ */
+void User::addCoin(int i) {
+
+    int coin = getCoin() + i;
+    setCoin(coin);
+}
+
+/**
+ * 코인을 소모합니다
+ * @return 코인이 충분한지 않으면 false를 반환합니다
+ */
+bool User::spendCoin(int i) {
+    
+    int coin = getCoin() - i;
+    if( coin < 0 ) {
+        return false;
+    }
+    
+    setCoin(coin);
+    return true;
+}
+
+/**
+ * 코인을 반환합니다
+ */
+int User::getCoin() {
+    
+    return UserDefault::getInstance()->getIntegerForKey(USER_DEFAULT_KEY_USER_COIN, GAME_CONFIG->getFirstCoin());
+}
+
+/**
+ * 코인이 충분한지 반환합니다
+ */
+bool User::isEnoughCoin(int i) {
+    
+    return getCoin() >= i;
 }
 
 /**

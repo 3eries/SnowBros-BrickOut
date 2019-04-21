@@ -30,6 +30,7 @@ public:
     
 private:
     CC_SYNTHESIZE_READONLY(std::string, storeUrl, StoreUrl);
+    CC_SYNTHESIZE_READONLY(int, firstCoin, FirstCoin);                  // 최초 코인
     CC_SYNTHESIZE_READONLY(std::string, firstBallSkin, FirstBallSkin);  // 최초 볼 스킨
     CC_SYNTHESIZE_READONLY(std::string, firstFriend, FirstFriend);      // 최초 프렌드
     

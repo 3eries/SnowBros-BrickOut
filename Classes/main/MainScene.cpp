@@ -16,8 +16,11 @@
 #include "TestList.hpp"
 
 #include "../game/GameManager.hpp"
+#include "../game/object/friend/Friend.hpp"
 
 #include "CommonLoadingBar.hpp"
+#include "BannerView.hpp"
+#include "UserCoinView.hpp"
 #include "ExitAlertPopup.hpp"
 #include "SettingPopup.hpp"
 
@@ -51,9 +54,17 @@ bool MainScene::init() {
     initBg();
     initMenu();
     
+    updateFriendsUI();
+    
     initIAPListener();
     initGiftListener();
     initPopupListener();
+    
+    // 덱 변경 리스너
+    auto listener = EventListenerCustom::create(DIRECTOR_EVENT_UPDATE_FRIENDS_DECK, [=](EventCustom *event) {
+        this->updateFriendsUI();
+    });
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
     return true;
 }
@@ -124,6 +135,36 @@ bool MainScene::onBackKeyReleased() {
 }
 
 /**
+ * 하단 프렌즈 UI 업데이트
+ */
+void MainScene::updateFriendsUI() {
+    
+    // 기존 프렌즈 제거
+    for( auto friendImage : friends ) {
+        friendImage->removeFromParent();
+    }
+    friends.clear();
+    
+    // 프렌즈 초기화
+    auto deck = User::getFriendsDeck();
+    int slotIndexes[] = { 1,3,0,4 };
+    
+    for( int i = 0; i < deck.size(); ++i ) {
+        string file = ContentResourceHelper::getFriendAnimationFile(deck[i].friendId);
+        int slotIndex = slotIndexes[i];
+        
+        auto image = spine::SkeletonAnimation::createWithJsonFile(file);
+        image->setAnchorPoint(Vec2::ZERO);
+        image->setPosition(Friend::getSlotPosition(slotIndex));
+        image->setAnimation(0, FRIEND_ANIM_NAME_IDLE, true);
+        image->setScaleX(slotIndex >= 3 ? -1 : 1);
+        addChild(image);
+        
+        friends.push_back(image);
+    }
+}
+
+/**
  * 버튼 클릭
  */
 void MainScene::onClick(Node *sender) {
@@ -155,25 +196,6 @@ void MainScene::onClick(Node *sender) {
         case Tag::BTN_SETTING: {
             showSettingPopup();
         } break;
-        
-        // 광고 제거 아이템
-        case Tag::BTN_REMOVE_ADS: {
-            if( iap::IAPHelper::isReady() ) {
-                auto loadingBar = CommonLoadingBar::create();
-                loadingBar->setUIDelay(0.1f);
-                loadingBar->show();
-                
-                auto listener = iap::PurchaseListener::create();
-                listener->setTarget(this);
-                listener->onPurchased = [=](const iap::Item &item) {
-                };
-                listener->onFinished = [=](bool result) {
-                    loadingBar->dismissWithDelay(0);
-                };
-
-                iap::IAPHelper::purchaseRemoveAds(listener);
-            }
-        } break;
             
         // 볼 스킨
         case Tag::BTN_BALL_SKIN: {
@@ -183,6 +205,19 @@ void MainScene::onClick(Node *sender) {
         // 프렌즈
         case Tag::BTN_FRIENDS: {
             showFriendsPopup();
+        } break;
+
+        // 상점
+        case Tag::BTN_SHOP: {
+        } break;
+            
+        // 리더보드
+        case Tag::BTN_LEADERBOARD: {
+            if( superbomb::PluginPlay::isSignedIn() ) {
+                superbomb::PluginPlay::showAllLeaderboards();
+            } else {
+                superbomb::PluginPlay::signIn();
+            }
         } break;
             
         // test
@@ -205,16 +240,6 @@ void MainScene::showSettingPopup() {
     popup->setOnClickMenuListener([=](SettingPopup::Tag tag) {
         
         switch( tag ) {
-            // leader board
-            case SettingPopup::Tag::LEADER_BOARD: {
-                if( superbomb::PluginPlay::isSignedIn() ) {
-                    superbomb::PluginPlay::showAllLeaderboards();
-                } else {
-                    superbomb::PluginPlay::signIn();
-                }
-                // popup->dismissWithAction();
-            } break;
-                
             // restore purchase
             case SettingPopup::Tag::RESTORE_PURCHASE: {
                 if( iap::IAPHelper::isReady() ) {
@@ -279,12 +304,20 @@ void MainScene::initBg() {
     auto demoView = DemoView::create();
     addChild(demoView);
     
+    // 유저 코인
+    addChild(UserCoinView::create(UserCoinView::Type::NORMAL), SBZOrder::BOTTOM);
+    
+    // 배너
+    auto bannerView = BannerView::create();
+    bannerView->setTag(Tag::BANNER);
+    addChild(bannerView, SBZOrder::BOTTOM);
+    
     // title
     auto title = SBButton::create(DIR_IMG_MAIN + "main_title.png");
     title->setZoomScale(0);
     title->setTag(Tag::BTN_TITLE);
     title->setAnchorPoint(ANCHOR_M);
-    title->setPosition(Vec2MC(0, 270));
+    title->setPosition(Vec2MC(0, 162));
     addChild(title);
     
     // title->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
@@ -293,7 +326,7 @@ void MainScene::initBg() {
     auto tapToStart = Sprite::create(DIR_IMG_MAIN + "main_tap_to_start.png");
     tapToStart->setTag(Tag::TAP_TO_START);
     tapToStart->setAnchorPoint(ANCHOR_M);
-    tapToStart->setPosition(Vec2BC(0, 430));
+    tapToStart->setPosition(Vec2MC(0, -124));
     addChild(tapToStart);
     
     {
@@ -303,6 +336,8 @@ void MainScene::initBg() {
     
     auto btn = SBNodeUtils::createTouchNode();
     btn->setTag(Tag::BTN_START);
+    btn->setAnchorPoint(ANCHOR_MT);
+    btn->setPosition(Vec2MC(0, 350));
     addChild(btn);
     
     btn->addClickEventListener([=](Ref*) {
@@ -315,13 +350,14 @@ void MainScene::initBg() {
  */
 void MainScene::initMenu() {
     
-    // 메인 화면 전용 메뉴
     SBUIInfo infos[] = {
-        SBUIInfo(Tag::BTN_SETTING,      ANCHOR_MR,   Vec2TR(-66 + (100*0.5f), -62),     DIR_IMG_COMMON + "RSP_btn_option.png"),
-        SBUIInfo(Tag::BTN_BALL_SKIN,    ANCHOR_M,    Vec2BC(-260, 200),                 DIR_IMG_MAIN + "main_btn_ball_skin.png"),
-        SBUIInfo(Tag::BTN_FRIENDS,      ANCHOR_M,    Vec2BC(-100, 200),                 DIR_IMG_STAGE_CLEAR + "clear_btn_friend.png"),
+        SBUIInfo(Tag::BTN_SETTING,      ANCHOR_M,    Vec2TR(-46, -146),     DIR_IMG_MAIN + "main_btn_setting.png"),
+        SBUIInfo(Tag::BTN_BALL_SKIN,    ANCHOR_M,    Vec2BC(-192, 274),     DIR_IMG_MAIN + "main_btn_ball_skin.png"),
+        SBUIInfo(Tag::BTN_FRIENDS,      ANCHOR_M,    Vec2BC(-64, 274),      DIR_IMG_MAIN + "main_btn_friends.png"),
+        SBUIInfo(Tag::BTN_SHOP,         ANCHOR_M,    Vec2BC(64, 274),       DIR_IMG_MAIN + "main_btn_shop.png"),
+        SBUIInfo(Tag::BTN_LEADERBOARD,  ANCHOR_M,    Vec2BC(192, 274),      DIR_IMG_MAIN + "main_btn_leader_board.png"),
 #if ENABLE_TEST_MENU
-        SBUIInfo(Tag::BTN_TEST,         ANCHOR_TL,   Vec2TL(10, -20),   DIR_IMG_COMMON + "RSP_btn_test.png"),
+        SBUIInfo(Tag::BTN_TEST,         ANCHOR_M,    Vec2MC(0, 10),         DIR_IMG_COMMON + "RSP_btn_test.png"),
 #endif
     };
     
@@ -340,6 +376,11 @@ void MainScene::initMenu() {
         btn->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
     }
     
+#if ENABLE_TEST_MENU
+    auto testBtn = getChildByTag(Tag::BTN_TEST);
+    testBtn->setOpacity(255*0.1f);
+#endif
+    
     if( User::isOwnRemoveAdsItem() ) {
         // getChildByTag(Tag::BTN_REMOVE_ADS)->setVisible(false);
     }
@@ -351,8 +392,6 @@ void MainScene::initMenu() {
 void MainScene::initIAPListener() {
     
     auto onRemoveAds = [=]() {
-        
-        this->getChildByTag(Tag::BTN_REMOVE_ADS)->setVisible(false);
     };
     
     // purchase listener

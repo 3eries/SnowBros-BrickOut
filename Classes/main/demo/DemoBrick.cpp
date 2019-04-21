@@ -47,7 +47,7 @@ bool DemoBrick::init(const DemoBrickData &data, b2World *world) {
     
     setAnchorPoint(ANCHOR_M);
     setContentSize(size);
-    setPosition(Game::Tile::convertToTilePosition(data.pos, brickData.width, brickData.height));
+    setPosition(Vec2MC(data.pos.x, data.pos.y));
     
     // bg
     auto bg = Sprite::create(ContentResourceHelper::getBrickBackgroundFile(brickData, false, 1));

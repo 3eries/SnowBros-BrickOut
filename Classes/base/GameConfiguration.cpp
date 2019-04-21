@@ -57,6 +57,7 @@ void GameConfiguration::parse(const string &json) {
     storeUrl = platformObj["store"].GetString();
     
     // game value
+    firstCoin            = doc["first_coin"].GetInt();
     firstBallSkin        = doc["first_ball_skin"].GetString();
     firstFriend          = doc["first_friend"].GetString();
     tileRows             = doc["tile_rows"].GetInt();

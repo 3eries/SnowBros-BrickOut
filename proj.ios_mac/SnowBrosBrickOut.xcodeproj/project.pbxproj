@@ -96,6 +96,8 @@
 		1D9C034A2226B95500745356 /* TileFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C03482226B95500745356 /* TileFactory.cpp */; };
 		1D9C035122277FE500745356 /* ShieldBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C034F22277FE500745356 /* ShieldBrick.cpp */; };
 		1D9C035422277FFB00745356 /* GhostBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9C035222277FFB00745356 /* GhostBrick.cpp */; };
+		1D9DAB78226CFA990004AD4E /* DemoViewEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB76226CFA990004AD4E /* DemoViewEdit.cpp */; };
+		1D9DAB7E226CFF410004AD4E /* UserCoinView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB7C226CFF410004AD4E /* UserCoinView.cpp */; };
 		1D9ED20220C421D8006DE988 /* GameConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */; };
 		1DA0408721034661001980BA /* PluginManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407921034660001980BA /* PluginManager.cpp */; };
 		1DA0408821034661001980BA /* FirebaseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407E21034660001980BA /* FirebaseManager.cpp */; };
@@ -387,6 +389,10 @@
 		1D9C035022277FE500745356 /* ShieldBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ShieldBrick.hpp; sourceTree = "<group>"; };
 		1D9C035222277FFB00745356 /* GhostBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GhostBrick.cpp; sourceTree = "<group>"; };
 		1D9C035322277FFB00745356 /* GhostBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GhostBrick.hpp; sourceTree = "<group>"; };
+		1D9DAB76226CFA990004AD4E /* DemoViewEdit.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DemoViewEdit.cpp; sourceTree = "<group>"; };
+		1D9DAB77226CFA990004AD4E /* DemoViewEdit.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = DemoViewEdit.hpp; sourceTree = "<group>"; };
+		1D9DAB7C226CFF410004AD4E /* UserCoinView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = UserCoinView.cpp; sourceTree = "<group>"; };
+		1D9DAB7D226CFF410004AD4E /* UserCoinView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UserCoinView.hpp; sourceTree = "<group>"; };
 		1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameConfiguration.cpp; sourceTree = "<group>"; };
 		1D9ED20120C421D8006DE988 /* GameConfiguration.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameConfiguration.hpp; sourceTree = "<group>"; };
 		1DA0407921034660001980BA /* PluginManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PluginManager.cpp; sourceTree = "<group>"; };
@@ -672,6 +678,8 @@
 		1D25EE26220E1DB800DD126A /* case */ = {
 			isa = PBXGroup;
 			children = (
+				1D9DAB76226CFA990004AD4E /* DemoViewEdit.cpp */,
+				1D9DAB77226CFA990004AD4E /* DemoViewEdit.hpp */,
 				1D25EE27220E1E0600DD126A /* GameConfigEdit.cpp */,
 				1D25EE28220E1E0600DD126A /* GameConfigEdit.hpp */,
 				1D25EE2A220E1E6D00DD126A /* TestCase.cpp */,
@@ -900,6 +908,8 @@
 				1D8F54A320D2A8C4009E2201 /* LogoView.hpp */,
 				1D45C49920A8A9E2007E63AD /* UIHelper.cpp */,
 				1D45C49A20A8A9E2007E63AD /* UIHelper.hpp */,
+				1D9DAB7C226CFF410004AD4E /* UserCoinView.cpp */,
+				1D9DAB7D226CFF410004AD4E /* UserCoinView.hpp */,
 			);
 			path = ui;
 			sourceTree = "<group>";
@@ -1492,6 +1502,7 @@
 				1D9C035122277FE500745356 /* ShieldBrick.cpp in Sources */,
 				1D107B212232E14800B3AEB4 /* DemoView.cpp in Sources */,
 				1D45C48B20A8A7B8007E63AD /* SBNodeUtils.cpp in Sources */,
+				1D9DAB78226CFA990004AD4E /* DemoViewEdit.cpp in Sources */,
 				1D4C659D21008BB8005A43D8 /* BaseScene.cpp in Sources */,
 				1DECFE8C2105C01C00F47252 /* SBPlatformHelper-ios.mm in Sources */,
 				1D7F2CE821B706CF00516469 /* DebugDrawView.cpp in Sources */,
@@ -1524,6 +1535,7 @@
 				1D45C47D20A8A7B8007E63AD /* SBAnimationSprite.cpp in Sources */,
 				1D107B242232E15400B3AEB4 /* DemoMap.cpp in Sources */,
 				1D86438F21523898001841C9 /* SBSecurity-android.cpp in Sources */,
+				1D9DAB7E226CFF410004AD4E /* UserCoinView.cpp in Sources */,
 				1D107B272232E15C00B3AEB4 /* DemoBrick.cpp in Sources */,
 				1DA0408D210346B4001980BA /* Analytics-ios.mm in Sources */,
 				1DA0408821034661001980BA /* FirebaseManager.cpp in Sources */,

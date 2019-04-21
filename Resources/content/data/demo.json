@@ -2,15 +2,15 @@
     "stage": 1,
     "bricks": [{
         "brick_id": "brick_00001",
-        "pos": [1, 8]
+        "pos": [-182, 292]
     },
     {
         "brick_id": "brick_00002",
-        "pos": [4, 8]
+        "pos": [178, 292]
     },
     {
         "brick_id": "brick_10001",
-        "pos": [2, 8]
+        "pos": [0, 350]
     }
     ],
     "shooting_angles": [-60, -45, -30, -10, 10, 30, 45, 60]

@@ -21,12 +21,16 @@ private:
     enum Tag {
         TAP_TO_START        = 10,
         
+        BANNER              = 50,
+        
         BTN_TITLE           = 100,
         BTN_START,
         BTN_SETTING,
-        BTN_REMOVE_ADS,
         BTN_BALL_SKIN,
         BTN_FRIENDS,
+        BTN_SHOP,
+        BTN_LEADERBOARD,
+        
         BTN_TEST,
     };
     
@@ -45,10 +49,13 @@ private:
     
     void initBg();
     void initMenu();
+    void initFriends();
     
     void initIAPListener();
     void initGiftListener();
     void initPopupListener();
+    
+    void updateFriendsUI();
     
 private:
     void onClick(cocos2d::Node *sender) override;
@@ -56,6 +63,9 @@ private:
     void showSettingPopup();
     void showBallSkinPopup();
     void showFriendsPopup();
+    
+private:
+    std::vector<spine::SkeletonAnimation*> friends;
 };
 
 #endif /* MainScene_hpp */

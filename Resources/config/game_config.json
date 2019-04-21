@@ -5,6 +5,7 @@
     "ios": {
         "store": "https://itunes.apple.com/app/id1410764042"
     },
+    "first_coin": 30,
     "first_ball_skin": "ball_00001",
     "first_friend": "friend_0001",
     "tile_rows": 6,

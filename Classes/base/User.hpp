@@ -29,6 +29,12 @@ public:
     void initOwnedBallSkins();
     void initOwnedFriends();
     
+    static void             setCoin(int i);
+    static void             addCoin(int i);
+    static bool             spendCoin(int i);
+    static int              getCoin();
+    static bool             isEnoughCoin(int i = 0);
+    
     static void             ownBallSkin(const std::string &ballId);
     static StringList       getOwnedBallSkins();
     static bool             isOwnedBallSkin(const std::string &ballId);

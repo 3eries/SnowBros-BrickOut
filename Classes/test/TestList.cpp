@@ -7,7 +7,9 @@
 #include "TestList.hpp"
 
 #include "Define.h"
+
 #include "case/GameConfigEdit.hpp"
+#include "case/DemoViewEdit.hpp"
 
 USING_NS_CC;
 using namespace cocos2d::ui;
@@ -30,6 +32,7 @@ TestList::~TestList() {
 void TestList::initTestList() {
     
     addTest("Game Config Edit", []() { return GameConfigEdit::create(); });
+    addTest("Demo View Edit", []() { return DemoViewEdit::create(); });
 }
 
 void TestList::addTest(const string &title, function<Scene*()> getScene) {
