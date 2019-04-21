@@ -436,3 +436,12 @@ float Friend::getBallMaxVelocity() {
     
     return balls[0]->getMaxVelocity();
 }
+
+/**
+ * 슬롯 인덱스에 해당하는 프렌즈 좌표를 반환합니다
+ */
+Vec2 Friend::getSlotPosition(int slotIndex) {
+ 
+    int w = SB_WIN_SIZE.width / GAME_FRIENDS_SLOT_COUNT;
+    return Vec2((w*slotIndex) + (w*0.5f), GAME_FRIENDS_POS_Y);
+}

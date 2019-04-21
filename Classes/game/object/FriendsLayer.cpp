@@ -17,8 +17,6 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-#define        SLOT_COUNT          5
-
 FriendsLayer* FriendsLayer::create(TileLayer *tileLayer) {
     
     auto layer = new FriendsLayer(tileLayer);
@@ -103,12 +101,12 @@ void FriendsLayer::initFriends() {
     }
     
     // 슬롯 리스트 생성
-    int w = SB_WIN_SIZE.width / SLOT_COUNT;
+    int w = SB_WIN_SIZE.width / GAME_FRIENDS_SLOT_COUNT;
     
-    for( int i = 0; i < SLOT_COUNT; ++i ) {
+    for( int i = 0; i < GAME_FRIENDS_SLOT_COUNT; ++i ) {
         Slot slot;
         slot.index = i;
-        slot.pos = Vec2((w*i) + (w*0.5f), GAME_FRIENDS_POS_Y);
+        slot.pos = Friend::getSlotPosition(i);
         slots.push_back(slot);
         
         /*

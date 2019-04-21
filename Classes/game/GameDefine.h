@@ -49,6 +49,7 @@ enum GameState {
 
 // Friends
 #define                                       GAME_FRIENDS_POS_Y                 Vec2MC(0,-529).y
+#define                                       GAME_FRIENDS_SLOT_COUNT            5
 
 // Ball
 #define                                       SHOOTING_MAX_ANGLE                 80                // 발사 최대 각도

@@ -80,6 +80,8 @@ public:
     
     float                 getBallMaxVelocity();
     
+    static cocos2d::Vec2  getSlotPosition(int slotIndex);
+    
 protected:
     CC_SYNTHESIZE(std::function<void(Friend*)>, onFallFinishedListener,
                   OnFallFinishedListener);
