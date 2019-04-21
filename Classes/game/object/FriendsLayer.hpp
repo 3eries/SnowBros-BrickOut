@@ -112,6 +112,7 @@ private:
     
     typedef std::vector<Slot> Slots;
     Slots slots;
+    cocos2d::Vec2 ballPosition;
     
     Slot  getNearSlot(const cocos2d::Vec2 &pos);
     Slots getSortedSlots(const Slot &ballSlot);

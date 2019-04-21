@@ -59,6 +59,7 @@ static const std::string LEADER_BOARD_HIGH_SCORE                = "CgkIhM_O4eseE
 
 // cocos2d::Director Event
 static const std::string DIRECTOR_EVENT_UPDATE_BALL_SKIN        = "DIRECTOR_EVENT_UPDATE_BALL_SKIN";
+static const std::string DIRECTOR_EVENT_UPDATE_FRIENDS_DECK     = "DIRECTOR_EVENT_UPDATE_FRIENDS_DECK";
 
 // 리소스 경로
 static const std::string DIR_IMG                    = "images/";
@@ -69,6 +70,7 @@ static const std::string DIR_IMG_MAIN_IPAD          = DIR_ADD(DIR_IMG_MAIN, "ipa
 static const std::string DIR_IMG_GAME               = DIR_ADD(DIR_IMG, "game");
 static const std::string DIR_IMG_GAME_IPAD          = DIR_ADD(DIR_IMG_GAME, "ipad");
 static const std::string DIR_IMG_BALL_SKIN          = DIR_ADD(DIR_IMG, "ball_skin");
+static const std::string DIR_IMG_FRIEND             = DIR_ADD(DIR_IMG, "friend");
 static const std::string DIR_IMG_STAGE_CLEAR        = DIR_ADD(DIR_IMG, "clear");
 
 static const std::string DIR_CONTENT                = "content/";

@@ -1,9 +1,9 @@
 [{
     "pack_id": "pack_001",
-    "pack_name": "SNOW BROS 1",
+    "pack_name": "SNOW BROS1",
     "friends": [{
         "friend_id": "friend_0001",
-        "name": "Nick",
+        "name": "NICK",
         "price": 100,
         "type": 1,
         "damage": 1,
@@ -12,7 +12,7 @@
     },
     {
         "friend_id": "friend_0002",
-        "name": "Tom",
+        "name": "TOM",
         "price": 100,
         "type": 1,
         "damage": 1,
@@ -23,10 +23,10 @@
 },
 {
     "pack_id": "pack_002",
-    "pack_name": "SNOW BROS 2",
+    "pack_name": "SNOW BROS2",
     "friends": [{
         "friend_id": "friend_0003",
-        "name": "Nick",
+        "name": "NICK",
         "price": 200,
         "type": 1,
         "damage": 1,
@@ -35,7 +35,7 @@
     },
     {
         "friend_id": "friend_0004",
-        "name": "Bobby",
+        "name": "BOBBY",
         "price": 1000,
         "type": 2,
         "single_ball": true,
@@ -47,7 +47,7 @@
     },
     {
         "friend_id": "friend_0005",
-        "name": "Roy",
+        "name": "ROY",
         "price": 1000,
         "type": 3,
         "remove_after_brick_contact": true,
@@ -57,7 +57,7 @@
     },
     {
         "friend_id": "friend_0006",
-        "name": "Richard",
+        "name": "RICHARD",
         "price": 1000,
         "type": 4,
         "single_ball": true,

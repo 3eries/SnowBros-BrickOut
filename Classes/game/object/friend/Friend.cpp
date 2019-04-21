@@ -239,8 +239,6 @@ void Friend::shoot(float delay) {
         }
         */
         
-        CCLOG("Friend::shoot index: %d", shootIndex);
-        
         auto ball = balls[shootIndex];
         
         // 발사

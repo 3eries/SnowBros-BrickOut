@@ -26,6 +26,7 @@ private:
         BTN_SETTING,
         BTN_REMOVE_ADS,
         BTN_BALL_SKIN,
+        BTN_FRIENDS,
         BTN_TEST,
     };
     
@@ -54,6 +55,7 @@ private:
     
     void showSettingPopup();
     void showBallSkinPopup();
+    void showFriendsPopup();
 };
 
 #endif /* MainScene_hpp */

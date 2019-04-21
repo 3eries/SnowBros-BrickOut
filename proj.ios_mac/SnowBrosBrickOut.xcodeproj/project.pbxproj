@@ -35,6 +35,9 @@
 		1D25EE32220E6BC200DD126A /* Brick_10012.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D25EE30220E6BC200DD126A /* Brick_10012.cpp */; };
 		1D28C93E22638ADC00CCC687 /* TeleportBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D28C93C22638ADC00CCC687 /* TeleportBrick.cpp */; };
 		1D28C9442263EBC400CCC687 /* TornadoBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D28C9422263EBC400CCC687 /* TornadoBrick.cpp */; };
+		1D28C94D2267E9C700CCC687 /* FriendsPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D28C94B2267E9C700CCC687 /* FriendsPopup.cpp */; };
+		1D28C9502267EC6400CCC687 /* FriendInfoView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D28C94E2267EC6400CCC687 /* FriendInfoView.cpp */; };
+		1D28C95322699FF600CCC687 /* FriendCell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D28C95122699FF600CCC687 /* FriendCell.cpp */; };
 		1D3120DC20E9F9EA00D059C6 /* RankingManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D3120D920E9F9E900D059C6 /* RankingManager.cpp */; };
 		1D322ED622389CB30007DDFB /* NeutralBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D322ED422389CB30007DDFB /* NeutralBrick.cpp */; };
 		1D322EE52239E57B0007DDFB /* BallSkinPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D322EE32239E57B0007DDFB /* BallSkinPopup.cpp */; };
@@ -260,6 +263,12 @@
 		1D28C93D22638ADC00CCC687 /* TeleportBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TeleportBrick.hpp; sourceTree = "<group>"; };
 		1D28C9422263EBC400CCC687 /* TornadoBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TornadoBrick.cpp; sourceTree = "<group>"; };
 		1D28C9432263EBC400CCC687 /* TornadoBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = TornadoBrick.hpp; sourceTree = "<group>"; };
+		1D28C94B2267E9C700CCC687 /* FriendsPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FriendsPopup.cpp; sourceTree = "<group>"; };
+		1D28C94C2267E9C700CCC687 /* FriendsPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FriendsPopup.hpp; sourceTree = "<group>"; };
+		1D28C94E2267EC6400CCC687 /* FriendInfoView.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FriendInfoView.cpp; sourceTree = "<group>"; };
+		1D28C94F2267EC6400CCC687 /* FriendInfoView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FriendInfoView.hpp; sourceTree = "<group>"; };
+		1D28C95122699FF600CCC687 /* FriendCell.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = FriendCell.cpp; sourceTree = "<group>"; };
+		1D28C95222699FF600CCC687 /* FriendCell.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FriendCell.hpp; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D3120D820E9F9E900D059C6 /* RankingManager.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = RankingManager.hpp; sourceTree = "<group>"; };
 		1D3120D920E9F9E900D059C6 /* RankingManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RankingManager.cpp; sourceTree = "<group>"; };
@@ -669,6 +678,19 @@
 				1D25EE2B220E1E6D00DD126A /* TestCase.hpp */,
 			);
 			path = case;
+			sourceTree = "<group>";
+		};
+		1D28C9482267E9B000CCC687 /* friend */ = {
+			isa = PBXGroup;
+			children = (
+				1D28C95122699FF600CCC687 /* FriendCell.cpp */,
+				1D28C95222699FF600CCC687 /* FriendCell.hpp */,
+				1D28C94E2267EC6400CCC687 /* FriendInfoView.cpp */,
+				1D28C94F2267EC6400CCC687 /* FriendInfoView.hpp */,
+				1D28C94B2267E9C700CCC687 /* FriendsPopup.cpp */,
+				1D28C94C2267E9C700CCC687 /* FriendsPopup.hpp */,
+			);
+			path = friend;
 			sourceTree = "<group>";
 		};
 		1D3120D620E9F9E900D059C6 /* ranking */ = {
@@ -1282,6 +1304,7 @@
 				1D322EE22239E5710007DDFB /* ball */,
 				1D45C44420A8A787007E63AD /* base */,
 				1D25EE0D220B398400DD126A /* content */,
+				1D28C9482267E9B000CCC687 /* friend */,
 				1D45C44A20A8A7AC007E63AD /* game */,
 				1DC8553221902C89007E180C /* gift */,
 				1D45C44B20A8A7B3007E63AD /* main */,
@@ -1448,6 +1471,7 @@
 				1DA723EC2109FEAE002B7ADE /* CommonLoadingBar.cpp in Sources */,
 				1D7E709521C9786400CF907F /* TopMenu.cpp in Sources */,
 				1DE5254E21BB0B94006CAE9F /* Ball.cpp in Sources */,
+				1D28C94D2267E9C700CCC687 /* FriendsPopup.cpp in Sources */,
 				1D322ED622389CB30007DDFB /* NeutralBrick.cpp in Sources */,
 				1D45C47C20A8A7B8007E63AD /* SBUIInfo.cpp in Sources */,
 				1D25EE29220E1E0600DD126A /* GameConfigEdit.cpp in Sources */,
@@ -1473,9 +1497,11 @@
 				1D7F2CE821B706CF00516469 /* DebugDrawView.cpp in Sources */,
 				1DE4B34B210DEE3800653FA8 /* IAPHelper-ios.mm in Sources */,
 				1D9C034A2226B95500745356 /* TileFactory.cpp in Sources */,
+				1D28C9502267EC6400CCC687 /* FriendInfoView.cpp in Sources */,
 				1DEA58132109A5B400CF6F98 /* AdsEventDispatcher.cpp in Sources */,
 				1D45C49720A8A7D2007E63AD /* MainScene.cpp in Sources */,
 				1D9C035422277FFB00745356 /* GhostBrick.cpp in Sources */,
+				1D28C95322699FF600CCC687 /* FriendCell.cpp in Sources */,
 				1DEA58152109A5B400CF6F98 /* AdsHelper-ios.mm in Sources */,
 				1D8643942152395B001841C9 /* md5.cpp in Sources */,
 				1D97ED9020C7348D0027C319 /* PatchManager.cpp in Sources */,

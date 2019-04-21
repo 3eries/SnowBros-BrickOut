@@ -76,6 +76,7 @@ public:
     
     void showPausePopup();
     void showStageClearPopup();
+    void showFriendsPopup();
     void showContinuePopup();
     void showResultPopup();
 

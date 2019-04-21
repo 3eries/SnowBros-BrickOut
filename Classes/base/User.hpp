@@ -27,6 +27,7 @@ private:
 public:
     void init();
     void initOwnedBallSkins();
+    void initOwnedFriends();
     
     static void             ownBallSkin(const std::string &ballId);
     static StringList       getOwnedBallSkins();
@@ -34,8 +35,15 @@ public:
     
     static void             setSelectedBallSkin(const std::string &ballId);
     static std::string      getSelectedBallSkin();
+
+    static void             ownFriend(const std::string &friendId);
+    static StringList       getOwnedFriends();
+    static bool             isOwnedFriend(const std::string &friendId);
     
+    static void             setFriendsDeck(StringList friendsDeck);
+    static void             setFriendsDeck(FriendDataList friendsDeck);
     static FriendDataList   getFriendsDeck();
+    static bool             isExistFriendsDeck(const std::string &friendId);
     
     static bool             isOwnRemoveAdsItem();
     static void             setOwnRemoveAdsItem(bool owned);
@@ -44,7 +52,9 @@ public:
     static bool             checkReview(float popupDelay = 0);
     
 private:
-    StringList ballSkins;
+    StringList ballSkins;       // 소유한 볼스킨
+    StringList friends;         // 소유한 프렌즈
+    StringList friendsDeck;     // 프렌즈 덱
 };
 
 #endif /* User_hpp */

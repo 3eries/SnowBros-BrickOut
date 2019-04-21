@@ -50,6 +50,7 @@ StageClearPopup* StageClearPopup::create(const StageData &stage, BrickDataList b
 }
 
 StageClearPopup::StageClearPopup() : BasePopup(PopupType::STAGE_CLEAR),
+onFriendsListener(nullptr),
 onNextListener(nullptr) {
     
 }
@@ -354,6 +355,7 @@ void StageClearPopup::initMenu() {
     
     friendsBtn->setOnClickListener([=](Node*) {
         SBAudioEngine::playEffect(SOUND_BUTTON_CLICK);
+        SB_SAFE_PERFORM_LISTENER(this, onFriendsListener);
     });
     
     // clear_btn_next_stage.png Vec2BL(196, 190) , Size(312, 188)

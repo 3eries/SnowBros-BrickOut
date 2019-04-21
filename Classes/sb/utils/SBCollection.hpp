@@ -138,6 +138,21 @@ public:
         removeDatas.clear();
     }
     
+    template <class T>
+    static void removeAtIndex(std::vector<T> &datas, size_t index) {
+        datas.erase(datas.begin() + index);
+    }
+    
+    template <class T>
+    static void remove(std::vector<T> &datas, T obj) {
+        
+        auto it = std::find(datas.begin(), datas.end(), obj);
+        
+        if( it != datas.end() ) {
+            datas.erase(it);
+        }
+    }
+    
     /**
      * convert
      */

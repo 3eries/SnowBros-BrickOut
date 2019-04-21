@@ -19,6 +19,9 @@ using namespace std;
 #define USER_DEFAULT_KEY_OWNED_BALL_SKINS               "OWNED_BALL_SKINS"
 #define USER_DEFAULT_KEY_SELECTED_BALL_SKIN             "SELECTED_BALL_SKIN"
 
+#define USER_DEFAULT_KEY_OWNED_FRIENDS                  "OWNED_FRIENDS"
+#define USER_DEFAULT_KEY_FRIENDS_DECK                   "FRIENDS_DECK"
+
 static User *instance = nullptr;
 User* User::getInstance() {
     
@@ -45,8 +48,8 @@ User::~User() {
 
 void User::init() {
     
-    // 볼 스킨 초기화
     initOwnedBallSkins();
+    initOwnedFriends();
     
     // IAP 리스너 초기화
     auto onRemoveAds = [=]() {
@@ -72,6 +75,9 @@ void User::init() {
     }
 }
 
+/**
+ * 소유한 볼을 초기화합니다
+ */
 void User::initOwnedBallSkins() {
  
     string json = UserDefault::getInstance()->getStringForKey(USER_DEFAULT_KEY_OWNED_BALL_SKINS, "");
@@ -91,6 +97,48 @@ void User::initOwnedBallSkins() {
         for( int i = 0; i < list.Size(); ++i ) {
             ballSkins.push_back(list[i].GetString());
         }
+    }
+}
+
+/**
+ * 소유한 프렌즈를 초기화합니다
+ */
+void User::initOwnedFriends() {
+    
+    string json = UserDefault::getInstance()->getStringForKey(USER_DEFAULT_KEY_OWNED_FRIENDS, "");
+    
+    // 초기 값 설정
+    if( json == "" ) {
+        ownFriend(GAME_CONFIG->getFirstFriend());
+        setFriendsDeck(StringList({GAME_CONFIG->getFirstFriend()}));
+    }
+    // json 파싱
+    else {
+        auto parse = [](string json, StringList &strs) {
+            
+            rapidjson::Document doc;
+            doc.Parse(json.c_str());
+            
+            auto list = doc.GetArray();
+            
+            for( int i = 0; i < list.Size(); ++i ) {
+                strs.push_back(list[i].GetString());
+            }
+        };
+        
+        parse(json, friends);
+        parse(UserDefault::getInstance()->getStringForKey(USER_DEFAULT_KEY_FRIENDS_DECK, ""), friendsDeck);
+        
+        
+        
+//        rapidjson::Document doc;
+//        doc.Parse(json.c_str());
+//
+//        auto list = doc.GetArray();
+//
+//        for( int i = 0; i < list.Size(); ++i ) {
+//            friends.push_back(list[i].GetString());
+//        }
     }
 }
 
@@ -170,21 +218,152 @@ string User::getSelectedBallSkin() {
 }
 
 /**
+ * 프렌드를 소유합니다
+ */
+void User::ownFriend(const string &friendId) {
+    
+    // 이미 소유했는지 체크
+    if( isOwnedFriend(friendId) ) {
+        return;
+    }
+    
+    auto &friends = instance->friends;
+    friends.push_back(friendId);
+    
+    // update user default
+    rapidjson::Document doc;
+    doc.SetArray();
+    
+    rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+    
+    for( auto friendId : friends ) {
+        doc.PushBack(SBJSON::value(friendId, allocator), allocator);
+    }
+    
+    rapidjson::StringBuffer strbuf;
+    strbuf.Clear();
+    
+    rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+    doc.Accept(writer);
+    
+    string json = strbuf.GetString();
+    Log::i("User::ownFriend: %s", json.c_str());
+    
+    UserDefault::getInstance()->setStringForKey(USER_DEFAULT_KEY_OWNED_FRIENDS, json);
+    UserDefault::getInstance()->flush();
+}
+
+/**
+ * 소유한 프렌즈를 반환합니다
+ */
+StringList User::getOwnedFriends() {
+    return instance->friends;
+}
+
+bool User::isOwnedFriend(const string &friendId) {
+    
+    auto friends = getOwnedFriends();
+    
+    for( auto ownedFriendId : friends ) {
+        if( ownedFriendId == friendId ) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+/**
+ * 프렌즈 덱을 설정합니다
+ */
+void User::setFriendsDeck(StringList friendsDeck) {
+    
+    CCASSERT(friendsDeck.size() <= 4, "User::setFriendsDeck error.");
+    
+    instance->friendsDeck = friendsDeck;
+    
+    // update user default
+    rapidjson::Document doc;
+    doc.SetArray();
+    
+    rapidjson::Document::AllocatorType& allocator = doc.GetAllocator();
+    
+    for( auto friendId : friendsDeck ) {
+        doc.PushBack(SBJSON::value(friendId, allocator), allocator);
+    }
+    
+    rapidjson::StringBuffer strbuf;
+    strbuf.Clear();
+    
+    rapidjson::Writer<rapidjson::StringBuffer> writer(strbuf);
+    doc.Accept(writer);
+    
+    string json = strbuf.GetString();
+    Log::i("User::setFriendsDeck: %s", json.c_str());
+    
+    UserDefault::getInstance()->setStringForKey(USER_DEFAULT_KEY_FRIENDS_DECK, json);
+    UserDefault::getInstance()->flush();
+}
+
+void User::setFriendsDeck(FriendDataList friendsDeck) {
+ 
+    StringList friendIds;
+    
+    for( auto data : friendsDeck ) {
+        friendIds.push_back(data.friendId);
+    }
+    
+    setFriendsDeck(friendIds);
+}
+
+/**
  * 프렌즈 덱을 반환합니다
  */
 FriendDataList User::getFriendsDeck() {
     
-    vector<string> friendIds({
-        "friend_0001", "friend_0002", "friend_0004", "friend_0005"
-    });
+    /*
+    string json = UserDefault::getInstance()->getStringForKey(USER_DEFAULT_KEY_FRIENDS_DECK, "");
+    CCASSERT(json != "", "User::getFriendsDeck error.");
+    
+    rapidjson::Document doc;
+    doc.Parse(json.c_str());
+    
+    auto list = doc.GetArray();
+    FriendDataList friends;
+    
+    for( int i = 0; i < list.Size(); ++i ) {
+        friends.push_back(Database::getFriend(list[i].GetString()));
+    }
+    */
     
     FriendDataList friends;
+    
+    /*
+    vector<string> friendIds({
+        "friend_0001", "friend_0004", "friend_0005", "friend_0006",
+    });
     
     for( string friendId : friendIds ) {
         friends.push_back(Database::getFriend(friendId));
     }
+    */
+    
+    for( string friendId : instance->friendsDeck ) {
+        friends.push_back(Database::getFriend(friendId));
+    }
     
     return friends;
+}
+
+bool User::isExistFriendsDeck(const string &friendId) {
+    
+    for( auto deckFriendId : instance->friendsDeck ) {
+        if( deckFriendId == friendId ) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
 /**

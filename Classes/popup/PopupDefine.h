@@ -17,6 +17,7 @@ enum class PopupType {
     CREDIT,
     GIFT,
     BALL_SKIN,
+    FRIENDS,
     SHOP,
     SETTING,
     PAUSE,

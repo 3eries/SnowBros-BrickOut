@@ -49,6 +49,7 @@ private:
     BrickDataList normalBrickDatas;
     int rewardCoin;
     
+    CC_SYNTHESIZE(SBCallback, onFriendsListener, OnFriendsListener);
     CC_SYNTHESIZE(SBCallback, onNextListener, OnNextListener);
     
     std::vector<cocos2d::Node*> bricks;

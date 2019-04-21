@@ -11,6 +11,10 @@
 #include "PopupManager.hpp"
 #include "GiftManager.hpp"
 #include "UIHelper.hpp"
+#include "RankingManager.hpp"
+
+#include "CommonLoadingBar.hpp"
+#include "FriendsPopup.hpp"
 
 #include "GameView.hpp"
 
@@ -18,9 +22,6 @@
 #include "ui/StageClearPopup.hpp"
 #include "ui/ContinuePopup.hpp"
 #include "ui/ResultPopup.hpp"
-
-#include "RankingManager.hpp"
-#include "CommonLoadingBar.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -335,10 +336,23 @@ void GameScene::showStageClearPopup() {
     auto popup = StageClearPopup::create(stage, GAME_MANAGER->getBricks(), rewardCoin);
     SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
     
+    popup->setOnFriendsListener([=]() {
+        this->showFriendsPopup();
+    });
+    
     popup->setOnNextListener([=]() {
         popup->dismissWithAction();
         GameManager::onMoveNextStage();
     });
+}
+
+/**
+ * 프렌즈 팝업 노출
+ */
+void GameScene::showFriendsPopup() {
+    
+    auto popup = FriendsPopup::create();
+    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
 }
 
 /**

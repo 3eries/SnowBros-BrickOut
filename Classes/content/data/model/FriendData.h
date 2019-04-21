@@ -18,6 +18,25 @@ enum class FriendType {
     PASS,       // 브릭 통과
 };
 
+static inline std::string friendTypeToString(FriendType type) {
+    switch( type ) {
+        case FriendType::NONE:          return "NONE";
+        case FriendType::NORMAL:        return "NORMAL";
+        case FriendType::CRITICAL:      return "CRITICAL";
+        case FriendType::SPLASH:        return "SPLASH";
+        case FriendType::PASS:          return "PASS";
+        default:                        return "";
+    }
+}
+
+#define FRIEND_ANIM_NAME_IDLE                  "idle"
+#define FRIEND_ANIM_NAME_STAGE_START           "stage_start"
+#define FRIEND_ANIM_NAME_STAGE_CLEAR           "stage_clear"
+#define FRIEND_ANIM_NAME_MOVE                  "move"
+#define FRIEND_ANIM_NAME_DIE                   "die"
+#define FRIEND_ANIM_NAME_SHOOT_LOW             "shoot_low"
+#define FRIEND_ANIM_NAME_SHOOT_HIGH            "shoot_high"
+
 struct FriendData {
     std::string friendId;
     std::string name;

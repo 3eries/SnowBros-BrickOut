@@ -55,6 +55,25 @@ bool FriendsLayer::init() {
     initFriends();
     initGameListener();
     
+    // 덱 변경 리스너
+    auto listener = EventListenerCustom::create(DIRECTOR_EVENT_UPDATE_FRIENDS_DECK, [=](EventCustom *event) {
+        
+        // 기존 프렌즈 제거
+        for( auto friendNode : friends ) {
+            friendNode->removeFromParent();
+        }
+        
+        friends.clear();
+        slots.clear();
+        
+        // 프렌즈 초기화
+        this->initFriends();
+        this->updateFriendsDamage();
+        this->updatePosition(ballPosition, false);
+        this->setDamageVisible(false);
+    });
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
+    
     return true;
 }
 
@@ -71,7 +90,7 @@ void FriendsLayer::cleanup() {
 void FriendsLayer::initFriends() {
     
     auto friendDatas = User::getFriendsDeck();
-    random_shuffle(friendDatas.begin(), friendDatas.end());
+    // random_shuffle(friendDatas.begin(), friendDatas.end());
     
     for( int i = 0; i < friendDatas.size(); ++i ) {
         auto friendNode = createFriend(friendDatas[i]);
@@ -246,6 +265,8 @@ void FriendsLayer::updateFriendsDamage() {
  * 볼을 기준으로 좌표 업데이트
  */
 void FriendsLayer::updatePosition(const Vec2 &ballPos, bool withAction) {
+    
+    this->ballPosition = ballPos;
     
     // 모든 슬롯 클리어
     for( auto slot : slots ) {

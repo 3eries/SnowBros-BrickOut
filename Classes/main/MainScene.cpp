@@ -22,7 +22,9 @@
 #include "SettingPopup.hpp"
 
 #include "demo/DemoView.hpp"
+
 #include "BallSkinPopup.hpp"
+#include "FriendsPopup.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -178,6 +180,11 @@ void MainScene::onClick(Node *sender) {
             showBallSkinPopup();
         } break;
             
+        // 프렌즈
+        case Tag::BTN_FRIENDS: {
+            showFriendsPopup();
+        } break;
+            
         // test
         case Tag::BTN_TEST: {
             // Director::getInstance()->pushScene(TestList::create());
@@ -252,6 +259,13 @@ void MainScene::showBallSkinPopup() {
     auto popup = BallSkinPopup::create();
     SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
 }
+
+/**
+ * 프렌즈 팝업 노출
+ */
+void MainScene::showFriendsPopup() {
+    
+    auto popup = FriendsPopup::create();
     SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
 }
 
@@ -304,7 +318,8 @@ void MainScene::initMenu() {
     // 메인 화면 전용 메뉴
     SBUIInfo infos[] = {
         SBUIInfo(Tag::BTN_SETTING,      ANCHOR_MR,   Vec2TR(-66 + (100*0.5f), -62),     DIR_IMG_COMMON + "RSP_btn_option.png"),
-        SBUIInfo(Tag::BTN_BALL_SKIN,    ANCHOR_M,    Vec2BC(-260, 200),                DIR_IMG_MAIN + "main_btn_ball_skin.png"),
+        SBUIInfo(Tag::BTN_BALL_SKIN,    ANCHOR_M,    Vec2BC(-260, 200),                 DIR_IMG_MAIN + "main_btn_ball_skin.png"),
+        SBUIInfo(Tag::BTN_FRIENDS,      ANCHOR_M,    Vec2BC(-100, 200),                 DIR_IMG_STAGE_CLEAR + "clear_btn_friend.png"),
 #if ENABLE_TEST_MENU
         SBUIInfo(Tag::BTN_TEST,         ANCHOR_TL,   Vec2TL(10, -20),   DIR_IMG_COMMON + "RSP_btn_test.png"),
 #endif
