@@ -50,10 +50,9 @@ void ContentResourceHelper::preload() {
     textureCache->addImage(SELECTED_BALL_IMAGE);
     
     // 유저 덱의 프렌즈
-    // FIXME: 현재는 덱 기능이 없어 모든 프렌즈 리소스 preload
-    auto friends = Database::getFriends();
+    auto deck = User::getFriendsDeck();
     
-    for( auto friendData : friends ) {
+    for( auto friendData : deck ) {
         string file = getAnimPNG(getFriendAnimationFile(friendData.friendId));
         textureCache->addImageAsync(file, nullptr);
     }
