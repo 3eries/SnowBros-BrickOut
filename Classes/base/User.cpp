@@ -161,7 +161,7 @@ void User::setSelectedBallSkin(const string &ballId) {
     UserDefault::getInstance()->setStringForKey(USER_DEFAULT_KEY_SELECTED_BALL_SKIN, ballId);
     UserDefault::getInstance()->flush();
     
-    Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(DIRECTOR_EVENT_SELECTED_BALL);
+    Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(DIRECTOR_EVENT_UPDATE_BALL_SKIN);
 }
 
 string User::getSelectedBallSkin() {

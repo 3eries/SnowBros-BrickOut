@@ -58,7 +58,7 @@ static const std::string FA_EVENT_PARAM_ITEM_NAME               = "item_name";  
 static const std::string LEADER_BOARD_HIGH_SCORE                = "CgkIhM_O4eseEAIQAQ";
 
 // cocos2d::Director Event
-static const std::string DIRECTOR_EVENT_SELECTED_BALL           = "DIRECTOR_EVENT_SELECTED_BALL";
+static const std::string DIRECTOR_EVENT_UPDATE_BALL_SKIN        = "DIRECTOR_EVENT_UPDATE_BALL_SKIN";
 
 // 리소스 경로
 static const std::string DIR_IMG                    = "images/";

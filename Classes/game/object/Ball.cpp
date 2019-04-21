@@ -72,8 +72,8 @@ void Ball::initImage() {
     
     updateImage();
     
-    // 볼 스킨 선택 리스너
-    auto listener = EventListenerCustom::create(DIRECTOR_EVENT_SELECTED_BALL, [=](EventCustom *event) {
+    // 볼 스킨 변경 리스너
+    auto listener = EventListenerCustom::create(DIRECTOR_EVENT_UPDATE_BALL_SKIN, [=](EventCustom *event) {
         updateImage();
     });
     getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
