@@ -475,7 +475,7 @@ void TileLayer::initFloorItem(const FloorData &floor) {
         int currentCount = (int)(friendsDamage + getItems(ItemType::FRIENDS_POWER_UP).size());
         Log::i("TileLayer::initFloorItem friendsDamage: %d", friendsDamage);
         
-        if( checkDrop(ItemType::FRIENDS_POWER_UP, currentCount, stage.finalFriendsBallCount,
+        if( checkDrop(ItemType::FRIENDS_POWER_UP, currentCount, stage.finalFriendsBallDamage,
                       randomEngine.friendsPowerUp) ) {
             addItem(ItemType::FRIENDS_POWER_UP, positions);
         }

@@ -1,7 +1,7 @@
 {
 	"stage": 2,
 	"final_ball_count" : 35,
-	"final_friends_ball_count" : 10,
+	"final_friends_ball_damage" : 10,
 	"coin_drop_count" : "10~15",
 	"floors": [{
 		"floor": 21,

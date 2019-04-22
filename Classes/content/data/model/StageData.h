@@ -18,7 +18,7 @@ struct StageData {
     int            stage;                   // 스테이지 번호
     int            originStage;
     int            finalBallCount;
-    int            finalFriendsBallCount;
+    int            finalFriendsBallDamage;
     int            coinDropMin;             // 코인 최소 드랍 수
     int            coinDropMax;             // 코인 최대 드랍 수
     FloorDataList  floors;
@@ -37,13 +37,13 @@ struct StageData {
             StringList keys({
                 "stage",
                 "final_ball_count",
-                "final_friends_ball_count",
+                "final_friends_ball_damage",
             });
             
             std::vector<int*> ptrs({
                 &stage,
                 &finalBallCount,
-                &finalFriendsBallCount,
+                &finalFriendsBallDamage,
             });
             
             SBJSON::parse(v, allocator, keys, ptrs);
@@ -92,7 +92,7 @@ struct StageData {
     std::string toString() {
         std::string str = "StageData {\n";
         str += STR_FORMAT("\tstage: %d, originStage: %d\n", stage, originStage);
-        str += STR_FORMAT("\tfinalBallCount: %d, finalFriendsBallCount: %d\n", finalBallCount, finalFriendsBallCount);
+        str += STR_FORMAT("\tfinalBallCount: %d, finalFriendsBallDamage: %d\n", finalBallCount, finalFriendsBallDamage);
         str += STR_FORMAT("\tcoinDropMin: %d, coinDropMax: %d\n", coinDropMin, coinDropMax);
         str += STR_FORMAT("\tfirstFloor: %d\n", getFirstFloor().floor);
         str += STR_FORMAT("\tlastFloor: %d\n", getLastFloor().floor);
