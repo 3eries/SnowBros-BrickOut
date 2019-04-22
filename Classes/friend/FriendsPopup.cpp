@@ -12,7 +12,7 @@
 
 #include "ContentManager.hpp"
 #include "SceneManager.h"
-#include "UIHelper.hpp"
+#include "PopupManager.hpp"
 
 #include "FriendInfoView.hpp"
 #include "FriendCell.hpp"
@@ -102,6 +102,33 @@ void FriendsPopup::initContentView() {
     }
 }
 
+/**
+ * 유저 코인 UI 업데이트
+ */
+void FriendsPopup::updateUserCoinUI(bool withAction) {
+    
+    auto coinLabel = getChildByTag<Label*>(Tag::USER_COIN_LABEL);
+    int  coin = User::getCoin();
+    
+    if( !withAction ) {
+        coinLabel->setString(TO_STRING(coin));
+        return;
+    }
+    
+    // 액션
+    auto onChanged = [=](float value) {
+        
+        int i = (int)value;
+        coinLabel->setString(TO_STRING(i));
+    };
+    
+    auto numberAction = ActionFloat::create(0.3f, TO_INTEGER(coinLabel->getString()), coin, onChanged);
+    coinLabel->runAction(numberAction);
+}
+
+/**
+ * 덱 UI 업데이트
+ */
 void FriendsPopup::updateDeckUI() {
     
     auto deck = User::getFriendsDeck();
@@ -170,7 +197,14 @@ void FriendsPopup::onClick(Tag tag) {
         // 프렌즈 구매
         case Tag::BTN_BUY: {
             CCLOG("FRIENDS BUY: %s", selectedFriend.friendId.c_str());
-            // TODO: 재화 연동
+            
+            // 코인 체크
+            if( !User::isEnoughCoin(selectedFriend.price) ) {
+                PopupManager::show(PopupType::SHOP, ZOrder::POPUP_TOP);
+                return;
+            }
+            
+            User::spendCoin(selectedFriend.price);
             User::ownFriend(selectedFriend.friendId);
             
             infoView->updateSelf();
@@ -365,8 +399,9 @@ void FriendsPopup::initUserCoin() {
     
     // amount
     // 99999 size:36 Vec2TR(-192, -166) , Size(129, 25)
-    auto amount = Label::createWithTTF("99999", FONT_COMMODORE, 36, Size::ZERO,
+    auto amount = Label::createWithTTF("", FONT_COMMODORE, 36, Size::ZERO,
                                        TextHAlignment::CENTER, TextVAlignment::CENTER);
+    amount->setTag(Tag::USER_COIN_LABEL);
     amount->setAnchorPoint(ANCHOR_M);
     amount->setPosition(Vec2TR(-192, -166 + 2));
     amount->setTextColor(Color4B(255,255,255,255));
@@ -381,9 +416,16 @@ void FriendsPopup::initUserCoin() {
     
     shopBtn->setOnClickListener([=](Node*) {
         SBAudioEngine::playEffect(SOUND_BUTTON_CLICK);
-        
-        // TODO: 상점 팝업
+        PopupManager::show(PopupType::SHOP, ZOrder::POPUP_TOP);
     });
+    
+    updateUserCoinUI(false);
+    
+    // 코인 업데이트 리스너
+    auto listener = EventListenerCustom::create(DIRECTOR_EVENT_UPDATE_USER_COIN, [=](EventCustom *event) {
+        this->updateUserCoinUI(true);
+    });
+    getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
 }
 
 /**

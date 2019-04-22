@@ -40,7 +40,9 @@ public:
 
 private:
     enum Tag {
-        BTN_OK = 10,
+        USER_COIN_LABEL = 10,
+        
+        BTN_OK          = 100,
         BTN_BUY,
         BTN_SELECT,
         BTN_UNSELECT,
@@ -63,6 +65,7 @@ private:
     void initDeck();
     void initButton();
     
+    void updateUserCoinUI(bool withAction);
     void updateDeckUI();
     
     FriendCell* getFriendCellOfList(const std::string &friendId);
