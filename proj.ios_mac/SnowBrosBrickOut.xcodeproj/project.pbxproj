@@ -116,6 +116,7 @@
 		1DB4B8CD2252D092009481B3 /* SplashBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB4B8CB2252D092009481B3 /* SplashBall.cpp */; };
 		1DB4B8DC225C14FA009481B3 /* CriticalBall.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DB4B8DA225C14FA009481B3 /* CriticalBall.cpp */; };
 		1DBC68E820E49B9300CA85F0 /* CreditPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */; };
+		1DBCD54B226DC05600F4806A /* SpecialBrick.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBCD549226DC05600F4806A /* SpecialBrick.cpp */; };
 		1DBCE73421AEB9F4002D8DC3 /* SBEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DBCE73221AEB9F4002D8DC3 /* SBEvent.cpp */; };
 		1DC2B7E4222EE30800C8EF98 /* SBTransition.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC2B7E2222EE30800C8EF98 /* SBTransition.cpp */; };
 		1DC8553721902C9F007E180C /* GiftManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DC8553521902C9F007E180C /* GiftManager.cpp */; };
@@ -430,6 +431,8 @@
 		1DB4B8DB225C14FA009481B3 /* CriticalBall.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CriticalBall.hpp; sourceTree = "<group>"; };
 		1DBC68E620E49B9300CA85F0 /* CreditPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CreditPopup.cpp; sourceTree = "<group>"; };
 		1DBC68E720E49B9300CA85F0 /* CreditPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CreditPopup.hpp; sourceTree = "<group>"; };
+		1DBCD549226DC05600F4806A /* SpecialBrick.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SpecialBrick.cpp; sourceTree = "<group>"; };
+		1DBCD54A226DC05600F4806A /* SpecialBrick.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SpecialBrick.hpp; sourceTree = "<group>"; };
 		1DBCE71C21AE8A3E002D8DC3 /* SBPluginConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SBPluginConfig.h; sourceTree = "<group>"; };
 		1DBCE73221AEB9F4002D8DC3 /* SBEvent.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBEvent.cpp; sourceTree = "<group>"; };
 		1DBCE73321AEB9F4002D8DC3 /* SBEvent.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBEvent.hpp; sourceTree = "<group>"; };
@@ -1172,6 +1175,8 @@
 				1D322ED522389CB30007DDFB /* NeutralBrick.hpp */,
 				1D9C034F22277FE500745356 /* ShieldBrick.cpp */,
 				1D9C035022277FE500745356 /* ShieldBrick.hpp */,
+				1DBCD549226DC05600F4806A /* SpecialBrick.cpp */,
+				1DBCD54A226DC05600F4806A /* SpecialBrick.hpp */,
 				1D28C93C22638ADC00CCC687 /* TeleportBrick.cpp */,
 				1D28C93D22638ADC00CCC687 /* TeleportBrick.hpp */,
 				1DD697A121B8546F005FDC62 /* Tile.cpp */,
@@ -1596,6 +1601,7 @@
 				1DEEE25821B59E2B00DD4776 /* ExitAlertPopup.cpp in Sources */,
 				1D59F3D520FA69D400649A99 /* PopupManager.cpp in Sources */,
 				1D48319A2191613000EA0F2D /* GiftBox.cpp in Sources */,
+				1DBCD54B226DC05600F4806A /* SpecialBrick.cpp in Sources */,
 				1DEEE25921B59E2B00DD4776 /* ReviewPopup.cpp in Sources */,
 				1D86439C21523AEC001841C9 /* NSData+Base64.m in Sources */,
 				1D8F54B120D2D114009E2201 /* SBSpineHelper.cpp in Sources */,

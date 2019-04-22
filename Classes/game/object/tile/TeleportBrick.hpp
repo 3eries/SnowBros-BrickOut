@@ -10,9 +10,9 @@
 
 #include <stdio.h>
 
-#include "Brick.hpp"
+#include "SpecialBrick.hpp"
 
-class TeleportBrick : public Brick {
+class TeleportBrick : public SpecialBrick {
 public:
     static TeleportBrick* create(const BrickDef &def);
     ~TeleportBrick();
@@ -26,11 +26,10 @@ private:
     void onFloorChanged(const FloorData &floor) override;
     void onNextFloor(const FloorData &floor) override;
     
-    void teleport();
-    
+public:
+    void updateSpecialState() override;
     TilePositions getTeleportTargetPositions();
     
-public:
     float getEnterDuration() override;
     
 private:

@@ -31,7 +31,7 @@ TeleportBrick* TeleportBrick::create(const BrickDef &def) {
     return nullptr;
 }
 
-TeleportBrick::TeleportBrick(const BrickDef &def) : Brick(def) {
+TeleportBrick::TeleportBrick(const BrickDef &def) : SpecialBrick(def) {
 }
 
 TeleportBrick::~TeleportBrick() {
@@ -40,7 +40,7 @@ TeleportBrick::~TeleportBrick() {
 
 bool TeleportBrick::init() {
     
-    if( !Brick::init() ) {
+    if( !SpecialBrick::init() ) {
         return false;
     }
     
@@ -49,7 +49,7 @@ bool TeleportBrick::init() {
 
 void TeleportBrick::onEnter() {
     
-    Brick::onEnter();
+    SpecialBrick::onEnter();
     
     teleportTargetPos = INVALID_TILE_POSITION;
     
@@ -63,21 +63,19 @@ void TeleportBrick::onEnter() {
  */
 void TeleportBrick::onFloorChanged(const FloorData &floor) {
     
-    Brick::onFloorChanged(floor);
-    
-    if( isAvailable() ) {
-        teleport();
-    }
+    SpecialBrick::onFloorChanged(floor);
 }
 
 void TeleportBrick::onNextFloor(const FloorData &floor) {
     
-    Brick::onNextFloor(floor);
+    SpecialBrick::onNextFloor(floor);
     
     teleportTargetPos = INVALID_TILE_POSITION;
 }
 
-void TeleportBrick::teleport() {
+void TeleportBrick::updateSpecialState() {
+    
+    SpecialBrick::updateSpecialState();
     
     // 텔레포트 타겟 좌표 설정
     auto positions = getTeleportTargetPositions();
@@ -194,5 +192,6 @@ TilePositions TeleportBrick::getTeleportTargetPositions() {
  * 등장 시간을 반환합니다
  */
 float TeleportBrick::getEnterDuration() {
-    return getFloorChangedCount() == 0 ? GAME_CONFIG->getTileEnterDuration() : data.enterDuration;
+    
+    return (int)getTilePosition().y == TILE_POSITION_MAX_Y ? GAME_CONFIG->getTileEnterDuration() : data.enterDuration;
 }

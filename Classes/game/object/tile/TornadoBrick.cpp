@@ -37,7 +37,7 @@ TornadoBrick* TornadoBrick::create(const BrickDef &def) {
     return nullptr;
 }
 
-TornadoBrick::TornadoBrick(const BrickDef &def) : Brick(def) {
+TornadoBrick::TornadoBrick(const BrickDef &def) : SpecialBrick(def) {
 }
 
 TornadoBrick::~TornadoBrick() {
@@ -46,7 +46,7 @@ TornadoBrick::~TornadoBrick() {
 
 bool TornadoBrick::init() {
     
-    if( !Brick::init() ) {
+    if( !SpecialBrick::init() ) {
         return false;
     }
     
@@ -55,11 +55,11 @@ bool TornadoBrick::init() {
 
 void TornadoBrick::onEnter() {
     
-    Brick::onEnter();
+    SpecialBrick::onEnter();
     
     hpGage.bg->setCascadeOpacityEnabled(true);
     
-    updateState();
+    updateSpecialState();
 }
 
 /**
@@ -67,11 +67,7 @@ void TornadoBrick::onEnter() {
  */
 void TornadoBrick::onFloorChanged(const FloorData &floor) {
     
-    Brick::onFloorChanged(floor);
-    
-    if( isAvailable() ) {
-        updateState();
-    }
+    SpecialBrick::onFloorChanged(floor);
 }
 
 /**
@@ -79,14 +75,14 @@ void TornadoBrick::onFloorChanged(const FloorData &floor) {
  */
 void TornadoBrick::onNextFloor(const FloorData &floor) {
     
-    Brick::onNextFloor(floor);
+    SpecialBrick::onNextFloor(floor);
 }
 
 void TornadoBrick::onPreSolve(b2Contact *contact, const b2Manifold *oldManifold) {
     
-    Brick::onPreSolve(contact, oldManifold);
+    SpecialBrick::onPreSolve(contact, oldManifold);
     
-    if( !isTornadoState() ) {
+    if( !isSpecialState() ) {
         return;
     }
     
@@ -103,103 +99,6 @@ void TornadoBrick::onPreSolve(b2Contact *contact, const b2Manifold *oldManifold)
     
     // 볼이 통과할 수 있게 해당 충돌 비활성화
     contact->SetEnabled(false);
-}
-
-/**
- * 상태 업데이트
- */
-void TornadoBrick::updateState() {
-    
-    auto originSpinAnimFiles = ContentResourceHelper::getBrickAnimationFiles(data.image, "spin");
-    auto originTornadoAnimFiles = ContentResourceHelper::getBrickAnimationFiles(data.image, "tornado");
-    
-    auto runAnimation = [=](StringList animFiles, float duration, int loops, SBCallbackNode onFinished) {
-        auto anim = SBNodeUtils::createAnimation(animFiles, duration);
-        
-        image->setAnimation(anim, loops);
-        image->runAnimation(onFinished);
-    };
-    
-    // 토네이도
-    if( getFloorChangedCount() % 2 == 0 ) {
-        tornadoState = true;
-        setCollisionLocked(true);
-        setBodyActive(false);
-        
-        contactBalls.clear();
-        schedule(CC_CALLBACK_1(TornadoBrick::checkCollision, this), SCHEDULER_CHECK_COLLISION);
-        
-        // 연출
-        const float SPIN_SLOW_DURATION = ANIM_SLOW_DURATION(originSpinAnimFiles.size()) - ANIM_FAST_INTERVAL;
-
-        const int   SPIN_FAST_LOOPS = 2;
-        const float SPIN_FAST_DURATION = ANIM_FAST_DURATION(originSpinAnimFiles.size()) * SPIN_FAST_LOOPS;
-        
-        const float TOTAL_DURATION = SPIN_SLOW_DURATION + SPIN_FAST_DURATION;
-        
-        // Step 1. spin slow
-        runAnimation(originSpinAnimFiles, ANIM_SLOW_INTERVAL, 1, nullptr);
-        
-        // Step 2. spin fast
-        SBDirector::postDelayed(this, [=]() {
-            
-            runAnimation(originSpinAnimFiles, ANIM_FAST_INTERVAL, SPIN_FAST_LOOPS, [=](Node*) {
-                
-                // Step 3. tornado
-                runAnimation(originTornadoAnimFiles, ANIM_FAST_INTERVAL, SBAnimationSprite::LOOP_FOREVER,
-                             nullptr);
-            });
-            
-        }, SPIN_SLOW_DURATION);
-        
-        // fade out
-        auto fadeOut = FadeOut::create(TOTAL_DURATION);
-        bg->runAction(fadeOut->clone());
-        hpGage.bg->runAction(fadeOut->clone());
-        hpGage.label->runAction(fadeOut->clone());
-    }
-    // 일반 브릭
-    else {
-        tornadoState = false;
-        setCollisionLocked(false);
-        setBodyActive(true);
-        unschedule(SCHEDULER_CHECK_COLLISION);
-    
-        // 연출
-        StringList spinFastAnimFiles({
-            originSpinAnimFiles[2], originSpinAnimFiles[3], originSpinAnimFiles[0], originSpinAnimFiles[1],
-        });
-
-        StringList spinSlowAnimFiles({
-            originSpinAnimFiles[2], originSpinAnimFiles[3], originSpinAnimFiles[0],
-        });
-        
-        const int   SPIN_FAST_LOOPS = 2;
-        const float SPIN_FAST_DURATION = (ANIM_FAST_DURATION(spinFastAnimFiles.size()) * SPIN_FAST_LOOPS) + ANIM_FAST_INTERVAL;
-        const float SPIN_SLOW_DURATION = ANIM_SLOW_DURATION(spinSlowAnimFiles.size());
-        
-        const float TOTAL_DURATION = SPIN_SLOW_DURATION + SPIN_FAST_DURATION;
-        
-        // Step 1. spin fast
-        runAnimation(spinFastAnimFiles, ANIM_FAST_INTERVAL, SPIN_FAST_LOOPS, nullptr);
-        
-        // Step 2. spin slow
-        SBDirector::postDelayed(this, [=]() {
-            
-            runAnimation(spinSlowAnimFiles, ANIM_SLOW_INTERVAL, 1, [=](Node*) {
-                
-                // Step 3. idle
-                this->setImage(BrickImageType::IDLE, true);
-            });
-            
-        }, SPIN_FAST_DURATION);
-        
-        // fade in
-        auto fadeIn = FadeIn::create(TOTAL_DURATION);
-        bg->runAction(fadeIn->clone());
-        hpGage.bg->runAction(fadeIn->clone());
-        hpGage.label->runAction(fadeIn->clone());
-    }
 }
 
 /**
@@ -251,18 +150,115 @@ void TornadoBrick::checkCollision(float dt) {
     });
 }
 
+/**
+ * 상태 변경
+ */
+void TornadoBrick::setSpecialState(bool specialState) {
+    
+    SpecialBrick::setSpecialState(specialState);
+    
+    auto originSpinAnimFiles = ContentResourceHelper::getBrickAnimationFiles(data.image, "spin");
+    auto originTornadoAnimFiles = ContentResourceHelper::getBrickAnimationFiles(data.image, "tornado");
+    
+    auto runAnimation = [=](StringList animFiles, float duration, int loops, SBCallbackNode onFinished) {
+        auto anim = SBNodeUtils::createAnimation(animFiles, duration);
+        
+        image->setAnimation(anim, loops);
+        image->runAnimation(onFinished);
+    };
+    
+    // 토네이도
+    if( specialState ) {
+    // if( getFloorChangedCount() % 2 == 0 ) {
+        setCollisionLocked(true);
+        setBodyActive(false);
+        
+        contactBalls.clear();
+        schedule(CC_CALLBACK_1(TornadoBrick::checkCollision, this), SCHEDULER_CHECK_COLLISION);
+        
+        // 연출
+        const float SPIN_SLOW_DURATION = ANIM_SLOW_DURATION(originSpinAnimFiles.size()) - ANIM_FAST_INTERVAL;
+        
+        const int   SPIN_FAST_LOOPS = 2;
+        const float SPIN_FAST_DURATION = ANIM_FAST_DURATION(originSpinAnimFiles.size()) * SPIN_FAST_LOOPS;
+        
+        const float TOTAL_DURATION = SPIN_SLOW_DURATION + SPIN_FAST_DURATION;
+        
+        // Step 1. spin slow
+        runAnimation(originSpinAnimFiles, ANIM_SLOW_INTERVAL, 1, nullptr);
+        
+        // Step 2. spin fast
+        SBDirector::postDelayed(this, [=]() {
+            
+            runAnimation(originSpinAnimFiles, ANIM_FAST_INTERVAL, SPIN_FAST_LOOPS, [=](Node*) {
+                
+                // Step 3. tornado
+                runAnimation(originTornadoAnimFiles, ANIM_FAST_INTERVAL, SBAnimationSprite::LOOP_FOREVER,
+                             nullptr);
+            });
+            
+        }, SPIN_SLOW_DURATION);
+        
+        // fade out
+        auto fadeOut = FadeOut::create(TOTAL_DURATION);
+        bg->runAction(fadeOut->clone());
+        hpGage.bg->runAction(fadeOut->clone());
+        hpGage.label->runAction(fadeOut->clone());
+    }
+    // 일반 브릭
+    else {
+        setCollisionLocked(false);
+        setBodyActive(true);
+        unschedule(SCHEDULER_CHECK_COLLISION);
+        
+        // 연출
+        StringList spinFastAnimFiles({
+            originSpinAnimFiles[2], originSpinAnimFiles[3], originSpinAnimFiles[0], originSpinAnimFiles[1],
+        });
+        
+        StringList spinSlowAnimFiles({
+            originSpinAnimFiles[2], originSpinAnimFiles[3], originSpinAnimFiles[0],
+        });
+        
+        const int   SPIN_FAST_LOOPS = 2;
+        const float SPIN_FAST_DURATION = (ANIM_FAST_DURATION(spinFastAnimFiles.size()) * SPIN_FAST_LOOPS) + ANIM_FAST_INTERVAL;
+        const float SPIN_SLOW_DURATION = ANIM_SLOW_DURATION(spinSlowAnimFiles.size());
+        
+        const float TOTAL_DURATION = SPIN_SLOW_DURATION + SPIN_FAST_DURATION;
+        
+        // Step 1. spin fast
+        runAnimation(spinFastAnimFiles, ANIM_FAST_INTERVAL, SPIN_FAST_LOOPS, nullptr);
+        
+        // Step 2. spin slow
+        SBDirector::postDelayed(this, [=]() {
+            
+            runAnimation(spinSlowAnimFiles, ANIM_SLOW_INTERVAL, 1, [=](Node*) {
+                
+                // Step 3. idle
+                this->setImage(BrickImageType::IDLE, true);
+            });
+            
+        }, SPIN_FAST_DURATION);
+        
+        // fade in
+        auto fadeIn = FadeIn::create(TOTAL_DURATION);
+        bg->runAction(fadeIn->clone());
+        hpGage.bg->runAction(fadeIn->clone());
+        hpGage.label->runAction(fadeIn->clone());
+    }
+}
+
+void TornadoBrick::updateSpecialState() {
+    
+    SpecialBrick::updateSpecialState();
+    
+    const int POS_Y = (int)getTilePosition().y;
+    setSpecialState(POS_Y % 2 != 0);
+}
+
 void TornadoBrick::prepareRemove() {
     
     unschedule(SCHEDULER_CHECK_COLLISION);
     
-    Brick::prepareRemove();
-}
-
-bool TornadoBrick::canDamage() {
-    
-    if( !Brick::canDamage() ) {
-        return false;
-    }
-    
-    return !isTornadoState();
+    SpecialBrick::prepareRemove();
 }

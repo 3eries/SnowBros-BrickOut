@@ -10,9 +10,9 @@
 
 #include <stdio.h>
 
-#include "Brick.hpp"
+#include "SpecialBrick.hpp"
 
-class TornadoBrick : public Brick {
+class TornadoBrick : public SpecialBrick {
 public:
     static TornadoBrick* create(const BrickDef &def);
     ~TornadoBrick();
@@ -27,17 +27,15 @@ private:
     void onNextFloor(const FloorData &floor) override;
     void onPreSolve(b2Contact *contact, const b2Manifold *oldManifold) override;
     
-    void updateState();
     void checkCollision(float dt);
     
 public:
+    void setSpecialState(bool specialState) override;
+    void updateSpecialState() override;
+    
     void prepareRemove() override;
-    bool canDamage() override;
     
 private:
-    SB_SYNTHESIZE_READONLY_BOOL(tornadoState, TornadoState);
-    int savedHp;
-    
     std::vector<Ball*> contactBalls;
 };
 

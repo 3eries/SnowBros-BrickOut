@@ -10,9 +10,9 @@
 
 #include <stdio.h>
 
-#include "Brick.hpp"
+#include "SpecialBrick.hpp"
 
-class GhostBrick : public Brick {
+class GhostBrick : public SpecialBrick {
 public:
     static GhostBrick* create(const BrickDef &def);
     ~GhostBrick();
@@ -26,13 +26,9 @@ private:
     void onFloorChanged(const FloorData &floor) override;
     void onNextFloor(const FloorData &floor) override;
     
-    void updateState();
-    
 public:
-    bool canDamage() override;
-    
-private:
-    SB_SYNTHESIZE_READONLY_BOOL(ghostState, GhostState);
+    void setSpecialState(bool specialState) override;
+    void updateSpecialState() override;
 };
 
 #endif /* GhostBrick_hpp */

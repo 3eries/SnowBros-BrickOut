@@ -27,7 +27,7 @@ GhostBrick* GhostBrick::create(const BrickDef &def) {
     return nullptr;
 }
 
-GhostBrick::GhostBrick(const BrickDef &def) : Brick(def) {
+GhostBrick::GhostBrick(const BrickDef &def) : SpecialBrick(def) {
 }
 
 GhostBrick::~GhostBrick() {
@@ -36,7 +36,7 @@ GhostBrick::~GhostBrick() {
 
 bool GhostBrick::init() {
     
-    if( !Brick::init() ) {
+    if( !SpecialBrick::init() ) {
         return false;
     }
     
@@ -45,12 +45,12 @@ bool GhostBrick::init() {
 
 void GhostBrick::onEnter() {
     
-    Brick::onEnter();
+    SpecialBrick::onEnter();
     
     setCascadeOpacityEnabled(true);
     hpGage.bg->setCascadeOpacityEnabled(true);
     
-    updateState();
+    updateSpecialState();
 }
 
 /**
@@ -58,11 +58,7 @@ void GhostBrick::onEnter() {
  */
 void GhostBrick::onFloorChanged(const FloorData &floor) {
     
-    Brick::onFloorChanged(floor);
-
-    if( isAvailable() ) {
-        updateState();
-    }
+    SpecialBrick::onFloorChanged(floor);
 }
 
 /**
@@ -70,14 +66,19 @@ void GhostBrick::onFloorChanged(const FloorData &floor) {
  */
 void GhostBrick::onNextFloor(const FloorData &floor) {
     
-    Brick::onNextFloor(floor);
+    SpecialBrick::onNextFloor(floor);
 }
 
-void GhostBrick::updateState() {
+/**
+ * 상태 변경
+ */
+void GhostBrick::setSpecialState(bool specialState) {
+    
+    SpecialBrick::setSpecialState(specialState);
     
     // 투명화
-    if( getFloorChangedCount() % 2 == 0 ) {
-        ghostState = true;
+    // if( getFloorChangedCount() % 2 == 0 ) {
+    if( specialState ) {
         setCollisionLocked(true);
         setBodyActive(false);
         
@@ -89,10 +90,9 @@ void GhostBrick::updateState() {
     }
     // 반투명화
     else {
-        ghostState = false;
         setCollisionLocked(false);
         setBodyActive(true);
-
+        
         auto fadeIn = FadeIn::create(data.enterDuration);
         auto callFunc = CallFunc::create([=]() {
             this->setImage(BrickImageType::IDLE, true);
@@ -101,11 +101,10 @@ void GhostBrick::updateState() {
     }
 }
 
-bool GhostBrick::canDamage() {
+void GhostBrick::updateSpecialState() {
     
-    if( !Brick::canDamage() ) {
-        return false;
-    }
+    SpecialBrick::updateSpecialState();
     
-    return !isGhostState();
+    const int POS_Y = (int)getTilePosition().y;
+    setSpecialState(POS_Y % 2 != 0);
 }
