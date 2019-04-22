@@ -9,10 +9,12 @@
 
 #include "Define.h"
 #include "User.hpp"
-
 #include "ContentManager.hpp"
 #include "SceneManager.h"
-#include "UIHelper.hpp"
+#include "PopupManager.hpp"
+
+#include "BannerView.hpp"
+#include "UserCoinView.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -173,9 +175,12 @@ void BallSkinPopup::onClickUnlockButton() {
     SBAudioEngine::playEffect(SOUND_BUTTON_CLICK);
     
     // 코인 체크
+    if( !User::isEnoughCoin(ballData.unlockAmount) ) {
+        PopupManager::show(PopupType::SHOP, ZOrder::POPUP_TOP);
+        return;
+    }
     
-    // spend the money
-    // TODO: 코인 소모
+    User::spendCoin(ballData.unlockAmount);
     
     // 해제
     User::ownBallSkin(ballData.ballId);
@@ -248,6 +253,14 @@ void BallSkinPopup::hideButton(Widget *btn, bool withAction) {
  */
 void BallSkinPopup::initBg() {
     
+    // 배너
+    auto bannerView = BannerView::create();
+    bannerView->setTag(Tag::BANNER);
+    addChild(bannerView, SBZOrder::BOTTOM);
+    
+    // 유저 코인
+    addChild(UserCoinView::create(UserCoinView::Type::NORMAL), SBZOrder::BOTTOM);
+    
     // ball_skin_title_deco.png Vec2TC(28, -174) , Size(176, 132)
     // ball_skin_title.png Vec2TC(0, -238) , Size(376, 100)
     SBUIInfo infos[] = {
@@ -275,11 +288,11 @@ void BallSkinPopup::initBg() {
     */
     
     // 닫기 버튼
-    // common_btn_close_red.png Vec2TR(-74, -138) , Size(76, 76)
+    // common_btn_close_red.png Vec2TR(-46, -146) , Size(76, 76)
     auto closeBtn = SBButton::create(DIR_IMG_COMMON + "common_btn_close_red.png");
-    closeBtn->setAnchorPoint(ANCHOR_M);
-    closeBtn->setPosition(Vec2TR(-74, -138));
     closeBtn->setZoomScale(0.1f);
+    closeBtn->setAnchorPoint(ANCHOR_M);
+    closeBtn->setPosition(Vec2TR(-46, -146));
     addContentChild(closeBtn);
     
     closeBtn->setOnClickListener([=](Node*) {
@@ -306,7 +319,7 @@ void BallSkinPopup::initButton() {
     // Select 버튼
     // ball_skin_btn_select.png Vec2BC(0, 134) , Size(484, 124)
     selectButton = Button::create(DIR_IMG_BALL_SKIN + "ball_skin_btn_select.png");
-    selectButton->setZoomScale(0.1f);
+    selectButton->setZoomScale(-0.03f);
     selectButton->setAnchorPoint(ANCHOR_M);
     addContentChild(selectButton);
     
@@ -496,7 +509,7 @@ bool UnlockButton::init() {
     addTouchEventListener([=](Ref*, Widget::TouchEventType eventType) {
         
         switch( eventType ) {
-            case Widget::TouchEventType::BEGAN:         setScale(1.1f);     break;
+            case Widget::TouchEventType::BEGAN:         setScale(0.97f);    break;
             case Widget::TouchEventType::ENDED:
             case Widget::TouchEventType::CANCELED:      setScale(1.0f);     break;
             default: break;

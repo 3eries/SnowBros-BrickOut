@@ -37,6 +37,11 @@ public:
     ~BallSkinPopup();
     
 private:
+    enum Tag {
+        BANNER = 10,
+    };
+    
+private:
     BallSkinPopup();
     
     bool init() override;
