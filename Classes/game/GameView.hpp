@@ -78,6 +78,7 @@ public:
     void onGameResume();
     void onGameOver();
     void onGameContinue();
+    void onGameRestore(const RestoreData &restoreData);
     void onGameResult();
     
     void onBoostStart();
@@ -93,6 +94,8 @@ public:
     void onNextFloor(const FloorData &floor);
     
 private:
+    void saveRestoreData();
+    
     void onTileDownFinished() ;             // 1. 타일 이동 완료
     void onShootingReady();                 // 2. 발사 준비
     void onAimingStart();                   // 3. 조준 시작

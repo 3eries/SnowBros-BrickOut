@@ -84,6 +84,8 @@ void Tile::onNextFloor(const FloorData &floor) {
  */
 void Tile::prepareRemove() {
     
+    removeListeners(this);
+    
     available = false;
     
     setBodyAwake(false);

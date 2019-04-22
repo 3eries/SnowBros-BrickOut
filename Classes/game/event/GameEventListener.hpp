@@ -12,8 +12,10 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#include "../GameDefine.h"
 #include "ContentManager.hpp"
+
+#include "../GameDefine.h"
+#include "../restore/RestoreData.h"
 
 class GameEventListener : public cocos2d::Ref {
 public:
@@ -33,6 +35,7 @@ public:
     std::function<void()>                   onGameResume;               // 게임 재게
     std::function<void()>                   onGameOver;                 // 게임 오버
     std::function<void()>                   onGameContinue;             // 게임 이어하기
+    std::function<void(const RestoreData&)> onGameRestore;              // 게임 리스토어
     std::function<void()>                   onGameResult;               // 게임 결과
     
     std::function<void()>                   onBoostStart;               // 부스트 시작

@@ -54,6 +54,7 @@ public:
     
     // Stage
     void            setStartStage(int stage);
+    void            save(const RestoreData &restoreData);
     
     // Item
     void            setGiftItems(std::vector<GiftRewardItem> items);
@@ -97,6 +98,12 @@ private:
     int score;                                                    // 스코어
     CC_SYNTHESIZE_READONLY(int, continueCount, ContinueCount);    // 이어하기한 횟수
     
+    // 리스토어 데이터
+    RestoreData restoreData;
+    // 리스토어 여부, 스테이지 전환 시 리셋
+    SB_SYNTHESIZE_READONLY_BOOL(restored, Restored);
+    CC_SYNTHESIZE_READONLY(int, restoreCount, RestoreCount);      // 리스토어 횟수
+    
     // 스테이지에 등장한 브릭 리스트, 스테이지 전환 시 리셋
     CC_SYNTHESIZE_READONLY(BrickDataList, bricks, Bricks);
                            
@@ -111,6 +118,7 @@ public:
     static void onGameResume();
     static void onGameOver();
     static void onGameContinue();
+    static void onGameRestore();
     static void onGameResult();
     
     static void onBoostStart();

@@ -47,12 +47,14 @@ protected:
     Friend();
     
     virtual bool init(const FriendDef &def);
+    virtual void cleanup() override;
     
     virtual void initImage();
     virtual void initBall();
     
     virtual FriendBall* createBall();
     virtual void        addBall(int count = 1);
+    virtual void        removeBalls();
     
     int                 getBallCount();
     
@@ -95,7 +97,7 @@ protected:
     
     spine::SkeletonAnimation *image;
     std::vector<FriendBall*> balls;
-    cocos2d::Label *damageLabel;
+    CC_SYNTHESIZE_READONLY(cocos2d::Label*, damageLabel, DamageLabel);
 };
 
 #endif /* Friend_hpp */

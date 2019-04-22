@@ -60,6 +60,7 @@ void GameConfiguration::parse(const string &json) {
     firstCoin            = doc["first_coin"].GetInt();
     firstBallSkin        = doc["first_ball_skin"].GetString();
     firstFriend          = doc["first_friend"].GetString();
+    restoreCost          = doc["restore_cost"].GetInt();
     tileRows             = doc["tile_rows"].GetInt();
     tileColumns          = doc["tile_columns"].GetInt();
     tileEnterDuration    = doc["tile_enter_duration"].GetFloat();

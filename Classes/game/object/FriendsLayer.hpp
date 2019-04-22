@@ -61,6 +61,7 @@ private:
     void onGameRestart();
     void onGameOver();
     void onGameContinue();
+    void onGameRestore(const RestoreData &restoreData);
     void onGameResult();
     
     void onBoostStart();

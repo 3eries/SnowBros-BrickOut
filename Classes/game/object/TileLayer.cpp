@@ -125,6 +125,55 @@ void TileLayer::onGameContinue() {
 }
 
 /**
+ * 게임 리스토어
+ */
+void TileLayer::onGameRestore(const RestoreData &restoreData) {
+    
+    // 기존 타일 제거
+    for( auto tile : tiles ) {
+//        tile->prepareRemove();
+//        tile->setVisible(false);
+//        tile->setNeedRemove(true);
+        tile->removeBody();
+        tile->removeFromParent();
+    }
+    
+    tiles.clear();
+    
+    // brick
+    for( auto brickRestoreData : restoreData.bricks ) {
+        BrickDef def(brickRestoreData.brick);
+        def.tile = brickRestoreData.tile;
+        def.hp = brickRestoreData.originHp;
+        def.elite = brickRestoreData.isElite;
+        def.floorData = (brickRestoreData.floor != 0) ? Database::getFloor(brickRestoreData.floor) : FloorData();
+        
+        auto brick = TileFactory::createBrick(def);
+        addBrick(brick);
+        
+        brick->setHp(brickRestoreData.hp);
+        
+        // special brick
+        auto specialBrick = dynamic_cast<SpecialBrick*>(brick);
+        
+        if( specialBrick ) {
+            specialBrick->setSpecialState(brickRestoreData.isSpecialState);
+        }
+    }
+    
+    // item
+    for( auto itemRestoreData : restoreData.items ) {
+        ItemDef def(itemRestoreData.item);
+        def.floorData = (itemRestoreData.floor != 0) ? Database::getFloor(itemRestoreData.floor) : FloorData();
+        
+        auto item = TileFactory::createItem(def);
+        item->setTilePosition(itemRestoreData.tile.pos);
+        item->setBodyActive(false);
+        addTile(item);
+    }
+}
+
+/**
  * 스테이지 변경
  */
 void TileLayer::onStageChanged(const StageData &stage) {
@@ -479,6 +528,7 @@ void TileLayer::initGameListener() {
     listener->onGameRestart             = CC_CALLBACK_0(TileLayer::onGameRestart, this);
     listener->onGameOver                = CC_CALLBACK_0(TileLayer::onGameOver, this);
     listener->onGameContinue            = CC_CALLBACK_0(TileLayer::onGameContinue, this);
+    listener->onGameRestore             = CC_CALLBACK_1(TileLayer::onGameRestore, this);
     listener->onStageChanged            = CC_CALLBACK_1(TileLayer::onStageChanged, this);
     listener->onStageClear              = CC_CALLBACK_0(TileLayer::onStageClear, this);
     listener->onFloorChanged            = CC_CALLBACK_1(TileLayer::onFloorChanged, this);

@@ -67,7 +67,7 @@ void UserCoinView::onClick(Node *sender) {
     
     switch( sender->getTag() ) {
         // 상점
-        case Tag::BTN_SHOP: {
+        case Tag::SHOP_BTN: {
             PopupManager::show(PopupType::SHOP, ZOrder::POPUP_TOP);
         } break;
             
@@ -80,7 +80,7 @@ void UserCoinView::onClick(Node *sender) {
  */
 void UserCoinView::updateCoin(bool withAction) {
     
-    auto coinLabel = getChildByTag<Label*>(Tag::LABEL_COIN);
+    auto coinLabel = getChildByTag<Label*>(Tag::COIN_LABEL);
     int  coin = User::getCoin();
     
     if( !withAction ) {
@@ -107,18 +107,20 @@ void UserCoinView::initNormal() {
     // bg
     // common_bg_coin_user.png Vec2TL(112, -138) , Size(200, 52)
     auto bg = SBButton::create(DIR_IMG_COMMON + "common_bg_coin_user.png");
+    bg->setTag(Tag::BG);
     bg->setZoomScale(0);
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2TL(112, -138));
     addChild(bg);
     
     bg->setOnClickListener([=](Node*) {
-        this->onClick(getChildByTag(Tag::BTN_SHOP));
+        this->onClick(getChildByTag(Tag::SHOP_BTN));
     });
     
     // icon
     // common_icon_coin_tiny.png Vec2TL(38, -138) , Size(36, 36)
     auto icon = Sprite::create(DIR_IMG_COMMON + "common_icon_coin_tiny.png");
+    icon->setTag(Tag::COIN_ICON);
     icon->setAnchorPoint(ANCHOR_M);
     icon->setPosition(Vec2TL(38, -138));
     addChild(icon);
@@ -127,7 +129,7 @@ void UserCoinView::initNormal() {
     // 999999 size:28 Vec2TL(116, -137) , Size(119, 19)
     auto coinLabel = Label::createWithTTF("0", FONT_COMMODORE, 28, Size::ZERO,
                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
-    coinLabel->setTag(Tag::LABEL_COIN);
+    coinLabel->setTag(Tag::COIN_LABEL);
     coinLabel->setAnchorPoint(ANCHOR_M);
     coinLabel->setPosition(Vec2TL(116, -137) + Vec2(0, 0));
     coinLabel->setTextColor(Color4B(255,255,255,255));
@@ -136,7 +138,7 @@ void UserCoinView::initNormal() {
     // shop
     // common_btn_shop.png Vec2TL(208, -136) , Size(56, 56)
     auto shopBtn = SBButton::create(DIR_IMG_COMMON + "common_btn_shop.png");
-    shopBtn->setTag(Tag::BTN_SHOP);
+    shopBtn->setTag(Tag::SHOP_BTN);
     shopBtn->setAnchorPoint(ANCHOR_M);
     shopBtn->setPosition(Vec2TL(208, -136));
     shopBtn->setZoomScale(0.1f);
@@ -145,7 +147,6 @@ void UserCoinView::initNormal() {
     shopBtn->setOnClickListener(CC_CALLBACK_1(UserCoinView::onClick, this));
 }
 
-
 /**
  * 상점 전용 UI 초기화
  */
@@ -153,12 +154,14 @@ void UserCoinView::initShop() {
     
     // shop_bg_coin_user.png Vec2TL(112, -138) , Size(200, 52)
     auto bg = Sprite::create(DIR_IMG_SHOP + "shop_bg_coin_user.png");
+    bg->setTag(Tag::BG);
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2TL(112, -138));
     addChild(bg);
     
     // common_icon_coin_tiny.png Vec2TL(38, -138) , Size(36, 36)
     auto icon = Sprite::create(DIR_IMG_COMMON + "common_icon_coin_tiny.png");
+    icon->setTag(Tag::COIN_ICON);
     icon->setAnchorPoint(ANCHOR_M);
     icon->setPosition(Vec2TL(38, -138));
     addChild(icon);
@@ -166,9 +169,26 @@ void UserCoinView::initShop() {
     // 999999 size:32 Vec2TL(129, -138) , Size(139, 22)
     auto coinLabel = Label::createWithTTF("0", FONT_COMMODORE, 32, Size::ZERO,
                                           TextHAlignment::CENTER, TextVAlignment::CENTER);
-    coinLabel->setTag(Tag::LABEL_COIN);
+    coinLabel->setTag(Tag::COIN_LABEL);
     coinLabel->setAnchorPoint(ANCHOR_M);
     coinLabel->setPosition(Vec2TL(129, -138) + Vec2(0, 0));
     coinLabel->setTextColor(Color4B(255,255,255,255));
     addChild(coinLabel);
 }
+
+Node* UserCoinView::getBackground() {
+    return getChildByTag(Tag::BG);
+}
+
+Node* UserCoinView::getCoinIcon() {
+    return getChildByTag(Tag::COIN_ICON);
+}
+
+Node* UserCoinView::getCoinLabel() {
+    return getChildByTag(Tag::COIN_LABEL);
+}
+
+Node* UserCoinView::getShopButton() {
+    return getChildByTag(Tag::SHOP_BTN);
+}
+

@@ -54,6 +54,7 @@ public:
     void onGameRestart();
     void onGameOver();
     void onGameContinue();
+    void onGameRestore(const RestoreData &restoreData);
     
     void onStageChanged(const StageData &stage);
     void onStageClear();

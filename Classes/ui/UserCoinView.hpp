@@ -26,8 +26,10 @@ public:
     
 private:
     enum Tag {
-        LABEL_COIN          = 10,
-        BTN_SHOP            = 100,
+        BG                  = 10,
+        COIN_ICON           = 100,
+        COIN_LABEL,
+        SHOP_BTN,
     };
     
 private:
@@ -42,6 +44,11 @@ private:
 
 public:
     void updateCoin(bool withAction);
+    
+    cocos2d::Node* getBackground();
+    cocos2d::Node* getCoinIcon();
+    cocos2d::Node* getCoinLabel();
+    cocos2d::Node* getShopButton();
     
 private:
     Type type;

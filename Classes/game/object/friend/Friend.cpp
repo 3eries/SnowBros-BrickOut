@@ -81,6 +81,13 @@ bool Friend::init(const FriendDef &def) {
     return true;
 }
 
+void Friend::cleanup() {
+    
+    removeBalls();
+    
+    Node::cleanup();
+}
+
 void Friend::initImage() {
     
     string file = ContentResourceHelper::getFriendAnimationFile(data.friendId);
@@ -139,6 +146,16 @@ void Friend::addBall(int count) {
         
         balls.push_back(ball);
     }
+}
+
+void Friend::removeBalls() {
+    
+    for( auto ball : balls ) {
+        ball->removeBody();
+        ball->removeFromParent();
+    }
+    
+    balls.clear();
 }
 
 int Friend::getBallCount() {

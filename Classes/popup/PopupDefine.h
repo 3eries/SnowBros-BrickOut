@@ -23,6 +23,7 @@ enum class PopupType {
     PAUSE,
     STAGE_CLEAR,
     GAME_RESULT,
+    GAME_RESTORE,
     CONTINUE,
 };
 

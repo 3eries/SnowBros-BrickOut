@@ -22,6 +22,7 @@
 #include "ui/StageClearPopup.hpp"
 #include "ui/ContinuePopup.hpp"
 #include "ui/ResultPopup.hpp"
+#include "restore/RestorePopup.hpp"
 
 USING_NS_CC;
 USING_NS_SB;
@@ -199,19 +200,17 @@ void GameScene::onGameResume() {
  */
 void GameScene::onGameOver() {
     
-    setSceneTouchLocked(true);
-    
     SBDirector::postDelayed(this, [=]() {
 
-        GameManager::onGameResult();
-//        // 이어하기
-//        if( GameManager::isContinuable() ) {
-//            this->showContinuePopup();
-//        }
-//        // 게임 결과
-//        else {
-//            GameManager::onGameResult();
-//        }
+        // 리스토어
+        if( !GAME_MANAGER->isRestored() ) {
+            this->showRestorePopup();
+        }
+        // 게임 결과
+        else {
+            // this->setSceneTouchLocked(true);
+            GameManager::onGameResult();
+        }
     }, GAME_RESULT_DELAY, true);
 }
 
@@ -458,6 +457,50 @@ void GameScene::showContinuePopup() {
     popup->setOnTimeOutListener([=]() {
         GameManager::onGameResult();
     });
+}
+
+/**
+ * 리스토어 팝업 노출
+ */
+void GameScene::showRestorePopup() {
+    
+    auto popup = RestorePopup::create();
+    popup->setOnRestoreListener([=](bool isRestored) {
+        
+        if( !isRestored ) {
+            GameManager::onGameResult();
+            return;
+        }
+        
+        // 연출
+        SBDirector::getInstance()->setScreenTouchLocked(true);
+        
+        auto effect = LayerColor::create(Color4B(0,0,0,0));
+        SceneManager::getScene()->addChild(effect, ZOrder::POPUP_MIDDLE);
+        
+        // Step 1. fade in
+        auto fadeIn = FadeIn::create(0.5f);
+        auto callFunc = CallFunc::create([=]() {
+         
+            // 리스토어
+            GameManager::onGameRestore();
+            
+            popup->dismiss();
+            
+            // Step 2. fade out
+            auto delay = DelayTime::create(0.3f);
+            auto fadeOut = FadeOut::create(0.3f);
+            auto callFunc = CallFunc::create([=]() {
+                SBDirector::getInstance()->setScreenTouchLocked(false);
+            });
+            auto remove = RemoveSelf::create();
+            
+            effect->runAction(Sequence::create(delay, fadeOut, callFunc, remove, nullptr));
+        });
+        
+        effect->runAction(Sequence::create(fadeIn, callFunc, nullptr));
+    });
+    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
 }
 
 /**

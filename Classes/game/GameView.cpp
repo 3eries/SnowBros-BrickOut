@@ -198,21 +198,45 @@ void GameView::onGameOver() {
     }
     
     ballCountLabel->runAction(FadeOut::create(0.1f));
-    
-    // 연출
-    /*
-    const float DURATION = 1.0f;
-    
-    auto scale = ScaleTo::create(DURATION, 1.3f);
-    auto moveBy = MoveBy::create(DURATION, Vec2(0, 200));
-    runAction(Spawn::create(scale, moveBy, nullptr));
-     */
 }
 
 /**
  * 게임 이어하기
  */
 void GameView::onGameContinue() {
+}
+
+/**
+ * 게임 리스토어
+ */
+void GameView::onGameRestore(const RestoreData &restoreData) {
+    
+    // 기존 볼 제거
+    for( auto ball : balls ) {
+        ball->removeBody();
+        ball->removeFromParent();
+    }
+    
+    balls.clear();
+    
+    for( auto ball : addBallQueue ) {
+        ball->removeFromParent();
+    }
+    
+    addBallQueue.clear();
+    
+    // 볼 리스토어
+    aimController->setStartPosition(restoreData.ballPosition);
+    
+    addBall(restoreData.ballDamage);
+    balls[0]->setVisible(true);
+    ballCountLabel->setOpacity(255);
+    
+    // 조준 활성화
+    SBDirector::postDelayed(this, [=]() {
+        CCLOG("tileLayer->getBricks(): %d", tileLayer->getBricks().size());
+        aimController->setEnabled(true, tileLayer->getBricks());
+    }, 1.0f, true);
 }
 
 /**
@@ -317,6 +341,58 @@ void GameView::onNextFloor(const FloorData &floor) {
 }
 
 /**
+ * 리스토어 데이터 저장
+ */
+void GameView::saveRestoreData() {
+    
+    RestoreData restoreData;
+    
+    // brick
+    auto bricks = tileLayer->getBricks();
+    
+    for( auto brick : bricks ) {
+        RestoreBrickData brickRestoreData;
+        brickRestoreData.brick = brick->getData();
+        brickRestoreData.tile = TileData(brick->getTilePosition());
+        brickRestoreData.tile.isFlippedX = brick->getImage()->isFlippedX();
+        brickRestoreData.tile.isFlippedY = brick->getImage()->isFlippedY();
+        brickRestoreData.floor = brick->getFloorData().floor;
+        brickRestoreData.hp = brick->getHp();
+        brickRestoreData.originHp = brick->getOriginalHp();
+        brickRestoreData.isElite = brick->isElite();
+        
+        auto specialBrick = dynamic_cast<SpecialBrick*>(brick);
+        
+        if( specialBrick ) {
+            brickRestoreData.isSpecialState = specialBrick->isSpecialState();
+        }
+        
+        restoreData.bricks.push_back(brickRestoreData);
+    }
+    
+    // item
+    auto items = tileLayer->getItems();
+    
+    for( auto item : items ) {
+        RestoreItemData itemRestoreData;
+        itemRestoreData.item = item->getData();
+        itemRestoreData.tile = TileData(item->getTilePosition());
+        itemRestoreData.floor = item->getFloorData().floor;
+        
+        restoreData.items.push_back(itemRestoreData);
+    }
+    
+    // ball
+    restoreData.ballDamage = (int)balls.size();
+    restoreData.ballPosition = aimController->getStartPosition();
+    
+    // friends
+    restoreData.friendsBallDamage = friendsLayer->getFriendsDamage();
+        
+    GAME_MANAGER->save(restoreData);
+}
+
+/**
  * 타일 이동 완료
  */
 void GameView::onTileDownFinished() {
@@ -373,6 +449,11 @@ void GameView::onShootingReady() {
         ball->setPosition(aimController->getStartPosition());
         ball->setSyncLocked(false);
         ball->syncNodeToBody();
+    }
+    
+    // 1행에 브릭이 있으면 리스토어 데이터 저장
+    if( !tileLayer->isRowClear(1) ) {
+        saveRestoreData();
     }
 }
 
@@ -976,7 +1057,6 @@ void GameView::eatItem(Item *item, bool isFallAction) {
         // 프렌즈 볼 개수 증가
         case ItemType::FRIENDS_POWER_UP: {
             friendsLayer->eatFriendsItem(item);
-            tileLayer->setFriendsDamage(friendsLayer->getFriendsDamage());
         } break;
             
         default:
@@ -1354,6 +1434,15 @@ void GameView::initTile() {
             label->setPosition(Vec2MC(tile->getContentSize(), 0, 0));
             label->setTextColor(Color4B::WHITE);
             tile->addChild(label);
+            
+//            auto box = SBNodeUtils::getBoundingBoxInWorld(tile, 0.9f, 0.5f);
+//
+//            auto n = LayerColor::create(Color4B(0,0,255,255*0.7f));
+//            n->setIgnoreAnchorPointForPosition(false);
+//            n->setAnchorPoint(ANCHOR_M);
+//            n->setPosition(Vec2(box.getMidX(), box.getMidY()));
+//            n->setContentSize(box.size);
+//            parent->addChild(n, 1);
         }
     }
 #endif
@@ -1368,8 +1457,6 @@ void GameView::initFriends() {
     friendsLayer->setOnFallFinishedListener(CC_CALLBACK_0(GameView::onFriendsBallFallFinished, this));
     friendsLayer->updatePosition(FIRST_SHOOTING_POSITION, false);
     addChild(friendsLayer, (int)ZOrder::FRIENDS);
-    
-    tileLayer->setFriendsDamage(friendsLayer->getFriendsDamage());
 }
 
 /**
@@ -1425,6 +1512,7 @@ void GameView::initGameListener() {
     listener->onGameResume              = CC_CALLBACK_0(GameView::onGameResume, this);
     listener->onGameOver                = CC_CALLBACK_0(GameView::onGameOver, this);
     listener->onGameContinue            = CC_CALLBACK_0(GameView::onGameContinue, this);
+    listener->onGameRestore             = CC_CALLBACK_1(GameView::onGameRestore, this);
     listener->onGameResult              = CC_CALLBACK_0(GameView::onGameResult, this);
     listener->onBoostStart              = CC_CALLBACK_0(GameView::onBoostStart, this);
     listener->onBoostEnd                = CC_CALLBACK_0(GameView::onBoostEnd, this);

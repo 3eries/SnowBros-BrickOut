@@ -57,6 +57,11 @@ void GameManager::reset() {
     view = nullptr;
     giftItems.clear();
     continueCount = 0;
+    
+    restoreData = RestoreData();
+    restored = false;
+    restoreCount = 0;
+    
     score = 0;
     stage = 1;
     floor = 1;
@@ -110,6 +115,14 @@ void GameManager::setStartStage(int stage) {
     
     this->stage = stage;
     this->floor = getStage().getFirstFloor().floor;
+}
+
+/**
+ * 리스토어 데이터를 저장합니다
+ */
+void GameManager::save(const RestoreData &restoreData) {
+    
+    this->restoreData = restoreData;
 }
 
 /**
@@ -179,7 +192,7 @@ void GameManager::addBrick(const BrickData &brick) {
 }
 
 GameEventDispatcher* GameManager::getEventDispatcher() {
-    return getInstance()->eventDispatcher;
+    return instance->eventDispatcher;
 }
 
 PhysicsManager* GameManager::getPhysicsManager() {
@@ -341,7 +354,7 @@ void GameManager::onGameResume() {
  */
 void GameManager::onGameOver() {
     
-    CCLOG("GameManager::onGameOver");
+    Log::i("GameManager::onGameOver");
     
     CCASSERT(getInstance()->hasState(GameState::STARTED), "GameManager::onGameOver invalid called.");
     
@@ -370,6 +383,26 @@ void GameManager::onGameContinue() {
     getEventDispatcher()->dispatchOnGameContinue();
     
     CCLOG("GameManager::onGameContinue end");
+}
+
+/**
+ * 게임 리스토어
+ */
+void GameManager::onGameRestore() {
+    
+    Log::i("GameManager::onGameRestore");
+    
+    CCASSERT(getInstance()->hasState(GameState::GAME_OVER), "GameManager::onGameRestore invalid called.");
+    
+    instance->restored = true;
+    instance->restoreCount++;
+    
+    getInstance()->removeState(GameState::GAME_OVER);
+    
+    getEventDispatcher()->dispatchOnGameRestore(instance->restoreData);
+    instance->restoreData = RestoreData();
+    
+    getPhysicsManager()->startScheduler();
 }
 
 static void logEventGameResult(int score) {
@@ -460,6 +493,7 @@ void GameManager::onStageChanged() {
     auto stage = getStage();
     Log::i("GameManager::onStageChanged: %d-%d(%d)", stage.stage, getFloorInStage(), getFloor().floor);
     
+    instance->restored = false;
     instance->bricks.clear();
     
     getEventDispatcher()->dispatchOnStageChanged(stage);

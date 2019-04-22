@@ -8,6 +8,7 @@
     "first_coin": 30,
     "first_ball_skin": "ball_00001",
     "first_friend": "friend_0001",
+    "restore_cost": 100,
     "tile_rows": 6,
     "tile_columns": 10,
     "tile_enter_duration": 0.3,

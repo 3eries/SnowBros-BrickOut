@@ -370,7 +370,7 @@ void MainScene::initMenu() {
         auto info = infos[i];
         
         auto btn = SBButton::create(info.file);
-        btn->setZoomScale(0.1f);
+        btn->setZoomScale(-0.07f);
         info.apply(btn);
         addChild(btn);
         

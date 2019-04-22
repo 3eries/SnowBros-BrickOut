@@ -149,7 +149,9 @@ void GameEventDispatcher::dispatchOnGameResume() {
  */
 void GameEventDispatcher::dispatchOnGameOver() {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onGameOver ) {
             listener->onGameOver();
         }
@@ -169,11 +171,27 @@ void GameEventDispatcher::dispatchOnGameContinue() {
 }
 
 /**
+ * onGameRestore 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnGameRestore(const RestoreData &restoreData) {
+    
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
+        if( listener->onGameRestore ) {
+            listener->onGameRestore(restoreData);
+        }
+    }
+}
+
+/**
  * onGameResult 이벤트 전달
  */
 void GameEventDispatcher::dispatchOnGameResult() {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onGameResult ) {
             listener->onGameResult();
         }

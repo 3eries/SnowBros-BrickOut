@@ -66,7 +66,6 @@ bool FriendsLayer::init() {
         
         // 프렌즈 초기화
         this->initFriends();
-        this->updateFriendsDamage();
         this->updatePosition(ballPosition, false);
         this->setDamageVisible(false);
     });
@@ -99,6 +98,8 @@ void FriendsLayer::initFriends() {
         
         friends.push_back(friendNode);
     }
+    
+    updateFriendsDamage();
     
     // 슬롯 리스트 생성
     int w = SB_WIN_SIZE.width / GAME_FRIENDS_SLOT_COUNT;
@@ -133,6 +134,7 @@ void FriendsLayer::initGameListener() {
     listener->onGameRestart             = CC_CALLBACK_0(FriendsLayer::onGameRestart, this);
     listener->onGameOver                = CC_CALLBACK_0(FriendsLayer::onGameOver, this);
     listener->onGameContinue            = CC_CALLBACK_0(FriendsLayer::onGameContinue, this);
+    listener->onGameRestore             = CC_CALLBACK_1(FriendsLayer::onGameRestore, this);
     listener->onGameResult              = CC_CALLBACK_0(FriendsLayer::onGameResult, this);
     listener->onBoostStart              = CC_CALLBACK_0(FriendsLayer::onBoostStart, this);
     listener->onBoostEnd                = CC_CALLBACK_0(FriendsLayer::onBoostEnd, this);
@@ -227,6 +229,7 @@ void FriendsLayer::eatFriendsItem(Item *item) {
         // 프렌즈 파워업
         case ItemType::FRIENDS_POWER_UP: {
             ++friendsDamage;
+            tileLayer->setFriendsDamage(friendsDamage);
             
             // 연출
             for( auto friendNode : friends ) {
@@ -257,6 +260,8 @@ void FriendsLayer::updateFriendsDamage() {
     for( auto friendNode : friends ) {
         friendNode->setDamage(friendsDamage);
     }
+    
+    tileLayer->setFriendsDamage(friendsDamage);
 }
 
 /**
@@ -352,6 +357,9 @@ void FriendsLayer::onGameOver() {
     
     for( auto friendNode : friends ) {
         friendNode->setImage(Friend::ImageType::DIE);
+        
+        auto damageLabel = friendNode->getDamageLabel();
+        damageLabel->runAction(FadeOut::create(0.1f));
     }
 }
 
@@ -359,6 +367,32 @@ void FriendsLayer::onGameOver() {
  * 게임 이어하기
  */
 void FriendsLayer::onGameContinue() {
+}
+
+/**
+ * 게임 리스토어
+ */
+void FriendsLayer::onGameRestore(const RestoreData &restoreData) {
+    
+    // 기존 프렌즈 제거
+    for( auto friendNode : friends ) {
+        friendNode->removeFromParent();
+    }
+    
+    friends.clear();
+    slots.clear();
+    
+    // 프렌즈 초기화
+    friendsDamage = restoreData.friendsBallDamage;
+    
+    initFriends();
+    updatePosition(restoreData.ballPosition, false);
+    
+    for( auto friendNode : friends ) {
+        friendNode->setImage(Friend::ImageType::STAGE_START, [=]() {
+            friendNode->setImage(Friend::ImageType::IDLE);
+        });
+    }
 }
 
 /**

@@ -42,6 +42,7 @@ public:
     void dispatchOnGameResume();
     void dispatchOnGameOver();
     void dispatchOnGameContinue();
+    void dispatchOnGameRestore(const RestoreData &restoreData);
     void dispatchOnGameResult();
     
     void dispatchOnBoostStart();

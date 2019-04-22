@@ -78,6 +78,7 @@ public:
     void showStageClearPopup();
     void showFriendsPopup();
     void showContinuePopup();
+    void showRestorePopup();
     void showResultPopup();
 
     void checkReview();

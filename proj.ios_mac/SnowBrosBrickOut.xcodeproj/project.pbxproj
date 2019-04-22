@@ -99,6 +99,7 @@
 		1D9DAB78226CFA990004AD4E /* DemoViewEdit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB76226CFA990004AD4E /* DemoViewEdit.cpp */; };
 		1D9DAB7E226CFF410004AD4E /* UserCoinView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB7C226CFF410004AD4E /* UserCoinView.cpp */; };
 		1D9DAB82226D0FC10004AD4E /* ShopPopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB80226D0FC10004AD4E /* ShopPopup.cpp */; };
+		1D9DAB86226D2FED0004AD4E /* RestorePopup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9DAB84226D2FED0004AD4E /* RestorePopup.cpp */; };
 		1D9ED20220C421D8006DE988 /* GameConfiguration.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */; };
 		1DA0408721034661001980BA /* PluginManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407921034660001980BA /* PluginManager.cpp */; };
 		1DA0408821034661001980BA /* FirebaseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DA0407E21034660001980BA /* FirebaseManager.cpp */; };
@@ -397,6 +398,9 @@
 		1D9DAB7D226CFF410004AD4E /* UserCoinView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = UserCoinView.hpp; sourceTree = "<group>"; };
 		1D9DAB80226D0FC10004AD4E /* ShopPopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ShopPopup.cpp; sourceTree = "<group>"; };
 		1D9DAB81226D0FC10004AD4E /* ShopPopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ShopPopup.hpp; sourceTree = "<group>"; };
+		1D9DAB84226D2FED0004AD4E /* RestorePopup.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = RestorePopup.cpp; sourceTree = "<group>"; };
+		1D9DAB85226D2FED0004AD4E /* RestorePopup.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = RestorePopup.hpp; sourceTree = "<group>"; };
+		1D9DAB87226D2FF50004AD4E /* RestoreData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RestoreData.h; sourceTree = "<group>"; };
 		1D9ED20020C421D8006DE988 /* GameConfiguration.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameConfiguration.cpp; sourceTree = "<group>"; };
 		1D9ED20120C421D8006DE988 /* GameConfiguration.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = GameConfiguration.hpp; sourceTree = "<group>"; };
 		1DA0407921034660001980BA /* PluginManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PluginManager.cpp; sourceTree = "<group>"; };
@@ -785,6 +789,7 @@
 				1D1F3C9220AD4A3C0035A36C /* GameView.cpp */,
 				1D1F3C9320AD4A3C0035A36C /* GameView.hpp */,
 				1DD6979921B84E97005FDC62 /* object */,
+				1D9DAB83226D2FDF0004AD4E /* restore */,
 				1DEB466120A9EF28004B8F87 /* ui */,
 			);
 			path = game;
@@ -1042,6 +1047,16 @@
 				1D9DAB81226D0FC10004AD4E /* ShopPopup.hpp */,
 			);
 			path = shop;
+			sourceTree = "<group>";
+		};
+		1D9DAB83226D2FDF0004AD4E /* restore */ = {
+			isa = PBXGroup;
+			children = (
+				1D9DAB87226D2FF50004AD4E /* RestoreData.h */,
+				1D9DAB84226D2FED0004AD4E /* RestorePopup.cpp */,
+				1D9DAB85226D2FED0004AD4E /* RestorePopup.hpp */,
+			);
+			path = restore;
 			sourceTree = "<group>";
 		};
 		1DA0407D21034660001980BA /* firebase */ = {
@@ -1506,6 +1521,7 @@
 				1D1F3C9A20AD6D040035A36C /* SBBasePopup.cpp in Sources */,
 				1D599D8D21AF029D00E758D8 /* GameEventDispatcher.cpp in Sources */,
 				1DEAFE672195C814001CE5B7 /* SBScheduleHelper.cpp in Sources */,
+				1D9DAB86226D2FED0004AD4E /* RestorePopup.cpp in Sources */,
 				1DD6979C21B84EAC005FDC62 /* GameMap.cpp in Sources */,
 				1D28C9442263EBC400CCC687 /* TornadoBrick.cpp in Sources */,
 				1D45C48820A8A7B8007E63AD /* SBHttp.cpp in Sources */,
