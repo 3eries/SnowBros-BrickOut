@@ -406,7 +406,9 @@ void PhysicsManager::removeListener(Ref *target) {
 
 void PhysicsManager::dispatchOnUpdate() {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onUpdate ) {
             listener->onUpdate();
         }
@@ -421,7 +423,9 @@ void PhysicsManager::dispatchOnBeginContact(b2Contact *contact) {
     if( objA && objA->isCollisionLocked() ) return;
     if( objB && objB->isCollisionLocked() ) return;
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onBeginContact ) {
             auto contactTarget = listener->getContactTarget();
             
@@ -444,7 +448,9 @@ void PhysicsManager::dispatchOnEndContact(b2Contact *contact) {
     if( objA && objA->isCollisionLocked() ) return;
     if( objB && objB->isCollisionLocked() ) return;
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onEndContact ) {
             auto contactTarget = listener->getContactTarget();
             
@@ -467,7 +473,9 @@ void PhysicsManager::dispatchOnPreSolve(b2Contact *contact, const b2Manifold *ol
     if( objA && objA->isCollisionLocked() ) return;
     if( objB && objB->isCollisionLocked() ) return;
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onPreSolve ) {
             auto contactTarget = listener->getContactTarget();
             
@@ -490,7 +498,9 @@ void PhysicsManager::dispatchOnPostSolve(b2Contact *contact, const b2ContactImpu
     if( objA && objA->isCollisionLocked() ) return;
     if( objB && objB->isCollisionLocked() ) return;
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onPostSolve ) {
             auto contactTarget = listener->getContactTarget();
             
@@ -507,7 +517,9 @@ void PhysicsManager::dispatchOnPostSolve(b2Contact *contact, const b2ContactImpu
 
 void PhysicsManager::dispatchOnContactBrick(Ball *ball, Game::Tile *brick, cocos2d::Vec2 contactPoint) {
 
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onContactBrick ) {
             auto contactTarget = listener->getContactTarget();
             
@@ -524,7 +536,9 @@ void PhysicsManager::dispatchOnContactBrick(Ball *ball, Game::Tile *brick, cocos
 
 void PhysicsManager::dispatchOnContactItem(Ball *ball, Game::Tile *item) {
 
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onContactItem ) {
             auto contactTarget = listener->getContactTarget();
             
@@ -541,7 +555,9 @@ void PhysicsManager::dispatchOnContactItem(Ball *ball, Game::Tile *item) {
 
 void PhysicsManager::dispatchOnContactWall(Ball *ball) {
     
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onContactWall ) {
             auto contactTarget = listener->getContactTarget();
             
@@ -558,7 +574,9 @@ void PhysicsManager::dispatchOnContactWall(Ball *ball) {
 
 void PhysicsManager::dispatchOnContactFloor(Ball *ball) {
 
-    for( auto listener : listeners ) {
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
         if( listener->onContactFloor ) {
             auto contactTarget = listener->getContactTarget();
             
