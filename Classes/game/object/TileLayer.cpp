@@ -28,7 +28,6 @@ using namespace spine;
 using namespace std;
 
 TileLayer::TileLayer() :
-onBrickAddedListener(nullptr),
 onTileDownFinishedListener(nullptr),
 onBrickBreakListener(nullptr),
 ballCount(0), friendsDamage(0) {
@@ -675,42 +674,51 @@ void TileLayer::updateEliteBrickDropRate(const FloorData &floor) {
  */
 void TileLayer::resetRandomEngine() {
     
-    mt19937 *engines[] {
-        &randomEngine.brickPosition,
-        &randomEngine.eliteBrickDrop,
-        &randomEngine.ballCountUp,
-        &randomEngine.friendsPowerUp,
+    struct SimulationConfig {
+        mt19937 *engine;
+        int simulationCount;
+        int randomBegin;
+        int randomEnd;
+        
+        SimulationConfig(mt19937 *_engine, int _simulationCount, int _randomBegin, int _randomEnd) :
+        engine(_engine), simulationCount(_simulationCount), randomBegin(_randomBegin), randomEnd(_randomEnd) {}
     };
     
-    const int SIMULATION_COUNT = 5000;
+    SimulationConfig configs[] = {
+        SimulationConfig(&randomEngine.brickPosition,  6*100,  0, 5),
+        SimulationConfig(&randomEngine.eliteBrickDrop, 100*30, 1, 100),
+        SimulationConfig(&randomEngine.ballCountUp,    100*30, 1, 100),
+        SimulationConfig(&randomEngine.friendsPowerUp, 100*30, 1, 100),
+    };
     
-    for( int i = 0; i < sizeof(engines) / sizeof(mt19937*); ++i ) {
-        auto engine = engines[i];
-        
+    // 균등한 난수 분포를 위해 시뮬레이션
+    for( auto config : configs ) {
         random_device rd;
-        (*engine) = mt19937(rd());
+        (*config.engine) = mt19937(rd());
         
-        // 균등한 난수 분포를 위해 시뮬레이션
-//        double now = SBSystemUtils::getCurrentTimeSeconds();
-//        map<int,int> numbers;
+        double now = SBSystemUtils::getCurrentTimeSeconds();
+        map<int,int> numbers;
         
-        for( int j = 0; j < SIMULATION_COUNT; ++j ) {
-            uniform_int_distribution<int> dist(1,100);
-            int n = dist(*engine);
+        for( int i = 0; i < config.simulationCount; ++i ) {
+            uniform_int_distribution<int> dist(config.randomBegin, config.randomEnd);
+            int n = dist(*config.engine);
             
-//            if( numbers.find(n) == numbers.end() ) {
-//                numbers[n] = 1;
-//            } else {
-//                numbers[n] = numbers[n]+1;
-//            }
+            if( numbers.find(n) == numbers.end() ) {
+                numbers[n] = 1;
+            } else {
+                numbers[n] = numbers[n]+1;
+            }
         }
         
-//        CCLOG("simulation result time :%f", (SBSystemUtils::getCurrentTimeSeconds()-now));
-//
-//        // print numbers
-//        for( auto it = numbers.begin(); it != numbers.end(); ++it ) {
-//            CCLOG("number %d : %d (%f)", it->first, it->second, ((float)it->second / SIMULATION_COUNT) * 100.0f);
-//        }
+        Log::i("resetRandomEngine simulation result dt: %f", SBSystemUtils::getCurrentTimeSeconds()-now);
+
+        // print numbers
+        /*
+        for( auto it = numbers.begin(); it != numbers.end(); ++it ) {
+            float per = ((float)it->second / config.simulationCount) * 100.0f;
+            Log::i("simulation result number %d: %.2f%%", it->first, per);
+        }
+        */
     }
 }
 

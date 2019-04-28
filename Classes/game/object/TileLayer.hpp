@@ -76,8 +76,6 @@ public:
     void        resetRandomEngine();
     
 private:
-    CC_SYNTHESIZE(std::function<void(BrickList)>, onBrickAddedListener,
-                  OnBrickAddedListener);
     CC_SYNTHESIZE(SBCallback, onTileDownFinishedListener,
                   OnTileDownFinishedListener);
     CC_SYNTHESIZE(OnBrickListener, onBrickBreakListener,
