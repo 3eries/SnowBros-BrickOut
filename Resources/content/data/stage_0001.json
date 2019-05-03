@@ -1,4 +1,5 @@
 {
+    "world": 1,
 	"stage": 1,
 	"final_ball_count" : 20,
 	"final_friends_ball_damage" : 5,

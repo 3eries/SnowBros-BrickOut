@@ -15,6 +15,7 @@
 #include "PatternData.h"
 
 struct StageData {
+    int            world;                   // 월드 번호
     int            stage;                   // 스테이지 번호
     int            originStage;
     int            finalBallCount;
@@ -28,19 +29,21 @@ struct StageData {
     BrickDataList  normalBrickList;
     BrickDataList  bossBrickList;
     
-    StageData() : stage(0) {}
+    StageData() : world(0), stage(0) {}
     
     void parse(const rapidjson::Value &v, rapidjson::Document::AllocatorType &allocator) {
         
         // int values
         {
             StringList keys({
+                "world",
                 "stage",
                 "final_ball_count",
                 "final_friends_ball_damage",
             });
             
             std::vector<int*> ptrs({
+                &world,
                 &stage,
                 &finalBallCount,
                 &finalFriendsBallDamage,
@@ -91,7 +94,7 @@ struct StageData {
 
     std::string toString() {
         std::string str = "StageData {\n";
-        str += STR_FORMAT("\tstage: %d, originStage: %d\n", stage, originStage);
+        str += STR_FORMAT("\tworld: %d, stage: %d, originStage: %d\n", world, stage, originStage);
         str += STR_FORMAT("\tfinalBallCount: %d, finalFriendsBallDamage: %d\n", finalBallCount, finalFriendsBallDamage);
         str += STR_FORMAT("\tcoinDropMin: %d, coinDropMax: %d\n", coinDropMin, coinDropMax);
         str += STR_FORMAT("\tfirstFloor: %d\n", getFirstFloor().floor);

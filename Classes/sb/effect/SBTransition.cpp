@@ -1,6 +1,5 @@
 //
 //  SBTransition.cpp
-//  SnowBrosBrickOut-mobile
 //
 //  Created by seongmin hwang on 06/03/2019.
 //

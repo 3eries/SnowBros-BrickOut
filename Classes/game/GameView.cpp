@@ -277,7 +277,7 @@ void GameView::onStageChanged(const StageData &stage) {
     friendsLayer->updatePosition(aimController->getStartPosition(), false);
     
     // update ui
-    showStageLabel(stage.stage);
+    showStageLabel(stage);
     updateBallCountUI();
 }
 
@@ -1200,9 +1200,14 @@ bool GameView::checkStageClear() {
 /**
  * 중앙에 Stage 라벨 표시
  */
-void GameView::showStageLabel(int stage) {
+void GameView::showStageLabel(const StageData &stage) {
     
-    auto label = Label::createWithBMFont(FONT_STAGE_LARGE, STR_FORMAT("S %d", stage),
+    // TODO:
+    // 보스는 B
+    string stageStr = (/*isBoss()*/false) ? "B" : TO_STRING(stage.stage);
+    
+    auto label = Label::createWithBMFont(FONT_WORLD_LARGE,
+                                         STR_FORMAT("W %d-%s", stage.world, stageStr.c_str()),
                                          TextHAlignment::CENTER);
     label->setAnchorPoint(ANCHOR_M);
     addChild(label);

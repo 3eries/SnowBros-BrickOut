@@ -104,9 +104,11 @@ static const std::string FONT_GAME_OVER             = DIR_FONT + "game_over.ttf"
 static const std::string FONT_RETRO                 = DIR_FONT + "Commodore.ttf";
 static const std::string FONT_NEW_RECORD            = DIR_FONT + "Sabo-Filled.otf";
 static const std::string FONT_FAMOUS_SAYING         = DIR_FONT + "game_over.ttf";
-static const std::string FONT_STAGE                 = DIR_FONT + "ui_stage.fnt";
-static const std::string FONT_STAGE_LARGE           = DIR_FONT + "stage_big.fnt";
-static const std::string FONT_STAGE_LARGE_Y         = DIR_FONT + "stage_big_yellow.fnt";
+
+static const std::string FONT_WORLD_SMALL           = DIR_FONT + "world_small.fnt";
+static const std::string FONT_WORLD_MEDIUM          = DIR_FONT + "world_medium.fnt";
+static const std::string FONT_WORLD_LARGE           = DIR_FONT + "world_big.fnt";
+static const std::string FONT_WORLD_SILVER          = DIR_FONT + "world_silver.fnt";
 static const std::string FONT_COIN_BLUE             = DIR_FONT + "coin_blue.fnt";
 
 // 사운드 경로

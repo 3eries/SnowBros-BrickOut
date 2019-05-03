@@ -23,7 +23,8 @@ public:
     
 private:
     enum Tag {
-        STAGE = 10,
+        WORLD = 10,
+        STAGE,
         SCORE,
         
         BTN_PAUSE = 100,

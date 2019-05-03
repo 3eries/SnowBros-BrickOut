@@ -136,7 +136,7 @@ private:
     bool checkBrickDown();
     bool checkStageClear();
     
-    void showStageLabel(int stage);
+    void showStageLabel(const StageData &stage);
     void updateBallCountUI();
     
 private:

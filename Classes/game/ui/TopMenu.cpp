@@ -87,11 +87,18 @@ void TopMenu::onClick(Node *sender) {
  * Stage UI 업데이트
  */
 void TopMenu::updateStageUI(const StageData &stage) {
+
+    auto worldLabel = getChildByTag<Label*>(Tag::WORLD);
+    
+    if( worldLabel ) {
+        worldLabel->setString(STR_FORMAT("W %d", stage.world));
+    }
     
     auto stageLabel = getChildByTag<Label*>(Tag::STAGE);
     
     if( stageLabel ) {
-        stageLabel->setString(STR_FORMAT("%d", stage.stage));
+        string stageStr = (/*isBoss()*/false) ? "B" : TO_STRING(stage.stage);
+        stageLabel->setString(stageStr);
     }
 }
 
@@ -252,15 +259,21 @@ void TopMenu::initStage() {
     
     const auto bgSize(getContentSize());
     
-    // 스테이지
-    // game_bg_stage.png Vec2TL(88, -36) , Size(168, 72)
+    // 스테이지 배경
     auto stageBg = Sprite::create(DIR_IMG_GAME + "game_bg_stage.png");
     stageBg->setAnchorPoint(ANCHOR_M);
-    stageBg->setPosition(Vec2TL(bgSize, 88, -36));
+    stageBg->setPosition(Vec2TL(bgSize, 88, -38));
     addChild(stageBg, 1);
     
-    // BM_font Vec2TL(88, -44) , Size(64, 40)
-    auto stageLabel = Label::createWithBMFont(FONT_STAGE, "1", TextHAlignment::CENTER);
+    // 월드 번호
+    auto worldLabel = Label::createWithBMFont(FONT_WORLD_SMALL, "W 1", TextHAlignment::CENTER);
+    worldLabel->setTag(Tag::WORLD);
+    worldLabel->setAnchorPoint(ANCHOR_M);
+    worldLabel->setPosition(Vec2TL(bgSize, 88, -14));
+    addChild(worldLabel, 1);
+    
+    // 스테이지 번호
+    auto stageLabel = Label::createWithBMFont(FONT_WORLD_MEDIUM, "1", TextHAlignment::CENTER);
     stageLabel->setTag(Tag::STAGE);
     stageLabel->setAnchorPoint(ANCHOR_M);
     stageLabel->setPosition(Vec2TL(bgSize, 88, -44));
@@ -273,7 +286,6 @@ void TopMenu::initStage() {
     floorProgressBar.layer = layer;
     
     // Gage
-    // game_gage_stage_bg.png Vec2TC(20, -38) , Size(408, 52)
     auto gageBg = Sprite::create(DIR_IMG_GAME + "game_gage_stage_bg.png");
     gageBg->setAnchorPoint(ANCHOR_M);
     gageBg->setPosition(Vec2TC(bgSize, 20, -38));
@@ -289,14 +301,12 @@ void TopMenu::initStage() {
     
     floorProgressBar.gage = gage;
     
-    // game_icon_boss.png Vec2TC(246, -38) , Size(84, 64)
     auto gageBossIcon = Sprite::create(DIR_IMG_GAME + "game_icon_boss.png");
     gageBossIcon->setAnchorPoint(ANCHOR_M);
     gageBossIcon->setPosition(Vec2TC(bgSize, 246, -38));
     layer->addChild(gageBossIcon);
     
     // Label
-    // 12/34 size:30 stroke:3 Vec2TC(19, -14) , Size(119, 31)
     floorProgressBar.label = Label::createWithTTF("", FONT_COMMODORE, 30, Size::ZERO,
                                                   TextHAlignment::CENTER, TextVAlignment::CENTER);
     floorProgressBar.label->setAnchorPoint(ANCHOR_M);

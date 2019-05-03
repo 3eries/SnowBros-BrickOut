@@ -15,7 +15,7 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-#define BALL_SKIN__FILE         (DIR_CONTENT_DATA + "ball_skin.json")
+#define BALL_SKIN_FILE          (DIR_CONTENT_DATA + "ball_skin.json")
 #define BRICK_FILE              (DIR_CONTENT_DATA + "brick.json")
 #define FRIENDS_FILE            (DIR_CONTENT_DATA + "friends.json")
 #define DEMO_FILE               (DIR_CONTENT_DATA + "demo.json")
@@ -58,7 +58,7 @@ void Database::init() {
 void Database::parseBallSkinJson() {
     
     CCLOG("========== PARSE START (ball_skin.json)  ==========");
-    string json = SBStringUtils::readTextFile(BALL_SKIN__FILE);
+    string json = SBStringUtils::readTextFile(BALL_SKIN_FILE);
     
     rapidjson::Document doc;
     doc.Parse(json.c_str());
