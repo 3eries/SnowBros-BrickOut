@@ -16,6 +16,7 @@
 #include "model/BallSkinData.h"
 #include "model/BrickData.h"
 #include "model/PatternData.h"
+#include "model/WorldData.h"
 #include "model/StageData.h"
 #include "model/ItemData.h"
 #include "model/FriendsPackData.h"
@@ -42,26 +43,19 @@ private:
     void parseDemoJson();
     
 public:
-    static void                addTempStage();
+    static void                addTempWorld();
     
     static BallSkinDataList    getBallSkins();
     static BallSkinData        getBallSkin(const std::string &ballId);
     
-    static StageDataList       getStages();
-    static StageData           getStage(int stage);
-    static StageData           getFirstStage();
-    static StageData           getLastStage();
-    static bool                isLastStage(int stage);
+    static WorldDataList       getWorlds();
+    static WorldData           getWorld(int world);
+    static WorldData           getFirstWorld();
+    static WorldData           getLastWorld();
+    static bool                isLastWorld(int world);
     
-    static FloorDataList       getFloors();
-    static FloorData           getFloor(int floor);
-    static bool                isLastFloor(int floor);
-    
-    static FloorDataList       getStageFloors(int stage);
-    static bool                isStageLastFloor(int stage, int floor);
-    static bool                isStageLastFloor(const FloorData &data);
-    
-    static int                 getStageFirstBallCount(int stage);
+    static StageData           getWorldLastStage(int world);
+    static int                 getStageFirstBallCount(int world, int stage);
     
     static BrickDataMap        getBricks();
     static BrickData           getBrick(const std::string &brickId);
@@ -77,8 +71,11 @@ public:
     
 private:
     BallSkinDataList ballSkins;
+    
+    WorldDataList worlds;
     StageDataList stages;
     FloorDataList floors;
+    
     BrickDataMap bricks;
     
     FriendsPackDataList friendsPacks;
