@@ -47,7 +47,7 @@ private:
     void onClick(cocos2d::Node *sender) override;
     
     void updateStageUI(const StageData &stage);
-    void updateFloorProgressUI(const FloorData &floor);
+    void updateFloorProgressUI(const StageData &stage, const FloorData &floor);
     
 // Game Event
 public:

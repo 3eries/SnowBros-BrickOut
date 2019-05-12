@@ -63,9 +63,7 @@ void GameManager::reset() {
     restoreCount = 0;
     
     score = 0;
-    stage = 1;
-    floor = 1;
-    floorInStage = 1;
+    setWorld(1);
 }
 
 /**
@@ -109,12 +107,22 @@ bool GameManager::isPaused() {
 }
 
 /**
- * 시작 스테이지를 설정합니다
+ * 월드를 설정합니다
  */
-void GameManager::setStartStage(int stage) {
+void GameManager::setWorld(int world) {
     
-    this->stage = stage;
-    this->floor = getStage().getFirstFloor().floor;
+    this->world = Database::getWorld(world);
+    setStage(1);
+}
+
+/**
+ * 스테이지를 설정합니다
+ */
+void GameManager::setStage(int stage) {
+    
+    this->stage = this->world.getStage(stage);
+    this->floor = this->stage.getFirstFloor();
+    this->floorStep = 1;
 }
 
 /**
@@ -207,22 +215,6 @@ int GameManager::getScore() {
     return instance->score;
 }
 
-StageData GameManager::getStage() {
-    return Database::getStage(getInstance()->stage);
-}
-
-FloorData GameManager::getFloor() {
-    return Database::getFloor(getInstance()->floor);
-}
-
-int GameManager::getFloorInStage() {
-    return instance->floorInStage;
-}
-
-bool GameManager::isStageLastFloor() {
-    return Database::isStageLastFloor(getFloor());
-}
-
 bool GameManager::isContinuable() {
     return instance->getContinueCount() == 0;
 }
@@ -274,7 +266,7 @@ void GameManager::onGameReset() {
     getPhysicsManager()->startScheduler();
     
     getEventDispatcher()->dispatchOnGameReset();
-    onStageChanged();
+    onWorldChanged();
 }
 
 /**
@@ -486,12 +478,33 @@ void GameManager::onBoostEnd() {
 }
 
 /**
+ * 월드 변경
+ */
+void GameManager::onWorldChanged() {
+    
+    auto world = instance->world;
+    
+    Log::i("GameManager::onWorldChanged: %d", world.world);
+    
+    getEventDispatcher()->dispatchOnWorldChanged(world);
+    onStageChanged();
+}
+
+/**
+ * 월드 클리어
+ */
+void GameManager::onWorldClear() {
+    
+    getEventDispatcher()->dispatchOnWorldClear();
+}
+
+/**
  * 스테이지 변경
  */
 void GameManager::onStageChanged() {
     
-    auto stage = getStage();
-    Log::i("GameManager::onStageChanged: %d-%d(%d)", stage.stage, getFloorInStage(), getFloor().floor);
+    auto stage = instance->stage;
+    Log::i("GameManager::onStageChanged: %d-%d", stage.world, stage.stage);
     
     instance->restored = false;
     instance->bricks.clear();
@@ -513,16 +526,21 @@ void GameManager::onStageClear() {
  */
 void GameManager::onMoveNextStage() {
  
-    // 현재 스테이지가 정의된 마지막 스테이지면 임시 스테이지 추가
-    if( Database::isLastStage(getStage().stage) ) {
-        Database::addTempStage();
+    // 다음 월드
+    if( instance->stage.isWorldLastStage ) {
+        // 현재 월드가 마지막 월드면 임시 월드 추가
+        if( Database::isLastWorld(instance->world.world) ) {
+            Database::addTempWorld();
+        }
+        
+        instance->setWorld(instance->world.world+1);
+    }
+    // 다음 스테이지
+    else {
+        instance->setStage(instance->stage.stage+1);
     }
     
-    instance->stage++;
-    instance->floor++;
-    instance->floorInStage = 1;
-    
-    getEventDispatcher()->dispatchOnMoveNextStage(getStage());
+    getEventDispatcher()->dispatchOnMoveNextStage(instance->stage);
 }
 
 /**
@@ -530,8 +548,13 @@ void GameManager::onMoveNextStage() {
  */
 void GameManager::onMoveNextStageFinished() {
     
-    getEventDispatcher()->dispatchOnMoveNextStageFinished(getStage());
-    onStageChanged();
+    getEventDispatcher()->dispatchOnMoveNextStageFinished(instance->stage);
+    
+    if( instance->stage.stage == 1 ) {
+        onWorldChanged();
+    } else {
+        onStageChanged();
+    }
 }
 
 /**
@@ -539,8 +562,8 @@ void GameManager::onMoveNextStageFinished() {
  */
 void GameManager::onFloorChanged() {
     
-    auto floor = getFloor();
-    Log::i("GameManager::onFloorChanged: %d-%d(%d)", floor.stage, getFloorInStage(), floor.floor);
+    auto floor = instance->floor;
+    Log::i("GameManager::onFloorChanged: %d-%d-%d", floor.world, floor.stage, instance->floorStep);
     
     getEventDispatcher()->dispatchOnFloorChanged(floor);
 }
@@ -552,14 +575,15 @@ void GameManager::onNextFloor() {
     
     FloorData floor;
     
-    if( !Database::isStageLastFloor(getFloor()) ) {
-        instance->floor++;
-        floor = getFloor();
+    if( !instance->floor.isStageLastFloor ) {
+        instance->floor = instance->stage.getFloor(instance->floor.floor+1);
+        floor = instance->floor;
     }
     
-    instance->floorInStage++;
+    instance->floorStep++;
     
-    Log::i("GameManager::onNextFloor: %d-%d(%d)", getStage().stage, getFloorInStage(), floor.floor);
+    Log::i("GameManager::onNextFloor: %d-%d-%d", instance->world.world, instance->stage.stage,
+           instance->floorStep);
     
     getEventDispatcher()->dispatchOnNextFloor(floor);
     getEventDispatcher()->dispatchOnFloorChanged(floor);

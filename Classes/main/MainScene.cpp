@@ -187,7 +187,8 @@ void MainScene::onClick(Node *sender) {
             removeChildByTag(Tag::TAP_TO_START);
             
 #if ENABLE_TEST_MENU
-            GameManager::getInstance()->setStartStage(TEST_HELPER->getStartStage());
+            GameManager::getInstance()->setWorld(TEST_HELPER->getStartWorld());
+            GameManager::getInstance()->setStage(TEST_HELPER->getStartStage());
 #endif
             replaceScene(SceneType::GAME);
         } break;

@@ -40,6 +40,9 @@ public:
     
     std::function<void()>                   onBoostStart;               // 부스트 시작
     std::function<void()>                   onBoostEnd;                 // 부스트 종료
+
+    std::function<void(const WorldData&)>   onWorldChanged;             // 월드 변경
+    std::function<void()>                   onWorldClear;               // 월드 클리어
     
     std::function<void(const StageData&)>   onStageChanged;             // 스테이지 변경
     std::function<void()>                   onStageClear;               // 스테이지 클리어

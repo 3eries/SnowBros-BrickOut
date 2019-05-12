@@ -145,7 +145,7 @@ void TileLayer::onGameRestore(const RestoreData &restoreData) {
         def.tile = brickRestoreData.tile;
         def.hp = brickRestoreData.originHp;
         def.elite = brickRestoreData.isElite;
-        def.floorData = (brickRestoreData.floor != 0) ? Database::getFloor(brickRestoreData.floor) : FloorData();
+        def.floorData = brickRestoreData.floor;
         
         auto brick = TileFactory::createBrick(def);
         addBrick(brick);
@@ -163,7 +163,7 @@ void TileLayer::onGameRestore(const RestoreData &restoreData) {
     // item
     for( auto itemRestoreData : restoreData.items ) {
         ItemDef def(itemRestoreData.item);
-        def.floorData = (itemRestoreData.floor != 0) ? Database::getFloor(itemRestoreData.floor) : FloorData();
+        def.floorData = itemRestoreData.floor;
         
         auto item = TileFactory::createItem(def);
         item->setTilePosition(itemRestoreData.tile.pos);
@@ -208,7 +208,7 @@ void TileLayer::onFloorChanged(const FloorData &floor) {
     // 데이터 있음
     if( !floor.isNull() ) {
         // 마지막 보스인 경우 연출 후 타일 추가
-        if( floor.isExistBoss() && GameManager::getStage().getLastFloor().floor == floor.floor) {
+        if( floor.isExistBoss() && floor.isStageLastFloor ) {
             auto effectLayer = SBNodeUtils::createTouchNode();
             addChild(effectLayer, SBZOrder::BOTTOM);
             
@@ -286,7 +286,7 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
     
     resetDropSpace(dropData);
     
-    Log::i("TileLayer::initFloorBrick(%d-%d) availableTileCount: %d", floor.stage, GameManager::getFloorInStage(), dropData.availableTileCount);
+    Log::i("TileLayer::initFloorBrick(%d-%d-%d) availableTileCount: %d", floor.world, floor.stage, GAME_MANAGER->getFloorStep(), dropData.availableTileCount);
     
     // 패턴
     if( !floor.pattern.isNull() ) {
@@ -376,7 +376,7 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
         // 드랍률 업데이트
         updateEliteBrickDropRate(floor);
         
-        Log::i("TileLayer::initFloorBrick(%d-%d) eliteBrickDropRate: %d", floor.stage, GameManager::getFloorInStage(), eliteBrickDropRate);
+        Log::i("==> eliteBrickDropRate: %d", eliteBrickDropRate);
         
         uniform_int_distribution<int> dist(1,100);
         isEliteDropped = (dist(randomEngine.eliteBrickDrop) <= eliteBrickDropRate);
@@ -411,7 +411,7 @@ void TileLayer::initFloorItem(const FloorData &floor) {
         return;
     }
     
-    auto stage = GameManager::getStage();
+    auto stage = GAME_MANAGER->getStage();
     
     auto addItem = [=](ItemType type, TilePositions &positions) {
         

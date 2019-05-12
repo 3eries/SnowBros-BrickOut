@@ -383,6 +383,7 @@
 		1D8F54A320D2A8C4009E2201 /* LogoView.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = LogoView.hpp; sourceTree = "<group>"; };
 		1D8F54AF20D2D114009E2201 /* SBSpineHelper.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SBSpineHelper.cpp; sourceTree = "<group>"; };
 		1D8F54B020D2D114009E2201 /* SBSpineHelper.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = SBSpineHelper.hpp; sourceTree = "<group>"; };
+		1D904614227BEA3D0097145B /* WorldData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WorldData.h; sourceTree = "<group>"; };
 		1D97ED8E20C7348D0027C319 /* PatchManager.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PatchManager.cpp; sourceTree = "<group>"; };
 		1D97ED8F20C7348D0027C319 /* PatchManager.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = PatchManager.hpp; sourceTree = "<group>"; };
 		1D98CB89218A230D00757DD7 /* PopupDefine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PopupDefine.h; sourceTree = "<group>"; };
@@ -681,6 +682,7 @@
 				1DA204A42212BE4700656689 /* PatternData.h */,
 				1D25EE13220B398400DD126A /* StageData.h */,
 				1D85389D22373B740087DF1A /* TileData.h */,
+				1D904614227BEA3D0097145B /* WorldData.h */,
 			);
 			path = model;
 			sourceTree = "<group>";

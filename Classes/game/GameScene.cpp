@@ -329,7 +329,7 @@ void GameScene::showPausePopup() {
  */
 void GameScene::showStageClearPopup() {
     
-    auto stage = GameManager::getStage();
+    auto stage = GAME_MANAGER->getStage();
     int rewardCoin = stage.getRandomCoinDropCount();
     
     auto popup = StageClearPopup::create(stage, GAME_MANAGER->getBricks(), rewardCoin);

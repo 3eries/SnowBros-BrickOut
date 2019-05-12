@@ -356,7 +356,7 @@ void GameView::saveRestoreData() {
         brickRestoreData.tile = TileData(brick->getTilePosition());
         brickRestoreData.tile.isFlippedX = brick->getImage()->isFlippedX();
         brickRestoreData.tile.isFlippedY = brick->getImage()->isFlippedY();
-        brickRestoreData.floor = brick->getFloorData().floor;
+        brickRestoreData.floor = brick->getFloorData();
         brickRestoreData.hp = brick->getHp();
         brickRestoreData.originHp = brick->getOriginalHp();
         brickRestoreData.isElite = brick->isElite();
@@ -377,7 +377,7 @@ void GameView::saveRestoreData() {
         RestoreItemData itemRestoreData;
         itemRestoreData.item = item->getData();
         itemRestoreData.tile = TileData(item->getTilePosition());
-        itemRestoreData.floor = item->getFloorData().floor;
+        itemRestoreData.floor = item->getFloorData();
         
         restoreData.items.push_back(itemRestoreData);
     }
@@ -1186,7 +1186,7 @@ bool GameView::isFriendsBallFallFinished() {
  */
 bool GameView::checkBrickDown() {
     
-    return !GameManager::isStageLastFloor() && !tileLayer->isExistTile<Brick*>(1);
+    return !GAME_MANAGER->getFloor().isStageLastFloor && !tileLayer->isExistTile<Brick*>(1);
 }
 
 /**
@@ -1194,7 +1194,7 @@ bool GameView::checkBrickDown() {
  */
 bool GameView::checkStageClear() {
     
-    return GameManager::isStageLastFloor() && tileLayer->checkStageClear();
+    return GAME_MANAGER->getFloor().isStageLastFloor && tileLayer->checkStageClear();
 }
 
 /**
@@ -1202,9 +1202,7 @@ bool GameView::checkStageClear() {
  */
 void GameView::showStageLabel(const StageData &stage) {
     
-    // TODO:
-    // 보스는 B
-    string stageStr = (/*isBoss()*/false) ? "B" : TO_STRING(stage.stage);
+    string stageStr = stage.isWorldLastStage ? "B" : TO_STRING(stage.stage);
     
     auto label = Label::createWithBMFont(FONT_WORLD_LARGE,
                                          STR_FORMAT("W %d-%s", stage.world, stageStr.c_str()),

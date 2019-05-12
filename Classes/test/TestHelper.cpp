@@ -28,6 +28,7 @@ void TestHelper::destroyInstance() {
 
 TestHelper::TestHelper() :
 cheatMode(false),
+startWorld(1),
 startStage(1),
 firstBallCount(GAME_CONFIG->getFirstBallCount()),
 demoViewBallEnabled(true) {

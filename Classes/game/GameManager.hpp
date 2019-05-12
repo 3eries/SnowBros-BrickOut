@@ -52,8 +52,9 @@ public:
     static bool     isPlaying();
     static bool     isPaused();
     
-    // Stage
-    void            setStartStage(int stage);
+    // Data
+    void            setWorld(int world);
+    void            setStage(int stage);
     void            save(const RestoreData &restoreData);
     
     // Item
@@ -74,12 +75,6 @@ public:
     static PhysicsManager*      getPhysicsManager();
     static int                  getPlayCount();
     static int                  getScore();
-    
-    static StageData            getStage();
-    static FloorData            getFloor();
-    static int                  getFloorInStage();
-    static bool                 isStageLastFloor();
-    
     static bool                 isContinuable();
     
 private:
@@ -92,9 +87,10 @@ private:
     
     GiftRewardItems giftItems;
     
-    int stage;                                                    // 스테이지
-    int floor;                                                    // 층, 전체 기준
-    int floorInStage;                                             // 층, 현재 스테이지 기준
+    CC_SYNTHESIZE_READONLY(WorldData, world, World);              // 월드
+    CC_SYNTHESIZE_READONLY(StageData, stage, Stage);              // 스테이지
+    CC_SYNTHESIZE_READONLY(FloorData, floor, Floor);              // 층
+    CC_SYNTHESIZE_READONLY(int, floorStep, FloorStep);            // 층 진행도
     int score;                                                    // 스코어
     CC_SYNTHESIZE_READONLY(int, continueCount, ContinueCount);    // 이어하기한 횟수
     
@@ -124,6 +120,9 @@ public:
     static void onBoostStart();
     static void onBoostEnd();
 
+    static void onWorldChanged();
+    static void onWorldClear();
+    
     static void onStageChanged();
     static void onStageClear();
     

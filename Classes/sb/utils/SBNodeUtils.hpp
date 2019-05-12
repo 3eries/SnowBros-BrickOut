@@ -45,6 +45,10 @@ public:
  
     static void scale(cocos2d::Node *target, const cocos2d::Size &targetSize);
     
+    static void alignCenterHorizontal(const cocos2d::Size &size,
+                                      std::vector<cocos2d::Node*> nodes);
+    static void alignCenterHorizontal(std::vector<cocos2d::Node*> nodes);
+    
     static void recursiveResume(cocos2d::Node *n);
     static void recursivePause(cocos2d::Node *n);
     

@@ -223,6 +223,34 @@ void GameEventDispatcher::dispatchOnBoostEnd() {
 }
 
 /**
+ * onWorldChanged 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnWorldChanged(const WorldData &world) {
+    
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
+        if( listener->onWorldChanged ) {
+            listener->onWorldChanged(world);
+        }
+    }
+}
+
+/**
+ * onWorldClear 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnWorldClear() {
+    
+    auto copyListeners = listeners;
+    
+    for( auto listener : copyListeners ) {
+        if( listener->onWorldClear ) {
+            listener->onWorldClear();
+        }
+    }
+}
+
+/**
  * onStageChanged 이벤트 전달
  */
 void GameEventDispatcher::dispatchOnStageChanged(const StageData &stage) {

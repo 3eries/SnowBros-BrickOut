@@ -68,6 +68,32 @@ void SBNodeUtils::scale(Node *target, const Size &targetSize) {
     target->setScaleY(targetSize.height / target->getContentSize().height);
 }
 
+void SBNodeUtils::alignCenterHorizontal(const Size &size, vector<Node*> nodes) {
+    
+    float min = INT_MAX;
+    float max = INT_MIN;
+    
+    for( auto n : nodes ) {
+        auto box = getBoundingBoxInWorld(n);
+        
+        if( box.getMinX() < min )   min = box.getMinX();
+        if( box.getMaxX() > max )   max = box.getMaxX();
+    }
+    
+    float w = max - min;
+    float x = (size.width*0.5f) - (w*0.5f);
+    float diff = x - min;
+    
+    for( auto n : nodes ) {
+        n->setPositionX(n->getPositionX() + diff);
+    }
+}
+
+void SBNodeUtils::alignCenterHorizontal(vector<Node*> nodes) {
+    
+    alignCenterHorizontal(SB_WIN_SIZE, nodes);
+}
+
 void SBNodeUtils::recursiveResume(Node *n) {
     
     n->resume();

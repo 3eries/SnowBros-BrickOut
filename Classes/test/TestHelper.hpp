@@ -27,6 +27,7 @@ private:
     
 private:
     SB_SYNTHESIZE_BOOL(cheatMode, CheatMode);                     // 치트 모드 on/off
+    CC_SYNTHESIZE(int, startWorld, StartWorld);                   // 시작 월드
     CC_SYNTHESIZE(int, startStage, StartStage);                   // 시작 스테이지
     CC_SYNTHESIZE(int, firstBallCount, FirstBallCount);           // 최초 볼 갯수
     SB_SYNTHESIZE_BOOL(demoViewBallEnabled, DemoViewBallEnabled); // 데모뷰 볼 on/off

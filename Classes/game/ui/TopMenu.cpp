@@ -59,8 +59,8 @@ bool TopMenu::init() {
 
 void TopMenu::onEnter() {
     
-    updateStageUI(GameManager::getStage());
-    updateFloorProgressUI(GameManager::getFloor());
+    updateStageUI(GAME_MANAGER->getStage());
+    updateFloorProgressUI(GAME_MANAGER->getStage(), GAME_MANAGER->getFloor());
     
     Node::onEnter();
 }
@@ -97,7 +97,7 @@ void TopMenu::updateStageUI(const StageData &stage) {
     auto stageLabel = getChildByTag<Label*>(Tag::STAGE);
     
     if( stageLabel ) {
-        string stageStr = (/*isBoss()*/false) ? "B" : TO_STRING(stage.stage);
+        string stageStr = stage.isWorldLastStage ? "B" : TO_STRING(stage.stage);
         stageLabel->setString(stageStr);
     }
 }
@@ -105,16 +105,14 @@ void TopMenu::updateStageUI(const StageData &stage) {
 /**
  * Floor 진행바 UI 업데이트
  */
-void TopMenu::updateFloorProgressUI(const FloorData &floor) {
-    
-    auto stage = GameManager::getStage();
+void TopMenu::updateFloorProgressUI(const StageData &stage, const FloorData &floor) {
     
     if( floor.isNull() ) {
         // floorProgressBar.layer->setVisible(false);
         return;
     }
     
-    int cnt = floor.floor - stage.getFirstFloor().floor + 1;
+    int cnt = floor.floor;
     int end = (int)stage.floors.size();
     
     // floorProgressBar.layer->setVisible(true);
@@ -213,7 +211,7 @@ void TopMenu::onMoveNextStageFinished(const StageData &stage) {
  */
 void TopMenu::onFloorChanged(const FloorData &floor) {
     
-    updateFloorProgressUI(floor);
+    updateFloorProgressUI(GAME_MANAGER->getStage(), floor);
 }
 
 /**

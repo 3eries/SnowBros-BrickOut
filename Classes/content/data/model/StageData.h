@@ -15,8 +15,10 @@
 #include "PatternData.h"
 
 struct StageData {
-    int            world;                   // 월드 번호
-    int            stage;                   // 스테이지 번호
+    int            world;                   // 월드
+    int            stage;                   // 스테이지
+    bool           isWorldLastStage;        // 마지막 스테이지 여부
+    int            originWorld;
     int            originStage;
     int            finalBallCount;
     int            finalFriendsBallDamage;
@@ -29,7 +31,7 @@ struct StageData {
     BrickDataList  normalBrickList;
     BrickDataList  bossBrickList;
     
-    StageData() : world(0), stage(0) {}
+    StageData() : world(0), stage(0), isWorldLastStage(false) {}
     
     void parse(const rapidjson::Value &v, rapidjson::Document::AllocatorType &allocator) {
         
@@ -52,6 +54,7 @@ struct StageData {
             SBJSON::parse(v, allocator, keys, ptrs);
         }
         
+        originWorld = world;
         originStage = stage;
         
         // coin_drop_count
@@ -91,10 +94,27 @@ struct StageData {
     FloorData getLastFloor() const {
         return floors[floors.size()-1];
     }
+    
+    bool isLastFloor(int floor) const {
+        return getLastFloor().floor == floor;
+    }
+    
+    FloorData getFloor(int floor) const {
+
+        for( auto floorData : floors ) {
+            if( floorData.floor == floor ) {
+                return floorData;
+            }
+        }
+
+        CCASSERT(false, "StageData::getFloor error: invalid floor.");
+        return FloorData();
+    }
 
     std::string toString() {
         std::string str = "StageData {\n";
-        str += STR_FORMAT("\tworld: %d, stage: %d, originStage: %d\n", world, stage, originStage);
+        str += STR_FORMAT("\tworld: %d, stage: %d, isWorldLastStage: %d\n", world, stage, isWorldLastStage);
+        str += STR_FORMAT("\toriginWorld: %d, originStage: %d\n", originWorld, originStage);
         str += STR_FORMAT("\tfinalBallCount: %d, finalFriendsBallDamage: %d\n", finalBallCount, finalFriendsBallDamage);
         str += STR_FORMAT("\tcoinDropMin: %d, coinDropMax: %d\n", coinDropMin, coinDropMax);
         str += STR_FORMAT("\tfirstFloor: %d\n", getFirstFloor().floor);

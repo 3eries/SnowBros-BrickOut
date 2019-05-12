@@ -18,7 +18,10 @@ public:
     
 private:
     enum Tag {
-        EDIT_BOX_STAGE = 100,
+        TITLE_STAGE         = 100,
+        
+        EDIT_BOX_WORLD,
+        EDIT_BOX_STAGE,
         EDIT_BOX_BALL_COUNT,
     };
     
@@ -27,10 +30,17 @@ private:
     
     bool init() override;
     
+    void updateStartStageTitle();
+    
     void editBoxReturn(cocos2d::ui::EditBox* editBox) override;
     
 private:
     float posY;
+    
+    struct EditBoxComponent {
+        cocos2d::Label *titleLabel;
+        cocos2d::ui::EditBox *editBox;
+    };
 };
 
 #endif /* GameConfigEdit_hpp */

@@ -10,11 +10,12 @@
 
 #include "../../content/data/model/BrickData.h"
 #include "../../content/data/model/TileData.h"
+#include "../../content/data/model/FloorData.h"
 
 struct RestoreBrickData {
     BrickData brick;
     TileData tile;
-    int floor;
+    FloorData floor;
     int hp;
     int originHp;
     bool isElite;
@@ -26,7 +27,7 @@ struct RestoreBrickData {
 struct RestoreItemData {
     ItemData item;
     TileData tile;
-    int floor;
+    FloorData floor;
 };
 
 struct RestoreData {

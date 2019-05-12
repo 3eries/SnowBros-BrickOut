@@ -47,6 +47,9 @@ public:
     
     void dispatchOnBoostStart();
     void dispatchOnBoostEnd();
+
+    void dispatchOnWorldChanged(const WorldData &world);
+    void dispatchOnWorldClear();
     
     void dispatchOnStageChanged(const StageData &stage);
     void dispatchOnStageClear();

@@ -15,8 +15,10 @@
 #include "PatternData.h"
 
 struct FloorData {
+    int                      world;                         // 월드
     int                      stage;                         // 스테이지
     int                      floor;                         // 층
+    bool                     isStageLastFloor;              // 마지막 층 여부
     bool                     usePrevData;                   // 이전 데이터 사용 여부
     std::string              brickHpOrigin;                 // 벽돌 HP 원본 json
     int                      brickHp;                       // 벽돌 HP
@@ -29,14 +31,16 @@ struct FloorData {
     BrickDataList            neutralBrickList;              // 중립 브릭 리스트
     PatternData              pattern;                       // 패턴
     
-    FloorData() : stage(0), floor(0), usePrevData(true),
+    FloorData() : world(0), stage(0), floor(0), isStageLastFloor(false), usePrevData(true),
     brickHpOrigin(""), brickHp(0), brickDropMin(0), brickDropMax(0),
     eliteBrickDropRate(0) {
     }
     
     FloorData(const FloorData &data) :
-    stage(data.stage), floor(data.floor), usePrevData(data.usePrevData),
-    brickHpOrigin(data.brickHpOrigin), brickHp(data.brickHp), brickDropMin(data.brickDropMin), brickDropMax(data.brickDropMax),
+    world(data.world), stage(data.stage), floor(data.floor), isStageLastFloor(data.isStageLastFloor),
+    usePrevData(data.usePrevData),
+    brickHpOrigin(data.brickHpOrigin), brickHp(data.brickHp),
+    brickDropMin(data.brickDropMin), brickDropMax(data.brickDropMax),
     eliteBrickDropRate(data.eliteBrickDropRate),
     normalBrickList(data.normalBrickList), specialBrickList(data.specialBrickList), neutralBrickList(data.neutralBrickList),
     pattern(data.pattern) {
@@ -158,7 +162,8 @@ struct FloorData {
     
     std::string toString() {
         std::string str = "\tFloorData {\n";
-        str += STR_FORMAT("\t\tstage: %d, floor: %d\n", stage, floor);
+        str += STR_FORMAT("\t\tworld: %d, stage: %d, floor: %d, isStageLastFloor:%d\n",
+                          world, stage, floor, isStageLastFloor);
         str += STR_FORMAT("\t\tusePrevData: %d\n", usePrevData);
         str += STR_FORMAT("\t\tbrickHpOrigin: %s, brickHp: %d, brickDropMin: %d, brickDropMax: %d\n", brickHpOrigin.c_str(), brickHp, brickDropMin, brickDropMax);
         str += STR_FORMAT("\t\teliteBrickDropRate: %d\n", eliteBrickDropRate);
