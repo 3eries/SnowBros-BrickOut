@@ -27,8 +27,8 @@ struct FloorData {
     int                      eliteBrickDropRate;            // 엘리트 벽돌 드랍률
     
     BrickDataList            normalBrickList;               // 일반 브릭 리스트
-    BrickDataList            specialBrickList;              // 특수 브릭 리스트
     BrickDataList            neutralBrickList;              // 중립 브릭 리스트
+    BrickDataList            specialBrickList;              // 특수 브릭 리스트
     PatternData              pattern;                       // 패턴
     
     FloorData() : world(0), stage(0), floor(0), isStageLastFloor(false), usePrevData(true),
@@ -175,16 +175,16 @@ struct FloorData {
         }
         
         str += "\n";
-        str += "\t\tspecialBrickList: ";
+        str += "\t\tneutralBrickList: ";
         
-        for( auto brick : specialBrickList ) {
+        for( auto brick : neutralBrickList ) {
             str += brick.brickId + ", ";
         }
         
         str += "\n";
-        str += "\t\tneutralBrickList: ";
+        str += "\t\tspecialBrickList: ";
         
-        for( auto brick : neutralBrickList ) {
+        for( auto brick : specialBrickList ) {
             str += brick.brickId + ", ";
         }
         

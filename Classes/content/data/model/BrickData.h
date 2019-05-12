@@ -14,12 +14,12 @@
 enum class BrickType {
     NONE                = 0,
     NORMAL              = 1,
+    NEUTRAL             = 5,
     SPECIAL             = 10,
     SPECIAL_SHIELD      = 11,
     SPECIAL_GHOST       = 12,
     SPECIAL_TELEPORT    = 13,
     SPECIAL_TORNADO     = 14,
-    SPECIAL_NEUTRAL     = 20,
     BOSS_FRIENDS        = 50,
     BOSS                = 100,
 };

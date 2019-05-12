@@ -211,15 +211,8 @@ void Database::parseStageJson() {
                 };
                 
                 if( floorValue.HasMember("normal_brick_list") )   floor.normalBrickList = getBrickList("normal_brick_list");
+                if( floorValue.HasMember("neutral_brick_list") )  floor.neutralBrickList = getBrickList("neutral_brick_list");
                 if( floorValue.HasMember("special_brick_list") )  floor.specialBrickList = getBrickList("special_brick_list");
-                
-                floor.neutralBrickList.clear();
-                
-                for( auto brick : floor.specialBrickList ) {
-                    if( brick.type == BrickType::SPECIAL_NEUTRAL ) {
-                        floor.neutralBrickList.push_back(brick);
-                    }
-                }
                 
                 // pattern
                 if( floorValue.HasMember("pattern") ) {

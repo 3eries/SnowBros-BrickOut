@@ -356,14 +356,10 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
     dropData.randomPositions = dropData.availablePositions;
     shuffle(dropData.randomPositions.begin(), dropData.randomPositions.end(), randomEngine.brickPosition);
     
-    // 특수 브릭, 중립 브릭 제외
+    // 특수 브릭
     for( int i = 0; i < floor.specialBrickList.size(); ++i ) {
         auto brickData = floor.specialBrickList[i];
-        
-        if( brickData.type == BrickType::SPECIAL_NEUTRAL ) {
-            continue;
-        }
-        
+
         if( dropData.checkSpace(brickData) ) {
             addBrickWithDropData(TileFactory::createSpecialBrick(brickData, TileData(), floor), dropData);
         }
@@ -792,7 +788,7 @@ bool TileLayer::isRowClear(int y) {
     auto bricks = getTiles<Brick*>(y);
     
     SBCollection::remove(bricks, [](Brick *brick) -> bool {
-        return brick->getData().type == BrickType::SPECIAL_NEUTRAL;
+        return brick->getData().type == BrickType::NEUTRAL;
     });
     
     return bricks.size() == 0;

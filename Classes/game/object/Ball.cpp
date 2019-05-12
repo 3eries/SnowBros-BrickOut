@@ -321,7 +321,7 @@ bool Ball::onContactBrick(Ball *ball, Game::Tile *tile, Vec2 contactPoint) {
     // 중립 브릭은 벽 충돌로 분리
     auto brick = (Brick*)tile;
     
-    if( brick->getData().type != BrickType::SPECIAL_NEUTRAL ) {
+    if( brick->getData().type != BrickType::NEUTRAL ) {
         brickContactCount++;
         wallContactCount = 0;
     } else {

@@ -34,11 +34,11 @@ Brick* TileFactory::createBrick(const BrickDef &def) {
     
     // by type
     switch( data.type ) {
+        case BrickType::NEUTRAL:            return NeutralBrick::create(def);
         case BrickType::SPECIAL_SHIELD:     return ShieldBrick::create(def);
         case BrickType::SPECIAL_GHOST:      return GhostBrick::create(def);
         case BrickType::SPECIAL_TELEPORT:   return TeleportBrick::create(def);
         case BrickType::SPECIAL_TORNADO:    return TornadoBrick::create(def);
-        case BrickType::SPECIAL_NEUTRAL:    return NeutralBrick::create(def);
         default: break;
     }
     
