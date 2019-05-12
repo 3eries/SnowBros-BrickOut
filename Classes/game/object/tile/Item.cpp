@@ -44,6 +44,7 @@ bool Item::init() {
     initPhysics();
     
     StringList anims;
+    float animInterval = 0.2f;
     
     switch( data.type ) {
         case ItemType::POWER_UP: {
@@ -52,6 +53,7 @@ bool Item::init() {
         } break;
             
         case ItemType::FRIENDS_POWER_UP: {
+            anims.push_back(DIR_IMG_GAME + "game_item_friends_01.png");
             anims.push_back(DIR_IMG_GAME + "game_item_friends_02.png");
         } break;
             
@@ -61,7 +63,7 @@ bool Item::init() {
     }
     
     // 이미지 초기화
-    image = SBAnimationSprite::create(anims, 0.2f);
+    image = SBAnimationSprite::create(anims, animInterval);
     image->setAnchorPoint(ANCHOR_M);
     image->setPosition(Vec2MC(getContentSize(), 0, 0));
     addChild(image);
