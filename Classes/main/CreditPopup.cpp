@@ -23,12 +23,10 @@ struct Member {
     image(_image), name(_name), job(_job) {}
 };
 
-// ART PROGRAMMING DESIGN
 static const vector<Member> MEMBERS = {
-    Member("RSP_icon_character_mw9.png", "MW9", "PROGRAMMING"),
+    Member("RSP_icon_character_mw9.png", "MR9", "PROGRAMMING"),
     Member("RSP_icon_character_w0n.png", "W0N", "DESIGN"),
     Member("RSP_icon_character_b30.png", "B3O", "ART"),
-    Member("RSP_icon_character_sjb.png", "SJB", "SOUND"),
 };
 
 CreditPopup::CreditPopup() : BasePopup(PopupType::CREDIT) {
@@ -119,7 +117,7 @@ void CreditPopup::initCredit() {
     random_shuffle(members.begin(), members.end());
     
     const float PADDING_Y = 267;
-    const float ORIGIN_Y = Vec2MC(0, 377).y;
+    const float ORIGIN_Y = Vec2MC(0, 290).y;
     
     for( int i = 0; i < MEMBERS.size(); ++i ) {
         float posY = ORIGIN_Y - (PADDING_Y*i);
@@ -130,6 +128,15 @@ void CreditPopup::initCredit() {
         icon->setAnchorPoint(ANCHOR_M);
         icon->setPosition(Vec2(SB_WIN_SIZE.width*0.5f, posY));
         addChild(icon);
+        
+        {
+            float offset = 5 * (arc4random() % 2 == 0 ? 1 : -1);
+            
+            auto rotate1 = RotateTo::create(0.4f, offset);
+            auto rotate2 = RotateTo::create(0.4f, -offset);
+            auto seq = Sequence::create(rotate1, rotate2, nullptr);
+            icon->runAction(RepeatForever::create(seq));
+        }
         
         posY -= 89;
         

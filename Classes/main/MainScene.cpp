@@ -175,11 +175,7 @@ void MainScene::onClick(Node *sender) {
         // 크레딧
         case Tag::BTN_TITLE: {        
             firebase::Analytics::logEvent(FA_EVENT_CREDIT);
-            
-            auto popup = PopupManager::show(PopupType::CREDIT);
-            popup->setLocalZOrder(ZOrder::POPUP_TOP);
-            popup->setOnDismissListener([=](Node*) {
-            });
+            PopupManager::show(PopupType::CREDIT, ZOrder::POPUP_TOP);
         } break;
             
         // 게임 시작
@@ -320,9 +316,9 @@ void MainScene::initBg() {
     title->setTag(Tag::BTN_TITLE);
     title->setAnchorPoint(ANCHOR_M);
     title->setPosition(Vec2MC(0, 162));
-    addChild(title);
+    addChild(title, SBZOrder::BOTTOM);
     
-    // title->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
+    title->setOnClickListener(CC_CALLBACK_1(MainScene::onClick, this));
      
     // tap to start
     auto tapToStart = Sprite::create(DIR_IMG_MAIN + "main_tap_to_start.png");
