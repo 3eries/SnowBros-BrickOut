@@ -149,4 +149,11 @@ namespace EffectDuration {
     static const float MENU_SLIDE_FAST         = 0.25f;
 }
 
+// UI
+namespace ButtonZoomScale {
+    static const float WEAK                    = -0.03f;
+    static const float NORMAL                  = -0.05f;
+    static const float HARD                    = -0.07f;
+}
+
 #endif /* Define_h */

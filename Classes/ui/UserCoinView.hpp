@@ -52,6 +52,7 @@ public:
     
 private:
     Type type;
+    SB_SYNTHESIZE_BOOL(updateLocekd, UpdateLocekd);
 };
 
 #endif /* UserCoinView_hpp */

@@ -28,7 +28,8 @@ UserCoinView* UserCoinView::create(Type type) {
     return nullptr;
 }
 
-UserCoinView::UserCoinView() {
+UserCoinView::UserCoinView() :
+updateLocekd(false) {
 }
 
 UserCoinView::~UserCoinView() {
@@ -79,6 +80,10 @@ void UserCoinView::onClick(Node *sender) {
  * 코인 업데이트
  */
 void UserCoinView::updateCoin(bool withAction) {
+    
+    if( updateLocekd ) {
+        return;
+    }
     
     auto coinLabel = getChildByTag<Label*>(Tag::COIN_LABEL);
     int  coin = User::getCoin();
@@ -141,7 +146,7 @@ void UserCoinView::initNormal() {
     shopBtn->setTag(Tag::SHOP_BTN);
     shopBtn->setAnchorPoint(ANCHOR_M);
     shopBtn->setPosition(Vec2TL(208, -136));
-    shopBtn->setZoomScale(0.1f);
+    shopBtn->setZoomScale(ButtonZoomScale::HARD);
     addChild(shopBtn);
     
     shopBtn->setOnClickListener(CC_CALLBACK_1(UserCoinView::onClick, this));

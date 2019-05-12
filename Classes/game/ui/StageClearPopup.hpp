@@ -17,6 +17,8 @@
 #include "BasePopup.hpp"
 #include "ContentManager.hpp"
 
+class UserCoinView;
+
 class StageClearPopup : public BasePopup {
 public:
     static StageClearPopup* create(const StageData &stage, BrickDataList bricks,
@@ -32,10 +34,11 @@ private:
     void initBackgroundView() override;
     void initContentView() override;
     
-    void initTitle();
+    void initBg();
     void initBrick();
-    void initCoin();
-    void initMenu();
+    void initRewardCoin();
+    void initTopMenu();
+    void initBottomMenu();
     
 public:
     void runEnterAction(SBCallback onFinished = nullptr) override;
@@ -52,8 +55,7 @@ private:
     CC_SYNTHESIZE(SBCallback, onFriendsListener, OnFriendsListener);
     CC_SYNTHESIZE(SBCallback, onNextListener, OnNextListener);
     
-    std::vector<cocos2d::Node*> bricks;
-    int brickEnterIndex;
+    UserCoinView *userCoinView;
 };
 
 #endif /* StageClearPopup_hpp */

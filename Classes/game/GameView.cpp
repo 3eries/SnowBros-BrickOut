@@ -102,6 +102,7 @@ void GameView::onEnterTransitionDidFinish() {
     addChild(line, INT_MAX);
     */
     
+    // 스테이지 클리어 강제
     /*
     SBDirector::postDelayed(this, [=]() {
         GAME_MANAGER->addBrick(Database::getBrick("brick_00001"));
