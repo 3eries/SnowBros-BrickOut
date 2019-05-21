@@ -32,6 +32,7 @@ protected:
     virtual void onEnter() override;
     virtual void cleanup() override;
     virtual void initPhysics() override;
+    virtual void initGameListener();
     
     virtual void onStageClear();
     virtual void onFloorChanged(const FloorData &floor);

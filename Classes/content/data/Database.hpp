@@ -49,6 +49,7 @@ public:
     static BallSkinData        getBallSkin(const std::string &ballId);
     
     static WorldDataList       getWorlds();
+    static int                 getOriginWorldCount();
     static WorldData           getWorld(int world);
     static WorldData           getFirstWorld();
     static WorldData           getLastWorld();
@@ -59,6 +60,7 @@ public:
     
     static BrickDataMap        getBricks();
     static BrickData           getBrick(const std::string &brickId);
+    static BrickData           getFirstBrick();
     
     static FriendsPackDataList getFriendsPacks();
     static FriendsPackData     getFriendsPack(const std::string &packId);
@@ -73,8 +75,7 @@ private:
     BallSkinDataList ballSkins;
     
     WorldDataList worlds;
-    StageDataList stages;
-    FloorDataList floors;
+    int originWorldCount;
     
     BrickDataMap bricks;
     

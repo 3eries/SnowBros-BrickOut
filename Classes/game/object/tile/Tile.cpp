@@ -42,12 +42,7 @@ bool Tile::init() {
 
 void Tile::onEnter() {
     
-    // 게임 리스너 등록
-    auto listener = GameEventListener::create(this);
-    listener->onStageClear   = CC_CALLBACK_0(Tile::onStageClear, this);
-    listener->onFloorChanged = CC_CALLBACK_1(Tile::onFloorChanged, this);
-    listener->onNextFloor    = CC_CALLBACK_1(Tile::onNextFloor, this);
-    GameManager::getEventDispatcher()->addListener(listener);
+    initGameListener();
     
     Node::onEnter();
 }
@@ -64,6 +59,18 @@ void Tile::cleanup() {
  */
 void Tile::initPhysics() {
     
+}
+
+/**
+ * 게임 리스너 초기화
+ */
+void Tile::initGameListener() {
+    
+    auto listener = GameEventListener::create(this);
+    listener->onStageClear   = CC_CALLBACK_0(Tile::onStageClear, this);
+    listener->onFloorChanged = CC_CALLBACK_1(Tile::onFloorChanged, this);
+    listener->onNextFloor    = CC_CALLBACK_1(Tile::onNextFloor, this);
+    GameManager::getEventDispatcher()->addListener(listener);
 }
 
 void Tile::onStageClear() {

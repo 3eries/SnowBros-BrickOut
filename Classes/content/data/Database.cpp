@@ -231,8 +231,6 @@ void Database::parseStageJson() {
                 }
                 
                 stage.floors.push_back(floor);
-                floors.push_back(floor);
-                
                 prevFloor = floor;
             }
             
@@ -263,7 +261,6 @@ void Database::parseStageJson() {
             lastFloor.isStageLastFloor = true;
             
             world.addStage(stage);
-            stages.push_back(stage);
             
             CCLOG("========== PARSE END (%s)  ==========", fileName.c_str());
         } // stage loop
@@ -287,15 +284,8 @@ void Database::parseStageJson() {
         }
     } // world loop
     
-    // order by stage asc
-    sort(stages.begin(), stages.end(), [](const StageData &s1, const StageData &s2) {
-        return s1.stage < s2.stage;
-    });
-    
-    // order by floor asc
-    sort(floors.begin(), floors.end(), [](const FloorData &f1, const FloorData &f2) {
-        return f1.floor < f2.floor;
-    });
+    originWorldCount = (int)worlds.size();
+    CCLOG("================> WORLD COUNT: %d", originWorldCount);
 }
 
 /**
@@ -393,9 +383,6 @@ void Database::addTempWorld() {
             floor.parseBrickHp(prevFloor);
             floor.brickHp *= 1.02f;
             
-            auto &floors = getInstance()->floors;
-            floors.push_back(floor);
-            
             prevFloor = floor;
         }
     }
@@ -430,7 +417,11 @@ BallSkinData Database::getBallSkin(const string &ballId) {
  * 월드 데이터를 반환합니다
  */
 WorldDataList Database::getWorlds() {
-    return getInstance()->worlds;
+    return instance->worlds;
+}
+
+int Database::getOriginWorldCount() {
+    return instance->originWorldCount;
 }
 
 WorldData Database::getWorld(int world) {
@@ -514,6 +505,10 @@ BrickData Database::getBrick(const string &brickId) {
     }
     
     return it->second;
+}
+
+BrickData Database::getFirstBrick() {
+    return getBricks().begin()->second;
 }
 
 /**

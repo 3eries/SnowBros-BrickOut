@@ -257,10 +257,10 @@ void Ball::checkMovement(float dt) {
     
     if( angle >= 90-RANGE && angle <= 90+RANGE ) {
         if( brickContactCount >= 5 || wallContactCount >= 2 ) {
-            Log::i("velocity: %f,%f, angle: %f, contactCount: %d, brickContactCount: %d, wallContactCount: %d",
-                   velocity.x, velocity.y, angle,
-                   contactCount, brickContactCount, wallContactCount);
-            Log::i("force!!");
+//            Log::i("velocity: %f,%f, angle: %f, contactCount: %d, brickContactCount: %d, wallContactCount: %d",
+//                   velocity.x, velocity.y, angle,
+//                   contactCount, brickContactCount, wallContactCount);
+//            Log::i("force!!");
             
             getBody()->ApplyForceToCenter(b2Vec2(0, angle < 90 ? 0.5f : -0.5f), false);
         }

@@ -22,15 +22,7 @@
 USING_NS_CC;
 using namespace std;
 
-#define BALL_POSITION                   Vec2BC(0, SHOOTING_POSITION_Y)
-
-#define ANIM_NAME_IDLE                  "idle"
-#define ANIM_NAME_STAGE_START           "stage_start"
-#define ANIM_NAME_STAGE_CLEAR           "stage_clear"
-#define ANIM_NAME_MOVE                  "move"
-#define ANIM_NAME_DIE                   "die"
-#define ANIM_NAME_SHOOT_LOW             "shoot_low"
-#define ANIM_NAME_SHOOT_HIGH            "shoot_high"
+#define             BALL_POSITION             Vec2BC(0, SHOOTING_POSITION_Y)
 
 static const string SCHEDULER_SHOOT         = "SCHEDULER_SHOOT";
 static const string SCHEDULER_SHOOT_DELAY   = "SCHEDULER_SHOOT_DELAY";
@@ -399,13 +391,13 @@ void Friend::setImage(ImageType type, SBCallback onAnimationFinished) {
 
     auto setAnimation = [=]() ->spTrackEntry* {
         switch( type ) {
-            case ImageType::IDLE:           return image->setAnimation(0, ANIM_NAME_IDLE, true);
-            case ImageType::MOVE:           return image->setAnimation(0, ANIM_NAME_MOVE, true);
-            case ImageType::DIE:            return image->setAnimation(0, ANIM_NAME_DIE, false);
-            case ImageType::SHOOT_LOW:      return image->setAnimation(0, ANIM_NAME_SHOOT_LOW, false);
-            case ImageType::SHOOT_HIGH:     return image->setAnimation(0, ANIM_NAME_SHOOT_HIGH, false);
-            case ImageType::STAGE_START:    return image->setAnimation(0, ANIM_NAME_STAGE_START, false);
-            case ImageType::STAGE_CLEAR:    return image->setAnimation(0, ANIM_NAME_STAGE_CLEAR, false);
+            case ImageType::IDLE:           return image->setAnimation(0, FRIEND_ANIM_NAME_IDLE, true);
+            case ImageType::MOVE:           return image->setAnimation(0, FRIEND_ANIM_NAME_MOVE, true);
+            case ImageType::DIE:            return image->setAnimation(0, FRIEND_ANIM_NAME_DIE, false);
+            case ImageType::SHOOT_LOW:      return image->setAnimation(0, FRIEND_ANIM_NAME_SHOOT_LOW, false);
+            case ImageType::SHOOT_HIGH:     return image->setAnimation(0, FRIEND_ANIM_NAME_SHOOT_HIGH, false);
+            case ImageType::STAGE_START:    return image->setAnimation(0, FRIEND_ANIM_NAME_STAGE_START, false);
+            case ImageType::STAGE_CLEAR:    return image->setAnimation(0, FRIEND_ANIM_NAME_STAGE_CLEAR, false);
             default:
                 CCASSERT(false, "Friend::setImage error: invalid image type.");
                 break;

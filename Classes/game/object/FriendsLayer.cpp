@@ -102,8 +102,6 @@ void FriendsLayer::initFriends() {
     updateFriendsDamage();
     
     // 슬롯 리스트 생성
-    int w = SB_WIN_SIZE.width / GAME_FRIENDS_SLOT_COUNT;
-    
     for( int i = 0; i < GAME_FRIENDS_SLOT_COUNT; ++i ) {
         Slot slot;
         slot.index = i;
