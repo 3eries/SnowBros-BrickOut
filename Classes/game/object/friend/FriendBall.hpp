@@ -19,8 +19,9 @@
 struct FriendBallDef {
     FriendData data;
     int index;
+    b2World *world;
     
-    FriendBallDef(const FriendData &_data) : data(_data), index(-1) {}
+    FriendBallDef(const FriendData &_data) : data(_data), index(-1), world(nullptr) {}
 };
 
 class TileLayer;

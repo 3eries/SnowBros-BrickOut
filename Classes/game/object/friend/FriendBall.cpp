@@ -32,7 +32,7 @@ FriendBall* FriendBall::create(const FriendBallDef &def) {
     return nullptr;
 }
 
-FriendBall::FriendBall(const FriendBallDef &def) : Ball(),
+FriendBall::FriendBall(const FriendBallDef &def) : Ball(def.world),
 data(def.data),
 ballIndex(def.index),
 tileLayer(nullptr),

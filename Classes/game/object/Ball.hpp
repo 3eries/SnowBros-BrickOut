@@ -19,11 +19,11 @@ namespace Game {
 
 class Ball : public cocos2d::Node, public SBPhysicsObject {
 public:
-    CREATE_FUNC(Ball);
+    static Ball* create(b2World *world);
     virtual ~Ball();
     
 protected:
-    Ball();
+    Ball(b2World *world);
     
     virtual bool init() override;
     virtual void cleanup() override;
@@ -32,7 +32,7 @@ protected:
     virtual void initPhysicsListener();
     
 public:
-    static b2Body*  createBody(SBPhysicsObject *userData = nullptr);
+    static b2Body*  createBody(b2World *world, SBPhysicsObject *userData = nullptr);
     
     virtual bool    beforeStep() override;
     virtual bool    afterStep() override;
@@ -50,7 +50,7 @@ public:
     
     virtual SBAnimationSprite* createHitAnimation();
     
-protected:
+public:
     virtual void onBeginContact(b2Contact *contact);
     virtual void onEndContact(b2Contact *contact);
     virtual void onPreSolve(b2Contact *contact, const b2Manifold *oldManifold);
@@ -61,6 +61,7 @@ protected:
     virtual void onContactFloor(Ball *ball);
     
 protected:
+    CC_SYNTHESIZE_READONLY(b2World*, world, World);
     cocos2d::Sprite *image;
     
     CC_SYNTHESIZE(int, damage, Damage);

@@ -113,6 +113,7 @@ FriendBall* Friend::createBall() {
     
     FriendBallDef def(data);
     def.index = getBallCount();
+    def.world = GameManager::getPhysicsManager()->getWorld();
     
     if( data.type == FriendType::CRITICAL )     return CriticalBall::create(def);
     if( data.type == FriendType::SPLASH )       return SplashBall::create(def);

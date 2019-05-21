@@ -21,7 +21,21 @@ using namespace std;
 
 static const string SCHEDULER_CHECK_MOVEMENT = "SCHEDULER_CHECK_MOVEMENT";
 
-Ball::Ball() : SBPhysicsObject(this),
+Ball* Ball::create(b2World *world) {
+    
+    auto ball = new Ball(world);
+    
+    if( ball && ball->init() ) {
+        ball->autorelease();
+        return ball;
+    }
+    
+    CC_SAFE_DELETE(ball);
+    return nullptr;
+}
+
+Ball::Ball(b2World *world) : SBPhysicsObject(this),
+world(world),
 damage(1),
 fall(false) {
 }
@@ -44,7 +58,7 @@ bool Ball::init() {
     initImage();
     initPhysicsListener();
     
-    setBody(createBody((SBPhysicsObject*)this));
+    setBody(createBody(world, (SBPhysicsObject*)this));
     
     return true;
 }
@@ -98,7 +112,7 @@ void Ball::initPhysicsListener() {
     GameManager::getPhysicsManager()->addListener(listener);
 }
 
-b2Body* Ball::createBody(SBPhysicsObject *userData) {
+b2Body* Ball::createBody(b2World *world, SBPhysicsObject *userData) {
     
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
@@ -110,7 +124,7 @@ b2Body* Ball::createBody(SBPhysicsObject *userData) {
     b2CircleShape circle;
     circle.m_radius = PTM(BALL_RADIUS);
     
-    auto body = GameManager::getPhysicsManager()->getWorld()->CreateBody(&bodyDef);
+    auto body = world->CreateBody(&bodyDef);
     
     b2Filter filter;
     filter.categoryBits = PhysicsCategory::BALL;
