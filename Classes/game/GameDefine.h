@@ -94,7 +94,14 @@ cocos2d::Size((TILE_CONTENT_SIZE.width*__rows__) + (TILE_PADDING_X*(__rows__-1))
 static const cocos2d::Size                    ITEM_CONTENT_SIZE                = cocos2d::Size(40, 48);
 
 // Physics
-static const float                            PHYSICS_FPS                      = 1 / 60.0f;
+#define                                       PHYSICS_FPS                        (1 / 60.0f)
+
+// velocityIterations : 바디들을 정상적으로 이동시키기 위해서 필요한 충돌들을 반복적으로 계산
+// positionIterations : 조인트 분리와, 겹침현상을 줄이기 위해서 바디의 위치를 반복적으로 적용
+// 값이 클수록 정확한 연산이 가능하지만 성능이 떨어진다.
+// 매뉴얼상의 권장값 (VELOCITY_ITERATIONS=8, POSITION_ITERATIONS=3)
+#define                                       VELOCITY_ITERATIONS                8
+#define                                       POSITION_ITERATIONS                6
 
 enum PhysicsCategory {
     WALL_LEFT   = (1 << 0),     // 왼쪽 벽
