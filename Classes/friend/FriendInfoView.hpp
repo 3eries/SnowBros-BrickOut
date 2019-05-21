@@ -22,7 +22,9 @@ public:
     
 private:
     enum Tag {
-        LABEL_NAME = 10,
+        PREVIEW       = 10,
+        
+        LABEL_NAME,
         LABEL_DAMAGE,
         LABEL_TYPE,
         LABEL_PRICE,
@@ -55,8 +57,6 @@ public:
 private:
     CC_SYNTHESIZE_READONLY(FriendData, data, Data);
     CC_SYNTHESIZE(std::function<void(Button)>, onClickButtonListener, OnClickButtonListener);
-    
-    spine::SkeletonAnimation *friendImage;
 };
 
 #endif /* FriendInfoView_hpp */

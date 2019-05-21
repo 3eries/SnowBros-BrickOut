@@ -66,7 +66,7 @@ void FriendsPopup::onEnter() {
 }
 
 void FriendsPopup::dismiss() {
-    
+
     Director::getInstance()->getEventDispatcher()->dispatchCustomEvent(DIRECTOR_EVENT_UPDATE_FRIENDS_DECK);
     
     BasePopup::dismiss();
@@ -190,7 +190,6 @@ void FriendsPopup::onClick(Tag tag) {
     switch( tag ) {
         // OK
         case Tag::BTN_OK: {
-            SBAudioEngine::playEffect(SOUND_BUTTON_CLICK);
             this->dismissWithAction();
         } break;
             
@@ -369,7 +368,7 @@ void FriendsPopup::initBg() {
     auto closeBtn = SBButton::create(DIR_IMG_COMMON + "common_btn_close_red.png");
     closeBtn->setAnchorPoint(ANCHOR_M);
     closeBtn->setPosition(Vec2TR(-42, -42));
-    closeBtn->setZoomScale(0.1f);
+    closeBtn->setZoomScale(ButtonZoomScale::HARD);
     addContentChild(closeBtn);
     
     closeBtn->setOnClickListener([=](Node*) {
@@ -385,20 +384,18 @@ void FriendsPopup::initUserCoin() {
     
     // bg
     // common_bg_coin_user.png Vec2TR(-184, -166) , Size(272, 52)
-    auto bg = Sprite::create(DIR_IMG_COMMON + "common_bg_coin_user.png");
+    auto bg = Sprite::create(DIR_IMG_FRIEND + "friends_bg_coin_user.png");
     bg->setAnchorPoint(ANCHOR_M);
     bg->setPosition(Vec2TR(-184, -166));
     addChild(bg);
     
     // icon
-    // common_icon_coin_tiny.png Vec2TR(-294, -166) , Size(36, 36)
     auto icon = Sprite::create(DIR_IMG_COMMON + "common_icon_coin_tiny.png");
     icon->setAnchorPoint(ANCHOR_M);
     icon->setPosition(Vec2TR(-294, -166));
     addChild(icon);
     
     // amount
-    // 99999 size:36 Vec2TR(-192, -166) , Size(129, 25)
     auto amount = Label::createWithTTF("", FONT_COMMODORE, 36, Size::ZERO,
                                        TextHAlignment::CENTER, TextVAlignment::CENTER);
     amount->setTag(Tag::USER_COIN_LABEL);
@@ -407,11 +404,10 @@ void FriendsPopup::initUserCoin() {
     amount->setTextColor(Color4B(255,255,255,255));
     addChild(amount);
     
-    // common_btn_shop.png Vec2TR(-78, -166) , Size(60, 60)
     auto shopBtn = SBButton::create(DIR_IMG_COMMON + "common_btn_shop.png");
     shopBtn->setAnchorPoint(ANCHOR_M);
     shopBtn->setPosition(Vec2TR(-78, -166));
-    shopBtn->setZoomScale(0.1f);
+    shopBtn->setZoomScale(ButtonZoomScale::HARD);
     addChild(shopBtn);
     
     shopBtn->setOnClickListener([=](Node*) {
@@ -552,18 +548,11 @@ void FriendsPopup::initDeck() {
  */
 void FriendsPopup::initButton() {
  
-    // friends_btn_start.png Vec2BC(2, 100) , Size(388, 120)
-    string file = "friends_btn_start.png";
-    
-    if( SceneManager::getSceneType() == SceneType::MAIN ) {
-        file = "friends_btn_start.png";
-    }
-    
-    auto okBtn = SBButton::create(DIR_IMG_FRIEND + file);
+    auto okBtn = SBButton::create(DIR_IMG_FRIEND + "friends_btn_ok.png");
     okBtn->setTag(Tag::BTN_OK);
     okBtn->setAnchorPoint(ANCHOR_M);
     okBtn->setPosition(Vec2BC(0, 100));
-    okBtn->setZoomScale(0.1f);
+    okBtn->setZoomScale(ButtonZoomScale::WEAK);
     addChild(okBtn);
     
     okBtn->setOnClickListener([=](Node *sender) {
