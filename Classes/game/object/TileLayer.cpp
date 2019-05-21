@@ -365,32 +365,34 @@ void TileLayer::initFloorBrick(const FloorData &floor) {
         }
     }
     
-    // 엘리트 브릭
-    auto eliteBrickData = floor.getRandomNormalBrick();
-    
-    if( dropData.checkSpace(eliteBrickData) ) {
-        // 드랍률 업데이트
-        updateEliteBrickDropRate(floor);
+    if( floor.normalBrickList.size() > 0 ) {
+        // 엘리트 브릭
+        auto eliteBrickData = floor.getRandomNormalBrick();
         
-        Log::i("==> eliteBrickDropRate: %d", eliteBrickDropRate);
-        
-        uniform_int_distribution<int> dist(1,100);
-        isEliteDropped = (dist(randomEngine.eliteBrickDrop) <= eliteBrickDropRate);
-        
-        if( isEliteDropped ) {
-            addBrickWithDropData(TileFactory::createEliteBrick(eliteBrickData, TileData(), floor), dropData);
-        }
-    }
-    
-    // 일반 브릭
-    if( !dropData.isNoSpace() ) {
-        int len = dropData.availableTileCount;
-        
-        for( int i = 0; i < len; ++i ) {
-            auto brickData = floor.getRandomNormalBrick();
+        if( dropData.checkSpace(eliteBrickData) ) {
+            // 드랍률 업데이트
+            updateEliteBrickDropRate(floor);
             
-            if( dropData.checkSpace(brickData) ) {
-                addBrickWithDropData(TileFactory::createNormalBrick(brickData, TileData(), floor), dropData);
+            Log::i("==> eliteBrickDropRate: %d", eliteBrickDropRate);
+            
+            uniform_int_distribution<int> dist(1,100);
+            isEliteDropped = (dist(randomEngine.eliteBrickDrop) <= eliteBrickDropRate);
+            
+            if( isEliteDropped ) {
+                addBrickWithDropData(TileFactory::createEliteBrick(eliteBrickData, TileData(), floor), dropData);
+            }
+        }
+        
+        // 일반 브릭
+        if( !dropData.isNoSpace() ) {
+            int len = dropData.availableTileCount;
+            
+            for( int i = 0; i < len; ++i ) {
+                auto brickData = floor.getRandomNormalBrick();
+                
+                if( dropData.checkSpace(brickData) ) {
+                    addBrickWithDropData(TileFactory::createNormalBrick(brickData, TileData(), floor), dropData);
+                }
             }
         }
     }
