@@ -19,7 +19,7 @@
 class TileFactory {
 // Brick
 public:
-    static Brick*          createBrick(const BrickDef &def);
+    static Brick*          createBrick(BrickDef def);
     static Brick*          createBrick(const PatternBrickData &patternData,
                                        const FloorData &floor);
     static Brick*          createNormalBrick(const BrickData &brickData,

@@ -9,6 +9,7 @@
 
 #include "GameConfiguration.hpp"
 #include "../../GameDefine.h"
+#include "../../GameManager.hpp"
 
 #include "Brick_10012.hpp"
 #include "NeutralBrick.hpp"
@@ -22,7 +23,9 @@ using namespace std;
 
 #pragma mark- Brick
 
-Brick* TileFactory::createBrick(const BrickDef &def) {
+Brick* TileFactory::createBrick(BrickDef def) {
+    
+    def.world = GameManager::getPhysicsManager()->getWorld();
     
     auto data = def.data;
     
@@ -48,22 +51,22 @@ Brick* TileFactory::createBrick(const BrickDef &def) {
 
 Brick* TileFactory::createBrick(const PatternBrickData &patternData, const FloorData &floor) {
     
-    return createBrick(BrickDef(patternData.brick, patternData.tile, patternData.hp, false, floor));
+    return createBrick(BrickDef(patternData.brick, patternData.tile, patternData.hp, false, floor, nullptr));
 }
 
 Brick* TileFactory::createNormalBrick(const BrickData &brickData, const TileData &tileData, const FloorData &floor) {
     
-    return createBrick(BrickDef(brickData, tileData, floor.brickHp, false, floor));
+    return createBrick(BrickDef(brickData, tileData, floor.brickHp, false, floor, nullptr));
 }
 
 Brick* TileFactory::createEliteBrick(const BrickData &brickData, const TileData &tileData, const FloorData &floor) {
     
-    return createBrick(BrickDef(brickData, tileData, floor.brickHp*3, true, floor));
+    return createBrick(BrickDef(brickData, tileData, floor.brickHp*3, true, floor, nullptr));
 }
 
 Brick* TileFactory::createSpecialBrick(const BrickData &brickData, const TileData &tileData, const FloorData &floor) {
     
-    return createBrick(BrickDef(brickData, tileData, floor.brickHp*0.8f, false, floor));
+    return createBrick(BrickDef(brickData, tileData, floor.brickHp*0.8f, false, floor, nullptr));
 }
 
 /**

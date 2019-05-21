@@ -59,6 +59,7 @@ bool Brick::init() {
     }
     
     initPhysics();
+    initPhysicsListener();
     initBg();
     initImage();
     setLocalZOrder(data.zOrder);
@@ -93,7 +94,7 @@ void Brick::initPhysics() {
     b2PolygonShape box;
     box.SetAsBox(PTM(size.width*0.5f), PTM(size.height*0.5f));
     
-    auto body = GameManager::getPhysicsManager()->getWorld()->CreateBody(&bodyDef);
+    auto body = def.world->CreateBody(&bodyDef);
     setBody(body);
     
     b2Filter filter;
@@ -107,8 +108,13 @@ void Brick::initPhysics() {
     fixtureDef.friction = 0;
     fixtureDef.filter = filter;
     body->CreateFixture(&fixtureDef);
+}
+
+/**
+ * 물리 리스너 초기화
+ */
+void Brick::initPhysicsListener() {
     
-    // 리스너 등록
     auto listener = GamePhysicsListener::create();
     listener->setTarget(this);
     listener->setContactTarget(this);

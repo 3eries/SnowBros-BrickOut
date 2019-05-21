@@ -24,11 +24,12 @@ struct BrickDef {
     int hp;
     bool elite;
     FloorData floorData;
+    b2World *world;
     
-    BrickDef(const BrickData &_data) : data(_data), hp(0), elite(false) {}
+    BrickDef(const BrickData &_data) : data(_data), hp(0), elite(false), world(nullptr) {}
     BrickDef(const BrickData &_data, const TileData &_tile,
-             int _hp, bool _elite, const FloorData &_floorData) :
-    data(_data), tile(_tile), hp(_hp), elite(_elite), floorData(_floorData) {}
+             int _hp, bool _elite, const FloorData &_floorData, b2World *_world) :
+    data(_data), tile(_tile), hp(_hp), elite(_elite), floorData(_floorData), world(_world) {}
 
 };
 
@@ -55,6 +56,7 @@ protected:
     virtual void onEnter() override;
     
     virtual void initPhysics() override;
+    virtual void initPhysicsListener();
     virtual void initBg();
     virtual void initImage();
     virtual void initHpGage();
