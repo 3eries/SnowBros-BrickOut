@@ -356,7 +356,7 @@ void AimController::initAimObject() {
         addChild(shootingObj.secondLine.clippingNode);
         
         // Ball
-        shootingObj.ballBody = Ball::createBody();
+        shootingObj.ballBody = Ball::createBody(GameManager::getPhysicsManager()->getWorld());
         
         // End Mark
         shootingObj.endMark = Node::create();
