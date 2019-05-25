@@ -20,6 +20,8 @@ struct StageData {
     bool           isWorldLastStage;        // 마지막 스테이지 여부
     int            originWorld;
     int            originStage;
+    int            firstBallCount;
+    int            firstFriendsBallDamage;
     int            finalBallCount;
     int            finalFriendsBallDamage;
     int            coinDropMin;             // 코인 최소 드랍 수

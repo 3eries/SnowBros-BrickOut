@@ -279,13 +279,30 @@ void Database::parseStageJson() {
             auto &lastStage = world.stages[world.stages.size()-1];
             lastStage.isWorldLastStage = true;
             
-            CCLOG("%s", world.toString().c_str());
             worlds.push_back(world);
         }
     } // world loop
     
     originWorldCount = (int)worlds.size();
     CCLOG("================> WORLD COUNT: %d", originWorldCount);
+    
+    // 스테이지 데이터 설정
+    StageData prevStage;
+    prevStage.finalBallCount = GAME_CONFIG->getFirstBallCount();
+    prevStage.finalFriendsBallDamage = GAME_CONFIG->getFirstFriendsDamage();
+    
+    for( auto &world : worlds ) {
+        for( auto &stage : world.stages ) {
+            stage.firstBallCount = prevStage.finalBallCount;
+            stage.firstFriendsBallDamage = prevStage.finalFriendsBallDamage;
+            prevStage = stage;
+        }
+    }
+    
+    // log
+    for( auto world : worlds ) {
+        CCLOG("%s", world.toString().c_str());
+    }
 }
 
 /**
@@ -462,6 +479,17 @@ WorldData Database::getLastWorld() {
 
 bool Database::isLastWorld(int world) {
     return getLastWorld().world == world;
+}
+
+/**
+ * 스테이지 데이터를 반환합니다
+ */
+StageData Database::getStage(int world, int stage) {
+    
+    auto worldData = getWorld(world);
+    CCASSERT(!worldData.isNull(), "Database::getStage error: invalid world.");
+    
+    return worldData.getStage(stage);
 }
 
 StageData Database::getWorldLastStage(int world) {

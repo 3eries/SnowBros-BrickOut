@@ -55,6 +55,7 @@ public:
     static WorldData           getLastWorld();
     static bool                isLastWorld(int world);
     
+    static StageData           getStage(int world, int stage);
     static StageData           getWorldLastStage(int world);
     static int                 getStageFirstBallCount(int world, int stage);
     

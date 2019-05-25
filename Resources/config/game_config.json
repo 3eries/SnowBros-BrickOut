@@ -13,6 +13,7 @@
     "tile_columns": 10,
     "tile_enter_duration": 0.3,
     "first_ball_count": 10,
+    "first_friends_damage": 1,
     "max_ball_count": 1000,
     "max_score": 999999999
 }

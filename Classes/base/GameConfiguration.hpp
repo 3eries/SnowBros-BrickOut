@@ -43,6 +43,7 @@ private:
     CC_SYNTHESIZE_READONLY(float, tileEnterDuration, TileEnterDuration);
     
     CC_SYNTHESIZE_READONLY(int, firstBallCount, FirstBallCount);        // 최초 볼 갯수
+    CC_SYNTHESIZE_READONLY(int, firstFriendsDamage, FirstFriendsDamage);// 최초 프렌즈 데미지
     CC_SYNTHESIZE_READONLY(int, maxBallCount, MaxBallCount);            // 최대 볼 갯수
     CC_SYNTHESIZE_READONLY(int, maxScore, MaxScore);                    // 최대 스코어
 };

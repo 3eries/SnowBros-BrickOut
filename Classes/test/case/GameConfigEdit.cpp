@@ -137,8 +137,8 @@ void GameConfigEdit::editBoxReturn(EditBox *editBox) {
             }
             
             // update ball count
-            int ballCount = Database::getStageFirstBallCount(TEST_HELPER->getStartWorld(),
-                                                             TEST_HELPER->getStartStage());
+            int ballCount = Database::getStage(TEST_HELPER->getStartWorld(),
+                                               TEST_HELPER->getStartStage()).firstBallCount;
             TEST_HELPER->setFirstBallCount(ballCount);
             
             auto ballCountBox = getChildByTag<EditBox*>(Tag::EDIT_BOX_BALL_COUNT);
