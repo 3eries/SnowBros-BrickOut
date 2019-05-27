@@ -7,6 +7,7 @@
 #include "GameManager.hpp"
 
 #include "UserDefaultKey.h"
+#include "User.hpp"
 #include "RankingManager.hpp"
 #include "TestHelper.hpp"
 
@@ -517,6 +518,8 @@ void GameManager::onStageChanged() {
  * 스테이지 클리어
  */
 void GameManager::onStageClear() {
+    
+    User::setClearStageSeq(instance->stage.stageSeq);
     
     getEventDispatcher()->dispatchOnStageClear();
 }

@@ -17,6 +17,7 @@
 struct StageData {
     int            world;                   // 월드
     int            stage;                   // 스테이지
+    int            stageSeq;                // 전체 스테이지 기준의 순서
     bool           isWorldLastStage;        // 마지막 스테이지 여부
     int            originWorld;
     int            originStage;
@@ -33,7 +34,7 @@ struct StageData {
     BrickDataList  normalBrickList;
     BrickDataList  bossBrickList;
     
-    StageData() : world(0), stage(0), isWorldLastStage(false) {}
+    StageData() : world(0), stage(0), stageSeq(0), isWorldLastStage(false) {}
     
     void parse(const rapidjson::Value &v, rapidjson::Document::AllocatorType &allocator) {
         

@@ -118,11 +118,13 @@ void Database::parseBrickJson() {
 void Database::parseStageJson() {
     
     int worldId = 0;
-    int stageId = 0;
+    int stageSeq = 0;
     
     while( true ) {
         worldId++;
         WorldData world(worldId);
+        
+        int stageId = 0;
         
         while( true ) {
             stageId++;
@@ -144,6 +146,7 @@ void Database::parseStageJson() {
             rapidjson::Document::AllocatorType &allocator = doc.GetAllocator();
             
             StageData stage;
+            stage.stageSeq = ++stageSeq;
             stage.parse(doc, allocator);
             
             // patterns
@@ -497,23 +500,19 @@ StageData Database::getWorldLastStage(int world) {
     return getWorld(world).getLastStage();
 }
 
-/**
- * 해당 스테이지의 최초 볼 개수를 반환합니다
- */
-int Database::getStageFirstBallCount(int world, int stage) {
+StageData Database::getStageBySeq(int stageSeq) {
     
-    // 최초 스테이지
-    if( world == 1 && stage == 1 ) {
-        return GAME_CONFIG->getFirstBallCount();
+    auto worlds = getWorlds();
+    
+    for( auto world : worlds ) {
+        for( auto stage : world.stages ) {
+            if( stage.stageSeq == stageSeq ) {
+                return stage;
+            }
+        }
     }
     
-    // 1 스테이지인 경우, 이전 월드 마지막 스테이지의 최종 개수
-    if( stage == 1 ) {
-        return getWorld(world-1).getLastStage().finalBallCount;
-    }
-    
-    // 이전 스테이지의 최종 개수
-    return getWorld(world).getStage(stage-1).finalBallCount;
+    return StageData();
 }
 
 /**

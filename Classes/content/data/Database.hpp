@@ -57,7 +57,7 @@ public:
     
     static StageData           getStage(int world, int stage);
     static StageData           getWorldLastStage(int world);
-    static int                 getStageFirstBallCount(int world, int stage);
+    static StageData           getStageBySeq(int stageSeq);
     
     static BrickDataMap        getBricks();
     static BrickData           getBrick(const std::string &brickId);

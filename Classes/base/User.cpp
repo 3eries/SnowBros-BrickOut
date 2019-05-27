@@ -17,6 +17,7 @@ USING_NS_SB;
 using namespace std;
 
 #define USER_DEFAULT_KEY_USER_COIN                      "USER_COIN"
+#define USER_DEFAULT_KEY_CLEAR_STAGE_SEQUENCE           "USER_DEFAULT_KEY_CLEAR_STAGE_SEQUENCE"
 
 #define USER_DEFAULT_KEY_OWNED_BALL_SKINS               "OWNED_BALL_SKINS"
 #define USER_DEFAULT_KEY_SELECTED_BALL_SKIN             "SELECTED_BALL_SKIN"
@@ -52,6 +53,10 @@ void User::init() {
     
     initOwnedBallSkins();
     initOwnedFriends();
+    
+    CCLOG("User {");
+    CCLOG("\tcoin: %d, clear stage seq: %d", getCoin(), getClearStageSeq());
+    CCLOG("}");
     
     // IAP 리스너 초기화
     auto onRemoveAds = [=]() {
@@ -193,6 +198,27 @@ int User::getCoin() {
 bool User::isEnoughCoin(int i) {
     
     return getCoin() >= i;
+}
+
+/**
+ * 클리어한 스테이지를 설정합니다
+ */
+void User::setClearStageSeq(int stageSeq) {
+    
+    if( stageSeq <= getClearStageSeq() ) {
+        return;
+    }
+    
+    UserDefault::getInstance()->setIntegerForKey(USER_DEFAULT_KEY_CLEAR_STAGE_SEQUENCE, stageSeq);
+    UserDefault::getInstance()->flush();
+}
+
+/**
+ * 클리어한 스테이지를 반환합니다
+ */
+int User::getClearStageSeq() {
+    
+    return UserDefault::getInstance()->getIntegerForKey(USER_DEFAULT_KEY_CLEAR_STAGE_SEQUENCE, 0);
 }
 
 /**

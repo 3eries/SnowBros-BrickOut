@@ -35,6 +35,9 @@ public:
     static int              getCoin();
     static bool             isEnoughCoin(int i = 0);
     
+    static void             setClearStageSeq(int stageSeq);
+    static int              getClearStageSeq();
+    
     static void             ownBallSkin(const std::string &ballId);
     static StringList       getOwnedBallSkins();
     static bool             isOwnedBallSkin(const std::string &ballId);
