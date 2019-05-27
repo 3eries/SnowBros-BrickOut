@@ -72,6 +72,7 @@ static const std::string DIR_IMG_GAME               = DIR_ADD(DIR_IMG, "game");
 static const std::string DIR_IMG_GAME_IPAD          = DIR_ADD(DIR_IMG_GAME, "ipad");
 static const std::string DIR_IMG_GAME_RESTORE       = DIR_ADD(DIR_IMG_GAME, "restore");
 static const std::string DIR_IMG_BALL_SKIN          = DIR_ADD(DIR_IMG, "ball_skin");
+static const std::string DIR_IMG_BOOST              = DIR_ADD(DIR_IMG, "boost");
 static const std::string DIR_IMG_FRIEND             = DIR_ADD(DIR_IMG, "friend");
 static const std::string DIR_IMG_SHOP               = DIR_ADD(DIR_IMG, "shop");
 static const std::string DIR_IMG_STAGE_CLEAR        = DIR_ADD(DIR_IMG, "clear");

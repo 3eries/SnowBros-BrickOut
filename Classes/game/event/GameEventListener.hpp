@@ -39,6 +39,7 @@ public:
     std::function<void()>                   onGameResult;               // 게임 결과
     
     std::function<void()>                   onBoostStart;               // 부스트 시작
+    std::function<void()>                   onBoosting;                 // 부스트 진행
     std::function<void()>                   onBoostEnd;                 // 부스트 종료
 
     std::function<void(const WorldData&)>   onWorldChanged;             // 월드 변경

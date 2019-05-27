@@ -33,7 +33,7 @@ private:
         MAP = 10,
         BTN_BRICK_DOWN,
         WITHDRAW_GUIDE,
-        
+        BOOST_EFFECT,
         DEBUG_DRAW_VIEW = 1000,
     };
     
@@ -82,6 +82,7 @@ public:
     void onGameResult();
     
     void onBoostStart();
+    void onBoosting();
     void onBoostEnd();
     
     void onStageChanged(const StageData &stage);

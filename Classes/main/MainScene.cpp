@@ -312,8 +312,8 @@ void MainScene::initBg() {
     
     // title
     auto title = SBButton::create(DIR_IMG_MAIN + "main_title.png");
-    title->setZoomScale(0);
     title->setTag(Tag::BTN_TITLE);
+    title->setZoomScale(0);
     title->setAnchorPoint(ANCHOR_M);
     title->setPosition(Vec2MC(0, 162));
     addChild(title, SBZOrder::BOTTOM);

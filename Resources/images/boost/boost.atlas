@@ -1,0 +1,48 @@
+
+boost.png
+size: 1024,256
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+boost_on
+  rotate: false
+  xy: 2, 16
+  size: 448, 216
+  orig: 448, 216
+  offset: 0, 0
+  index: -1
+boost_on_lightning
+  rotate: true
+  xy: 452, 42
+  size: 140, 188
+  orig: 140, 188
+  offset: 0, 0
+  index: -1
+light_big
+  rotate: true
+  xy: 452, 184
+  size: 48, 344
+  orig: 48, 344
+  offset: 0, 0
+  index: -1
+light_small_01
+  rotate: true
+  xy: 452, 27
+  size: 13, 75
+  orig: 13, 75
+  offset: 0, 0
+  index: -1
+light_small_02
+  rotate: true
+  xy: 798, 217
+  size: 15, 108
+  orig: 15, 108
+  offset: 0, 0
+  index: -1
+light_small_03
+  rotate: true
+  xy: 2, 2
+  size: 12, 124
+  orig: 12, 124
+  offset: 0, 0
+  index: -1

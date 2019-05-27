@@ -419,6 +419,11 @@ void Friend::setImageFlippedX(bool flippedX) {
     image->setScaleX(flippedX ? -1 : 1);
 }
 
+void Friend::setAnimationTimeScale(float scale) {
+    
+    image->setTimeScale(scale);
+}
+
 void Friend::setDamage(int damage) {
     
     damage += data.damage;

@@ -46,6 +46,7 @@ public:
     void dispatchOnGameResult();
     
     void dispatchOnBoostStart();
+    void dispatchOnBoosting();
     void dispatchOnBoostEnd();
 
     void dispatchOnWorldChanged(const WorldData &world);

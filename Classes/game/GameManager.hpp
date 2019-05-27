@@ -89,6 +89,7 @@ private:
     
     CC_SYNTHESIZE_READONLY(WorldData, world, World);              // 월드
     CC_SYNTHESIZE_READONLY(StageData, stage, Stage);              // 스테이지
+    CC_SYNTHESIZE_READONLY(StageData, boostStage, BoostStage);    // 부스트 스테이지
     CC_SYNTHESIZE_READONLY(FloorData, floor, Floor);              // 층
     CC_SYNTHESIZE_READONLY(int, floorStep, FloorStep);            // 층 진행도
     int score;                                                    // 스코어
@@ -117,7 +118,8 @@ public:
     static void onGameRestore();
     static void onGameResult();
     
-    static void onBoostStart();
+    static void onBoostStart(const StageData &boostStage);
+    static void onBoosting();
     static void onBoostEnd();
 
     static void onWorldChanged();

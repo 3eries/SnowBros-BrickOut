@@ -21,6 +21,7 @@ struct StageData {
     bool           isWorldLastStage;        // 마지막 스테이지 여부
     int            originWorld;
     int            originStage;
+    int            boostCost;               // 부스트 비용
     int            firstBallCount;
     int            firstFriendsBallDamage;
     int            finalBallCount;
@@ -116,9 +117,14 @@ struct StageData {
 
     std::string toString() {
         std::string str = "StageData {\n";
-        str += STR_FORMAT("\tworld: %d, stage: %d, isWorldLastStage: %d\n", world, stage, isWorldLastStage);
+        str += STR_FORMAT("\tworld: %d, stage: %d, stageSeq: %d, isWorldLastStage: %d\n",
+                          world, stage, stageSeq, isWorldLastStage);
         str += STR_FORMAT("\toriginWorld: %d, originStage: %d\n", originWorld, originStage);
-        str += STR_FORMAT("\tfinalBallCount: %d, finalFriendsBallDamage: %d\n", finalBallCount, finalFriendsBallDamage);
+        str += STR_FORMAT("\tboostCost: %d\n", boostCost);
+        str += STR_FORMAT("\tfirstBallCount: %d, firstFriendsBallDamage: %d\n",
+                          firstBallCount, firstFriendsBallDamage);
+        str += STR_FORMAT("\tfinalBallCount: %d, finalFriendsBallDamage: %d\n",
+                          finalBallCount, finalFriendsBallDamage);
         str += STR_FORMAT("\tcoinDropMin: %d, coinDropMax: %d\n", coinDropMin, coinDropMax);
         str += STR_FORMAT("\tfirstFloor: %d\n", getFirstFloor().floor);
         str += STR_FORMAT("\tlastFloor: %d\n", getLastFloor().floor);

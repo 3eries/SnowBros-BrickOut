@@ -65,6 +65,7 @@ private:
     void onGameResult();
     
     void onBoostStart();
+    void onBoosting();
     void onBoostEnd();
     
     void onStageChanged(const StageData &stage);

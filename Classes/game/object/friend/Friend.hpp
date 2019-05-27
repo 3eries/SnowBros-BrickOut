@@ -76,6 +76,7 @@ public:
     
     virtual void          setImage(ImageType type, SBCallback onAnimationFinished = nullptr);
     virtual void          setImageFlippedX(bool flippedX);
+    virtual void          setAnimationTimeScale(float scale);
     
     virtual void          setDamage(int damage);
     virtual void          setDamageVisible(bool isVisible);

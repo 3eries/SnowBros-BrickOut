@@ -147,6 +147,7 @@ void Database::parseStageJson() {
             
             StageData stage;
             stage.stageSeq = ++stageSeq;
+            stage.boostCost = (stage.stageSeq-1) * 100;
             stage.parse(doc, allocator);
             
             // patterns

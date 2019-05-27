@@ -285,11 +285,6 @@ void GameManager::onGameStart() {
     getInstance()->setState(GameState::STARTED);
     getEventDispatcher()->dispatchOnGameStart();
     
-    // 부스트 발동
-    if( getInstance()->hasGiftItem(GiftType::BOOST) ) {
-        onBoostStart();
-    }
-    
     CCLOG("GameManager::onGameStart end");
 }
 
@@ -459,12 +454,23 @@ void GameManager::onGameResult() {
 /**
  * 부스트 시작
  */
-void GameManager::onBoostStart() {
+void GameManager::onBoostStart(const StageData &boostStage) {
     
-    CCASSERT(getInstance()->hasState(GameState::STARTED), "GameManager::onBoostStart invalid called.");
+    // CCASSERT(instance->hasState(GameState::STARTED), "GameManager::onBoostStart invalid called.");
     
-    getInstance()->addState(GameState::BOOSTING);
+    instance->boostStage = boostStage;
+    instance->addState(GameState::BOOSTING);
     getEventDispatcher()->dispatchOnBoostStart();
+}
+
+/**
+ * 부스트 진행
+ */
+void GameManager::onBoosting() {
+    
+    CCASSERT(instance->hasState(GameState::BOOSTING), "GameManager::onBoosting invalid called.");
+    
+    getEventDispatcher()->dispatchOnBoosting();
 }
 
 /**
@@ -472,7 +478,9 @@ void GameManager::onBoostStart() {
  */
 void GameManager::onBoostEnd() {
  
-    CCASSERT(getInstance()->hasState(GameState::BOOSTING), "GameManager::onBoostEnd invalid called.");
+    CCASSERT(instance->hasState(GameState::BOOSTING), "GameManager::onBoostEnd invalid called.");
+    
+    instance->stage = instance->boostStage;
     
     getInstance()->removeState(GameState::BOOSTING);
     getEventDispatcher()->dispatchOnBoostEnd();

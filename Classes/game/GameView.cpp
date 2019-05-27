@@ -39,8 +39,8 @@ static const string SCHEDULER_CHECK_WITHDRAW_GUIDE  = "SCHEDULER_CHECK_WITHDRAW_
 
 static const float  DRAG_MIN_DIST                   = 200; // 드래그 판단 거리
 
-#define DEBUG_DRAW_PHYSICS      1
-#define DEBUG_DRAW_TILE         1
+#define DEBUG_DRAW_PHYSICS      0
+#define DEBUG_DRAW_TILE         0
 
 GameView::GameView() :
 gameMgr(GameManager::getInstance()),
@@ -145,6 +145,9 @@ void GameView::onGameExit() {
  */
 void GameView::onGameReset() {
     
+    friendsLayer->setVisible(true);
+    balls[0]->setVisible(true);
+    ballCountLabel->setVisible(true);
 }
 
 /**
@@ -250,12 +253,47 @@ void GameView::onGameResult() {
  * 부스트 시작
  */
 void GameView::onBoostStart() {
+    
+    // 연출
+    auto anim = SkeletonAnimation::createWithJsonFile(DIR_IMG_BOOST + "boost.json");
+    anim->setTag(Tag::BOOST_EFFECT);
+    anim->setAnchorPoint(Vec2::ZERO);
+    anim->setPosition(Vec2(SB_WIN_SIZE*0.5f));
+    addChild(anim, SBZOrder::BOTTOM);
+    
+    auto track = anim->setAnimation(0, "start", false);
+    anim->setTrackCompleteListener(track, [=](spTrackEntry *entry) {
+        GameManager::onBoosting();
+    });
+}
+
+/**
+ * 부스트 진행
+ */
+void GameView::onBoosting() {
+    
+    friendsLayer->setVisible(true);
+    
+    // 연출
+    auto anim = getChildByTag<SkeletonAnimation*>(Tag::BOOST_EFFECT);
+    anim->setAnimation(0, "run", true);
 }
 
 /**
  * 부스트 종료
  */
 void GameView::onBoostEnd() {
+    
+    // 볼 개수 부스트
+    addBall(GAME_MANAGER->getBoostStage().firstBallCount - (int)balls.size());
+    
+    // 연출 완료 후 게임 시작
+    auto anim = getChildByTag<SkeletonAnimation*>(Tag::BOOST_EFFECT);
+    auto track = anim->setAnimation(0, "end", false);
+    
+    anim->setTrackCompleteListener(track, [=](spTrackEntry *entry) {
+        GameManager::onGameStart();
+    });
 }
 
 /**
@@ -1076,7 +1114,7 @@ void GameView::addBall(int count, bool updateUI) {
     const int MAX_BALL_COUNT = GAME_CONFIG->getMaxBallCount();
     
     for( int i = 0; i < count && balls.size() <= MAX_BALL_COUNT; ++i ) {
-        auto ball = Ball::create();
+        auto ball = Ball::create(world);
         ball->setPosition(aimController->getStartPosition());
         ball->setVisible(false);
         ball->setBodyAwake(false);
@@ -1395,6 +1433,7 @@ void GameView::initAimController() {
     
     aimController = AimController::create();
     aimController->setEnabled(false);
+    aimController->setStartPosition(FIRST_SHOOTING_POSITION);
     aimController->setOnAimingStartListener(CC_CALLBACK_0(GameView::onAimingStart, this));
     aimController->setOnAimingEndListener(CC_CALLBACK_0(GameView::onAimingEnd, this));
     aimController->setOnShootListener(CC_CALLBACK_1(GameView::shoot, this));
@@ -1458,6 +1497,7 @@ void GameView::initTile() {
 void GameView::initFriends() {
     
     friendsLayer = FriendsLayer::create(tileLayer);
+    friendsLayer->setVisible(false);
     friendsLayer->setOnFallFinishedListener(CC_CALLBACK_0(GameView::onFriendsBallFallFinished, this));
     friendsLayer->updatePosition(FIRST_SHOOTING_POSITION, false);
     addChild(friendsLayer, (int)ZOrder::FRIENDS);
@@ -1483,7 +1523,7 @@ void GameView::initBall() {
     addBall(GAME_CONFIG->getFirstBallCount());
 #endif
     
-    balls[0]->setVisible(true);
+    ballCountLabel->setVisible(false);
 }
 
 /**
@@ -1519,6 +1559,7 @@ void GameView::initGameListener() {
     listener->onGameRestore             = CC_CALLBACK_1(GameView::onGameRestore, this);
     listener->onGameResult              = CC_CALLBACK_0(GameView::onGameResult, this);
     listener->onBoostStart              = CC_CALLBACK_0(GameView::onBoostStart, this);
+    listener->onBoosting                = CC_CALLBACK_0(GameView::onBoosting, this);
     listener->onBoostEnd                = CC_CALLBACK_0(GameView::onBoostEnd, this);
     listener->onStageChanged            = CC_CALLBACK_1(GameView::onStageChanged, this);
     listener->onStageClear              = CC_CALLBACK_0(GameView::onStageClear, this);

@@ -33,7 +33,7 @@ FriendsLayer* FriendsLayer::create(TileLayer *tileLayer) {
 FriendsLayer::FriendsLayer(TileLayer *tileLayer) :
 tileLayer(tileLayer),
 onFallFinishedListener(nullptr),
-friendsDamage(1) {
+friendsDamage(GAME_CONFIG->getFirstFriendsDamage()) {
 }
 
 FriendsLayer::~FriendsLayer() {
@@ -135,6 +135,7 @@ void FriendsLayer::initGameListener() {
     listener->onGameRestore             = CC_CALLBACK_1(FriendsLayer::onGameRestore, this);
     listener->onGameResult              = CC_CALLBACK_0(FriendsLayer::onGameResult, this);
     listener->onBoostStart              = CC_CALLBACK_0(FriendsLayer::onBoostStart, this);
+    listener->onBoosting                = CC_CALLBACK_0(FriendsLayer::onBoosting, this);
     listener->onBoostEnd                = CC_CALLBACK_0(FriendsLayer::onBoostEnd, this);
     listener->onStageChanged            = CC_CALLBACK_1(FriendsLayer::onStageChanged, this);
     listener->onStageClear              = CC_CALLBACK_0(FriendsLayer::onStageClear, this);
@@ -333,7 +334,6 @@ void FriendsLayer::onGameExit() {
 void FriendsLayer::onGameReset() {
     
     shot = false;
-    friendsDamage = 1;
 }
 
 /**
@@ -406,9 +406,31 @@ void FriendsLayer::onBoostStart() {
 }
 
 /**
+ * 부스트 진행
+ */
+void FriendsLayer::onBoosting() {
+    
+    for( auto friendNode : friends ) {
+        friendNode->setDamageVisible(false);
+        friendNode->setAnimationTimeScale(2);
+        friendNode->setImage(Friend::ImageType::STAGE_CLEAR);
+    }
+}
+
+/**
  * 부스트 종료
  */
 void FriendsLayer::onBoostEnd() {
+    
+    auto boostStage = GAME_MANAGER->getBoostStage();
+    
+    friendsDamage = boostStage.firstFriendsBallDamage;
+    updateFriendsDamage();
+    
+    for( auto friendNode : friends ) {
+        friendNode->setAnimationTimeScale(1);
+        friendNode->setDamageVisible(true);
+    }
 }
 
 /**

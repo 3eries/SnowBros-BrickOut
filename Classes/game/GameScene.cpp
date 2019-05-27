@@ -18,6 +18,7 @@
 
 #include "GameView.hpp"
 
+#include "ui/BoostPopup.hpp"
 #include "ui/PausePopup.hpp"
 #include "ui/StageClearPopup.hpp"
 #include "ui/ContinuePopup.hpp"
@@ -73,20 +74,13 @@ void GameScene::onEnter() {
     BaseScene::onEnter();
     
     GameManager::onGameEnter();
+    
+    showBoostPopup();
 }
 
 void GameScene::onEnterTransitionDidFinish() {
     
     BaseScene::onEnterTransitionDidFinish();
-    
-    GameManager::onGameStart();
-    
-    // bgm
-    SBAudioEngine::playBGM(DIR_SOUND + "bgm_stage_01.mp3");
-    
-//    scheduleOnce([=](float) {
-//        SBAudioEngine::playBGM(SOUND_BGM_MAIN);
-//    }, SceneManager::REPLACE_DURATION_MAIN, "MAIN_SCENE_BGM_DELAY");
 }
 
 void GameScene::onExit() {
@@ -166,6 +160,13 @@ void GameScene::onGameReset() {
  * 게임 시작
  */
 void GameScene::onGameStart() {
+    
+    // bgm
+    SBAudioEngine::playBGM(DIR_SOUND + "bgm_stage_01.mp3");
+    
+//    scheduleOnce([=](float) {
+//        SBAudioEngine::playBGM(SOUND_BGM_MAIN);
+//    }, SceneManager::REPLACE_DURATION_MAIN, "MAIN_SCENE_BGM_DELAY");
 }
 
 /**
@@ -234,12 +235,16 @@ void GameScene::onGameResult() {
  * 부스트 시작
  */
 void GameScene::onBoostStart() {
+    
+    setSceneTouchLocked(true);
 }
 
 /**
  * 부스트 종료
  */
 void GameScene::onBoostEnd() {
+    
+    setSceneTouchLocked(false);
 }
 
 /**
@@ -267,6 +272,27 @@ void GameScene::replaceScene(SceneType type, const GiftRewardItems &items) {
     GameManager::destroyInstance();
     
     BaseScene::replaceScene(type, items);
+}
+
+/**
+ * 부스트 팝업 노출
+ */
+void GameScene::showBoostPopup() {
+    
+    auto popup = BoostPopup::create();
+    SceneManager::getScene()->addChild(popup, ZOrder::POPUP_MIDDLE);
+    
+    popup->setOnBoostListener([=](StageData stage) {
+        if( stage.stageSeq == 1 ) {
+            GameManager::onGameStart();
+        } else {
+            GameManager::onBoostStart(stage);
+        }
+    });
+    
+    popup->setOnClosedListener([=]() {
+        GameManager::onGameStart();
+    });
 }
 
 /**
@@ -607,37 +633,6 @@ void GameScene::initBg() {
  * 배너 초기화
  */
 void GameScene::initBanner() {
-    
-#if SB_PLUGIN_USE_ADS
-    // 배너 로딩중 이미지
-    // 로딩된 배너 광고의 ZOrder가 높기 때문에 로딩중 이미지를 따로 제거하지 않는다.
-    if( User::isOwnRemoveAdsItem() ) {
-        return;
-    }
-    
-    const Size bannerSize(SB_WIN_SIZE.width, AdsHelper::getBannerHeight());
-    
-    auto bannerLayer = Node::create();
-    bannerLayer->setTag(Tag::BANNER_LOADING);
-    bannerLayer->setAnchorPoint(ANCHOR_MT);
-    bannerLayer->setPosition(Vec2TC(0, 0));
-    bannerLayer->setContentSize(bannerSize);
-    addChild(bannerLayer, INT_MAX);
-    
-    {
-        auto bg = Sprite::create(DIR_IMG_GAME + "RSP_ad_top_bg.png");
-        bg->setAnchorPoint(ANCHOR_M);
-        bg->setPosition(Vec2MC(bannerSize, 0, 0));
-        bg->setScaleX(bannerSize.width / bg->getContentSize().width);
-        bg->setScaleY(bannerSize.height / bg->getContentSize().height);
-        bannerLayer->addChild(bg);
-        
-        auto text = Sprite::create(DIR_IMG_GAME + "RSP_ad_top_text.png");
-        text->setAnchorPoint(ANCHOR_M);
-        text->setPosition(Vec2MC(bannerSize, 0, 0));
-        bannerLayer->addChild(text);
-    }
-#endif
 }
 
 /**

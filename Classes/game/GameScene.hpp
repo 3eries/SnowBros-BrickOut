@@ -74,6 +74,7 @@ public:
 public:
     void replaceScene(SceneType type, const GiftRewardItems &items = GiftRewardItems()) override;
     
+    void showBoostPopup();
     void showPausePopup();
     void showStageClearPopup();
     void showFriendsPopup();

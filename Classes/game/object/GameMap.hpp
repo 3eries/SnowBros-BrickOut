@@ -38,11 +38,18 @@ private:
         cocos2d::Node *bottom;
     };
     
-    Background* createBackground(const StageData &stage);
+    static Background* createBackground(const StageData &stage);
     
 private:
+    void updateBackground(const StageData &stage);
+    
+    void onGameEnter();
+    
+    void onBoostStart();
+    void onBoosting();
+    void onBoostEnd();
+    
     void onStageChanged(const StageData &stage);
-
     void onMoveNextStage(const StageData &stage);
     void onMoveNextStageFinished(const StageData &stage);
     

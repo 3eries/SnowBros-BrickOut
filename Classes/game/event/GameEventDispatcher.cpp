@@ -211,6 +211,18 @@ void GameEventDispatcher::dispatchOnBoostStart() {
 }
 
 /**
+ * onBoosting 이벤트 전달
+ */
+void GameEventDispatcher::dispatchOnBoosting() {
+    
+    for( auto listener : listeners ) {
+        if( listener->onBoosting ) {
+            listener->onBoosting();
+        }
+    }
+}
+
+/**
  * onBoostEnd 이벤트 전달
  */
 void GameEventDispatcher::dispatchOnBoostEnd() {

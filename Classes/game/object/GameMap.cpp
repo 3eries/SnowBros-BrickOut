@@ -100,9 +100,9 @@ bool GameMap::init() {
 }
 
 /**
- * 스테이지 변경
+ * 배경 업데이트
  */
-void GameMap::onStageChanged(const StageData &stage) {
+void GameMap::updateBackground(const StageData &stage) {
     
     if( bg ) {
         bg->removeFromParent();
@@ -110,6 +110,88 @@ void GameMap::onStageChanged(const StageData &stage) {
     
     bg = createBackground(stage);
     addChild(bg);
+}
+
+/**
+ * 게임 진입
+ */
+void GameMap::onGameEnter() {
+    
+    updateBackground(Database::getFirstWorld().getFirstStage());
+}
+
+/**
+ * 부스트 시작
+ */
+void GameMap::onBoostStart() {
+}
+
+/**
+ * 부스트 진행
+ */
+void GameMap::onBoosting() {
+    
+    auto boostStage = GAME_MANAGER->getBoostStage();
+    int stageDiff = boostStage.stageSeq-1;
+    bool isBoostMultiStage = (stageDiff >= 2);
+    
+    const float MOVE_DURATION = 0.8f;
+    
+    SBDirector::postDelayed(this, [=]() {
+        
+        GameManager::onBoostEnd();
+        
+    }, isBoostMultiStage ? MOVE_DURATION*2 : MOVE_DURATION);
+    
+    // 이동 연출
+    auto getMoveAction = [=]() -> MoveBy* {
+        return MoveBy::create(MOVE_DURATION, Vec2(0, -SB_WIN_SIZE.height-bg->top->getContentSize().height));
+    };
+    
+    // Step 1. 원래 배경 퇴장 & 다음 배경 등장
+    bg->runAction(getMoveAction());
+    
+    auto nextStage = isBoostMultiStage ? Database::getStageBySeq(GAME_MANAGER->getStage().stageSeq+1) : boostStage;
+    
+    auto nextStageBg = createBackground(nextStage);
+    nextStageBg->setAnchorPoint(ANCHOR_MB);
+    nextStageBg->setPosition(Vec2TC(0, bg->top->getContentSize().height));
+    addChild(nextStageBg);
+    
+    auto callFunc = CallFunc::create([=]() {
+        
+        // Step 2. 부스트된 스테이지가 여러개면 Step1을 한번 더 진행
+        if( isBoostMultiStage ) {
+            nextStageBg->runAction(Sequence::create(getMoveAction(), RemoveSelf::create(), nullptr));
+            
+            auto boostStageBg = createBackground(boostStage);
+            boostStageBg->setAnchorPoint(ANCHOR_MB);
+            boostStageBg->setPosition(Vec2TC(0, bg->top->getContentSize().height));
+            this->addChild(boostStageBg);
+    
+            boostStageBg->runAction(Sequence::create(getMoveAction(), RemoveSelf::create(), nullptr));
+            
+        } else {
+            nextStageBg->removeFromParent();
+        }
+    });
+    nextStageBg->runAction(Sequence::create(getMoveAction(), callFunc, nullptr));
+}
+
+/**
+ * 부스트 종료
+ */
+void GameMap::onBoostEnd() {
+    
+    updateBackground(GAME_MANAGER->getBoostStage());
+}
+
+/**
+ * 스테이지 변경
+ */
+void GameMap::onStageChanged(const StageData &stage) {
+    
+    updateBackground(stage);
 }
 
 /**
@@ -177,6 +259,10 @@ GameMap::Background* GameMap::createBackground(const StageData &stage) {
 void GameMap::initGameListener() {
     
     auto listener = GameEventListener::create(this);
+    listener->onGameEnter               = CC_CALLBACK_0(GameMap::onGameEnter, this);
+    listener->onBoostStart              = CC_CALLBACK_0(GameMap::onBoostStart, this);
+    listener->onBoosting                = CC_CALLBACK_0(GameMap::onBoosting, this);
+    listener->onBoostEnd                = CC_CALLBACK_0(GameMap::onBoostEnd, this);
     listener->onStageChanged            = CC_CALLBACK_1(GameMap::onStageChanged, this);
     listener->onMoveNextStage           = CC_CALLBACK_1(GameMap::onMoveNextStage, this);
     listener->onMoveNextStageFinished   = CC_CALLBACK_1(GameMap::onMoveNextStageFinished, this);

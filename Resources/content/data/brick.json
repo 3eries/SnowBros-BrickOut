@@ -556,7 +556,7 @@
     "type": 100,
     "width": 2,
     "height": 2,
-    "color": "255,255,255",
+    "color": "204,106,0",
     "image": "",
     "idle_anim_interval": 0.6,
     "damage_anim_interval": 0.1
@@ -566,7 +566,7 @@
     "type": 100,
     "width": 2,
     "height": 2,
-    "color": "255,255,255",
+    "color": "255,189,0",
     "image": "",
     "idle_anim_interval": 0.6,
     "damage_anim_interval": 0.1

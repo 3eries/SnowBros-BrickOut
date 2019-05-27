@@ -2,7 +2,7 @@
     "world": 1,
     "bg": "",
     "stage": 1,
-    "final_ball_count": 15,
+    "final_ball_count": 20,
     "final_friends_ball_damage": 2,
     "coin_drop_count": "5~8",
     "floors": [{
@@ -44,7 +44,10 @@
         "normal_brick_list": ["brick_00002", "brick_00003"],
         "elite_brick_drop_rate": 5
     }, {
-        "floor": 15
+	"floor": 15,
+	"brick_hp": "25",
+	"brick_drop_count": "5",
+	"normal_brick_list": ["brick_00001","brick_00002","brick_00003"]
     }]
     
 }
