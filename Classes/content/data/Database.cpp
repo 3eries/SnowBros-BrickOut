@@ -401,8 +401,8 @@ void Database::addTempWorld() {
         
         for( auto &floor : stage.floors ) {
             floor.world = world.world;
-            floor.parseBrickHp(prevFloor);
-            floor.brickHp *= 1.02f;
+//            floor.parseBrickHp(prevFloor);
+//            floor.brickHp *= 1.02f;
             
             prevFloor = floor;
         }

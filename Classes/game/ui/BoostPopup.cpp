@@ -22,10 +22,7 @@ USING_NS_SB;
 using namespace cocos2d::ui;
 using namespace std;
 
-#define LIST_ORIGIN             Vec2MC(0, -99)         // mask Vec2MC(-1, -99) , Size(634, 412)
-#define LIST_SIZE               Size(536,132)
-#define LIST_CELL_SIZE          Size(608,134)          // bg Vec2MC(0, 0) , Size(608, 134)
-#define LIST_CELL_PADDING       2
+#define LIST_CELL_SIZE          Size(608,134)
 
 BoostPopup* BoostPopup::create() {
     
@@ -236,10 +233,6 @@ void BoostPopup::initBg() {
  */
 void BoostPopup::initWorldView() {
     
-    // boost_btn_stage1.png Vec2MC(0, 161) , Size(536, 132)
-    // boost_btn_stage2.png Vec2MC(0, 25) , Size(536, 132)
-    // boost_btn_stage3.png Vec2MC(0, -111) , Size(536, 132)
-    // boost_btn_stage_boss.png Vec2MC(0, -247) , Size(536, 132)
     Vec2 cellPos[] = {
         Vec2MC(0, 161),
         Vec2MC(0, 25),
@@ -247,7 +240,11 @@ void BoostPopup::initWorldView() {
         Vec2MC(0, -247),
     };
     
-    auto boostStageSeq = User::getClearStageSeq()+1; // 부스트 가능한 최대 스테이지
+    auto boostStageSeq = User::getClearStageSeq(); // 부스트 가능한 최대 스테이지
+    
+    if( !Database::getStageBySeq(boostStageSeq+1).isNull() ) {
+        boostStageSeq += 1;
+    }
     
     for( int i = 0; i < Database::getOriginWorldCount(); ++i ) {
         auto world = Database::getWorlds()[i];
@@ -275,7 +272,6 @@ void BoostPopup::initWorldView() {
         }
     }
     
-    // BMfont_world_silver Vec2MC(-1, 282) , Size(340, 68)
     auto worldLabel = Label::createWithBMFont(FONT_WORLD_SILVER, "", TextHAlignment::CENTER);
     worldLabel->setTag(Tag::WORLD_LABEL);
     worldLabel->setAnchorPoint(ANCHOR_M);
@@ -395,7 +391,6 @@ bool ListCell::init(const StageData &data, int cellIndex) {
     });
     
     // bg
-    // boost_btn_stage3.png Vec2MC(0, 0) , Size(536, 132)
     string bgFiles[] = {
         "boost_btn_stage1.png",
         "boost_btn_stage2.png",
@@ -409,7 +404,6 @@ bool ListCell::init(const StageData &data, int cellIndex) {
     addChild(bg);
     
     // cost
-    // 1200 size:48 stroke:4 Vec2MC(167, 7) , Size(143, 45)
     costLabel = Label::createWithTTF(TO_STRING(data.boostCost), FONT_COMMODORE, 48, Size::ZERO,
                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
     costLabel->setAnchorPoint(ANCHOR_M);
@@ -424,14 +418,12 @@ bool ListCell::init(const StageData &data, int cellIndex) {
     getEventDispatcher()->addEventListenerWithSceneGraphPriority(listener, this);
     
     // coin icon
-    // common_icon_coin_small.png Vec2MC(68, 7) , Size(45, 45)
     auto coinIcon = Sprite::create(DIR_IMG_COMMON + "common_icon_coin_small.png");
     coinIcon->setAnchorPoint(ANCHOR_M);
     coinIcon->setPosition(Vec2MC(size, 68, 7));
     addChild(coinIcon);
     
     // selected
-    // boost_focus_stage.png Vec2MC(0, 0) , Size(536, 132)
     selectedImage = Sprite::create(DIR_IMG_BOOST + "boost_focus_stage.png");
     selectedImage->setAnchorPoint(ANCHOR_M);
     selectedImage->setPosition(Vec2MC(size, 0, 0));
@@ -446,13 +438,11 @@ bool ListCell::init(const StageData &data, int cellIndex) {
     lockedLayer->setVisible(false);
     addChild(lockedLayer);
     
-    // boost_cover_stage_dis.png Vec2MC(0, 4) , Size(528, 124)
     auto lockedBg = Sprite::create(DIR_IMG_BOOST + "boost_cover_stage_dis.png");
     lockedBg->setAnchorPoint(ANCHOR_M);
     lockedBg->setPosition(Vec2MC(size, 0, 4));
     lockedLayer->addChild(lockedBg);
     
-    // boost_icon_lock.png Vec2MC(0, 5) , Size(60, 76)
     auto lockedIcon = Sprite::create(DIR_IMG_BOOST + "boost_icon_lock.png");
     lockedIcon->setAnchorPoint(ANCHOR_M);
     lockedIcon->setPosition(Vec2MC(size, 0, 5));

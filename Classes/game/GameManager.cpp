@@ -480,7 +480,8 @@ void GameManager::onBoostEnd() {
  
     CCASSERT(instance->hasState(GameState::BOOSTING), "GameManager::onBoostEnd invalid called.");
     
-    instance->stage = instance->boostStage;
+    instance->setWorld(instance->boostStage.world);
+    instance->setStage(instance->boostStage.stage);
     
     getInstance()->removeState(GameState::BOOSTING);
     getEventDispatcher()->dispatchOnBoostEnd();
@@ -527,7 +528,9 @@ void GameManager::onStageChanged() {
  */
 void GameManager::onStageClear() {
     
-    User::setClearStageSeq(instance->stage.stageSeq);
+    if( instance->stage.world <= Database::getOriginWorldCount() ) {
+        User::setClearStageSeq(instance->stage.stageSeq);
+    }
     
     getEventDispatcher()->dispatchOnStageClear();
 }
