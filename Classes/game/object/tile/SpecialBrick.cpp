@@ -14,7 +14,8 @@ USING_NS_CC;
 USING_NS_SB;
 using namespace std;
 
-SpecialBrick::SpecialBrick(const BrickDef &def) : Brick(def) {
+SpecialBrick::SpecialBrick(const BrickDef &def) : Brick(def),
+specialState(false) {
 }
 
 SpecialBrick::~SpecialBrick() {
