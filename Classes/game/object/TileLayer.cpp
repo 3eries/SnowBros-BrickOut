@@ -234,7 +234,7 @@ void TileLayer::onFloorChanged(const FloorData &floor) {
     }
     // 데이터 없음, 타일만 이동
     else {
-        downTile();
+        downTileWithDelay();
     }
 }
 
@@ -252,21 +252,7 @@ void TileLayer::initFloorTile(const FloorData &floor) {
     initFloorBrick(floor);
     initFloorItem(floor);
     
-    // 타일 등장 연출 완료 후 이동, 가장 긴 시간을 기준으로 함 
-    auto bricks = getBricks();
-    float enterDuration = 0;
-    
-    for( auto brick : bricks ) {
-        float d = brick->getEnterDuration();
-        
-        if( d > enterDuration ) {
-            enterDuration = d;
-        }
-    }
-    
-    SBDirector::postDelayed(this, [=]() {
-        this->downTile();
-    }, enterDuration);
+    downTileWithDelay();
 }
 
 /**
@@ -614,7 +600,7 @@ Game::Tile* TileLayer::removeTile(Game::Tile *tile) {
 }
 
 /**
- * 모든 타일을 한칸 아래로 이동 시킵니다
+ * 모든 타일을 한칸 아래로 이동시킵니다
  */
 void TileLayer::downTile() {
     
@@ -644,6 +630,27 @@ void TileLayer::downTile() {
             onTileDownFinishedListener();
         }
     }, TILE_MOVE_DURATION + 0.1f);
+}
+
+/**
+ * 타일 등장 연출 시간 만큼 지연 후 이동시킵니다
+ */
+void TileLayer::downTileWithDelay() {
+    
+    auto bricks = getBricks();
+    float enterDuration = 0;
+    
+    for( auto brick : bricks ) {
+        float d = brick->getEnterDuration();
+        
+        if( d > enterDuration ) {
+            enterDuration = d;
+        }
+    }
+    
+    SBDirector::postDelayed(this, [=]() {
+        this->downTile();
+    }, enterDuration);
 }
 
 /**

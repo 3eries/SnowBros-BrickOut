@@ -71,6 +71,7 @@ public:
     Game::Tile* removeTile(Game::Tile *tile);
     
     void        downTile();
+    void        downTileWithDelay();
     
     void        updateEliteBrickDropRate(const FloorData &floor);
     void        resetRandomEngine();
