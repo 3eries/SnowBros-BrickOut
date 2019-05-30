@@ -1,0 +1,77 @@
+{
+    "world": 2,
+    "bg": "",
+    "stage": 2,
+    "final_ball_count": 60,
+    "final_friends_ball_damage": 10,
+    "coin_drop_count": "5~8",
+    "floors": [{
+        "floor": 1,
+        "brick_hp": "130",
+        "brick_drop_count": "2~3",
+        "normal_brick_list": ["brick_00011"]
+    }, {
+        "floor": 2,
+        "brick_hp": "prev_brick_hp+1"
+    }, {
+        "floor": 3,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00012","brick_00014"]
+    }, {
+        "floor": 4
+    }, {
+        "floor": 5,
+        "brick_drop_count": "3",
+        "normal_brick_list": [],
+        "special_brick_list": ["brick_01005", "brick_01005","brick_01005"],
+        "elite_brick_drop_rate": 0
+
+    }, {
+        "floor": 6,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00011","brick_00014"],
+        "special_brick_list": [],
+        "elite_brick_drop_rate": 3
+
+    }, {
+        "floor": 7
+    }, {
+        "floor": 8
+    }, {
+        "floor": 9
+    }, {
+        "floor": 10,
+        "brick_drop_count": "4",
+        "normal_brick_list": [],
+        "special_brick_list": ["brick_01004", "brick_01004","brick_01004","brick_01004"],
+        "elite_brick_drop_rate": 0
+    }, {
+        "floor": 11,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00012"],
+        "special_brick_list": [],
+        "elite_brick_drop_rate": 5
+    }, {
+        "floor": 12,
+        "brick_drop_count": "2",
+        "normal_brick_list": [],
+        "special_brick_list": ["brick_01007", "brick_01007"],
+        "elite_brick_drop_rate": 0
+    }, {
+        "floor": 13,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00012","brick_00014"],
+        "special_brick_list": [],
+        "elite_brick_drop_rate": 10
+
+    }, {
+        "floor": 14
+    }, {
+	"floor": 15,
+        "brick_drop_count": "5",
+        "normal_brick_list": ["brick_00012"],
+        "elite_brick_drop_rate": 0
+
+    }]
+    
+}

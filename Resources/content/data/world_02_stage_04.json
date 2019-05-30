@@ -1,0 +1,138 @@
+{
+    "world": 2,
+    "bg": "",
+    "stage": 4,
+    "final_ball_count": 60,
+    "final_friends_ball_damage": 12,
+    "coin_drop_count": "5~8",
+    "floors": [{
+        "floor": 1,
+        "brick_hp": "200",
+        "brick_drop_count": "4",
+        "special_brick_list": ["brick_01003","brick_01003","brick_01003","brick_01003"]
+    }, {
+        "floor": 2,
+        "brick_hp": "prev_brick_hp+2",
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00020"],
+	"special_brick_list": [],
+	"elite_brick_drop_rate" : 5
+    }, {
+        "floor": 3
+    }, {
+        "floor": 4,
+	"brick_drop_count": "3",
+	"normal_brick_list": ["brick_00021"]
+    }, {
+        "floor": 5
+    }, {
+        "floor": 6,
+	"brick_drop_count": "3",
+	"normal_brick_list": ["brick_00022"]
+    }, {
+        "floor": 7
+    }, {
+        "floor": 8,
+	"brick_drop_count": "3",
+	"normal_brick_list": [],
+	"special_brick_list": ["brick_01004","brick_01004","brick_01004"]
+    }, {
+        "floor": 9,
+	"brick_drop_count": "3",
+	"special_brick_list": ["brick_01005","brick_01005","brick_01005"]
+    }, {
+        "floor": 10,
+	"brick_drop_count": "3",
+	"special_brick_list": ["brick_01007","brick_01007","brick_01007"]
+    }, {
+        "floor": 11,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00020","brick_00021","brick_00022"],
+	"special_brick_list": []
+    }, {
+        "floor": 12
+    }, {
+        "floor": 13,
+        "brick_drop_count": "4",
+        "normal_brick_list": [],
+	"special_brick_list": ["brick_01003","brick_01003","brick_01003","brick_01003"]
+    }, {
+        "floor": 14,
+	"brick_drop_count": "3",
+	"normal_brick_list": ["brick_00020","brick_00022"],
+	"special_brick_list": []
+    }, {
+	"floor": 15
+    },{
+	"floor": 16,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00020","brick_00021"]
+    },{
+	"floor": 17,
+	"brick_drop_count": "4",
+	"normal_brick_list": ["brick_00007"],
+	"special_brick_list": ["brick_01002","brick_01002"],
+	"elite_brick_drop_rate": 0
+
+    },{
+	"floor": 18,
+	"brick_drop_count": "3",
+	"normal_brick_list": [],
+	"special_brick_list": ["brick_01004","brick_01005","brick_01007"]
+    },{
+	"floor": 19,
+        "brick_drop_count": "4",
+        "normal_brick_list": ["brick_00020","brick_00021","brick_00021"],
+	"special_brick_list": []
+    },{
+	"floor": 20,
+	"pattern" : "pattern_01"
+    }],
+"patterns": [{
+		"id": "pattern_01",
+		"brick_list": [{
+				"brick_id": "brick_10007",
+				"pos": [
+					3,
+					0
+				],
+				"hp": 2000,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05007",
+				"pos": [
+					1,
+					0
+				],
+				"hp": 500,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05007",
+				"pos": [
+					2,
+					0
+				],
+				"hp": 500,
+				"flipped_x": false,
+				"flipped_y": false
+			},
+			{
+				"brick_id": "brick_05008",
+				"pos": [
+					1,
+					2
+				],
+				"hp": 500,
+				"flipped_x": true,
+				"flipped_y": false
+			}]
+
+		
+	}]
+
+    
+}

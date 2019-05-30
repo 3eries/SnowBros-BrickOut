@@ -1,0 +1,106 @@
+{
+    "world": 2,
+    "bg": "",
+    "stage": 3,
+    "final_ball_count": 60,
+    "final_friends_ball_damage": 12,
+    "coin_drop_count": "5~8",
+    "floors": [{
+        "floor": 1,
+        "brick_hp": "160",
+        "brick_drop_count": "3",
+        "normal_brick_list" : ["brick_00016"],
+	"elite_brick_drop_rate" : 3
+    }, {
+        "floor": 2,
+        "brick_hp": "prev_brick_hp+2"
+    }, {
+        "floor": 3,
+        "brick_drop_count": "4",
+        "normal_brick_list": [],
+	"special_brick_list": ["brick_01004","brick_01004","brick_01004","brick_01004"],
+	"elite_brick_drop_rate": 0
+    }, {
+        "floor": 4,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00017"],
+	"special_brick_list": [],
+	"elite_brick_drop_rate": 3
+
+    }, {
+        "floor": 5,
+        "brick_drop_count": "4",
+        "normal_brick_list": ["brick_00018"]
+    }, {
+        "floor": 6,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00016","brick_00017","brick_00018"]
+    }, {
+        "floor": 7
+    }, {
+        "floor": 8,
+        "brick_drop_count": "4",
+        "normal_brick_list": [],
+	"special_brick_list": ["brick_01005","brick_01005","brick_01005","brick_01005"]
+    }, {
+        "floor": 9,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00016","brick_00017","brick_00018"],
+	"special_brick_list": []
+    }, {
+        "floor": 10
+    }, {
+        "floor": 11,
+        "brick_drop_count": "3",
+        "normal_brick_list": [],
+	"special_brick_list": ["brick_01007","brick_01007","brick_01007"]
+    }, {
+        "floor": 12,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00016","brick_00017","brick_00018"],
+	"special_brick_list": [],
+	"elite_brick_drop_rate": 5
+
+    }, {
+        "floor": 13
+    }, {
+        "floor": 14
+    }, {
+	"floor": 15
+    },{
+	"floor": 16,
+        "brick_drop_count": "3",
+        "normal_brick_list": [],
+	"special_brick_list": ["brick_01003","brick_01003","brick_01003"]
+    },{
+	"floor": 17,
+        "brick_drop_count": "3",
+        "normal_brick_list": ["brick_00017","brick_00018"],
+	"special_brick_list": []
+    },{
+	"floor": 18
+    },{
+	"floor": 19
+    },{
+	"floor": 20,
+	"pattern" : "pattern_01"
+    }],
+"patterns": [{
+		"id": "pattern_01",
+		"brick_list": [{
+				"brick_id": "brick_10016",
+				"pos": [
+					2,
+					0
+				],
+				"hp": 1100,
+				"flipped_x": false,
+				"flipped_y": false
+				}
+			]
+
+		
+	}]
+
+    
+}
