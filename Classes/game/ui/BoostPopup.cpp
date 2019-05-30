@@ -53,10 +53,20 @@ bool BoostPopup::init() {
         return false;
     }
     
+    // 부스트 가능한 최대 스테이지 설정
+    auto stageSeq = User::getClearStageSeq();
+    
+    if( !Database::getStageBySeq(stageSeq+1).isNull() ) {
+        stageSeq += 1;
+    }
+    
+    boostMaxStage = Database::getStageBySeq(stageSeq);
+    
+    // UI 초기화
     initBg();
     initWorldView();
     
-    updateWorld(0);
+    updateWorld(boostMaxStage.world-1);
     
     return true;
 }
@@ -240,12 +250,6 @@ void BoostPopup::initWorldView() {
         Vec2MC(0, -247),
     };
     
-    auto boostStageSeq = User::getClearStageSeq(); // 부스트 가능한 최대 스테이지
-    
-    if( !Database::getStageBySeq(boostStageSeq+1).isNull() ) {
-        boostStageSeq += 1;
-    }
-    
     for( int i = 0; i < Database::getOriginWorldCount(); ++i ) {
         auto world = Database::getWorlds()[i];
         
@@ -262,11 +266,11 @@ void BoostPopup::initWorldView() {
             cell->setAnchorPoint(ANCHOR_M);
             cell->setPosition(cellPos[j]);
             cell->setOnClickListener(CC_CALLBACK_1(BoostPopup::onSelectedCell, this));
-            cell->setLocked(stage.stageSeq > boostStageSeq);
+            cell->setLocked(stage.stageSeq > boostMaxStage.stageSeq);
             worldView->addChild(cell);
             
             // 부스트 가능한 최대 스테이지인 경우 셀 선택
-            if( stage.stageSeq == boostStageSeq ) {
+            if( stage.stageSeq == boostMaxStage.stageSeq ) {
                 this->onSelectedCell(cell);
             }
         }
@@ -284,7 +288,7 @@ void BoostPopup::initWorldView() {
     prevBtn->setAnchorPoint(ANCHOR_M);
     prevBtn->setPosition(Vec2MC(-232, 282));
     prevBtn->setZoomScale(ButtonZoomScale::HARD);
-    prevBtn->getContentsLayer()->setScaleX(-1);
+    prevBtn->getContentsLayer()->setFlippedX(true);
     addChild(prevBtn);
     
     prevBtn->setOnClickListener(CC_CALLBACK_1(BoostPopup::onClick, this));

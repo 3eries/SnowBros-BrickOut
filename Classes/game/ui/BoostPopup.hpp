@@ -71,6 +71,8 @@ private:
     CC_SYNTHESIZE(std::function<void(StageData)>, onBoostListener, OnBoostListener);
     CC_SYNTHESIZE(SBCallback, onClosedListener, OnClosedListener);
     
+    StageData boostMaxStage;
+    
     int currentWorldIndex;
     std::vector<cocos2d::Node*> worldViews;
     
