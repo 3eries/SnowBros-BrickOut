@@ -12,7 +12,7 @@
 #include "cocos2d.h"
 #include "superbomb.h"
 
-#define ENABLE_TEST_MENU        1
+#define ENABLE_TEST_MENU        0
 #define TEST_HELPER             TestHelper::getInstance()
 
 class TestHelper : public cocos2d::Ref {
