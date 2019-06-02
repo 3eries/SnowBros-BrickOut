@@ -111,8 +111,6 @@ void BallSkinPopup::onSelectedCell(BallSkin::ListCell *cell) {
     
     CCASSERT(cell != nullptr, "BallSkinPopup::onSelectedCell error.");
     
-    SBAudioEngine::playEffect(SOUND_BUTTON_CLICK);
-    
     // 광고 보기 셀
     if( cell->getData().isWatchAd ) {
         CCLOG("onSelectedCell watch ad (reward amount: %d)", cell->getData().amount);
@@ -637,6 +635,7 @@ bool ListCell::init(const ListCellData &data) {
     setTouchEnabled(true);
     addClickEventListener([=](Ref*) {
         if( onClickListener ) {
+            SBAudioEngine::playEffect(SOUND_BUTTON_CLICK);
             onClickListener(this);
         }
     });
