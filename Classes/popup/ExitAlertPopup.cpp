@@ -50,27 +50,20 @@ void ExitAlertPopup::initContentView() {
     
     BasePopup::initContentView();
     
-    // RSP_popup_bg_give_up.png Vec2MC(0, 0) , Size(552, 568)
-    stoneBg = Sprite::create(DIR_IMG_COMMON + "RSP_popup_bg_give_up.png");
-    stoneBg->setAnchorPoint(ANCHOR_M);
-    stoneBg->setPosition(Vec2MC(0, 0));
-    addContentChild(stoneBg);
-    
-    const Size SIZE(stoneBg->getContentSize());
-    
     // title
     // RSP_popup_title_give_up.png Vec2MC(0, 210) , Size(392, 60)
-    auto title = Sprite::create(DIR_IMG_COMMON + "RSP_popup_title_give_up.png");
+    auto title = Label::createWithTTF("QUIT THE GAME?", FONT_COMMODORE, 50, Size::ZERO,
+                                      TextHAlignment::CENTER, TextVAlignment::CENTER);
     title->setAnchorPoint(ANCHOR_M);
-    title->setPosition(Vec2MC(SIZE, 0, 210));
-    stoneBg->addChild(title);
+    title->setPosition(Vec2MC(0, 10));
+    addChild(title);
     
     // YES
     auto yesBtn = SBButton::create("YES", FONT_COMMODORE, 50);
     yesBtn->setAnchorPoint(ANCHOR_MR);
-    yesBtn->setPosition(Vec2MC(SIZE, -60, -150));
+    yesBtn->setPosition(Vec2MC(-60, -170));
     yesBtn->setContentSize(Size(100, 80));
-    stoneBg->addChild(yesBtn);
+    addChild(yesBtn);
     
     yesBtn->setOnClickListener([=](Node*) {
         
@@ -81,9 +74,9 @@ void ExitAlertPopup::initContentView() {
     // NO
     auto noBtn = SBButton::create("NO", FONT_COMMODORE, 50);
     noBtn->setAnchorPoint(ANCHOR_ML);
-    noBtn->setPosition(Vec2MC(SIZE, 60, -150));
+    noBtn->setPosition(Vec2MC(60, -170));
     noBtn->setContentSize(Size(100, 80));
-    stoneBg->addChild(noBtn);
+    addChild(noBtn);
     
     noBtn->setOnClickListener([=](Node*) {
         
@@ -95,49 +88,23 @@ void ExitAlertPopup::initContentView() {
 /**
  * 등장 연출
  */
-void ExitAlertPopup::runEnterAction(float duration, SBCallback onFinished) {
-    
-    BasePopup::runEnterAction(duration, onFinished);
-    
-    // 배경 fade in
-    runBackgroundFadeInAction(nullptr, FADE_DURATION);
-    
-    // 컨텐츠 slide in
-    runSlideInAction([=]() {
-        
-        this->onEnterActionFinished();
-        SB_SAFE_PERFORM_LISTENER(this, onFinished);
-        
-    }, duration);
-}
-
 void ExitAlertPopup::runEnterAction(SBCallback onFinished) {
     
-    runEnterAction(SLIDE_DURATION, onFinished);
+    BasePopup::runEnterAction(0, onFinished);
+    
+    onEnterActionFinished();
+    SB_SAFE_PERFORM_LISTENER(this, onFinished);
 }
 
 /**
  * 퇴장 연출
  */
-void ExitAlertPopup::runExitAction(float duration, SBCallback onFinished) {
-    
-    BasePopup::runExitAction(duration, onFinished);
-    
-    // 배경 fade out
-    runBackgroundFadeOutAction(nullptr, FADE_DURATION);
-    
-    // 컨텐츠 slide out
-    runSlideOutAction([=]() {
-        
-        this->onExitActionFinished();
-        SB_SAFE_PERFORM_LISTENER(this, onFinished);
-        
-    }, duration);
-}
-
 void ExitAlertPopup::runExitAction(SBCallback onFinished) {
     
-    runExitAction(SLIDE_DURATION, onFinished);
+    BasePopup::runExitAction(0, onFinished);
+    
+    onExitActionFinished();
+    SB_SAFE_PERFORM_LISTENER(this, onFinished);
 }
 
 /**
@@ -146,21 +113,5 @@ void ExitAlertPopup::runExitAction(SBCallback onFinished) {
 void ExitAlertPopup::onEnterActionFinished() {
     
     BasePopup::onEnterActionFinished();
-    
-    // 비석 바깥 영역 터치 시 팝업 종료
-    auto touchNode = SBNodeUtils::createTouchNode();
-    addChild(touchNode);
-    
-    touchNode->addClickEventListener([=](Ref*) {
-        this->dismissWithAction();
-    });
-    
-    // auto box = SBNodeUtils::getBoundingBoxInWorld(stoneBg);
-    
-    auto stoneTouchNode = SBNodeUtils::createTouchNode();
-    stoneTouchNode->setAnchorPoint(stoneBg->getAnchorPoint());
-    stoneTouchNode->setPosition(stoneBg->getPosition());
-    stoneTouchNode->setContentSize(stoneBg->getContentSize());
-    addChild(stoneTouchNode);
 }
 

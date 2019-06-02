@@ -30,17 +30,13 @@ private:
     void initBackgroundView() override;
     void initContentView() override;
     
-    void runEnterAction(float duration, SBCallback onFinished) override;
     void runEnterAction(SBCallback onFinished = nullptr) override;
-    
-    void runExitAction(float duration, SBCallback onFinished) override;
     void runExitAction(SBCallback onFinished = nullptr) override;
     
     void onEnterActionFinished() override;
     
 private:
     CC_SYNTHESIZE(SBCallback, onExitAppListener, OnExitAppListener);
-    cocos2d::Node *stoneBg;
 };
 
 #endif /* ExitAlertPopup_hpp */
